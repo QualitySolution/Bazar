@@ -5,7 +5,7 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../bin/Debug/WidgetLib.dll" internal="true" />
+    <widget-library name="../bin/Release/WidgetLib.dll" internal="true" />
   </import>
   <widget class="Gtk.Bin" id="WidgetLib.DatePicker" design-size="128 28">
     <property name="MemberName" />
