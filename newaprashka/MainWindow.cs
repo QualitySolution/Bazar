@@ -361,7 +361,7 @@ public partial class MainWindow : Gtk.Window
 		AboutDialog dialog = new AboutDialog ();
 		dialog.ProgramName = "БазАр (База Арендаторов)";
 		
-		dialog.Version = "2.0.2";
+		dialog.Version = "2.0.3";
 		
 		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.logo.png");
 		
