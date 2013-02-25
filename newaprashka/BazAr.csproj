@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>bazar</RootNamespace>
+    <AssemblyName>BazAr</AssemblyName>
+    <CodePage>65001</CodePage>
+    <StartupObject>bazar.MainClass</StartupObject>
+    <ReleaseVersion>2.0.2</ReleaseVersion>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="System.Data" />
+    <Reference Include="MySql.Data">
+      <HintPath>..\lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity">
+      <HintPath>..\lib\MySql.Ddata.Entity.dll</HintPath>
+    </Reference>
+    <Reference Include="Nini">
+      <HintPath>..\Nini.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="logo.png" />
+    <EmbeddedResource Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="MainWindow.cs">
+      <CustomToolNamespace>bazar</CustomToolNamespace>
+    </Compile>
+    <Compile Include="gtk-gui\MainWindow.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Login.cs" />
+    <Compile Include="Place.cs" />
+    <Compile Include="reference.cs" />
+    <Compile Include="Contact.cs" />
+    <Compile Include="Lessee.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Delete.cs" />
+    <Compile Include="Service.cs" />
+    <Compile Include="gtk-gui\bazar.Service.cs" />
+    <Compile Include="gtk-gui\bazar.Delete.cs" />
+    <Compile Include="gtk-gui\bazar.Place.cs" />
+    <Compile Include="gtk-gui\bazar.Event.cs" />
+    <Compile Include="gtk-gui\bazar.reference.cs" />
+    <Compile Include="gtk-gui\bazar.lessee.cs" />
+    <Compile Include="gtk-gui\bazar.Contact.cs" />
+    <Compile Include="gtk-gui\bazar.Login.cs" />
+    <Compile Include="Contract.cs" />
+    <Compile Include="gtk-gui\bazar.Contract.cs" />
+    <Compile Include="MainWinPlace.cs" />
+    <Compile Include="MainWinLessee.cs" />
+    <Compile Include="MainWinEvent.cs" />
+    <Compile Include="MainWinContract.cs" />
+    <Compile Include="MainWinCash.cs" />
+    <Compile Include="IncomeSlip.cs" />
+    <Compile Include="gtk-gui\bazar.IncomeSlip.cs" />
+    <Compile Include="gtk-gui\bazar.ExpenseSlip.cs" />
+    <Compile Include="ExpenseSlip.cs" />
+    <Compile Include="Users.cs" />
+    <Compile Include="gtk-gui\bazar.Users.cs" />
+    <Compile Include="UserProperty.cs" />
+    <Compile Include="gtk-gui\bazar.UserProperty.cs" />
+    <Compile Include="AdvanceStatement.cs" />
+    <Compile Include="gtk-gui\bazar.AdvanceStatement.cs" />
+    <Compile Include="Reports.cs" />
+    <Compile Include="AccountableDebts.cs" />
+    <Compile Include="gtk-gui\bazar.AccountableDebts.cs" />
+    <Compile Include="AccountableSlips.cs" />
+    <Compile Include="gtk-gui\bazar.AccountableSlips.cs" />
+    <Compile Include="CashBalance.cs" />
+    <Compile Include="gtk-gui\bazar.CashBalance.cs" />
+    <Compile Include="MainWinAccrual.cs" />
+    <Compile Include="Accrual.cs" />
+    <Compile Include="gtk-gui\bazar.Accrual.cs" />
+    <Compile Include="PayAccrual.cs" />
+    <Compile Include="gtk-gui\bazar.PayAccrual.cs" />
+    <Compile Include="MassAccrualCreation.cs" />
+    <Compile Include="gtk-gui\bazar.MassAccrualCreation.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Deployment.LinuxDeployData generateScript="False" scriptName="newaprashka" />
+        <GtkDesignInfo generateGettext="False" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <Content Include="changes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WidgetLib\WidgetLib.csproj">
+      <Project>{5A2BB01E-E124-432E-8099-D1343D3897B9}</Project>
+      <Name>WidgetLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
