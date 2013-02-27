@@ -311,7 +311,6 @@ public partial class MainWindow : Gtk.Window
 			UpdatePlaces ();
 			OnTreeviewPlacesCursorChanged(o, EventArgs.Empty);
 			labelSum.Visible = true;
-			CalculateAreaSum ();
 			break;
 		case 1:
 			UpdateLessees();
@@ -344,7 +343,6 @@ public partial class MainWindow : Gtk.Window
 			UpdateCash ();
 			CalculateTotalCash ();
 			labelSum.Visible = true;
-			CalculateCashSum ();
 			break;
 		case 5:
 			OnTreeviewEventsCursorChanged(o, EventArgs.Empty);
