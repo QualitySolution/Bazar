@@ -421,6 +421,7 @@ namespace bazar
 		public static void StatusMessage(string message)
 		{
 			StatusBarLabel.Text = message;
+			Console.WriteLine (message);
 			while (GLib.MainContext.Pending())
 			{
    				Gtk.Main.Iteration();

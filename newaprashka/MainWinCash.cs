@@ -201,19 +201,17 @@ public partial class MainWindow : Gtk.Window
 		switch (notebookCash.CurrentPage) {
 		case 0:
 			MainClass.ComboFillReference(comboCashItem,"income_items",1);
-			UpdateCashIncome ();
 			break;
 		case 1:
 			MainClass.ComboFillReference(comboCashItem,"expense_items",1);
-			UpdateCashExpense ();
 			break;
 		case 2:
 			MainClass.ComboFillReference(comboCashItem,"expense_items",1);
-			UpdateCashAdvance ();
 			break;
 		default:
 			break;
 		}
+		UpdateCash ();
 	}
 
 	void UpdateCashIncome()
@@ -431,6 +429,8 @@ public partial class MainWindow : Gtk.Window
 
 	public void UpdateCash()
 	{
+		if(notebookMain.CurrentPage != 4)
+			return;
 		switch (notebookCash.CurrentPage) {
 		case 0:
 			UpdateCashIncome();
