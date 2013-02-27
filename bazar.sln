@@ -42,7 +42,7 @@ Global
 		$0.VersionControlPolicy = $5
 		$5.inheritsSet = Mono
 		$0.ChangeLogPolicy = $6
-		$6.UpdateMode = None
+		$6.UpdateMode = ProjectRoot
 		$6.MessageStyle = $7
 		$7.LineAlign = 0
 		$6.inheritsSet = Mono

@@ -326,7 +326,7 @@ public partial class MainWindow : Gtk.Window
 		case 3:
 			UpdateAccrual();
 			OnTreeviewAccrualCursorChanged(o, EventArgs.Empty);
-			labelSum.Visible = false;
+			labelSum.Visible = true;
 			break;
 		case 4:
 			switch(notebookCash.CurrentPage)

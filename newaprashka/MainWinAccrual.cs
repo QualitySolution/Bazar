@@ -1,8 +1,5 @@
 using System;
 using Gtk;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
@@ -29,6 +26,7 @@ public partial class MainWindow : Gtk.Window
 		treeviewAccrual.AppendColumn("Договор", new Gtk.CellRendererText (), "text", 3);
 		treeviewAccrual.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 5);
 		treeviewAccrual.AppendColumn("Сумма начисления", new Gtk.CellRendererText (), "text", 6);
+		// 7 - сумма decimal
 		treeviewAccrual.AppendColumn("Оплачено", new Gtk.CellRendererToggle (), "active", 8);
 		treeviewAccrual.AppendColumn("Незаполнено", new Gtk.CellRendererToggle (), "active", 9);
 
@@ -98,6 +96,8 @@ public partial class MainWindow : Gtk.Window
 		rdr.Close();
 		
 		MainClass.StatusMessage("Ok");
+
+		CalculateAccrualSum();
 		
 		bool isSelect = treeviewAccrual.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
@@ -163,6 +163,7 @@ public partial class MainWindow : Gtk.Window
 	protected void OnEntryAccrualLesseeChanged (object sender, EventArgs e)
 	{
 		Accrualfilter.Refilter ();
+		CalculateAccrualSum();
 	}
 	
 	protected void OnButtonAccrualLesseeClearClicked (object sender, EventArgs e)
@@ -191,5 +192,23 @@ public partial class MainWindow : Gtk.Window
 		if((ResponseType)winPay.Run () == ResponseType.Ok)
 			UpdateAccrual ();
 		winPay.Destroy ();
+	}
+
+	protected void CalculateAccrualSum ()
+	{
+		decimal Sum = 0;
+		TreeIter iter;
+		TreeModelFilter Model;
+		Model = Accrualfilter;
+
+		if(Model.GetIterFirst(out iter))
+		{
+			Sum = (decimal)Model.GetValue(iter, 7);
+			while (Model.IterNext(ref iter)) 
+			{
+				Sum += (decimal)Model.GetValue(iter, 7);
+			}
+		}
+		labelSum.Text = String.Format("Сумма начислений: {0:C} ", Sum);
 	}
 }
