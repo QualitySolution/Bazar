@@ -45,12 +45,6 @@ namespace bazar
         	}
 		}
 		
-		protected virtual void OnResponse (object o, Gtk.ResponseArgs args)
-		{
-			Console.WriteLine (args.ResponseId);
-			MainClass.LoginResult = args.ResponseId;
-		}
-		
 		protected virtual void OnButtonErrorInfoClicked (object sender, System.EventArgs e)
 		{
 			MessageDialog md = new MessageDialog (this, DialogFlags.DestroyWithParent,

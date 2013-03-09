@@ -9,7 +9,6 @@ namespace bazar
 	class MainClass
 	{
 		public static MySqlConnection connectionDB;
-		public static ResponseType LoginResult;
 		public static Label StatusBarLabel;
 		public static UserInfo User = new UserInfo();
 		public static MainWindow MainWin;
@@ -19,16 +18,13 @@ namespace bazar
 			{
 				Application.Init ();
 				Login LoginDialog = new Login ();
-				LoginDialog.Run();
+				ResponseType LoginResult;
+				LoginResult = (ResponseType) LoginDialog.Run();
+				LoginDialog.Destroy ();
+				if (LoginResult == ResponseType.DeleteEvent || LoginResult == ResponseType.Cancel)
+					return;
 				MainWin = new MainWindow ();
 				MainWin.Show ();
-				LoginDialog.Destroy ();
-				if (MainClass.LoginResult == ResponseType.DeleteEvent || MainClass.LoginResult == ResponseType.Cancel)
-				{
-					Application.Invoke (delegate {
-		            	Application.Quit ();
-		        	});
-				}
 			}
 			catch (Exception ex)
 			{

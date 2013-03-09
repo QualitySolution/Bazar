@@ -271,7 +271,6 @@ namespace bazar
 			this.buttonDemo.Hide ();
 			this.buttonErrorInfo.Hide ();
 			this.Show ();
-			this.Response += new global::Gtk.ResponseHandler (this.OnResponse);
 			this.entryUser.Activated += new global::System.EventHandler (this.OnEntryActivated);
 			this.entryServer.Activated += new global::System.EventHandler (this.OnEntryActivated);
 			this.entryServer.Changed += new global::System.EventHandler (this.OnEntryServerChanged);
