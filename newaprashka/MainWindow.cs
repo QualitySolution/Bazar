@@ -30,6 +30,7 @@ public partial class MainWindow : Gtk.Window
 		if(MainClass.User.TestUserExistByLogin (true))
 			MainClass.User.UpdateUserInfoByLogin ();
 		UsersAction.Sensitive = MainClass.User.admin;
+		labelUser.LabelProp = MainClass.User.Name;
 		
 		PreparePlaces();
 		PrepareLessee();

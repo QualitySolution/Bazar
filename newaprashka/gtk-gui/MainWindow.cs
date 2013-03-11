@@ -215,6 +215,7 @@ public partial class MainWindow
 	private global::Gtk.Button buttonAdd;
 	private global::Gtk.Button buttonDel;
 	private global::Gtk.Statusbar statusbar1;
+	private global::Gtk.Label labelUser;
 	private global::Gtk.Label labelStatus;
 	private global::Gtk.Label labelSum;
 	
@@ -348,7 +349,7 @@ public partial class MainWindow
 		this.notebookMain = new global::Gtk.Notebook ();
 		this.notebookMain.CanFocus = true;
 		this.notebookMain.Name = "notebookMain";
-		this.notebookMain.CurrentPage = 0;
+		this.notebookMain.CurrentPage = 1;
 		// Container child notebookMain.Gtk.Notebook+NotebookChild
 		this.vbox2 = new global::Gtk.VBox ();
 		this.vbox2.Name = "vbox2";
@@ -2269,29 +2270,39 @@ public partial class MainWindow
 		this.statusbar1 = new global::Gtk.Statusbar ();
 		this.statusbar1.Name = "statusbar1";
 		this.statusbar1.Spacing = 6;
+		this.statusbar1.BorderWidth = ((uint)(1));
+		// Container child statusbar1.Gtk.Box+BoxChild
+		this.labelUser = new global::Gtk.Label ();
+		this.labelUser.Name = "labelUser";
+		this.labelUser.LabelProp = "Пользователь";
+		this.statusbar1.Add (this.labelUser);
+		global::Gtk.Box.BoxChild w312 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelUser]));
+		w312.Position = 0;
+		w312.Expand = false;
+		w312.Fill = false;
 		// Container child statusbar1.Gtk.Box+BoxChild
 		this.labelStatus = new global::Gtk.Label ();
 		this.labelStatus.Name = "labelStatus";
 		this.labelStatus.LabelProp = "Ок";
 		this.statusbar1.Add (this.labelStatus);
-		global::Gtk.Box.BoxChild w312 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelStatus]));
-		w312.Position = 1;
-		w312.Expand = false;
-		w312.Fill = false;
+		global::Gtk.Box.BoxChild w313 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelStatus]));
+		w313.Position = 2;
+		w313.Expand = false;
+		w313.Fill = false;
 		// Container child statusbar1.Gtk.Box+BoxChild
 		this.labelSum = new global::Gtk.Label ();
 		this.labelSum.Name = "labelSum";
 		this.labelSum.LabelProp = "Суммарная площадь: 0 кв.м.";
 		this.statusbar1.Add (this.labelSum);
-		global::Gtk.Box.BoxChild w313 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelSum]));
-		w313.Position = 2;
-		w313.Expand = false;
-		w313.Fill = false;
-		this.vbox1.Add (this.statusbar1);
-		global::Gtk.Box.BoxChild w314 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.statusbar1]));
+		global::Gtk.Box.BoxChild w314 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelSum]));
 		w314.Position = 3;
 		w314.Expand = false;
 		w314.Fill = false;
+		this.vbox1.Add (this.statusbar1);
+		global::Gtk.Box.BoxChild w315 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.statusbar1]));
+		w315.Position = 3;
+		w315.Expand = false;
+		w315.Fill = false;
 		this.Add (this.vbox1);
 		if ((this.Child != null)) {
 			this.Child.ShowAll ();
