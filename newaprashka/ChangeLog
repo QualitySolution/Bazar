@@ -1,3 +1,11 @@
+2013-03-12  Gankov Andrey  <gav@qsolution.ru>
+
+	* Users.cs:
+	* UserProperty.cs:
+	* gui.stetic:
+	* bazar.Users.cs:
+	* bazar.UserProperty.cs: 
+
 2013-03-11  Gankov Andrey  <gav@qsolution.ru>
 
 	* MainWindow.cs:

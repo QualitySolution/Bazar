@@ -26,6 +26,9 @@ namespace bazar
 			treeviewUsers.Model = UsersListStore;
 			treeviewUsers.ShowAll();
 			UpdateUsers ();
+
+			if(MainClass.connectionDB.DataSource == "demo.qsolution.ru")
+				buttonAdd.Sensitive = false;
 		}
 
 		void UpdateUsers()
@@ -57,7 +60,9 @@ namespace bazar
 		{
 			bool isSelect = treeviewUsers.Selection.CountSelectedRows() == 1;
 			buttonEdit.Sensitive = isSelect;
-			buttonDelete.Sensitive = false; //isSelect;
+			if(MainClass.connectionDB.DataSource == "demo.qsolution.ru")
+				isSelect = false;
+			buttonDelete.Sensitive = isSelect;
 		}
 
 		protected void OnTreeviewUsersRowActivated (object o, RowActivatedArgs args)
@@ -86,6 +91,36 @@ namespace bazar
 			winUser.Show();
 			winUser.Run();
 			winUser.Destroy();
+			UpdateUsers();
+		}
+
+		protected void OnButtonDeleteClicked (object sender, EventArgs e)
+		{
+			TreeIter iter;
+			
+			treeviewUsers.Selection.GetSelected(out iter);
+			int itemid = Convert.ToInt32(UsersListStore.GetValue(iter,0));
+			string loginname = UsersListStore.GetValue(iter,1).ToString ();
+			Delete winDel = new Delete();
+			if (winDel.RunDeletion("users",itemid))
+			{
+				MainClass.StatusMessage("Удаляем пользователя с сервера...");
+				string sql;
+				sql = String.Format("DROP USER {0}, {0}@localhost", loginname);
+				try 
+				{
+					MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd.ExecuteNonQuery();
+					MainClass.StatusMessage("Пользователь удалён. Ok");
+				} 
+				catch (Exception ex) 
+				{
+					Console.WriteLine(ex.ToString());
+					MainClass.StatusMessage("Ошибка удаления пользователя!");
+					MainClass.ErrorMessage(this,ex);
+				}
+			}
+			winDel.Destroy();
 			UpdateUsers();
 		}
 	}

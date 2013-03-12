@@ -47,7 +47,6 @@ namespace bazar
 			this.hbox1.Spacing = 6;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.buttonAdd = new global::Gtk.Button ();
-			this.buttonAdd.Sensitive = false;
 			this.buttonAdd.CanFocus = true;
 			this.buttonAdd.Name = "buttonAdd";
 			this.buttonAdd.UseUnderline = true;
@@ -174,6 +173,7 @@ namespace bazar
 			this.treeviewUsers.RowActivated += new global::Gtk.RowActivatedHandler (this.OnTreeviewUsersRowActivated);
 			this.buttonAdd.Clicked += new global::System.EventHandler (this.OnButtonAddClicked);
 			this.buttonEdit.Clicked += new global::System.EventHandler (this.OnButtonEditClicked);
+			this.buttonDelete.Clicked += new global::System.EventHandler (this.OnButtonDeleteClicked);
 		}
 	}
 }
