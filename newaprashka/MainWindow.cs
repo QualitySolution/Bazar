@@ -26,6 +26,21 @@ public partial class MainWindow : Gtk.Window
 		//Передаем лебл
 		MainClass.StatusBarLabel = labelStatus;
 
+		if(MainClass.User.Login == "root")
+		{
+			string Message = "Вы зашли в программу под администратором базы данных. У вас есть только возможность создавать других пользователей.";
+			MessageDialog md = new MessageDialog ( this, DialogFlags.DestroyWithParent,
+			                                      MessageType.Info, 
+			                                      ButtonsType.Ok,
+			                                      Message);
+			md.Run ();
+			md.Destroy();
+			Users WinUser = new Users();
+			WinUser.Show();
+			WinUser.Run ();
+			WinUser.Destroy ();
+			return;
+		}
 		//Загружаем информацию о пользователе
 		if(MainClass.User.TestUserExistByLogin (true))
 			MainClass.User.UpdateUserInfoByLogin ();

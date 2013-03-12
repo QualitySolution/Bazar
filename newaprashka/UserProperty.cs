@@ -59,6 +59,18 @@ namespace bazar
 		{
 			string sql;
 
+			if(entryLogin.Text == "root")
+			{
+				string Message = "Операции с пользователем root запрещены.";
+				MessageDialog md = new MessageDialog ( this, DialogFlags.DestroyWithParent,
+				                                      MessageType.Warning, 
+				                                      ButtonsType.Ok,
+				                                      Message);
+				md.Run ();
+				md.Destroy();
+				return;
+			}
+
 			if(NewUser)
 			{
 				if(!CreateLogin ())

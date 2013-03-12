@@ -1,5 +1,12 @@
 2013-03-12  Gankov Andrey  <gav@qsolution.ru>
 
+	* Main.cs:
+	* MainWindow.cs:
+	* UserProperty.cs:
+	* MainWindow.cs: 
+
+2013-03-12  Gankov Andrey  <gav@qsolution.ru>
+
 	* Users.cs:
 	* UserProperty.cs:
 	* gui.stetic:

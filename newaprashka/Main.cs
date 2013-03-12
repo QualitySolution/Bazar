@@ -24,6 +24,8 @@ namespace bazar
 				if (LoginResult == ResponseType.DeleteEvent || LoginResult == ResponseType.Cancel)
 					return;
 				MainWin = new MainWindow ();
+				if(User.Login == "root")
+					return;
 				MainWin.Show ();
 			}
 			catch (Exception ex)
