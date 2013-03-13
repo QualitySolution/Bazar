@@ -381,7 +381,6 @@ namespace bazar
 		{
 			int CountReferenceItems = 0;
 			bool result = false;
-			Exception Errorex;
 			Params OutParam = new Params(IntKey,StrKey);
 			try
 			{

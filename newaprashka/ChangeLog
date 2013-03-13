@@ -1,3 +1,7 @@
+2013-03-14  Gankov Andrey  <gav@qsolution.ru>
+
+	* Delete.cs: удалил лишнюю переменную.
+
 2013-03-12  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:
