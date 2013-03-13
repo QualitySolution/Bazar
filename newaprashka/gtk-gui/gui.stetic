@@ -5,9 +5,9 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../../lib/MonoReports.dll" />
     <widget-library name="../../WidgetLib/bin/Debug/WidgetLib.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
+    <widget-library name="../../../MonoReports/build/MonoReports.dll" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="961 551">
     <action-group name="Default">
@@ -1897,6 +1897,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2564,6 +2565,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -10810,7 +10812,21 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder />
+                      <widget class="Gtk.Button" id="buttonPrint">
+                        <property name="MemberName" />
+                        <property name="CanFocus">True</property>
+                        <property name="Type">TextAndIcon</property>
+                        <property name="Icon">stock:gtk-print Menu</property>
+                        <property name="Label" translatable="yes">Расчёт</property>
+                        <property name="UseUnderline">True</property>
+                        <signal name="Clicked" handler="OnButtonPrintClicked" />
+                      </widget>
+                      <packing>
+                        <property name="Position">1</property>
+                        <property name="AutoSize">True</property>
+                        <property name="Expand">False</property>
+                        <property name="Fill">False</property>
+                      </packing>
                     </child>
                     <child>
                       <placeholder />

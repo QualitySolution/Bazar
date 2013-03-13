@@ -696,6 +696,11 @@ namespace bazar
 			}
 		}
 
+		protected void OnButtonPrintClicked (object sender, EventArgs e)
+		{
+			Reports rep = new Reports("Pay");
+			rep.ViewPay ( Convert.ToInt64 (entryNumber.Text));
+		}
 	}
 }
 	

@@ -52,6 +52,12 @@
       <HintPath>..\Nini.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="MonoReports">
+      <HintPath>..\..\MonoReports\build\MonoReports.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoReports.Model">
+      <HintPath>..\..\MonoReports\build\MonoReports.Model.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
