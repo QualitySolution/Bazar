@@ -19,17 +19,24 @@ public partial class MainWindow : Gtk.Window
 		//Создаем таблицу "Договора"
 		AccrualListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), 
 		                                      typeof (int), typeof (string), typeof (string), typeof (decimal),
-		                                       typeof (bool), typeof (bool));
+		                                      typeof (string), typeof (decimal),typeof (string), typeof (decimal),
+		                                      typeof (bool));
+
+		TreeViewColumn DebtColumn = new TreeViewColumn();
 		
 		treeviewAccrual.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
 		treeviewAccrual.AppendColumn("Месяц", new Gtk.CellRendererText (), "text", 1);
 		treeviewAccrual.AppendColumn("Договор", new Gtk.CellRendererText (), "text", 3);
 		treeviewAccrual.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 5);
-		treeviewAccrual.AppendColumn("Сумма начисления", new Gtk.CellRendererText (), "text", 6);
+		treeviewAccrual.AppendColumn("Начислено", new Gtk.CellRendererText (), "text", 6);
 		// 7 - сумма decimal
-		treeviewAccrual.AppendColumn("Оплачено", new Gtk.CellRendererToggle (), "active", 8);
-		treeviewAccrual.AppendColumn("Незаполнено", new Gtk.CellRendererToggle (), "active", 9);
+		treeviewAccrual.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", 8);
+		// 9 - оплачено decimal
+		treeviewAccrual.AppendColumn("Долг", new Gtk.CellRendererText (), new Gtk.TreeCellDataFunc (RenderDebtColumn));
+		// 11 - долг decimal
+		treeviewAccrual.AppendColumn("Незаполнено", new Gtk.CellRendererToggle (), "active", 12);
 
+		//treeviewAccrual.Columns[6].SetCellDataFunc(new Gtk.CellRendererText (), );
 		Accrualfilter = new Gtk.TreeModelFilter (AccrualListStore, null);
 		Accrualfilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeAccrual);
 		treeviewAccrual.Model = Accrualfilter;
@@ -45,11 +52,13 @@ public partial class MainWindow : Gtk.Window
 		TreeIter iter;
 		
 		string sql = "SELECT accrual.id as id, month, year, contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
-			"lessees.name as lessee, sumtable.sum as sum FROM accrual " +
+			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
 			"LEFT JOIN contracts ON contracts.number = contract_no " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 				"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable " +
-				"ON sumtable.accrual_id = accrual.id WHERE year = @year ";
+				"ON sumtable.accrual_id = accrual.id " +
+				"LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id) as paidtable " +
+				"ON paidtable.accrual_id = accrual.id  WHERE year = @year ";
 	
 		if(comboAccrualMonth.Active > 0)
 		{
@@ -74,7 +83,7 @@ public partial class MainWindow : Gtk.Window
 			cmd.Parameters.AddWithValue("@year", DateTime.Now.Year);
 		MySqlDataReader rdr = cmd.ExecuteReader();
 
-		decimal rowsum;
+		decimal rowsum, rowpaidsum;
 		AccrualListStore.Clear();
 		while (rdr.Read())
 		{
@@ -82,6 +91,10 @@ public partial class MainWindow : Gtk.Window
 				rowsum = 0m;
 			else
 				rowsum = rdr.GetDecimal("sum");
+			if(rdr["paidsum"] == DBNull.Value)
+				rowpaidsum = 0m;
+			else
+				rowpaidsum = rdr.GetDecimal("paidsum");
 			AccrualListStore.AppendValues(rdr.GetInt32("id"),
 			                              String.Format("{0:MMMM}", new DateTime(1, rdr.GetInt32("month"), 1)),
 			                              rdr.GetInt32("month"),
@@ -90,7 +103,10 @@ public partial class MainWindow : Gtk.Window
 			                              rdr["lessee"].ToString(),
 			                              String.Format ("{0:C}", rowsum),
 			               				  rowsum,
-			                              rdr.GetBoolean("paid"),
+			                              String.Format ("{0:C}", rowpaidsum),
+			                              rowpaidsum,
+			                              String.Format ("{0:C}", rowsum - rowpaidsum),
+			                              rowsum - rowpaidsum,
 			               				  rdr.GetBoolean("no_complete"));
 		}
 		rdr.Close();
@@ -205,6 +221,8 @@ public partial class MainWindow : Gtk.Window
 	protected void CalculateAccrualSum ()
 	{
 		decimal Sum = 0;
+		decimal PaidSum = 0;
+		decimal DebtSum = 0;
 		TreeIter iter;
 		TreeModelFilter Model;
 		Model = Accrualfilter;
@@ -212,12 +230,16 @@ public partial class MainWindow : Gtk.Window
 		if(Model.GetIterFirst(out iter))
 		{
 			Sum = (decimal)Model.GetValue(iter, 7);
+			PaidSum = (decimal)Model.GetValue(iter, 9);
+			DebtSum = (decimal)Model.GetValue(iter, 11);
 			while (Model.IterNext(ref iter)) 
 			{
 				Sum += (decimal)Model.GetValue(iter, 7);
+				PaidSum += (decimal)Model.GetValue(iter, 9);
+				DebtSum += (decimal)Model.GetValue(iter, 11);
 			}
 		}
-		labelSum.Text = String.Format("Сумма начислений: {0:C} ", Sum);
+		labelSum.Text = String.Format("Всего начислено: {0:C} Оплачено: {1:C} Долг: {2:C}", Sum, PaidSum, DebtSum);
 	}
 
 	protected void OnButtonAccrualContractClearClicked (object sender, EventArgs e)
@@ -229,5 +251,20 @@ public partial class MainWindow : Gtk.Window
 	{
 		Accrualfilter.Refilter ();
 		CalculateAccrualSum();
+	}
+
+	private void RenderDebtColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+	{
+		decimal Debt = (decimal) model.GetValue (iter, 11);
+		string DebtText = model.GetValue (iter, 10).ToString ();
+		if (Debt > 0) 
+		{
+			(cell as Gtk.CellRendererText).Foreground = "red";
+		} 
+		else 
+		{
+			(cell as Gtk.CellRendererText).Foreground = "darkgreen";
+		}
+		(cell as Gtk.CellRendererText).Text = DebtText;
 	}
 }
