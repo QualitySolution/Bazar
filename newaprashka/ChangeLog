@@ -1,5 +1,9 @@
 2013-03-23  Gankov Andrey  <gav@qsolution.ru>
 
+	* IncomeSlip.cs: 
+
+2013-03-23  Gankov Andrey  <gav@qsolution.ru>
+
 	* MainWinAccrual.cs:
 	* gui.stetic:
 	* MainWindow.cs: 

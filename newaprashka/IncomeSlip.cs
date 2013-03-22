@@ -188,7 +188,7 @@ namespace bazar
 						                                     MessageType.Warning, 
 						                                     ButtonsType.Ok,"ошибка");
 						md.UseMarkup = false;
-						md.Text = String.Format ("Внимание! По выбранному начислению произошла переплата на сумму {0:C}", Balance) ;
+						md.Text = String.Format ("Внимание! По выбранному начислению произошла переплата на сумму {0:C}", Math.Abs (Balance)) ;
 						md.Run ();
 						md.Destroy();
 					}
