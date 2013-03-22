@@ -106,9 +106,10 @@ public partial class MainWindow : Gtk.Window
 	
 	private bool FilterTreeAccrual (Gtk.TreeModel model, Gtk.TreeIter iter)
 	{
-		if (entryAccrualLessee.Text == "")
+		if (entryAccrualLessee.Text == "" && entryAccrualContract.Text == "")
 			return true;
 		bool filterLessee = true;
+		bool filterContract = true;
 		string cellvalue;
 		
 		if(model.GetValue (iter, 5) == null)
@@ -119,7 +120,14 @@ public partial class MainWindow : Gtk.Window
 			cellvalue  = model.GetValue (iter, 5).ToString();
 			filterLessee = cellvalue.IndexOf (entryAccrualLessee.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		return filterLessee;
+
+		if (entryAccrualContract.Text != "" && model.GetValue (iter, 3) != null)
+		{
+			cellvalue  = model.GetValue (iter, 3).ToString();
+			filterContract = cellvalue.IndexOf (entryAccrualContract.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
+		}
+
+		return filterLessee && filterContract;
 	}
 
 	protected void OnComboAccrualOrgChanged (object sender, EventArgs e)
@@ -210,5 +218,16 @@ public partial class MainWindow : Gtk.Window
 			}
 		}
 		labelSum.Text = String.Format("Сумма начислений: {0:C} ", Sum);
+	}
+
+	protected void OnButtonAccrualContractClearClicked (object sender, EventArgs e)
+	{
+		entryAccrualContract.Text = "";
+	}
+	
+	protected void OnEntryAccrualContractChanged (object sender, EventArgs e)
+	{
+		Accrualfilter.Refilter ();
+		CalculateAccrualSum();
 	}
 }
