@@ -41,6 +41,23 @@ public partial class MainWindow : Gtk.Window
 			WinUser.Destroy ();
 			return;
 		}
+
+		if(MainClass.connectionDB.DataSource == "demo.qsolution.ru")
+		{
+			string Message = "Вы подключились к демонстрационному серверу. Сервер предназначен для оценки " +
+				"возможностей программы, не используйте его для работы, так как ваши данные будут доступны " +
+				"любому пользователю через интернет.\n\nДля полноценного использования программы вам необходимо " +
+				"установить собственный сервер. Для его установки обратитесь к документации.\n\nЕсли у вас возникнут " +
+				"вопросы вы можете задать из на форуме программы: https://groups.google.com/forum/?fromgroups#!forum/bazarsoft " +
+				"или обратится в нашу тех. поддержку.";
+			MessageDialog md = new MessageDialog ( this, DialogFlags.DestroyWithParent,
+			                                      MessageType.Info, 
+			                                      ButtonsType.Ok,
+			                                      Message);
+			md.Run ();
+			md.Destroy();
+		}
+
 		//Загружаем информацию о пользователе
 		if(MainClass.User.TestUserExistByLogin (true))
 			MainClass.User.UpdateUserInfoByLogin ();
