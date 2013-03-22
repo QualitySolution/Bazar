@@ -56,6 +56,7 @@ public partial class MainWindow : Gtk.Window
 			                                      Message);
 			md.Run ();
 			md.Destroy();
+			dialogAuthenticationAction.Sensitive = false;
 		}
 
 		//Загружаем информацию о пользователе
