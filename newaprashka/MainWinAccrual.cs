@@ -21,9 +21,7 @@ public partial class MainWindow : Gtk.Window
 		                                      typeof (int), typeof (string), typeof (string), typeof (decimal),
 		                                      typeof (string), typeof (decimal),typeof (string), typeof (decimal),
 		                                      typeof (bool));
-
-		TreeViewColumn DebtColumn = new TreeViewColumn();
-		
+				
 		treeviewAccrual.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
 		treeviewAccrual.AppendColumn("Месяц", new Gtk.CellRendererText (), "text", 1);
 		treeviewAccrual.AppendColumn("Договор", new Gtk.CellRendererText (), "text", 3);
@@ -36,7 +34,6 @@ public partial class MainWindow : Gtk.Window
 		// 11 - долг decimal
 		treeviewAccrual.AppendColumn("Незаполнено", new Gtk.CellRendererToggle (), "active", 12);
 
-		//treeviewAccrual.Columns[6].SetCellDataFunc(new Gtk.CellRendererText (), );
 		Accrualfilter = new Gtk.TreeModelFilter (AccrualListStore, null);
 		Accrualfilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeAccrual);
 		treeviewAccrual.Model = Accrualfilter;
