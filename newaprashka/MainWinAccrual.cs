@@ -74,10 +74,7 @@ public partial class MainWindow : Gtk.Window
 			sql += " AND paid = FALSE ";
 		}
 		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
-		if(comboAccuralYear.Active > 0)
-			cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
-		else
-			cmd.Parameters.AddWithValue("@year", DateTime.Now.Year);
+		cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
 		MySqlDataReader rdr = cmd.ExecuteReader();
 
 		decimal rowsum, rowpaidsum;
