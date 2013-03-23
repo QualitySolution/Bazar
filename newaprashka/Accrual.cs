@@ -309,8 +309,7 @@ namespace bazar
 
 				CalculateServiceSum();
 				UpdateIncomes ();
-				
-
+				ShowOldDebts ();
 			}
 			catch (Exception ex)
 			{
@@ -625,7 +624,7 @@ namespace bazar
 			string CompleteStatus, BalanceStatus;
 			decimal Balance = AccrualTotal - IncomeTotal;
 			if(NotComplete)
-				CompleteStatus = "<span background=\"blue\">Неполное</span>";
+				CompleteStatus = "<span background=\"Cyan\">Неполное</span>";
 			else
 				CompleteStatus = "";
 			if(AccrualTotal == 0)
@@ -700,6 +699,66 @@ namespace bazar
 		{
 			Reports rep = new Reports("Pay");
 			rep.ViewPay ( Convert.ToInt64 (entryNumber.Text));
+		}
+
+		private void ShowOldDebts()
+		{
+			string sql = "SELECT accrual.month, accrual.year, SUM(money) as debt FROM (" +
+				"SELECT accrual_id, SUM(count * price) as money FROM accrual_pays WHERE accrual_id IN " +
+				"(SELECT id FROM accrual WHERE contract_no = @contract)" +
+				"GROUP BY accrual_id " +
+				"UNION ALL SELECT accrual_id, -(sum) as money FROM credit_slips WHERE accrual_id IN " +
+				"(SELECT id FROM accrual WHERE contract_no = @contract) " +
+				"GROUP BY accrual_id ) as sumtable " +
+				"LEFT JOIN accrual ON accrual.id = sumtable.accrual_id " +
+				"GROUP BY accrual_id";
+			decimal TotalDebt = 0;
+			int count = 0;
+			string DebtsText = "";
+			int year = Convert.ToInt32 (comboAccuralYear.ActiveText);
+			try
+			{
+				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd.Parameters.AddWithValue("@contract", comboContract.ActiveText);
+				MySqlDataReader rdr = cmd.ExecuteReader ();
+
+				while(rdr.Read ())
+				{
+					if(rdr.GetDecimal ("debt") <= 0)
+						continue;
+					if( rdr.GetInt32 ("year") > year  || ( rdr.GetInt32 ("year") == year && rdr.GetInt32 ("month") >= comboAccrualMonth.Active))
+						continue;
+					if(DebtsText != "")
+						DebtsText += "\n";
+					DateTime Month = new DateTime(rdr.GetInt32 ("year"), rdr.GetInt32("month"), 1);
+					if(rdr.GetInt32 ("year") == year)
+					{
+						DebtsText += String.Format ("{0:MMMM} = <span foreground=\"red\">{1:C}</span>", Month, rdr.GetDecimal ("debt"));
+					}
+					else
+					{
+						DebtsText += String.Format ("{0:Y} = <span foreground=\"red\">{1:C}</span>", Month, rdr.GetDecimal ("debt"));
+					}
+					TotalDebt += rdr.GetDecimal ("debt");
+					count ++;
+				}
+				rdr.Close ();
+				if (count == 0)
+					return;
+				if (count > 5)
+				{
+					labelDebts.LabelProp = String.Format ("за {0} месяцев - {1:C}", count, TotalDebt);
+				}
+				else
+				{
+					labelDebts.LabelProp = DebtsText;
+				}
+			}
+			catch (Exception ex) 
+			{
+				Console.WriteLine(ex.ToString());
+				MainClass.StatusMessage("Ошибка вычисления прошлого долга!");
+			}
 		}
 	}
 }

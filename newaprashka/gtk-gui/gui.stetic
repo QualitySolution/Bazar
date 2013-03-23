@@ -1970,7 +1970,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2638,7 +2637,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -10724,7 +10722,7 @@
                 <child>
                   <widget class="Gtk.Table" id="table2">
                     <property name="MemberName" />
-                    <property name="NRows">3</property>
+                    <property name="NRows">4</property>
                     <property name="NColumns">2</property>
                     <property name="RowSpacing">6</property>
                     <property name="ColumnSpacing">6</property>
@@ -10822,6 +10820,47 @@
                       <packing>
                         <property name="TopAttach">1</property>
                         <property name="BottomAttach">2</property>
+                        <property name="AutoSize">True</property>
+                        <property name="XOptions">Fill</property>
+                        <property name="YOptions">Fill</property>
+                        <property name="XExpand">False</property>
+                        <property name="XFill">True</property>
+                        <property name="XShrink">False</property>
+                        <property name="YExpand">False</property>
+                        <property name="YFill">True</property>
+                        <property name="YShrink">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="Gtk.Label" id="labelDebtName">
+                        <property name="MemberName" />
+                        <property name="LabelProp" translatable="yes">Предыдущий долг:</property>
+                      </widget>
+                      <packing>
+                        <property name="TopAttach">3</property>
+                        <property name="BottomAttach">4</property>
+                        <property name="AutoSize">True</property>
+                        <property name="XOptions">Fill</property>
+                        <property name="YOptions">Fill</property>
+                        <property name="XExpand">False</property>
+                        <property name="XFill">True</property>
+                        <property name="XShrink">False</property>
+                        <property name="YExpand">False</property>
+                        <property name="YFill">True</property>
+                        <property name="YShrink">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="Gtk.Label" id="labelDebts">
+                        <property name="MemberName" />
+                        <property name="LabelProp" translatable="yes">нет</property>
+                        <property name="UseMarkup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="TopAttach">3</property>
+                        <property name="BottomAttach">4</property>
+                        <property name="LeftAttach">1</property>
+                        <property name="RightAttach">2</property>
                         <property name="AutoSize">True</property>
                         <property name="XOptions">Fill</property>
                         <property name="YOptions">Fill</property>
