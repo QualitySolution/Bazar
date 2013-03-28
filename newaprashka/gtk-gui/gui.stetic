@@ -3063,7 +3063,6 @@
     <property name="WindowPosition">Center</property>
     <property name="Buttons">2</property>
     <property name="HelpButton">False</property>
-    <signal name="Response" handler="OnResponse" />
     <child internal-child="VBox">
       <widget class="Gtk.VBox" id="dialog1_VBox">
         <property name="MemberName" />
