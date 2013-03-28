@@ -697,8 +697,13 @@ namespace bazar
 
 		protected void OnButtonPrintClicked (object sender, EventArgs e)
 		{
-			Reports rep = new Reports("Pay");
-			rep.ViewPay ( Convert.ToInt64 (entryNumber.Text));
+			//Reports rep = new Reports("Pay");
+			//rep.ViewPay ( Convert.ToInt64 (entryNumber.Text));
+			ViewReportsDlg win = new ViewReportsDlg();
+			win.LoadReport ("PayList");
+			win.Show ();
+			win.Run ();
+			win.Destroy ();
 		}
 
 		private void ShowOldDebts()

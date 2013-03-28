@@ -1,5 +1,9 @@
 2013-03-28  Gankov Andrey  <gav@qsolution.ru>
 
+	* Accrual.cs: 
+
+2013-03-28  Gankov Andrey  <gav@qsolution.ru>
+
 	* RdlCmd.exe:
 	* config.xml:
 	* BazAr.csproj:
