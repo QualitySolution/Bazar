@@ -729,4 +729,5 @@ public partial class MainWindow : Gtk.Window
 	{
 		System.Diagnostics.Process.Start("UserGuide_ru.pdf");
 	}
+	
 }

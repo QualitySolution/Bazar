@@ -42,14 +42,11 @@
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="System.Data" />
-    <Reference Include="MySql.Data">
-      <HintPath>..\lib\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data.Entity">
       <HintPath>..\lib\MySql.Ddata.Entity.dll</HintPath>
     </Reference>
     <Reference Include="Nini">
-      <HintPath>..\Nini.dll</HintPath>
+      <HintPath>..\lib\Nini.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="MonoReports">
@@ -58,6 +55,55 @@
     <Reference Include="MonoReports.Model">
       <HintPath>..\..\MonoReports\build\MonoReports.Model.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="policy.2.0.Npgsql">
+      <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\policy.2.0.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.6.5.4\lib\net40\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="DataProviders">
+      <HintPath>..\packages\My-FyiReporting.x86.4.5.2\lib\net40\DataProviders.dll</HintPath>
+    </Reference>
+    <Reference Include="RdlAsp">
+      <HintPath>..\packages\My-FyiReporting.x86.4.5.2\lib\net40\RdlAsp.dll</HintPath>
+    </Reference>
+    <Reference Include="RdlCri">
+      <HintPath>..\packages\My-FyiReporting.x86.4.5.2\lib\net40\RdlCri.dll</HintPath>
+    </Reference>
+    <Reference Include="RdlEngine">
+      <HintPath>..\packages\My-FyiReporting.x86.4.5.2\lib\net40\RdlEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="RdlViewer">
+      <HintPath>..\packages\My-FyiReporting.x86.4.5.2\lib\net40\RdlViewer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.1.0.84.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.1.0.84.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="LibRdlCrossPlatformViewer">
+      <HintPath>..\lib\FyiReporting\LibRdlCrossPlatformViewer.dll</HintPath>
+    </Reference>
+    <Reference Include="Xwt">
+      <HintPath>..\lib\FyiReporting\Xwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Xwt.Gtk">
+      <HintPath>..\lib\FyiReporting\Xwt.Gtk.dll</HintPath>
+    </Reference>
+    <Reference Include="Xwt.WPF">
+      <HintPath>..\lib\FyiReporting\Xwt.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -121,6 +167,8 @@
     <Compile Include="gtk-gui\bazar.PayAccrual.cs" />
     <Compile Include="MassAccrualCreation.cs" />
     <Compile Include="gtk-gui\bazar.MassAccrualCreation.cs" />
+    <Compile Include="ViewReportsDlg.cs" />
+    <Compile Include="gtk-gui\bazar.ViewReportsDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -141,5 +189,19 @@
       <Project>{5A2BB01E-E124-432E-8099-D1343D3897B9}</Project>
       <Name>WidgetLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="x64\SQLite.Interop.dll" />
+    <None Include="x86\SQLite.Interop.dll" />
+    <None Include="packages.config" />
+    <None Include="RdlCmd.exe" />
+    <None Include="RdlDesigner.exe" />
+    <None Include="RdlDesktop.exe" />
+    <None Include="RdlEngineConfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RdlMapFile.exe" />
+    <None Include="RdlReader.exe" />
+    <None Include="config.xml" />
   </ItemGroup>
 </Project>

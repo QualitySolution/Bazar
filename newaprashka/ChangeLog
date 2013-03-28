@@ -1,3 +1,22 @@
+2013-03-28  Gankov Andrey  <gav@qsolution.ru>
+
+	* RdlCmd.exe:
+	* config.xml:
+	* BazAr.csproj:
+	* MainWindow.cs:
+	* RdlReader.exe:
+	* RdlDesktop.exe:
+	* RdlMapFile.exe:
+	* packages.config:
+	* RdlDesigner.exe:
+	* ViewReportsDlg.cs:
+	* gui.stetic:
+	* RdlEngineConfig.xml:
+	* MainWindow.cs:
+	* SQLite.Interop.dll:
+	* SQLite.Interop.dll:
+	* bazar.ViewReportsDlg.cs: 
+
 2013-03-23  Gankov Andrey  <gav@qsolution.ru>
 
 	* Accrual.cs:

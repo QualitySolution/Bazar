@@ -353,7 +353,7 @@ public partial class MainWindow
 		this.notebookMain = new global::Gtk.Notebook ();
 		this.notebookMain.CanFocus = true;
 		this.notebookMain.Name = "notebookMain";
-		this.notebookMain.CurrentPage = 3;
+		this.notebookMain.CurrentPage = 0;
 		// Container child notebookMain.Gtk.Notebook+NotebookChild
 		this.vbox2 = new global::Gtk.VBox ();
 		this.vbox2.Name = "vbox2";
@@ -1549,6 +1549,7 @@ public partial class MainWindow
 		this.radioCashToday = new global::Gtk.RadioButton ("Сегодня");
 		this.radioCashToday.CanFocus = true;
 		this.radioCashToday.Name = "radioCashToday";
+		this.radioCashToday.Active = true;
 		this.radioCashToday.DrawIndicator = true;
 		this.radioCashToday.UseUnderline = true;
 		this.radioCashToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
@@ -2016,6 +2017,7 @@ public partial class MainWindow
 		this.radiobuttonToday = new global::Gtk.RadioButton ("Сегодня");
 		this.radiobuttonToday.CanFocus = true;
 		this.radiobuttonToday.Name = "radiobuttonToday";
+		this.radiobuttonToday.Active = true;
 		this.radiobuttonToday.DrawIndicator = true;
 		this.radiobuttonToday.UseUnderline = true;
 		this.radiobuttonToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
