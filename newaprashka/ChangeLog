@@ -1,5 +1,9 @@
 2013-03-30  Gankov Andrey  <gav@qsolution.ru>
 
+	* gui.stetic: 
+
+2013-03-30  Gankov Andrey  <gav@qsolution.ru>
+
 	* Main.cs:
 	* Login.cs:
 	* RdlCmd.exe:
