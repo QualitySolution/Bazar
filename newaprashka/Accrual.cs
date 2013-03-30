@@ -699,11 +699,13 @@ namespace bazar
 		{
 			//Reports rep = new Reports("Pay");
 			//rep.ViewPay ( Convert.ToInt64 (entryNumber.Text));
-			ViewReportsDlg win = new ViewReportsDlg();
-			win.LoadReport ("PayList");
-			win.Show ();
-			win.Run ();
-			win.Destroy ();
+			//ViewReportsDlg win = new ViewReportsDlg();
+			//win.LoadReport ("PayList");
+			//win.Show ();
+			//win.Run ();
+			//win.Destroy ();
+			string param = "id=" + entryNumber.Text;
+			ReportsExt.ViewReport ("PayList", param);
 		}
 
 		private void ShowOldDebts()
@@ -712,7 +714,7 @@ namespace bazar
 				"SELECT accrual_id, SUM(count * price) as money FROM accrual_pays WHERE accrual_id IN " +
 				"(SELECT id FROM accrual WHERE contract_no = @contract)" +
 				"GROUP BY accrual_id " +
-				"UNION ALL SELECT accrual_id, -(sum) as money FROM credit_slips WHERE accrual_id IN " +
+				"UNION ALL SELECT accrual_id, -SUM(sum) as money FROM credit_slips WHERE accrual_id IN " +
 				"(SELECT id FROM accrual WHERE contract_no = @contract) " +
 				"GROUP BY accrual_id ) as sumtable " +
 				"LEFT JOIN accrual ON accrual.id = sumtable.accrual_id " +

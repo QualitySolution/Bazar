@@ -9,6 +9,7 @@ namespace bazar
 	class MainClass
 	{
 		public static MySqlConnection connectionDB;
+		public static string ConnectionString;
 		public static Label StatusBarLabel;
 		public static UserInfo User = new UserInfo();
 		public static MainWindow MainWin;

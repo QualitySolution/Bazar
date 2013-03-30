@@ -6,7 +6,6 @@
   </configuration>
   <import>
     <widget-library name="../../../MonoReports/build/MonoReports.dll" />
-    <widget-library name="../../lib/FyiReporting/Xwt.Gtk.dll" />
     <widget-library name="../../WidgetLib/bin/Debug/WidgetLib.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
   </import>
@@ -212,6 +211,12 @@
         <property name="StockId">gtk-help</property>
         <signal name="Activated" handler="OnHelpActionActivated" />
       </action>
+      <action id="Action33">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Долги арендаторов</property>
+        <property name="ShortLabel" translatable="yes">Долги арендаторов</property>
+        <signal name="Activated" handler="OnAction33Activated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">База арендаторов (БазАр)</property>
@@ -257,6 +262,7 @@
                   <node type="Menuitem" action="Action31" />
                   <node type="Menuitem" action="Action32" />
                 </node>
+                <node type="Menuitem" action="Action33" />
               </node>
               <node type="Menu" action="Action11">
                 <node type="Menuitem" action="helpAction" />
@@ -1971,7 +1977,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2639,7 +2644,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -7795,7 +7799,7 @@
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый расходный ордер</property>
     <property name="WindowPosition">CenterOnParent</property>
-    <property name="Buttons">2</property>
+    <property name="Buttons">3</property>
     <property name="HelpButton">False</property>
     <child internal-child="VBox">
       <widget class="Gtk.VBox" id="dialog1_VBox">
@@ -8389,8 +8393,24 @@
         <property name="MemberName" />
         <property name="Spacing">10</property>
         <property name="BorderWidth">5</property>
-        <property name="Size">2</property>
+        <property name="Size">3</property>
         <property name="LayoutStyle">End</property>
+        <child>
+          <widget class="Gtk.Button" id="buttonPrint">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Type">TextAndIcon</property>
+            <property name="Icon">stock:gtk-print Button</property>
+            <property name="Label" translatable="yes">Печать</property>
+            <property name="UseUnderline">True</property>
+            <property name="ResponseId">0</property>
+            <signal name="Clicked" handler="OnButtonPrintClicked" />
+          </widget>
+          <packing>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
         <child>
           <widget class="Gtk.Button" id="buttonCancel">
             <property name="MemberName" />
@@ -8403,6 +8423,7 @@
             <property name="ResponseId">-6</property>
           </widget>
           <packing>
+            <property name="Position">1</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
           </packing>
@@ -8421,7 +8442,7 @@
             <signal name="Clicked" handler="OnButtonOkClicked" />
           </widget>
           <packing>
-            <property name="Position">1</property>
+            <property name="Position">2</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
           </packing>

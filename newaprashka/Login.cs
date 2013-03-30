@@ -77,6 +77,7 @@ namespace bazar
 				Configsource.Configs["Login"].Set("Server", entryServer.Text);
 				Configsource.Configs["Login"].Set("UserLogin", entryUser.Text);
 				Configsource.Save();
+				MainClass.ConnectionString = connStr;
 				MainClass.User.Login = entryUser.Text.ToLower();
 				this.Respond(ResponseType.Ok);
         	}

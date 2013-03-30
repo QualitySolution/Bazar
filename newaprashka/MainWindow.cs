@@ -730,4 +730,9 @@ public partial class MainWindow : Gtk.Window
 		System.Diagnostics.Process.Start("UserGuide_ru.pdf");
 	}
 	
+	protected void OnAction33Activated (object sender, EventArgs e)
+	{
+		string param = "";
+		ReportsExt.ViewReport ("LesseeDebts", param);
+	}
 }

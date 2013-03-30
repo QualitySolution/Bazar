@@ -1,3 +1,28 @@
+2013-03-30  Gankov Andrey  <gav@qsolution.ru>
+
+	* Main.cs:
+	* Login.cs:
+	* RdlCmd.exe:
+	* config.xml:
+	* BazAr.csproj:
+	* MainWindow.cs:
+	* RdlReader.exe:
+	* ReportsExt.cs:
+	* RdlDesktop.exe:
+	* RdlMapFile.exe:
+	* ExpenseSlip.cs:
+	* packages.config:
+	* RdlDesigner.exe:
+	* ViewReportsDlg.cs:
+	* gui.stetic:
+	* MainWindow.cs:
+	* SQLite.Interop.dll:
+	* SQLite.Interop.dll:
+	* bazar.ExpenseSlip.cs: 
+
+	* Accrual.cs: Дополнительно исправлена ошибка в запросе,
+	приводящая к неправильному расчету долга.
+
 2013-03-28  Gankov Andrey  <gav@qsolution.ru>
 
 	* gui.stetic: Убрал ссылку на уже удаленное событие.

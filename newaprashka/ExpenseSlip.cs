@@ -308,6 +308,12 @@ namespace bazar
 		{
 			TestCanSave ();
 		}
+
+		protected void OnButtonPrintClicked (object sender, EventArgs e)
+		{
+			string param = "id=" + entryNumber.Text;
+			ReportsExt.ViewReport ("Expense", param);
+		}
 	}
 }
 
