@@ -5,7 +5,7 @@ namespace bazar
 	public partial class IncomeSlip
 	{
 		private global::Gtk.VBox vbox2;
-		private global::Gtk.HBox hbox1;
+		private global::Gtk.HBox hbox2;
 		private global::Gtk.Table table1;
 		private global::Gtk.ComboBox comboAccrual;
 		private global::Gtk.ComboBox comboCash;
@@ -58,9 +58,9 @@ namespace bazar
 			this.vbox2.Name = "vbox2";
 			this.vbox2.Spacing = 6;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.hbox1 = new global::Gtk.HBox ();
-			this.hbox1.Name = "hbox1";
-			this.hbox1.Spacing = 6;
+			this.hbox2 = new global::Gtk.HBox ();
+			this.hbox2.Name = "hbox1";
+			this.hbox2.Spacing = 6;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.table1 = new global::Gtk.Table (((uint)(7)), ((uint)(2)), false);
 			this.table1.Name = "table1";
@@ -295,8 +295,8 @@ namespace bazar
 			w35.BottomAttach = ((uint)(4));
 			w35.XOptions = ((global::Gtk.AttachOptions)(4));
 			w35.YOptions = ((global::Gtk.AttachOptions)(4));
-			this.hbox1.Add (this.table1);
-			global::Gtk.Box.BoxChild w36 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.table1]));
+			this.hbox2.Add (this.table1);
+			global::Gtk.Box.BoxChild w36 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.table1]));
 			w36.Position = 0;
 			w36.Expand = false;
 			w36.Fill = false;
@@ -431,13 +431,13 @@ namespace bazar
 			w46.RightAttach = ((uint)(2));
 			w46.XOptions = ((global::Gtk.AttachOptions)(4));
 			w46.YOptions = ((global::Gtk.AttachOptions)(4));
-			this.hbox1.Add (this.table2);
-			global::Gtk.Box.BoxChild w47 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.table2]));
+			this.hbox2.Add (this.table2);
+			global::Gtk.Box.BoxChild w47 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.table2]));
 			w47.Position = 1;
 			w47.Expand = false;
 			w47.Fill = false;
-			this.vbox2.Add (this.hbox1);
-			global::Gtk.Box.BoxChild w48 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox1]));
+			this.vbox2.Add (this.hbox2);
+			global::Gtk.Box.BoxChild w48 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox2]));
 			w48.Position = 0;
 			w48.Expand = false;
 			w48.Fill = false;
