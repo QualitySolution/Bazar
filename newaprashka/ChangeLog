@@ -1,5 +1,10 @@
 2013-03-31  Gankov Andrey  <gav@qsolution.ru>
 
+	* BazAr.csproj:
+	* RdlEngineConfig.xml: 
+
+2013-03-31  Gankov Andrey  <gav@qsolution.ru>
+
 	* gui.stetic:
 	* bazar.IncomeSlip.cs: 
 
