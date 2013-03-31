@@ -1,3 +1,9 @@
+2013-04-01  Gankov Andrey  <gav@qsolution.ru>
+
+	* gui.stetic:
+	* bazar.Accrual.cs:
+	* bazar.IncomeSlip.cs: 
+
 2013-03-31  Gankov Andrey  <gav@qsolution.ru>
 
 	* BazAr.csproj:
