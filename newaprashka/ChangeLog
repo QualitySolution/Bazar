@@ -1,5 +1,11 @@
 2013-04-01  Gankov Andrey  <gav@qsolution.ru>
 
+	* changes.txt:
+	* BazAr.csproj:
+	* MainWindow.cs: 
+
+2013-04-01  Gankov Andrey  <gav@qsolution.ru>
+
 	* gui.stetic:
 	* bazar.Accrual.cs:
 	* bazar.IncomeSlip.cs: 

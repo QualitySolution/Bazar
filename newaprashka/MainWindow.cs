@@ -48,7 +48,7 @@ public partial class MainWindow : Gtk.Window
 				"возможностей программы, не используйте его для работы, так как ваши данные будут доступны " +
 				"любому пользователю через интернет.\n\nДля полноценного использования программы вам необходимо " +
 				"установить собственный сервер. Для его установки обратитесь к документации.\n\nЕсли у вас возникнут " +
-				"вопросы вы можете задать из на форуме программы: https://groups.google.com/forum/?fromgroups#!forum/bazarsoft " +
+				"вопросы вы можете задать их на форуме программы: https://groups.google.com/forum/?fromgroups#!forum/bazarsoft " +
 				"или обратится в нашу тех. поддержку.";
 			MessageDialog md = new MessageDialog ( this, DialogFlags.DestroyWithParent,
 			                                      MessageType.Info, 
@@ -393,7 +393,7 @@ public partial class MainWindow : Gtk.Window
 		AboutDialog dialog = new AboutDialog ();
 		dialog.ProgramName = "БазАр (База Арендаторов)";
 		
-		dialog.Version = "2.0.2";
+		dialog.Version = "2.0.3";
 		
 		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.logo.png");
 		

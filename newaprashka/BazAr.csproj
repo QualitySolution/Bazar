@@ -11,7 +11,7 @@
     <AssemblyName>BazAr</AssemblyName>
     <CodePage>65001</CodePage>
     <StartupObject>bazar.MainClass</StartupObject>
-    <ReleaseVersion>2.0.2</ReleaseVersion>
+    <ReleaseVersion>2.0.3</ReleaseVersion>
     <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
