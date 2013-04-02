@@ -6,8 +6,8 @@
   </configuration>
   <import>
     <widget-library name="../../../MonoReports/build/MonoReports.dll" />
-    <widget-library name="../../WidgetLib/bin/Debug/WidgetLib.dll" />
-    <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
+    <widget-library name="../../WidgetLib/bin/Release/WidgetLib.dll" />
+    <widget-library name="../bin/Release/BazAr.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="961 551">
     <action-group name="Default">
@@ -91,7 +91,7 @@
         <property name="StockId">gtk-quit</property>
         <signal name="Activated" handler="OnQuitActionActivated" />
       </action>
-      <action id="Action11">
+      <action id="Action34">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Справка</property>
         <property name="ShortLabel" translatable="yes">Справка</property>
@@ -217,6 +217,22 @@
         <property name="ShortLabel" translatable="yes">Долги арендаторов</property>
         <signal name="Activated" handler="OnAction33Activated" />
       </action>
+      <action id="Action35">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+      </action>
+      <action id="Action36">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Сайт программы</property>
+        <property name="ShortLabel" translatable="yes">Сайт программы</property>
+        <signal name="Activated" handler="OnAction36Activated" />
+      </action>
+      <action id="Action37">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Задать вопрос на форуме</property>
+        <property name="ShortLabel" translatable="yes">Задать вопрос на форуме</property>
+        <signal name="Activated" handler="OnAction37Activated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">База арендаторов (БазАр)</property>
@@ -264,8 +280,10 @@
                 </node>
                 <node type="Menuitem" action="Action33" />
               </node>
-              <node type="Menu" action="Action11">
+              <node type="Menu" action="Action34">
                 <node type="Menuitem" action="helpAction" />
+                <node type="Menuitem" action="Action36" />
+                <node type="Menuitem" action="Action37" />
                 <node type="Menuitem" action="Action26" />
                 <node type="Separator" />
                 <node type="Menuitem" action="aboutAction" />
@@ -1977,7 +1995,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2645,7 +2662,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>

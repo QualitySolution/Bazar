@@ -735,4 +735,14 @@ public partial class MainWindow : Gtk.Window
 		string param = "";
 		ReportsExt.ViewReport ("LesseeDebts", param);
 	}
+	protected void OnAction36Activated (object sender, EventArgs e)
+	{
+		System.Diagnostics.Process.Start ("http://bazar.qsolution.ru");
+	}
+	
+	protected void OnAction37Activated (object sender, EventArgs e)
+	{
+		System.Diagnostics.Process.Start ("https://groups.google.com/forum/?fromgroups#!forum/bazarsoft");
+	}
+
 }
