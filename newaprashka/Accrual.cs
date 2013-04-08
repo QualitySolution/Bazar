@@ -365,6 +365,7 @@ namespace bazar
 				labelLessee.LabelProp = "--";
 				labelOrg.LabelProp = "--";
 				labelPlace.LabelProp = "--";
+				buttonOpenContract.Sensitive = false;
 				return;
 			}
 			try
@@ -383,6 +384,7 @@ namespace bazar
 				labelOrg.LabelProp = rdr["organization"].ToString();
 				labelPlace.LabelProp = rdr["place_type"].ToString () + " - " + rdr["place_no"].ToString ();
 				rdr.Close ();
+				buttonOpenContract.Sensitive = true;
 			}
 			catch (Exception ex)
 			{
@@ -766,6 +768,15 @@ namespace bazar
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка вычисления прошлого долга!");
 			}
+		}
+
+		protected void OnButtonOpenContractClicked (object sender, EventArgs e)
+		{
+			Contract winContract = new Contract();
+			winContract.ContractFill(comboContract.ActiveText);
+			winContract.Show();
+			winContract.Run();
+			winContract.Destroy();
 		}
 	}
 }
