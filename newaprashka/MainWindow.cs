@@ -752,5 +752,30 @@ public partial class MainWindow : Gtk.Window
 		win.Run ();
 		win.Destroy ();
 	}
-
+	
+	protected void OnButtonRefreshTableClicked (object sender, EventArgs e)
+	{
+		switch (notebookMain.CurrentPage) {
+		case 0:
+			UpdatePlaces();
+			break;
+		case 1:
+			UpdateLessees();
+			break;
+		case 2:
+			UpdateContract();
+			break;
+		case 3:
+			UpdateAccrual();
+			break;
+		case 4:
+			UpdateCash ();
+			break;
+		case 5:
+			UpdateEvents();
+			break;
+		default:
+			break;
+		}
+	}
 }

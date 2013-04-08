@@ -2057,6 +2057,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -3036,17 +3037,6 @@
               </packing>
             </child>
             <child>
-              <widget class="Gtk.VSeparator" id="vseparator2">
-                <property name="MemberName" />
-              </widget>
-              <packing>
-                <property name="Position">1</property>
-                <property name="AutoSize">True</property>
-                <property name="Expand">False</property>
-                <property name="Fill">False</property>
-              </packing>
-            </child>
-            <child>
               <widget class="Gtk.Button" id="buttonAdd">
                 <property name="MemberName" />
                 <property name="CanFocus">True</property>
@@ -3057,7 +3047,7 @@
                 <signal name="Clicked" handler="OnButtonAddClicked" />
               </widget>
               <packing>
-                <property name="Position">2</property>
+                <property name="Position">1</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
@@ -3075,7 +3065,36 @@
                 <signal name="Clicked" handler="OnButtonDelClicked" />
               </widget>
               <packing>
+                <property name="Position">2</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.VSeparator" id="vseparator2">
+                <property name="MemberName" />
+              </widget>
+              <packing>
                 <property name="Position">3</property>
+                <property name="AutoSize">False</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Button" id="buttonRefreshTable">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="Type">TextAndIcon</property>
+                <property name="Icon">stock:gtk-refresh Menu</property>
+                <property name="Label" translatable="yes">Обновить</property>
+                <property name="UseUnderline">True</property>
+                <signal name="Clicked" handler="OnButtonRefreshTableClicked" />
+              </widget>
+              <packing>
+                <property name="PackType">End</property>
+                <property name="Position">4</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
