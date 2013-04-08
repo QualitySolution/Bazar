@@ -124,6 +124,8 @@
     <Compile Include="gtk-gui\bazar.ViewReportsDlg.cs" />
     <Compile Include="ReportsExt.cs" />
     <Compile Include="ViewReportsDlg.cs" />
+    <Compile Include="DocRegister.cs" />
+    <Compile Include="gtk-gui\bazar.DocRegister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

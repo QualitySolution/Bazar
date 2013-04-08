@@ -745,4 +745,12 @@ public partial class MainWindow : Gtk.Window
 		System.Diagnostics.Process.Start ("https://groups.google.com/forum/?fromgroups#!forum/bazarsoft");
 	}
 
+	protected void OnAction38Activated (object sender, EventArgs e)
+	{
+		DocRegister win = new DocRegister();
+		win.Show ();
+		win.Run ();
+		win.Destroy ();
+	}
+
 }
