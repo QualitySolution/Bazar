@@ -1,5 +1,11 @@
 2013-04-08  Gankov Andrey  <gav@qsolution.ru>
 
+	* MainWinCash.cs:
+	* gui.stetic:
+	* MainWindow.cs: 
+
+2013-04-08  Gankov Andrey  <gav@qsolution.ru>
+
 	* BazAr.csproj:
 	* MainWindow.cs:
 	* DocRegister.cs:

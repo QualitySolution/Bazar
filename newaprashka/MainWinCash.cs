@@ -653,4 +653,14 @@ public partial class MainWindow : Gtk.Window
 		winBalance.Run();
 		winBalance.Destroy();
 	}
+
+	protected void OnButtonCashEmployeeClearClicked (object sender, EventArgs e)
+	{
+		entryCashEmployee.Text = "";
+	}
+	
+	protected void OnButtonCashContractorClearClicked (object sender, EventArgs e)
+	{
+		entryCashContractor.Text = "";
+	}
 }

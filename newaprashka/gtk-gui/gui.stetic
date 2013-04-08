@@ -308,7 +308,7 @@
           <widget class="Gtk.Notebook" id="notebookMain">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">0</property>
+            <property name="CurrentPage">4</property>
             <signal name="SwitchPage" handler="OnNotebookMainSwitchPage" />
             <child>
               <widget class="Gtk.VBox" id="vbox2">
@@ -1827,21 +1827,49 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="Gtk.Entry" id="entryCashContractor">
+                          <widget class="Gtk.HBox" id="hbox26">
                             <property name="MemberName" />
-                            <property name="CanFocus">True</property>
-                            <property name="IsEditable">True</property>
-                            <property name="InvisibleChar">●</property>
-                            <signal name="Changed" handler="OnEntryCashContractorChanged" />
+                            <property name="Spacing">6</property>
+                            <child>
+                              <widget class="Gtk.Entry" id="entryCashContractor">
+                                <property name="MemberName" />
+                                <property name="CanFocus">True</property>
+                                <property name="IsEditable">True</property>
+                                <property name="InvisibleChar">●</property>
+                                <signal name="Changed" handler="OnEntryCashContractorChanged" />
+                              </widget>
+                              <packing>
+                                <property name="Position">0</property>
+                                <property name="AutoSize">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="Gtk.Button" id="buttonCashContractorClear">
+                                <property name="MemberName" />
+                                <property name="CanFocus">True</property>
+                                <property name="Type">TextAndIcon</property>
+                                <property name="Icon">stock:gtk-clear Menu</property>
+                                <property name="Label" translatable="yes" />
+                                <property name="UseUnderline">True</property>
+                                <signal name="Clicked" handler="OnButtonCashContractorClearClicked" />
+                              </widget>
+                              <packing>
+                                <property name="Position">1</property>
+                                <property name="AutoSize">True</property>
+                                <property name="Expand">False</property>
+                                <property name="Fill">False</property>
+                              </packing>
+                            </child>
                           </widget>
                           <packing>
                             <property name="TopAttach">3</property>
                             <property name="BottomAttach">4</property>
                             <property name="LeftAttach">1</property>
                             <property name="RightAttach">2</property>
-                            <property name="AutoSize">False</property>
+                            <property name="AutoSize">True</property>
+                            <property name="XOptions">Fill</property>
                             <property name="YOptions">Fill</property>
-                            <property name="XExpand">True</property>
+                            <property name="XExpand">False</property>
                             <property name="XFill">True</property>
                             <property name="XShrink">False</property>
                             <property name="YExpand">False</property>
@@ -1850,12 +1878,39 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="Gtk.Entry" id="entryCashEmployee">
+                          <widget class="Gtk.HBox" id="hbox27">
                             <property name="MemberName" />
-                            <property name="CanFocus">True</property>
-                            <property name="IsEditable">True</property>
-                            <property name="InvisibleChar">●</property>
-                            <signal name="Changed" handler="OnEntryEmployeeChanged" />
+                            <property name="Spacing">6</property>
+                            <child>
+                              <widget class="Gtk.Entry" id="entryCashEmployee">
+                                <property name="MemberName" />
+                                <property name="CanFocus">True</property>
+                                <property name="IsEditable">True</property>
+                                <property name="InvisibleChar">●</property>
+                                <signal name="Changed" handler="OnEntryEmployeeChanged" />
+                              </widget>
+                              <packing>
+                                <property name="Position">0</property>
+                                <property name="AutoSize">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="Gtk.Button" id="buttonCashEmployeeClear">
+                                <property name="MemberName" />
+                                <property name="CanFocus">True</property>
+                                <property name="Type">TextAndIcon</property>
+                                <property name="Icon">stock:gtk-clear Menu</property>
+                                <property name="Label" translatable="yes" />
+                                <property name="UseUnderline">True</property>
+                                <signal name="Clicked" handler="OnButtonCashEmployeeClearClicked" />
+                              </widget>
+                              <packing>
+                                <property name="Position">1</property>
+                                <property name="AutoSize">True</property>
+                                <property name="Expand">False</property>
+                                <property name="Fill">False</property>
+                              </packing>
+                            </child>
                           </widget>
                           <packing>
                             <property name="TopAttach">4</property>
@@ -2669,6 +2724,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
