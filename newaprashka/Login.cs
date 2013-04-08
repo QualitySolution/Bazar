@@ -10,6 +10,7 @@ namespace bazar
 	public partial class Login : Gtk.Dialog
 	{
 		String ConnectionError;
+		string BaseName = "bazar";
 		IniConfigSource Configsource;
 
 		public Login ()
@@ -28,6 +29,7 @@ namespace bazar
 				entryServer.Text = Configsource.Configs["Login"].Get("Server");
 				entryUser.Text = Configsource.Configs["Login"].Get("UserLogin");
 				entryPassword.GrabFocus();
+				BaseName = Configsource.Configs["Login"].Get("DataBase","bazar");
 			} 
 			catch (Exception ex)
         	{
@@ -59,7 +61,7 @@ namespace bazar
 		protected virtual void OnButtonOkClicked (object sender, System.EventArgs e)
 		{
 			string connStr = "server=" + entryServer.Text + ";user=" +
-				entryUser.Text + ";database=bazar;port=3306;password=" +
+				entryUser.Text + ";database=" + BaseName + ";port=3306;password=" +
 				entryPassword.Text + ";";
         	MainClass.connectionDB = new MySqlConnection(connStr);
         	try
