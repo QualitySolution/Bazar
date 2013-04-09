@@ -247,7 +247,7 @@ namespace bazar
 
 		}
 
-		public static void ComboFillUniversal(ComboBox combo, string SqlSelect, string DisplayString, int KeyField, int listmode)
+		public static void ComboFillUniversal(ComboBox combo, string SqlSelect, string DisplayString, MySqlParameter[] Parameters, int KeyField, int listmode)
 		{   //Заполняем универсальный комбобокс
 			// Режимы списка:
 			// 0 - Только элементы
@@ -265,6 +265,7 @@ namespace bazar
 			{
 				int count = 0;
 				MySqlCommand cmd = new MySqlCommand(SqlSelect, MainClass.connectionDB);
+				cmd.Parameters.AddRange (Parameters);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
 				switch (listmode) {

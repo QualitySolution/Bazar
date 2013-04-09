@@ -373,9 +373,10 @@ namespace bazar
 		protected void OnComboContractChanged (object sender, EventArgs e)
 		{
 			string sql = "SELECT id, DATE(CONCAT('2012-', month, '-1')) as month, year FROM accrual " +
-				"WHERE contract_no = '" + comboContract.ActiveText + "'";
+				"WHERE contract_no = @contract";
+			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.ActiveText) };
 			string Display = "№{0} - {1:MMMM} {2}";
-			MainClass.ComboFillUniversal (comboAccrual, sql, Display, 0, 2);
+			MainClass.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, 2);
 		}
 	}
 }
