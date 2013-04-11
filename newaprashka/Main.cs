@@ -372,19 +372,24 @@ namespace bazar
 	       	}
 
 		}
-		
+
 		public static bool SearchListStore( ListStore list, int id, out TreeIter iter)
+		{
+			return SearchListStore (list, id, 1, out iter);
+		}
+
+		public static bool SearchListStore( ListStore list, object searchvalue, int column, out TreeIter iter)
 		{   // Перебираем список, ищем id, возвращаем iter
 			if(list.GetIterFirst(out iter))
 			{
-				if( (int)list.GetValue(iter,1) == id)
+				if( searchvalue.Equals (list.GetValue(iter, column)))
 					return true;
 			}
 			else
 				return false;
 			while (list.IterNext(ref iter)) 
 			{
-				if( (int)list.GetValue(iter,1) == id)
+				if( searchvalue.Equals (list.GetValue(iter, column)))
 					return true;
 			}
 			return false;		

@@ -39,7 +39,7 @@ namespace bazar
 			//Создаем таблицу "Услуги"
 			ServiceListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string),
 			                                      typeof (int), typeof (string), typeof (int), typeof (double),
-			                                      typeof (double), typeof (long));
+			                                      typeof (double), typeof (long), typeof (string), typeof (decimal));
 
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
 			ServiceColumn.Title = "Наименование";
@@ -98,6 +98,9 @@ namespace bazar
 			PriceColumn.AddAttribute (CellPrice,"text", 7);
 			treeviewServices.AppendColumn (SumColumn);
 			SumColumn.AddAttribute (CellSum,"text", 8);
+			// ID long - 9
+			treeviewServices.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", 10);
+			//Оплачено цифровое - 11
 			
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
@@ -107,13 +110,13 @@ namespace bazar
 
 			//Создаем таблицу оплат
 			IncomeListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (string), typeof (string),
-			                                         typeof (string), typeof (string), typeof (decimal));
+			                                     typeof (string), typeof (string), typeof (decimal));
 
 			//ID -0
 			treeviewIncomes.AppendColumn("Документ", new Gtk.CellRendererText (), "text", 1);
 			treeviewIncomes.AppendColumn("Дата", new Gtk.CellRendererText (), "text", 2);
 			treeviewIncomes.AppendColumn("Касса", new Gtk.CellRendererText (), "text", 3);
-			treeviewIncomes.AppendColumn("Статья дохода", new Gtk.CellRendererText (), "text", 4);
+			// пусто
 			treeviewIncomes.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 5);
 			//Сумма цифровое -6
 			
@@ -224,6 +227,15 @@ namespace bazar
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			double Sum = (double) model.GetValue (iter, 8);
+			decimal Debt = Convert.ToDecimal (Sum) - (decimal) model.GetValue (iter, 11);
+			if (Debt <= 0 && Sum != 0) 
+			{
+				(cell as Gtk.CellRendererText).Foreground = "darkgreen";
+			} 
+			else
+			{
+				(cell as Gtk.CellRendererText).Foreground = "black";
+			}
 			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
 		}
 
@@ -266,10 +278,13 @@ namespace bazar
 				
 				//Получаем таблицу услуг
 				sql = "SELECT accrual_pays.*, cash.name as cash, services.name as service, " +
-					"units.id as units_id, units.name as units FROM accrual_pays " +
+					"units.id as units_id, units.name as units, paysum.sum as paid FROM accrual_pays " +
 						"LEFT JOIN cash ON cash.id = accrual_pays.cash_id " +
 						"LEFT JOIN services ON accrual_pays.service_id = services.id " +
 						"LEFT JOIN units ON services.units_id = units.id " +
+						"LEFT JOIN (" +
+						"SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum " +
+						"ON paysum.accrual_pay_id = accrual_pays.id " +
 						"WHERE accrual_pays.accrual_id = @accrual_id";
 				
 				cmd = new MySqlCommand(sql, MainClass.connectionDB);
@@ -278,6 +293,7 @@ namespace bazar
 				
 				int cash_id, units_id, count;
 				double price, sum;
+				decimal paid;
 				
 				while (rdr.Read())
 				{
@@ -289,6 +305,10 @@ namespace bazar
 						units_id = int.Parse(rdr["units_id"].ToString());
 					else
 						units_id = -1;
+					if(rdr["paid"] != DBNull.Value)
+						paid = rdr.GetDecimal ("paid");
+					else
+						paid = 0;
 					count = int.Parse(rdr["count"].ToString());
 					price = double.Parse(rdr["price"].ToString());
 					sum = count * price;
@@ -302,7 +322,9 @@ namespace bazar
 					                              count,
 					                              price,
 					                              sum,
-					                              (object) rdr.GetInt64("id"));
+					                              (object) rdr.GetInt64("id"),
+					                              String.Format ("{0:0.00}", paid),
+					                              paid);
 				}
 				rdr.Close();
 				MainClass.StatusMessage("Ok");
@@ -329,10 +351,9 @@ namespace bazar
 
 			MainClass.StatusMessage("Получаем таблицу приходных ордеров...");
 			
-			string sql = "SELECT credit_slips.*, cash.name as cash, income_items.name as income_item " +
+			string sql = "SELECT credit_slips.*, cash.name as cash " +
 					"FROM credit_slips " +
 					"LEFT JOIN cash ON credit_slips.cash_id = cash.id " +
-					"LEFT JOIN income_items ON credit_slips.income_id = income_items.id " +
 					"WHERE credit_slips.accrual_id = @id";
 
 			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
@@ -347,7 +368,7 @@ namespace bazar
 				                             String.Format ("Приходный ордер № {0}", rdr["id"]),
 				                             DateTime.Parse(rdr["date"].ToString()).ToShortDateString(),
 				                             rdr["cash"].ToString (),
-				                             rdr["income_item"].ToString(),
+				                             null,
 				                             String.Format ("{0:C}",rdr.GetDecimal ("sum")),
 				                             rdr.GetDecimal ("sum"));
 			}
@@ -692,20 +713,16 @@ namespace bazar
 				winPay.FillPayTable (Convert.ToInt32 (entryNumber.Text));
 				winPay.ShowAll ();
 				if((ResponseType)winPay.Run () == ResponseType.Ok)
+				{
 					UpdateIncomes ();
+					UpdatePaid ();
+				}
 				winPay.Destroy ();
 			}
 		}
 
 		protected void OnButtonPrintClicked (object sender, EventArgs e)
 		{
-			//Reports rep = new Reports("Pay");
-			//rep.ViewPay ( Convert.ToInt64 (entryNumber.Text));
-			//ViewReportsDlg win = new ViewReportsDlg();
-			//win.LoadReport ("PayList");
-			//win.Show ();
-			//win.Run ();
-			//win.Destroy ();
 			string param = "id=" + entryNumber.Text;
 			ReportsExt.ViewReport ("PayList", param);
 		}
@@ -777,6 +794,55 @@ namespace bazar
 			winContract.Show();
 			winContract.Run();
 			winContract.Destroy();
+		}
+
+		private void UpdatePaid()
+		{
+			string sql = "SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details " +
+					"WHERE payment_id IN " +
+					"(SELECT id FROM payments WHERE accrual_id = @accrual_id) " +
+					"GROUP BY accrual_pay_id";
+			TreeIter iter;
+			
+			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			cmd.Parameters.AddWithValue("@accrual_id", entryNumber.Text);
+			MySqlDataReader rdr = cmd.ExecuteReader();
+
+			decimal paid;
+			foreach(object[] row in ServiceListStore)
+			{
+				row[10] = String.Format ("{0:0.00}", 0);
+				row[11] = 0;
+			}
+			
+			while (rdr.Read())
+			{
+				if( MainClass.SearchListStore (ServiceListStore, rdr.GetInt64("accrual_pay_id"), 9, out iter))
+				{
+					paid = rdr.GetDecimal ("sum");
+					ServiceListStore.SetValue (iter, 10, String.Format ("{0:0.00}", paid));
+					ServiceListStore.SetValue (iter, 10, paid);
+				}
+			}
+			rdr.Close();
+		}
+
+		protected void OnTreeviewIncomesRowActivated (object o, RowActivatedArgs args)
+		{
+			TreeIter iter;
+			treeviewIncomes.Selection.GetSelected(out iter);
+			int itemid = Convert.ToInt32(IncomeListStore.GetValue(iter,0));
+			IncomeSlip winIncome = new IncomeSlip();
+			winIncome.SlipFill(itemid);
+			winIncome.Show();
+			ResponseType result = (ResponseType)winIncome.Run();
+			winIncome.Destroy();
+			if(result == ResponseType.Ok)
+			{
+				UpdateIncomes();
+				UpdatePaid ();
+			}
+
 		}
 	}
 }

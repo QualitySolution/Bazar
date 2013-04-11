@@ -12,7 +12,7 @@ namespace bazar
 		TreeModel IncomeNameList;
 
 		bool IncomeNotEmpty;
-		decimal PaySum, PayableSum, PaidSum;
+		decimal PaySum, PayableSum;
 		int Accrual_Id;
 
 		public PayAccrual ()
@@ -26,7 +26,7 @@ namespace bazar
 
 			//Создаем таблицу "Услуги"
 			ServiceListStore = new Gtk.ListStore (typeof (bool), typeof (int), typeof (string), typeof (int), typeof (string),
-			                                      typeof (int), typeof (string), typeof (double));
+			                                      typeof (int), typeof (string), typeof (double), typeof(long));
 			
 			CellRendererToggle CellPay = new CellRendererToggle();
 			CellPay.Activatable = true;
@@ -64,6 +64,7 @@ namespace bazar
 			IncomeItemsColumn.AddAttribute (CellIncomeItems,"text", 6);
 			treeviewServices.AppendColumn (SumColumn);
 			SumColumn.AddAttribute (CellSum,"text", 7);
+			//ID строки начисления - 8
 
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
 			
@@ -173,10 +174,13 @@ namespace bazar
 				
 				//Получаем таблицу услуг
 				string sql = "SELECT accrual_pays.*, cash.name as cash, services.name as service, " +
-					"services.income_id as income_id, income_items.name as income FROM accrual_pays " +
+					"services.income_id as income_id, income_items.name as income, paysum.sum as paid FROM accrual_pays " +
 						"LEFT JOIN cash ON cash.id = accrual_pays.cash_id " +
 						"LEFT JOIN services ON accrual_pays.service_id = services.id " +
 						"LEFT JOIN income_items ON services.income_id = income_items.id " +
+						"LEFT JOIN (" +
+						"SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum " +
+						"ON paysum.accrual_pay_id = accrual_pays.id " +
 						"WHERE accrual_pays.accrual_id = @accrual_id";
 				
 				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
@@ -185,10 +189,20 @@ namespace bazar
 				
 				int cash_id, income_id;
 				double sum;
+				decimal paid, accrual;
 				PayableSum = 0m;
 				
 				while (rdr.Read())
 				{
+					if(rdr["paid"] != DBNull.Value)
+						paid = rdr.GetDecimal ("paid");
+					else
+						paid = 0;
+					accrual = rdr.GetInt32("count") * rdr.GetDecimal("price");
+					sum = Convert.ToDouble (accrual - paid);
+					if(sum <= 0)
+						continue;
+					PayableSum += Convert.ToDecimal(sum);
 					if(rdr["cash_id"] != DBNull.Value)
 						cash_id = rdr.GetInt32("cash_id");
 					else
@@ -197,9 +211,7 @@ namespace bazar
 						income_id = rdr.GetInt32("income_id");
 					else
 						income_id = -1;
-					sum = Convert.ToDouble(rdr.GetInt32("count") * rdr.GetDecimal("price"));
-					PayableSum += Convert.ToDecimal(sum);
-					
+
 					ServiceListStore.AppendValues(false,
 												  rdr.GetInt32("service_id"),
 					                              rdr["service"].ToString(),
@@ -207,25 +219,13 @@ namespace bazar
 					                              rdr["cash"].ToString(),
 					                              income_id,
 					                              rdr["income"].ToString(),
-					                              sum);
+					                              sum,
+					                              rdr.GetInt64 ("id"));
 				}
 				rdr.Close();
 
-				sql = "SELECT SUM(sum) FROM credit_slips WHERE credit_slips.accrual_id = @id";
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
-				cmd.Parameters.AddWithValue("@id", AccrualId);
-				object result = cmd.ExecuteScalar ();
-				if(result != DBNull.Value)
-				{
-					PaidSum = Convert.ToDecimal (result);
-					labelTotal.LabelProp = String.Format ("Всего к оплате: {0:C} Уже оплачено: <span background=\"orange\">{1:C}</span> ", PayableSum, PaidSum);
-				}
-				else
-				{
-					PaidSum = 0m;
-					labelTotal.LabelProp = String.Format ("Всего к оплате: {0:C} Уже оплачено: {1:C} ", PayableSum, PaidSum);
-				}
-
+				labelTotal.LabelProp = String.Format ("Всего к оплате: {0:C} ", PayableSum);
+		
 				MainClass.StatusMessage("Ok");
 				CalculateServiceSum();
 			}
@@ -255,17 +255,14 @@ namespace bazar
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
-			List<int[]> PayList = new List<int[]>();
+			List<CashDoc> PayList = new List<CashDoc>();
 			TreeIter iter;
-			//Составляем список статей дохода
+			//Составляем список касс
 			if(ServiceListStore.GetIterFirst(out iter))
 			{
 				if((bool)ServiceListStore.GetValue(iter, 0))
 				{
-					PayList.Add (new int[2] { 
-						(int) ServiceListStore.GetValue (iter, 3),
-						(int) ServiceListStore.GetValue (iter, 5)
-					});
+					PayList.Add (new CashDoc((int) ServiceListStore.GetValue (iter, 3)));
 				}
 				while (ServiceListStore.IterNext(ref iter)) 
 				{
@@ -273,10 +270,9 @@ namespace bazar
 						continue;
 					bool exist = false;
 					int Cashid = (int) ServiceListStore.GetValue (iter, 3);
-					int IncomeId = (int) ServiceListStore.GetValue (iter, 5);
-					foreach (int[] item in PayList)
+					foreach (CashDoc item in PayList)
 					{
-						if( item[0] == Cashid && item[1] == IncomeId)
+						if( item.CashId == Cashid)
 						{
 							exist = true;
 							break;
@@ -284,7 +280,7 @@ namespace bazar
 					}
 					if(!exist)
 					{
-						PayList.Add (new int[2] { Cashid, IncomeId});
+						PayList.Add (new CashDoc(Cashid));
 					}
 				}
 			}
@@ -299,6 +295,7 @@ namespace bazar
 			if(!rdr.Read())
 			{
 				MainClass.StatusMessage("Не удалось получить информацию по начислению!");
+				rdr.Close ();
 				return;
 			}
 			int org_id = rdr.GetInt32("org_id");
@@ -306,42 +303,96 @@ namespace bazar
 			string contract_no = rdr.GetString ("contract_no");
 			DateTime Month = new DateTime(rdr.GetInt32("year"), rdr.GetInt32 ("month"), 1);
 			rdr.Close ();
-			// Записываем Приходники
-			sql = "INSERT INTO credit_slips (operation, org_id, cash_id, lessee_id, user_id, date, sum, " +
-				"contract_no, accrual_id, income_id, details) " +
-					"VALUES (@operation, @org_id, @cash_id, @lessee_id, @user_id, @date, @sum, " +
-					"@contract_no, @accrual_id, @income_id, @details)";
-			foreach(int[] item in PayList)
+			//Записываем оплату
+			MySqlTransaction trans = MainClass.connectionDB.BeginTransaction ();
+
+			try
 			{
-				decimal sum = 0m;
-				string details = String.Format ("Оплата по начислению № {0} ({1:MMMM yyyy}) за услуги: ", Accrual_Id, Month);
+				sql = "INSERT INTO credit_slips (operation, org_id, cash_id, lessee_id, user_id, date, sum, " +
+					"contract_no, accrual_id, details) " +
+					"VALUES (@operation, @org_id, @cash_id, @lessee_id, @user_id, @date, @sum, " +
+					"@contract_no, @accrual_id, @details)";
+				string sql2 = "INSERT INTO payments (createdate, credit_slip_id, accrual_id) " +
+					"VALUES (@date, @slip, @accrual)";
+				foreach(CashDoc item in PayList)
+				{
+					decimal sum = 0m;
+					string details = String.Format ("Оплата по начислению № {0} ({1:MMMM yyyy}) за услуги: ", Accrual_Id, Month);
+					foreach(object[] row in ServiceListStore)
+					{
+						if((bool)row[0] && (int)row[3] == item.CashId)
+						{
+							if(sum != 0)
+								details += ", ";
+							sum += Convert.ToDecimal (row[7]);
+							details += (string) row[2];
+						}
+					}
+					// Записываем приходный ордер
+					cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+					cmd.Parameters.AddWithValue("@operation", "payment");
+					cmd.Parameters.AddWithValue("@org_id", org_id);
+					cmd.Parameters.AddWithValue("@cash_id", item.CashId);
+					cmd.Parameters.AddWithValue("@lessee_id", lessee_id);
+					cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+					cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
+					cmd.Parameters.AddWithValue("@sum", sum);
+					cmd.Parameters.AddWithValue("@contract_no", contract_no);
+					cmd.Parameters.AddWithValue("@accrual_id", Accrual_Id);
+					cmd.Parameters.AddWithValue("@details", details);
+
+					cmd.ExecuteNonQuery ();
+					item.DocId = Convert.ToInt32(cmd.LastInsertedId);
+
+					// Записываем платеж
+					cmd = new MySqlCommand(sql2, MainClass.connectionDB, trans);
+					cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
+					cmd.Parameters.AddWithValue("@accrual", Accrual_Id);
+					cmd.Parameters.AddWithValue("@slip", item.DocId);
+					
+					cmd.ExecuteNonQuery ();
+					item.PaymentId = Convert.ToInt32(cmd.LastInsertedId);
+				}
+
+				// Записываем строки оплаты
+				sql = "INSERT INTO payment_details(payment_id, accrual_pay_id, sum, income_id)" +
+					"VALUES (@payment_id, @accrual_pay_id, @sum, @income_id)";
 				foreach(object[] row in ServiceListStore)
 				{
-					if((bool)row[0] && (int)row[3] == item[0] && (int)row[5] == item[1])
+					if((bool)row[0])
 					{
-						if(sum != 0)
-							details += ", ";
-						sum += Convert.ToDecimal (row[7]);
-						details += (string) row[2];
+						CashDoc CurrentDoc = PayList.Find( p => p.CashId == (int)row[3]);
+						cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+						cmd.Parameters.AddWithValue("@payment_id", CurrentDoc.PaymentId);
+						cmd.Parameters.AddWithValue("@accrual_pay_id", row[8]);
+						cmd.Parameters.AddWithValue("@sum", row[7]);
+						cmd.Parameters.AddWithValue("@income_id", row[5]);
+						
+						cmd.ExecuteNonQuery ();
 					}
 				}
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
-				cmd.Parameters.AddWithValue("@operation", "common");
-				cmd.Parameters.AddWithValue("@org_id", org_id);
-				cmd.Parameters.AddWithValue("@cash_id", item[0]);
-				cmd.Parameters.AddWithValue("@lessee_id", lessee_id);
-				cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
-				cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
-				cmd.Parameters.AddWithValue("@sum", sum);
-				cmd.Parameters.AddWithValue("@contract_no", contract_no);
-				cmd.Parameters.AddWithValue("@accrual_id", Accrual_Id);
-				cmd.Parameters.AddWithValue("@income_id", item[1]);
-				cmd.Parameters.AddWithValue("@details", details);
-
-				cmd.ExecuteNonQuery ();
+				trans.Commit ();
 			}
-
+			catch (Exception ex) 
+			{
+				trans.Rollback ();
+				Console.WriteLine(ex.ToString());
+				MainClass.StatusMessage("Ошибка записи оплаты!");
+				MainClass.ErrorMessage(this,ex);
+			}
 			Accrual.GetAccrualPaidBalance (Accrual_Id);
+		}
+
+		private class CashDoc
+		{
+			public int DocId;
+			public int CashId;
+			public int PaymentId;
+			
+			public CashDoc(int Cash)
+			{
+				CashId = Cash;
+			}
 		}
 	}
 }

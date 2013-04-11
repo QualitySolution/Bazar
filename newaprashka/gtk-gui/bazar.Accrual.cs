@@ -404,7 +404,7 @@ namespace bazar
 			this.notebook1 = new global::Gtk.Notebook ();
 			this.notebook1.CanFocus = true;
 			this.notebook1.Name = "notebook1";
-			this.notebook1.CurrentPage = 0;
+			this.notebook1.CurrentPage = 1;
 			// Container child notebook1.Gtk.Notebook+NotebookChild
 			this.vbox3 = new global::Gtk.VBox ();
 			this.vbox3.Name = "vbox3";
@@ -529,7 +529,7 @@ namespace bazar
 			// Notebook tab
 			this.label12 = new global::Gtk.Label ();
 			this.label12.Name = "label12";
-			this.label12.LabelProp = "Оплачено";
+			this.label12.LabelProp = "Платежи";
 			this.notebook1.SetTabLabel (this.vbox4, this.label12);
 			this.label12.ShowAll ();
 			w1.Add (this.notebook1);
@@ -623,7 +623,7 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 650;
+			this.DefaultWidth = 717;
 			this.DefaultHeight = 423;
 			this.Show ();
 			this.comboContract.Changed += new global::System.EventHandler (this.OnComboContractChanged);
@@ -634,6 +634,7 @@ namespace bazar
 			this.treeviewServices.CursorChanged += new global::System.EventHandler (this.OnTreeviewServicesCursorChanged);
 			this.buttonAddService.Clicked += new global::System.EventHandler (this.OnButtonAddServiceClicked);
 			this.buttonDelService.Clicked += new global::System.EventHandler (this.OnButtonDelServiceClicked);
+			this.treeviewIncomes.RowActivated += new global::Gtk.RowActivatedHandler (this.OnTreeviewIncomesRowActivated);
 			this.buttonPrint.Clicked += new global::System.EventHandler (this.OnButtonPrintClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}

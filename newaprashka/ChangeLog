@@ -1,3 +1,12 @@
+2013-04-11  Gankov Andrey  <gav@qsolution.ru>
+
+	* Accrual.cs:
+	* PayAccrual.cs:
+	* gui.stetic:
+	* bazar.Accrual.cs: 
+
+	* Main.cs: Реализовал более универсальный метод поиска.
+
 2013-04-09  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:

@@ -2057,7 +2057,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2725,7 +2724,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -10567,7 +10565,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Accrual" design-size="650 423">
+  <widget class="Gtk.Dialog" id="bazar.Accrual" design-size="717 423">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новое начисление</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -11105,7 +11103,7 @@
           <widget class="Gtk.Notebook" id="notebook1">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">0</property>
+            <property name="CurrentPage">1</property>
             <child>
               <widget class="Gtk.VBox" id="vbox3">
                 <property name="MemberName" />
@@ -11209,6 +11207,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="ShowScrollbars">True</property>
+                        <signal name="RowActivated" handler="OnTreeviewIncomesRowActivated" />
                       </widget>
                     </child>
                   </widget>
@@ -11238,7 +11237,7 @@
             <child>
               <widget class="Gtk.Label" id="label12">
                 <property name="MemberName" />
-                <property name="LabelProp" translatable="yes">Оплачено</property>
+                <property name="LabelProp" translatable="yes">Платежи</property>
               </widget>
               <packing>
                 <property name="type">tab</property>
