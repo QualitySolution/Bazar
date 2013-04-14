@@ -1,5 +1,13 @@
 2013-04-14  Gankov Andrey  <gav@qsolution.ru>
 
+	* BazAr.csproj:
+	* MainWindow.cs:
+	* gui.stetic:
+	* LesseeDebtsReport.cs:
+	* bazar.LesseeDebtsReport.cs: 
+
+2013-04-14  Gankov Andrey  <gav@qsolution.ru>
+
 	* CashBalance.cs:
 	* gui.stetic: 
 

@@ -732,8 +732,10 @@ public partial class MainWindow : Gtk.Window
 	
 	protected void OnAction33Activated (object sender, EventArgs e)
 	{
-		string param = "";
-		ReportsExt.ViewReport ("LesseeDebts", param);
+		LesseeDebtsReport WinReport = new LesseeDebtsReport();
+		WinReport.Show ();
+		WinReport.Run ();
+		WinReport.Destroy ();
 	}
 	protected void OnAction36Activated (object sender, EventArgs e)
 	{

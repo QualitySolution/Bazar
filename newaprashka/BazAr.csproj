@@ -130,6 +130,8 @@
     <Compile Include="gtk-gui\bazar.SeparationPayment.cs" />
     <Compile Include="SelectAccrualRow.cs" />
     <Compile Include="gtk-gui\bazar.SelectAccrualRow.cs" />
+    <Compile Include="ReportDialogs\LesseeDebtsReport.cs" />
+    <Compile Include="gtk-gui\bazar.LesseeDebtsReport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -150,5 +152,8 @@
       <Project>{5A2BB01E-E124-432E-8099-D1343D3897B9}</Project>
       <Name>WidgetLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ReportDialogs\" />
   </ItemGroup>
 </Project>
