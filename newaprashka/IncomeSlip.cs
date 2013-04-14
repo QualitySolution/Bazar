@@ -348,6 +348,7 @@ namespace bazar
 				{
 					separationpayment.PaymentId = Payment;
 					separationpayment.AccrualId = OriginalAccrual;
+					buttonPrint.Sensitive = true;
 					// Временно пока не налажено корректная обработка смены начисления у созданной оплаты
 					comboContract.Sensitive = false;
 					comboAccrual.Sensitive = false;
@@ -484,6 +485,17 @@ namespace bazar
 				separationpayment.AccrualId = (int)comboAccrual.Model.GetValue(AccrualIter,1);
 			else
 				separationpayment.AccrualId = 0;
+		}
+
+		protected void OnButtonPrintClicked (object sender, EventArgs e)
+		{
+			switch(comboOperation.Active)
+			{
+			case 2:
+				string param = "id=" + entryNumber.Text;
+				ReportsExt.ViewReport ("Ticket", param);
+				break;
+			}
 		}
 	}
 }

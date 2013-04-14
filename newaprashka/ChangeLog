@@ -1,5 +1,15 @@
 2013-04-14  Gankov Andrey  <gav@qsolution.ru>
 
+	* IncomeSlip.cs:
+	* MainWindow.cs:
+	* PayAccrual.cs:
+	* gui.stetic:
+	* MainWindow.cs:
+	* bazar.IncomeSlip.cs:
+	* bazar.LesseeDebtsReport.cs: 
+
+2013-04-14  Gankov Andrey  <gav@qsolution.ru>
+
 	* BazAr.csproj:
 	* MainWindow.cs:
 	* gui.stetic:

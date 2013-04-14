@@ -372,6 +372,7 @@ namespace bazar
 					}
 				}
 				trans.Commit ();
+				PrintTicket (PayList[0].DocId);
 			}
 			catch (Exception ex) 
 			{
@@ -381,6 +382,19 @@ namespace bazar
 				MainClass.ErrorMessage(this,ex);
 			}
 			Accrual.GetAccrualPaidBalance (Accrual_Id);
+		}
+
+		private void PrintTicket(int id)
+		{
+			MessageDialog WinAsk = new MessageDialog(this, DialogFlags.Modal, MessageType.Question,
+			                                         ButtonsType.YesNo, "Распечатать квитанцию?");
+			WinAsk.Show ();
+			if((ResponseType) WinAsk.Run () == ResponseType.Yes)
+			{
+				string param = "id=" + id.ToString ();
+				ReportsExt.ViewReport ("Ticket", param);
+			}
+			WinAsk.Destroy ();
 		}
 
 		private class CashDoc

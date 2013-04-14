@@ -37,12 +37,12 @@ namespace bazar
 			this.hbox1.Spacing = 6;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.comboMonth = global::Gtk.ComboBox.NewText ();
-			this.comboMonth.AppendText ("Все");
+			this.comboMonth.AppendText ("Нет");
 			this.comboMonth.AppendText ("Января");
 			this.comboMonth.AppendText ("Февраля");
 			this.comboMonth.AppendText ("Марта");
 			this.comboMonth.AppendText ("Апреля");
-			this.comboMonth.AppendText ("Майя");
+			this.comboMonth.AppendText ("Мая");
 			this.comboMonth.AppendText ("Июня");
 			this.comboMonth.AppendText ("Июля");
 			this.comboMonth.AppendText ("Августа");
@@ -103,6 +103,7 @@ namespace bazar
 			this.DefaultWidth = 330;
 			this.DefaultHeight = 123;
 			this.Show ();
+			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
 	}
 }

@@ -780,4 +780,11 @@ public partial class MainWindow : Gtk.Window
 			break;
 		}
 	}
+
+	protected void OnAction39Activated (object sender, EventArgs e)
+	{
+		string param = "";
+		ReportsExt.ViewReport ("Contracts", param);
+	}
+
 }

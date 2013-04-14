@@ -37,9 +37,10 @@ namespace bazar
 		private global::Gtk.Label labelIncomeItem;
 		private global::Gtk.SpinButton spinSum;
 		private global::bazar.SeparationPayment separationpayment;
-		private global::Gtk.Label label1;
-		private global::Gtk.ScrolledWindow GtkScrolledWindow;
+		private global::Gtk.Label label5;
+		private global::Gtk.ScrolledWindow GtkScrolledWindow1;
 		private global::Gtk.TextView textviewDetails;
+		private global::Gtk.Button buttonPrint;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
 		
@@ -455,28 +456,28 @@ namespace bazar
 			global::Gtk.Box.BoxChild w49 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.separationpayment]));
 			w49.Position = 1;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.label1 = new global::Gtk.Label ();
-			this.label1.Name = "label1";
-			this.label1.Xalign = 0F;
-			this.label1.LabelProp = "Основание:";
-			this.vbox2.Add (this.label1);
-			global::Gtk.Box.BoxChild w50 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.label1]));
+			this.label5 = new global::Gtk.Label ();
+			this.label5.Name = "label5";
+			this.label5.Xalign = 0F;
+			this.label5.LabelProp = "Основание:";
+			this.vbox2.Add (this.label5);
+			global::Gtk.Box.BoxChild w50 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.label5]));
 			w50.Position = 2;
 			w50.Expand = false;
 			w50.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.GtkScrolledWindow = new global::Gtk.ScrolledWindow ();
-			this.GtkScrolledWindow.Name = "GtkScrolledWindow";
-			this.GtkScrolledWindow.ShadowType = ((global::Gtk.ShadowType)(1));
-			this.GtkScrolledWindow.BorderWidth = ((uint)(3));
-			// Container child GtkScrolledWindow.Gtk.Container+ContainerChild
+			this.GtkScrolledWindow1 = new global::Gtk.ScrolledWindow ();
+			this.GtkScrolledWindow1.Name = "GtkScrolledWindow1";
+			this.GtkScrolledWindow1.ShadowType = ((global::Gtk.ShadowType)(1));
+			this.GtkScrolledWindow1.BorderWidth = ((uint)(3));
+			// Container child GtkScrolledWindow1.Gtk.Container+ContainerChild
 			this.textviewDetails = new global::Gtk.TextView ();
 			this.textviewDetails.CanFocus = true;
 			this.textviewDetails.Name = "textviewDetails";
 			this.textviewDetails.WrapMode = ((global::Gtk.WrapMode)(2));
-			this.GtkScrolledWindow.Add (this.textviewDetails);
-			this.vbox2.Add (this.GtkScrolledWindow);
-			global::Gtk.Box.BoxChild w52 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.GtkScrolledWindow]));
+			this.GtkScrolledWindow1.Add (this.textviewDetails);
+			this.vbox2.Add (this.GtkScrolledWindow1);
+			global::Gtk.Box.BoxChild w52 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.GtkScrolledWindow1]));
 			w52.Position = 3;
 			w1.Add (this.vbox2);
 			global::Gtk.Box.BoxChild w53 = ((global::Gtk.Box.BoxChild)(w1 [this.vbox2]));
@@ -488,31 +489,58 @@ namespace bazar
 			w54.BorderWidth = ((uint)(5));
 			w54.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
-			this.buttonCancel = new global::Gtk.Button ();
-			this.buttonCancel.CanDefault = true;
-			this.buttonCancel.CanFocus = true;
-			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.UseUnderline = true;
-			// Container child buttonCancel.Gtk.Container+ContainerChild
+			this.buttonPrint = new global::Gtk.Button ();
+			this.buttonPrint.Sensitive = false;
+			this.buttonPrint.CanFocus = true;
+			this.buttonPrint.Name = "buttonPrint";
+			this.buttonPrint.UseUnderline = true;
+			// Container child buttonPrint.Gtk.Container+ContainerChild
 			global::Gtk.Alignment w55 = new global::Gtk.Alignment (0.5F, 0.5F, 0F, 0F);
 			// Container child GtkAlignment.Gtk.Container+ContainerChild
 			global::Gtk.HBox w56 = new global::Gtk.HBox ();
 			w56.Spacing = 2;
 			// Container child GtkHBox.Gtk.Container+ContainerChild
 			global::Gtk.Image w57 = new global::Gtk.Image ();
-			w57.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
+			w57.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-print", global::Gtk.IconSize.Button);
 			w56.Add (w57);
 			// Container child GtkHBox.Gtk.Container+ContainerChild
 			global::Gtk.Label w59 = new global::Gtk.Label ();
-			w59.LabelProp = "О_тменить";
+			w59.LabelProp = "Печать";
 			w59.UseUnderline = true;
 			w56.Add (w59);
 			w55.Add (w56);
-			this.buttonCancel.Add (w55);
-			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w63 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w54 [this.buttonCancel]));
+			this.buttonPrint.Add (w55);
+			this.AddActionWidget (this.buttonPrint, 0);
+			global::Gtk.ButtonBox.ButtonBoxChild w63 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w54 [this.buttonPrint]));
 			w63.Expand = false;
 			w63.Fill = false;
+			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
+			this.buttonCancel = new global::Gtk.Button ();
+			this.buttonCancel.CanDefault = true;
+			this.buttonCancel.CanFocus = true;
+			this.buttonCancel.Name = "buttonCancel";
+			this.buttonCancel.UseUnderline = true;
+			// Container child buttonCancel.Gtk.Container+ContainerChild
+			global::Gtk.Alignment w64 = new global::Gtk.Alignment (0.5F, 0.5F, 0F, 0F);
+			// Container child GtkAlignment.Gtk.Container+ContainerChild
+			global::Gtk.HBox w65 = new global::Gtk.HBox ();
+			w65.Spacing = 2;
+			// Container child GtkHBox.Gtk.Container+ContainerChild
+			global::Gtk.Image w66 = new global::Gtk.Image ();
+			w66.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
+			w65.Add (w66);
+			// Container child GtkHBox.Gtk.Container+ContainerChild
+			global::Gtk.Label w68 = new global::Gtk.Label ();
+			w68.LabelProp = "О_тменить";
+			w68.UseUnderline = true;
+			w65.Add (w68);
+			w64.Add (w65);
+			this.buttonCancel.Add (w64);
+			this.AddActionWidget (this.buttonCancel, -6);
+			global::Gtk.ButtonBox.ButtonBoxChild w72 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w54 [this.buttonCancel]));
+			w72.Position = 1;
+			w72.Expand = false;
+			w72.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.Sensitive = false;
@@ -521,31 +549,31 @@ namespace bazar
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.UseUnderline = true;
 			// Container child buttonOk.Gtk.Container+ContainerChild
-			global::Gtk.Alignment w64 = new global::Gtk.Alignment (0.5F, 0.5F, 0F, 0F);
+			global::Gtk.Alignment w73 = new global::Gtk.Alignment (0.5F, 0.5F, 0F, 0F);
 			// Container child GtkAlignment.Gtk.Container+ContainerChild
-			global::Gtk.HBox w65 = new global::Gtk.HBox ();
-			w65.Spacing = 2;
+			global::Gtk.HBox w74 = new global::Gtk.HBox ();
+			w74.Spacing = 2;
 			// Container child GtkHBox.Gtk.Container+ContainerChild
-			global::Gtk.Image w66 = new global::Gtk.Image ();
-			w66.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
-			w65.Add (w66);
+			global::Gtk.Image w75 = new global::Gtk.Image ();
+			w75.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
+			w74.Add (w75);
 			// Container child GtkHBox.Gtk.Container+ContainerChild
-			global::Gtk.Label w68 = new global::Gtk.Label ();
-			w68.LabelProp = "_OK";
-			w68.UseUnderline = true;
-			w65.Add (w68);
-			w64.Add (w65);
-			this.buttonOk.Add (w64);
+			global::Gtk.Label w77 = new global::Gtk.Label ();
+			w77.LabelProp = "_OK";
+			w77.UseUnderline = true;
+			w74.Add (w77);
+			w73.Add (w74);
+			this.buttonOk.Add (w73);
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w72 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w54 [this.buttonOk]));
-			w72.Position = 1;
-			w72.Expand = false;
-			w72.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w81 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w54 [this.buttonOk]));
+			w81.Position = 2;
+			w81.Expand = false;
+			w81.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 704;
-			this.DefaultHeight = 562;
+			this.DefaultHeight = 568;
 			this.Show ();
 			this.buttonLesseeEdit.Clicked += new global::System.EventHandler (this.OnButtonLesseeEditClicked);
 			this.comboOrg.Changed += new global::System.EventHandler (this.OnComboOrgChanged);
@@ -555,6 +583,7 @@ namespace bazar
 			this.comboAccrual.Changed += new global::System.EventHandler (this.OnComboAccrualChanged);
 			this.spinSum.ValueChanged += new global::System.EventHandler (this.OnSpinSumValueChanged);
 			this.comboIncomeItem.Changed += new global::System.EventHandler (this.OnComboIncomeItemChanged);
+			this.buttonPrint.Clicked += new global::System.EventHandler (this.OnButtonPrintClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
 	}
