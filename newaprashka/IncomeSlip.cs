@@ -11,6 +11,7 @@ namespace bazar
 		int Lessee_id;
 		int Accountable_id;
 		int OriginalAccrual = 0;
+		int Payment = 0;
 		bool LesseeNull = true;
 		bool AccountableNull = true;
 
@@ -27,6 +28,7 @@ namespace bazar
 			entryUser.Text = MainClass.User.Name;
 			if(MainClass.User.edit_slips)
 				dateSlip.Sensitive = true;
+			OnComboOperationChanged (null, null);
 		}
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
@@ -55,6 +57,7 @@ namespace bazar
 			bool Cashok = comboCash.Active > 0;
 			bool Itemok = comboIncomeItem.Active > 0;
 			bool Lesseeok = !LesseeNull;
+			bool Paymentok = separationpayment.CanSave;
 			bool Sumok;
 			if(spinSum.Text != "")
 				Sumok = Convert.ToDecimal (spinSum.Text) != 0; 
@@ -69,6 +72,9 @@ namespace bazar
 				break;
 			case 1:
 				buttonOk.Sensitive = Orgok && Cashok && Accountableok && Sumok;
+				break;
+			case 2:
+				buttonOk.Sensitive = Orgok && Cashok && Lesseeok && Paymentok && Sumok;
 				break;
 			default:
 				break;
@@ -94,12 +100,15 @@ namespace bazar
 		protected void OnSpinSumValueChanged (object sender, EventArgs e)
 		{
 			TestCanSave ();
+			if(comboOperation.Active == 2)
+				separationpayment.PaymentSum = Convert.ToDecimal (spinSum.Value);
 		}
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
 			string sql;
 			TreeIter iter, AccrualIter;
+			int Slip_id;
 
 			if(NewSlip)
 			{
@@ -116,15 +125,24 @@ namespace bazar
 						"WHERE id = @id";
 			}
 			MainClass.StatusMessage("Запись Приходного ордера...");
+			MySqlTransaction trans = MainClass.connectionDB.BeginTransaction ();
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
 				
 				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
-				if(comboOperation.Active == 1)
+				switch (comboOperation.Active) 
+				{
+				case 1:
 					cmd.Parameters.AddWithValue ("@operation","advance");
-				else
+					break;
+				case 2:
+					cmd.Parameters.AddWithValue ("@operation","payment");
+					break;
+				default:
 					cmd.Parameters.AddWithValue ("@operation","common");
+				break;
+				}
 				if(comboOrg.GetActiveIter(out iter) && (int)comboOrg.Model.GetValue(iter,1) != -1)
 					cmd.Parameters.AddWithValue("@org_id",comboOrg.Model.GetValue(iter,1));
 				else
@@ -133,7 +151,7 @@ namespace bazar
 				{
 					cmd.Parameters.AddWithValue("@cash_id", comboCash.Model.GetValue(iter,1));
 				}	
-				if(comboOperation.Active == 0 && !LesseeNull)
+				if((comboOperation.Active == 0 || comboOperation.Active == 2) && !LesseeNull)
 					cmd.Parameters.AddWithValue("@lessee_id", Lessee_id);
 				else
 					cmd.Parameters.AddWithValue("@lessee_id", DBNull.Value);
@@ -148,12 +166,12 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@date", dateSlip.Date);
 				cmd.Parameters.AddWithValue("@sum", spinSum.Value);
-				if(comboOperation.Active == 0 && comboContract.Active >= 0)
+				if((comboOperation.Active == 0 || comboOperation.Active == 2) && comboContract.Active >= 0)
 					cmd.Parameters.AddWithValue("@contract_no", comboContract.ActiveText);
 				else
 					cmd.Parameters.AddWithValue("@contract_no", DBNull.Value);
 				int CurrentAccrualId;
-				if(comboOperation.Active == 0 && comboAccrual.Active > 0 && comboAccrual.GetActiveIter(out AccrualIter))
+				if((comboOperation.Active == 0 || comboOperation.Active == 2) && comboAccrual.Active > 0 && comboAccrual.GetActiveIter(out AccrualIter))
 				{
 					CurrentAccrualId = (int)comboAccrual.Model.GetValue(AccrualIter,1);
 					cmd.Parameters.AddWithValue("@accrual_id", CurrentAccrualId);
@@ -173,6 +191,30 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@details", textviewDetails.Buffer.Text);
 				
 				cmd.ExecuteNonQuery();
+				// Создаем платеж
+				if(comboOperation.Active == 2)
+				{
+					// Здесь возможно надо будет обновлять информацию в платеже о начислении. пока только создание.
+					if(NewSlip)
+					{
+						Slip_id = Convert.ToInt32(cmd.LastInsertedId);
+						sql = "INSERT INTO payments (createdate, credit_slip_id, accrual_id) " +
+							"VALUES (@date, @slip, @accrual)";
+						// Записываем платеж
+						cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+						cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
+						cmd.Parameters.AddWithValue("@accrual", CurrentAccrualId);
+						cmd.Parameters.AddWithValue("@slip", Slip_id);
+						
+						cmd.ExecuteNonQuery ();
+						Payment = Convert.ToInt32(cmd.LastInsertedId);
+					}
+
+					// Записываем Операции оплаты.
+					separationpayment.PaymentId = Payment;
+					separationpayment.SavePaymentDetails (trans);
+				}
+				trans.Commit ();
 				decimal Balance;
 
 				if(OriginalAccrual != 0 && OriginalAccrual != CurrentAccrualId)
@@ -198,6 +240,7 @@ namespace bazar
 			} 
 			catch (Exception ex) 
 			{
+				trans.Rollback ();
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи приходного ордера!");
 				MainClass.ErrorMessage(this,ex);
@@ -212,10 +255,11 @@ namespace bazar
 			
 			MainClass.StatusMessage(String.Format ("Запрос приходного ордера №{0}...", SlipId));
 			string sql = "SELECT credit_slips.*, lessees.name as lessee, users.name as user, " +
-				"employees.name as employee FROM credit_slips " +
+				"employees.name as employee, payments.id as payment FROM credit_slips " +
 				"LEFT JOIN lessees ON credit_slips.lessee_id = lessees.id " +
 				"LEFT JOIN users ON credit_slips.user_id = users.id " +
 				"LEFT JOIN employees ON credit_slips.employee_id = employees.id " +
+				"LEFT JOIN payments ON payments.credit_slip_id = credit_slips.id " +
 				"WHERE credit_slips.id = @id";
 			try
 			{
@@ -232,11 +276,15 @@ namespace bazar
 				case "advance":
 					comboOperation.Active = 1;
 					break;
+				case "payment":
+					comboOperation.Active = 2;
+					break;
 				default:
 					comboOperation.Active = 0;
 					break;
 				}
 				entryNumber.Text = rdr["id"].ToString();
+				Payment = rdr.GetInt32 ("payment");
 				if(rdr["lessee_id"] != DBNull.Value)
 				{
 					Lessee_id = Convert.ToInt32(rdr["lessee_id"].ToString());
@@ -293,21 +341,36 @@ namespace bazar
 					if(MainClass.SearchListStore((ListStore)comboAccrual.Model, Convert.ToInt32(DBAccrual) , out iter))
 						comboAccrual.SetActiveIter (iter);
 					OriginalAccrual = Convert.ToInt32(DBAccrual);
+					// для возможности редактировать старые оплаты
+					comboAccrual.Visible = true;
 				}
+				if(comboOperation.Active == 2)
+				{
+					separationpayment.PaymentId = Payment;
+					separationpayment.AccrualId = OriginalAccrual;
+					// Временно пока не налажено корректная обработка смены начисления у созданной оплаты
+					comboContract.Sensitive = false;
+					comboAccrual.Sensitive = false;
+					buttonLesseeEdit.Sensitive = false;
+				}
+
 				this.Title = "Приходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
 				if(!MainClass.User.edit_slips && dateSlip.Date != DateTime.Now.Date)
 				{
 					comboOrg.Sensitive = false;
 					comboCash.Sensitive = false;
-					comboOperation.Sensitive = false;
 					buttonLesseeEdit.Sensitive = false;
 					buttonAccountableEdit.Sensitive = false;
 					comboContract.Sensitive = false;
+					comboAccrual.Sensitive = false;
 					comboIncomeItem.Sensitive = false;
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
+					separationpayment.Sensitive = false;
 				}
+				comboOperation.Sensitive = false;
+
 				MainClass.StatusMessage("Ok");
 			}
 			catch (Exception ex)
@@ -324,27 +387,62 @@ namespace bazar
 			switch (comboOperation.Active) 
 			{
 			case 0: //common
-				entryLessee.Sensitive = true;
-				buttonLesseeEdit.Sensitive = true;
-				labelIncomeItem.LabelProp = "Статья дохода<span foreground=\"red\">*</span>:";
-				labelAccountable.LabelProp = "Подотчетное лицо:";
-				labelLessee.LabelProp = "Арендатор<span foreground=\"red\">*</span>:";
-				entryAccountable.Sensitive = false;
-				buttonAccountableEdit.Sensitive = false;
-				comboContract.Sensitive = true;
+				VisibleLessee (true);
+				VisibleContract (true);
+				VisibleAccrual (false);
+				VisibleAccountable (false);
+				VisibleIncomeItems (true);
+				separationpayment.Visible = false;
 				break;
 			case 1: //advance
-				entryLessee.Sensitive = false;
-				buttonLesseeEdit.Sensitive = false;
-				labelIncomeItem.LabelProp = "Статья дохода:";
-				labelAccountable.LabelProp = "Подотчетное лицо<span foreground=\"red\">*</span>:";
-				labelLessee.LabelProp = "Арендатор:";
-				entryAccountable.Sensitive = true;
-				buttonAccountableEdit.Sensitive = true;
-				comboContract.Sensitive = false;
+				VisibleLessee (false);
+				VisibleContract (false);
+				VisibleAccrual (false);
+				VisibleAccountable (true);
+				VisibleIncomeItems (false);
+				separationpayment.Visible = false;
+				break;
+			case 2: //payment
+				VisibleLessee (true);
+				VisibleContract (true);
+				VisibleAccrual (true);
+				VisibleAccountable (false);
+				VisibleIncomeItems (false);
+				separationpayment.Visible = true;
 				break;
 			}
+			this.Resize (1, 1);
 			TestCanSave ();
+		}
+
+		private void VisibleLessee( bool visible)
+		{
+			labelLessee.Visible = visible;
+			hboxLessee.Visible = visible;
+		}
+
+		private void VisibleContract( bool visible)
+		{
+			labelContract.Visible = visible;
+			comboContract.Visible = visible;
+		}
+
+		private void VisibleAccrual( bool visible)
+		{
+			labelAccrual.Visible = visible;
+			comboAccrual.Visible = visible;
+		}
+
+		private void VisibleAccountable( bool visible)
+		{
+			labelAccountable.Visible = visible;
+			hboxAccountable.Visible = visible;
+		}
+
+		private void VisibleIncomeItems( bool visible)
+		{
+			labelIncomeItem.Visible = visible;
+			comboIncomeItem.Visible = visible;
 		}
 
 		protected void OnButtonAccountableEditClicked (object sender, EventArgs e)
@@ -377,6 +475,15 @@ namespace bazar
 			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.ActiveText) };
 			string Display = "№{0} - {1:MMMM} {2}";
 			MainClass.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, 2);
+		}
+
+		protected void OnComboAccrualChanged (object sender, EventArgs e)
+		{
+			TreeIter AccrualIter;
+			if(comboAccrual.Active > 0 && comboAccrual.GetActiveIter(out AccrualIter))
+				separationpayment.AccrualId = (int)comboAccrual.Model.GetValue(AccrualIter,1);
+			else
+				separationpayment.AccrualId = 0;
 		}
 	}
 }

@@ -1,3 +1,16 @@
+2013-04-14  Gankov Andrey  <gav@qsolution.ru>
+
+	* Accrual.cs:
+	* BazAr.csproj:
+	* IncomeSlip.cs:
+	* gui.stetic:
+	* SelectAccrualRow.cs:
+	* SeparationPayment.cs:
+	* generated.cs:
+	* bazar.IncomeSlip.cs:
+	* bazar.SelectAccrualRow.cs:
+	* bazar.SeparationPayment.cs: 
+
 2013-04-11  Gankov Andrey  <gav@qsolution.ru>
 
 	* Accrual.cs:

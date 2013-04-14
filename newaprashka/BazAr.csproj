@@ -126,6 +126,10 @@
     <Compile Include="ViewReportsDlg.cs" />
     <Compile Include="DocRegister.cs" />
     <Compile Include="gtk-gui\bazar.DocRegister.cs" />
+    <Compile Include="SeparationPayment.cs" />
+    <Compile Include="gtk-gui\bazar.SeparationPayment.cs" />
+    <Compile Include="SelectAccrualRow.cs" />
+    <Compile Include="gtk-gui\bazar.SelectAccrualRow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

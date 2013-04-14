@@ -227,7 +227,12 @@ namespace bazar
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			double Sum = (double) model.GetValue (iter, 8);
-			decimal Debt = Convert.ToDecimal (Sum) - (decimal) model.GetValue (iter, 11);
+			decimal Paid ;
+			if(model.GetValue (iter, 11) != null)
+				Paid = (decimal) model.GetValue (iter, 11);
+			else
+				Paid = 0;
+			decimal Debt = Convert.ToDecimal (Sum) - Paid;
 			if (Debt <= 0 && Sum != 0) 
 			{
 				(cell as Gtk.CellRendererText).Foreground = "darkgreen";
@@ -573,6 +578,7 @@ namespace bazar
 			TreeIter iter, CashIter;
 			iter = ServiceListStore.Append();
 			ServiceListStore.SetValue(iter, 6, 1);
+			ServiceListStore.SetValue(iter, 10, String.Format ("{0:0.00}", 0));
 			if(CashNameList.IterNChildren() == 1)
 			{
 				CashNameList.GetIterFirst (out CashIter);
@@ -629,6 +635,16 @@ namespace bazar
 		{
 			TreeIter iter;
 			treeviewServices.Selection.GetSelected (out iter);
+			if (ServiceListStore.GetValue(iter, 11) != null && (decimal) ServiceListStore.GetValue(iter, 11) > 0)
+			{
+				string mes = "Нельзя удалить уже оплаченную услугу.";
+				MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
+				                                     MessageType.Warning, 
+				                                     ButtonsType.Ok, mes);
+				md.Run ();
+				md.Destroy();
+				return;
+			}
 			if((long)ServiceListStore.GetValue(iter, 9) > 0)
 				DeletedRowId.Add ((long)ServiceListStore.GetValue(iter, 9));
 			ServiceListStore.Remove(ref iter);
