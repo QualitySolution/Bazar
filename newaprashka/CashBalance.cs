@@ -36,13 +36,16 @@ namespace bazar
 			{
 				// Расходы
 				string sqlwhere = "";
+				string sqlwhere2 = "";
 				if(comboCash.GetActiveIter(out iter) && comboCash.Active != 0)
 				{
 					sqlwhere += " AND cash_id = '" + comboCash.Model.GetValue(iter,1) + "'";
+					sqlwhere2 += " AND credit_slips.cash_id = '" + comboCash.Model.GetValue(iter,1) + "'";
 				}
 				if(comboOrg.GetActiveIter(out iter) && comboOrg.Active != 0)
 				{
 					sqlwhere += " AND org_id = '" + comboOrg.Model.GetValue(iter,1) + "'";
+					sqlwhere2 += " AND credit_slips.org_id = '" + comboOrg.Model.GetValue(iter,1) + "'";
 				}
 				string sql = "SELECT expense_items.name as item, SUM(amount) as sum FROM ( " +
 					"SELECT expense_id, SUM(sum) as amount FROM debit_slips " +
@@ -75,10 +78,18 @@ namespace bazar
 				BalanceTreeStore.AppendNode();
 
 				// Доходы
-				sql = "SELECT income_items.name as item, SUM(sum) as sum FROM credit_slips " +
+				sql = "SELECT income_items.name as item, SUM(sumtable.total) as sum FROM (" +
+					"SELECT income_id, SUM(sum) as total FROM credit_slips " +
+					"WHERE operation = 'common' AND date BETWEEN @start AND @end "+ sqlwhere + " " +
+					"GROUP BY income_id " +
+					"UNION ALL " +
+					"SELECT payment_details.income_id as income_id, SUM(payment_details.sum) as total " +
+					"FROM payment_details, payments, credit_slips " +
+					"WHERE payment_details.payment_id = payments.id AND payments.credit_slip_id = credit_slips.id " +
+					"AND credit_slips.operation = 'payment' AND credit_slips.date BETWEEN @start AND @end "+ sqlwhere2 + " " +
+					"GROUP BY payment_details.income_id ) as sumtable " +
 					"LEFT JOIN income_items ON income_id = income_items.id " +
-					"WHERE operation != 'advance' AND date BETWEEN @start AND @end "+ sqlwhere + " " +
-					"GROUP BY income_id";
+					"GROUP BY sumtable.income_id";
 				
 				cmd = new MySqlCommand(sql, MainClass.connectionDB);
 				cmd.Parameters.AddWithValue("@start", dateCashStart.Date);

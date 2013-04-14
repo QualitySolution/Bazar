@@ -1,5 +1,10 @@
 2013-04-14  Gankov Andrey  <gav@qsolution.ru>
 
+	* CashBalance.cs:
+	* gui.stetic: 
+
+2013-04-14  Gankov Andrey  <gav@qsolution.ru>
+
 	* Accrual.cs:
 	* BazAr.csproj:
 	* IncomeSlip.cs:
