@@ -245,6 +245,12 @@
         <property name="ShortLabel" translatable="yes">Реестр договоров</property>
         <signal name="Activated" handler="OnAction39Activated" />
       </action>
+      <action id="Action40">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Касса за день</property>
+        <property name="ShortLabel" translatable="yes">Касса за день</property>
+        <signal name="Activated" handler="OnAction40Activated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">База арендаторов (БазАр)</property>
@@ -289,6 +295,7 @@
                   <node type="Menuitem" action="Action30" />
                   <node type="Menuitem" action="Action31" />
                   <node type="Menuitem" action="Action32" />
+                  <node type="Menuitem" action="Action40" />
                 </node>
                 <node type="Menuitem" action="Action33" />
                 <node type="Menuitem" action="Action38" />
@@ -7825,6 +7832,7 @@
                 <property name="PaymentSum">0</property>
                 <property name="PaymentId">0</property>
                 <property name="AccrualId">0</property>
+                <signal name="CanSaveStateChanged" handler="OnSeparationpaymentCanSaveStateChanged" />
               </widget>
               <packing>
                 <property name="Position">1</property>
@@ -12294,6 +12302,96 @@
           </widget>
           <packing>
             <property name="Position">1</property>
+            <property name="AutoSize">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+    <child internal-child="ActionArea">
+      <widget class="Gtk.HButtonBox" id="dialog1_ActionArea">
+        <property name="MemberName" />
+        <property name="Spacing">10</property>
+        <property name="BorderWidth">5</property>
+        <property name="Size">2</property>
+        <property name="LayoutStyle">End</property>
+        <child>
+          <widget class="Gtk.Button" id="buttonCancel">
+            <property name="MemberName" />
+            <property name="CanDefault">True</property>
+            <property name="CanFocus">True</property>
+            <property name="UseStock">True</property>
+            <property name="Type">StockItem</property>
+            <property name="StockId">gtk-cancel</property>
+            <property name="ResponseId">-6</property>
+            <property name="label">gtk-cancel</property>
+          </widget>
+          <packing>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Button" id="buttonOk">
+            <property name="MemberName" />
+            <property name="CanDefault">True</property>
+            <property name="CanFocus">True</property>
+            <property name="UseStock">True</property>
+            <property name="Type">StockItem</property>
+            <property name="StockId">gtk-ok</property>
+            <property name="ResponseId">-5</property>
+            <signal name="Clicked" handler="OnButtonOkClicked" />
+            <property name="label">gtk-ok</property>
+          </widget>
+          <packing>
+            <property name="Position">1</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="Gtk.Dialog" id="bazar.DailyCashReport" design-size="316 111">
+    <property name="MemberName" />
+    <property name="Title" translatable="yes">Кассовый отчет за день</property>
+    <property name="WindowPosition">CenterOnParent</property>
+    <property name="Modal">True</property>
+    <property name="Buttons">2</property>
+    <property name="HelpButton">False</property>
+    <child internal-child="VBox">
+      <widget class="Gtk.VBox" id="dialog1_VBox">
+        <property name="MemberName" />
+        <property name="BorderWidth">2</property>
+        <child>
+          <widget class="Gtk.HBox" id="hbox1">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <widget class="Gtk.Label" id="label1">
+                <property name="MemberName" />
+                <property name="LabelProp" translatable="yes">Отчет за:</property>
+              </widget>
+              <packing>
+                <property name="Position">0</property>
+                <property name="AutoSize">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="WidgetLib.DatePicker" id="datepickerCash">
+                <property name="MemberName" />
+                <property name="Events">ButtonPressMask</property>
+                <property name="Date">0</property>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
             <property name="AutoSize">False</property>
             <property name="Fill">False</property>
           </packing>

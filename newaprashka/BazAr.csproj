@@ -132,6 +132,8 @@
     <Compile Include="gtk-gui\bazar.SelectAccrualRow.cs" />
     <Compile Include="ReportDialogs\LesseeDebtsReport.cs" />
     <Compile Include="gtk-gui\bazar.LesseeDebtsReport.cs" />
+    <Compile Include="ReportDialogs\DailyCashReport.cs" />
+    <Compile Include="gtk-gui\bazar.DailyCashReport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

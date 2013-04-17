@@ -1,3 +1,13 @@
+2013-04-17  Gankov Andrey  <gav@qsolution.ru>
+
+	* BazAr.csproj:
+	* MainWindow.cs:
+	* ReportsExt.cs:
+	* gui.stetic:
+	* MainWindow.cs:
+	* DailyCashReport.cs:
+	* bazar.DailyCashReport.cs: 
+
 2013-04-14  Gankov Andrey  <gav@qsolution.ru>
 
 	* IncomeSlip.cs:

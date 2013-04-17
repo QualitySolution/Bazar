@@ -787,4 +787,12 @@ public partial class MainWindow : Gtk.Window
 		ReportsExt.ViewReport ("Contracts", param);
 	}
 
+	protected void OnAction40Activated (object sender, EventArgs e)
+	{
+		DailyCashReport WinReport = new DailyCashReport();
+		WinReport.Show ();
+		WinReport.Run ();
+		WinReport.Destroy ();
+	}
+
 }

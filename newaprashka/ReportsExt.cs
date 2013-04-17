@@ -12,6 +12,11 @@ namespace bazar
 
 		public static void ViewReport(string ReportName, string Params)
 		{
+			ViewReport(ReportName, Params, false);
+		}
+
+		public static void ViewReport(string ReportName, string Params, bool UserVar)
+		{
 			string ReportPath = System.IO.Path.Combine( Directory.GetCurrentDirectory(), "Reports", ReportName + ".rdl");
 
 			XmlDocument xmlDoc = new XmlDocument();
@@ -19,7 +24,10 @@ namespace bazar
 			
 			foreach (XmlNode node in xmlDoc.GetElementsByTagName("ConnectString"))
 			{
-				node.InnerText = MainClass.ConnectionString;
+				if(UserVar)
+					node.InnerText = MainClass.ConnectionString + "Allow User Variables=True";
+				else
+					node.InnerText = MainClass.ConnectionString;
 			}
 
 			ReportPath = System.IO.Path.Combine (System.IO.Path.GetTempPath (), ReportName + ".rdl");
