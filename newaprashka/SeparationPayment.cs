@@ -17,6 +17,8 @@ namespace bazar
 		TreeModelFilter AccrualRowsFilter;
 		private List<long> DeletedRowId = new List<long>();
 
+		public event EventHandler CanSaveStateChanged;
+
 		public decimal PaymentSum {
 			get {return _PaymentSum;}
 			set {_PaymentSum = value;
@@ -348,10 +350,13 @@ namespace bazar
 				paid += Convert.ToDecimal (row[6]);
 			}
 			labelNotSeparated.Text = String.Format ("Не разнесено: {0:C}", _PaymentSum - paid);
+			bool OldCanSave = _CanSave;
 			_CanSave = ((_PaymentSum - paid) == 0);
+			if(_CanSave != OldCanSave && CanSaveStateChanged != null)
+				CanSaveStateChanged(this, EventArgs.Empty);
 		}
 
-		public bool SavePaymentDetails(MySqlTransaction trans)
+		public bool SavePaymentDetails(int Payment_id, MySqlTransaction trans)
 		{
 			// Записываем строки оплаты
 			string sql;
@@ -369,7 +374,7 @@ namespace bazar
 						
 					cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
 					cmd.Parameters.AddWithValue("@id", row[0]);
-					cmd.Parameters.AddWithValue("@payment_id", _PaymentId);
+					cmd.Parameters.AddWithValue("@payment_id", Payment_id);
 					cmd.Parameters.AddWithValue("@accrual_pay_id", row[1]);
 					cmd.Parameters.AddWithValue("@sum", row[6]);
 					cmd.Parameters.AddWithValue("@income_id", row[3]);

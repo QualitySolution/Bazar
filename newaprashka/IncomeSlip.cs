@@ -211,8 +211,8 @@ namespace bazar
 					}
 
 					// Записываем Операции оплаты.
-					separationpayment.PaymentId = Payment;
-					separationpayment.SavePaymentDetails (trans);
+					//separationpayment.PaymentId = Payment;
+					separationpayment.SavePaymentDetails (Payment, trans);
 				}
 				trans.Commit ();
 				decimal Balance;
@@ -284,7 +284,8 @@ namespace bazar
 					break;
 				}
 				entryNumber.Text = rdr["id"].ToString();
-				Payment = rdr.GetInt32 ("payment");
+				if(rdr["payment"] != DBNull.Value)
+					Payment = rdr.GetInt32 ("payment");
 				if(rdr["lessee_id"] != DBNull.Value)
 				{
 					Lessee_id = Convert.ToInt32(rdr["lessee_id"].ToString());
@@ -496,6 +497,11 @@ namespace bazar
 				ReportsExt.ViewReport ("Ticket", param);
 				break;
 			}
+		}
+
+		protected void OnSeparationpaymentCanSaveStateChanged (object sender, EventArgs e)
+		{
+			TestCanSave ();
 		}
 	}
 }

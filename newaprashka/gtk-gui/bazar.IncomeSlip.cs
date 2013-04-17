@@ -583,6 +583,7 @@ namespace bazar
 			this.comboAccrual.Changed += new global::System.EventHandler (this.OnComboAccrualChanged);
 			this.spinSum.ValueChanged += new global::System.EventHandler (this.OnSpinSumValueChanged);
 			this.comboIncomeItem.Changed += new global::System.EventHandler (this.OnComboIncomeItemChanged);
+			this.separationpayment.CanSaveStateChanged += new global::System.EventHandler (this.OnSeparationpaymentCanSaveStateChanged);
 			this.buttonPrint.Clicked += new global::System.EventHandler (this.OnButtonPrintClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
