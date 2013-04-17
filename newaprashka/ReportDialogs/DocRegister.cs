@@ -38,13 +38,15 @@ namespace bazar
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
 			string param;
+			string Startdate = String.Format ("{0:u}", dateCashStart.Date).Substring (0, 10);
+			string Enddate = String.Format ("{0:u}", dateCashEnd.Date).Substring (0, 10);
 			switch (comboDoc.Active) {
 			case 0:
-				param = "Start=" + dateCashStart.DateText + "&End=" + dateCashEnd.DateText;
+				param = "Start=" + Startdate + "&End=" + Enddate;
 				ReportsExt.ViewReport ("IncomeRegister", param);
 				break;
 			case 1:
-				param = "Start=" + dateCashStart.DateText + "&End=" + dateCashEnd.DateText;
+				param = "Start=" + Startdate + "&End=" + Enddate;
 				ReportsExt.ViewReport ("ExpenseRegister", param);
 				break;
 			default:

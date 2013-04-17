@@ -124,7 +124,6 @@
     <Compile Include="gtk-gui\bazar.ViewReportsDlg.cs" />
     <Compile Include="ReportsExt.cs" />
     <Compile Include="ViewReportsDlg.cs" />
-    <Compile Include="DocRegister.cs" />
     <Compile Include="gtk-gui\bazar.DocRegister.cs" />
     <Compile Include="SeparationPayment.cs" />
     <Compile Include="gtk-gui\bazar.SeparationPayment.cs" />
@@ -134,6 +133,7 @@
     <Compile Include="gtk-gui\bazar.LesseeDebtsReport.cs" />
     <Compile Include="ReportDialogs\DailyCashReport.cs" />
     <Compile Include="gtk-gui\bazar.DailyCashReport.cs" />
+    <Compile Include="ReportDialogs\DocRegister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

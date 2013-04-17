@@ -1,5 +1,11 @@
 2013-04-17  Gankov Andrey  <gav@qsolution.ru>
 
+	* BazAr.csproj:
+	* DocRegister.cs:
+	* DocRegister.cs: 
+
+2013-04-17  Gankov Andrey  <gav@qsolution.ru>
+
 	* IncomeSlip.cs:
 	* SeparationPayment.cs:
 	* bazar.IncomeSlip.cs: 
