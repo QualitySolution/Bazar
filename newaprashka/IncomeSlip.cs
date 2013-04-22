@@ -350,11 +350,13 @@ namespace bazar
 					separationpayment.PaymentId = Payment;
 					separationpayment.AccrualId = OriginalAccrual;
 					buttonPrint.Sensitive = true;
-					// Временно пока не налажено корректная обработка смены начисления у созданной оплаты
+					//FIXME Временно пока не налажено корректная обработка смены начисления у созданной оплаты
 					comboContract.Sensitive = false;
 					comboAccrual.Sensitive = false;
 					buttonLesseeEdit.Sensitive = false;
 				}
+				if(comboOperation.Active == 0)
+					buttonPrint.Sensitive = true;
 
 				this.Title = "Приходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
@@ -490,11 +492,14 @@ namespace bazar
 
 		protected void OnButtonPrintClicked (object sender, EventArgs e)
 		{
+			string param = "id=" + entryNumber.Text;
 			switch(comboOperation.Active)
 			{
+			case 0:
+				ReportsExt.ViewReport ("CommonTicket", param);
+				break;
 			case 2:
-				string param = "id=" + entryNumber.Text;
-				ReportsExt.ViewReport ("Ticket", param);
+				ReportsExt.ViewReport ("PaymentTicket", param);
 				break;
 			}
 		}
