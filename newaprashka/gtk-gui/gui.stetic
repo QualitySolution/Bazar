@@ -2071,6 +2071,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2738,6 +2739,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -7334,7 +7336,6 @@
                         <child>
                           <widget class="Gtk.Entry" id="entryAccountable">
                             <property name="MemberName" />
-                            <property name="Sensitive">False</property>
                             <property name="CanFocus">True</property>
                             <property name="IsEditable">False</property>
                             <property name="InvisibleChar">●</property>
@@ -7347,12 +7348,12 @@
                         <child>
                           <widget class="Gtk.Button" id="buttonAccountableEdit">
                             <property name="MemberName" />
-                            <property name="Sensitive">False</property>
                             <property name="CanFocus">True</property>
                             <property name="Type">TextAndIcon</property>
                             <property name="Icon">stock:gtk-edit Menu</property>
                             <property name="Label" translatable="yes" />
                             <property name="UseUnderline">True</property>
+                            <signal name="Clicked" handler="OnButtonAccountableEditClicked" />
                           </widget>
                           <packing>
                             <property name="Position">1</property>

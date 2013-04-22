@@ -132,7 +132,6 @@ namespace bazar
 			this.hboxAccountable.Spacing = 6;
 			// Container child hboxAccountable.Gtk.Box+BoxChild
 			this.entryAccountable = new global::Gtk.Entry ();
-			this.entryAccountable.Sensitive = false;
 			this.entryAccountable.CanFocus = true;
 			this.entryAccountable.Name = "entryAccountable";
 			this.entryAccountable.IsEditable = false;
@@ -142,7 +141,6 @@ namespace bazar
 			w7.Position = 0;
 			// Container child hboxAccountable.Gtk.Box+BoxChild
 			this.buttonAccountableEdit = new global::Gtk.Button ();
-			this.buttonAccountableEdit.Sensitive = false;
 			this.buttonAccountableEdit.CanFocus = true;
 			this.buttonAccountableEdit.Name = "buttonAccountableEdit";
 			this.buttonAccountableEdit.UseUnderline = true;
@@ -576,6 +574,7 @@ namespace bazar
 			this.DefaultHeight = 568;
 			this.Show ();
 			this.buttonLesseeEdit.Clicked += new global::System.EventHandler (this.OnButtonLesseeEditClicked);
+			this.buttonAccountableEdit.Clicked += new global::System.EventHandler (this.OnButtonAccountableEditClicked);
 			this.comboOrg.Changed += new global::System.EventHandler (this.OnComboOrgChanged);
 			this.comboOperation.Changed += new global::System.EventHandler (this.OnComboOperationChanged);
 			this.comboContract.Changed += new global::System.EventHandler (this.OnComboContractChanged);
