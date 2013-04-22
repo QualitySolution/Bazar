@@ -315,7 +315,7 @@ public partial class MainWindow : Gtk.Window
 				AreaSum += (double)Placefilter.GetValue(iter,11);
 			}
 		}
-		labelSum.Text = "Суммарная площадь: " + AreaSum.ToString() + " кв.м.";
+		labelSum.LabelProp = "Суммарная площадь: " + AreaSum.ToString() + " м<sup>2</sup>";
 	}
 
 }

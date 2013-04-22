@@ -565,7 +565,7 @@ public partial class MainWindow : Gtk.Window
 				Sum += (decimal)Model.GetValue(iter,13);
 			}
 		}
-		labelSum.Text = String.Format("Сумма документов: {0:C} ", Sum);
+		labelSum.LabelProp = String.Format("Сумма документов: {0:C} ", Sum);
 	}
 
 	protected void CalculateTotalCash()

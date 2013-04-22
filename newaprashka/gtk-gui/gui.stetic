@@ -3154,7 +3154,8 @@
             <child>
               <widget class="Gtk.Label" id="labelSum">
                 <property name="MemberName" />
-                <property name="LabelProp" translatable="yes">Суммарная площадь: 0 кв.м.</property>
+                <property name="LabelProp" translatable="yes">Суммарная площадь: 0 м&lt;sup&gt;2&lt;/sup&gt;</property>
+                <property name="UseMarkup">True</property>
               </widget>
               <packing>
                 <property name="Position">3</property>
@@ -3784,7 +3785,8 @@
                               <widget class="Gtk.Label" id="label3">
                                 <property name="MemberName" />
                                 <property name="Xalign">1</property>
-                                <property name="LabelProp" translatable="yes">Площадь (кв.м.):</property>
+                                <property name="LabelProp" translatable="yes">Площадь (м&lt;sup&gt;2&lt;/sup&gt;):</property>
+                                <property name="UseMarkup">True</property>
                               </widget>
                               <packing>
                                 <property name="TopAttach">3</property>

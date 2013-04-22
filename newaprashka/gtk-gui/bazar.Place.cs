@@ -253,7 +253,8 @@ namespace bazar
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
 			this.label3.Xalign = 1F;
-			this.label3.LabelProp = "Площадь (кв.м.):";
+			this.label3.LabelProp = "Площадь (м<sup>2</sup>):";
+			this.label3.UseMarkup = true;
 			this.table2.Add (this.label3);
 			global::Gtk.Table.TableChild w36 = ((global::Gtk.Table.TableChild)(this.table2 [this.label3]));
 			w36.TopAttach = ((uint)(3));

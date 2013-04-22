@@ -1,5 +1,14 @@
 2013-04-22  Gankov Andrey  <gav@qsolution.ru>
 
+	* MainWinCash.cs:
+	* MainWinPlace.cs:
+	* MainWinAccrual.cs:
+	* gui.stetic:
+	* MainWindow.cs:
+	* bazar.Place.cs: 
+
+2013-04-22  Gankov Andrey  <gav@qsolution.ru>
+
 	* Contract.cs:
 	* gui.stetic:
 	* bazar.Contract.cs: 

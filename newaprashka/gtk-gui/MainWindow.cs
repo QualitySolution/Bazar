@@ -2476,7 +2476,8 @@ public partial class MainWindow
 		// Container child statusbar1.Gtk.Box+BoxChild
 		this.labelSum = new global::Gtk.Label ();
 		this.labelSum.Name = "labelSum";
-		this.labelSum.LabelProp = "Суммарная площадь: 0 кв.м.";
+		this.labelSum.LabelProp = "Суммарная площадь: 0 м<sup>2</sup>";
+		this.labelSum.UseMarkup = true;
 		this.statusbar1.Add (this.labelSum);
 		global::Gtk.Box.BoxChild w355 = ((global::Gtk.Box.BoxChild)(this.statusbar1 [this.labelSum]));
 		w355.Position = 3;

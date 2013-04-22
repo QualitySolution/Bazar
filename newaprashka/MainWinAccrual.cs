@@ -233,7 +233,7 @@ public partial class MainWindow : Gtk.Window
 				DebtSum += (decimal)Model.GetValue(iter, 11);
 			}
 		}
-		labelSum.Text = String.Format("Всего начислено: {0:C} Оплачено: {1:C} Долг: {2:C}", Sum, PaidSum, DebtSum);
+		labelSum.LabelProp = String.Format("Всего начислено: {0:C} Оплачено: {1:C} Долг: {2:C}", Sum, PaidSum, DebtSum);
 	}
 
 	protected void OnButtonAccrualContractClearClicked (object sender, EventArgs e)
