@@ -1,5 +1,11 @@
 2013-04-22  Gankov Andrey  <gav@qsolution.ru>
 
+	* Contract.cs:
+	* gui.stetic:
+	* bazar.Contract.cs: 
+
+2013-04-22  Gankov Andrey  <gav@qsolution.ru>
+
 	* gui.stetic:
 	* bazar.IncomeSlip.cs: 
 

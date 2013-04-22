@@ -222,8 +222,9 @@ namespace bazar
 			TreeIter iter;
 			
 			MainClass.StatusMessage("Запрос договора №" + ContractNumber +"...");
-			string sql = "SELECT contracts.*, lessees.name as lessee FROM contracts " +
+			string sql = "SELECT contracts.*, lessees.name as lessee, places.area FROM contracts " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
+				"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no = contracts.place_no " +
 				"WHERE contracts.number = @number";
 			try
 			{
@@ -260,6 +261,11 @@ namespace bazar
 					comboPayDay.Active = Convert.ToInt32(rdr["pay_day"].ToString());
 				else
 					comboPayDay.Active = 0;
+
+				float area = 0;
+				if(rdr["area"] != DBNull.Value)
+					area = rdr.GetFloat("area");
+				labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
 
 				textComments.Buffer.Text = rdr["comments"].ToString();
 				//запоминаем переменные что бы освободить соединение
@@ -428,7 +434,7 @@ namespace bazar
 			if(NewContract && comboPlaceNo.ActiveText != null)
 			{
 				MainClass.StatusMessage("Запрос информации о месте...");
-				string sql = "SELECT org_id FROM places " +
+				string sql = "SELECT org_id, area FROM places " +
 					"WHERE type_id = @type_id AND place_no = @place_no";
 				try
 				{
@@ -449,6 +455,10 @@ namespace bazar
 						else
 							MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 						comboOrg.SetActiveIter (iter);
+						float area = 0;
+						if(rdr["area"] != DBNull.Value)
+							area = rdr.GetFloat("area");
+						labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
 					}
 					rdr.Close();
 					MainClass.StatusMessage("Ok");

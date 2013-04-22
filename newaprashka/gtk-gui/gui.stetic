@@ -6444,7 +6444,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Contract" design-size="770 449">
+  <widget class="Gtk.Dialog" id="bazar.Contract" design-size="756 450">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый договор</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -6459,10 +6459,9 @@
             <property name="MemberName" />
             <property name="Spacing">6</property>
             <child>
-              <widget class="Gtk.HPaned" id="hpaned1">
+              <widget class="Gtk.HBox" id="hbox8">
                 <property name="MemberName" />
-                <property name="CanFocus">True</property>
-                <property name="Position">372</property>
+                <property name="Spacing">6</property>
                 <child>
                   <widget class="Gtk.Table" id="table2">
                     <property name="MemberName" />
@@ -6706,6 +6705,19 @@
                             <property name="Fill">False</property>
                           </packing>
                         </child>
+                        <child>
+                          <widget class="Gtk.Label" id="labelArea">
+                            <property name="MemberName" />
+                            <property name="Tooltip" translatable="yes">Площадь</property>
+                            <property name="UseMarkup">True</property>
+                          </widget>
+                          <packing>
+                            <property name="PackType">End</property>
+                            <property name="Position">3</property>
+                            <property name="AutoSize">False</property>
+                            <property name="Fill">False</property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
                         <property name="TopAttach">1</property>
@@ -6847,7 +6859,10 @@
                     </child>
                   </widget>
                   <packing>
-                    <property name="Resize">False</property>
+                    <property name="Position">0</property>
+                    <property name="AutoSize">True</property>
+                    <property name="Expand">False</property>
+                    <property name="Fill">False</property>
                   </packing>
                 </child>
                 <child>
@@ -7037,12 +7052,17 @@
                       </packing>
                     </child>
                   </widget>
+                  <packing>
+                    <property name="Position">1</property>
+                    <property name="AutoSize">False</property>
+                  </packing>
                 </child>
               </widget>
               <packing>
                 <property name="Position">0</property>
-                <property name="AutoSize">False</property>
+                <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
+                <property name="Fill">False</property>
               </packing>
             </child>
             <child>
