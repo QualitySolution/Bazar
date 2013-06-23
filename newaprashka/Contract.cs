@@ -14,6 +14,7 @@ namespace bazar
 		Gtk.ListStore ServiceListStore, ServiceRefListStore;
 		TreeModel ServiceNameList, CashNameList;
 		int LesseeId;
+		int OrigLesseeId = -1;
 		bool LesseeisNull = true;
 		string OriginalNumber;
 		List<int> DeletedRowId = new List<int>();
@@ -241,6 +242,7 @@ namespace bazar
 				if(rdr["lessee_id"] != DBNull.Value)
 				{
 					LesseeId = Convert.ToInt32(rdr["lessee_id"].ToString());
+					OrigLesseeId = LesseeId;
 					entryLessee.Text = rdr["lessee"].ToString();
 					entryLessee.TooltipText = rdr["lessee"].ToString();
 					LesseeisNull = false;
@@ -655,7 +657,40 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@id", id);
 					cmd.ExecuteNonQuery();
 				}
-				 
+				//Корректная смена арендатора
+				if(!NewContract && OrigLesseeId != LesseeId && !LesseeisNull)
+				{
+					MainClass.StatusMessage("Арендатор изменился...");
+					sql = "SELECT COUNT(*) FROM credit_slips WHERE contract_no = @contract AND lessee_id = @old_lessee";
+					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd.Parameters.AddWithValue("@contract", entryNumber.Text);
+					cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
+					long rowcount = (long) cmd.ExecuteScalar();
+					if( rowcount > 0)
+					{
+						MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
+						                                     MessageType.Warning, 
+						                                     ButtonsType.YesNo, "Предупреждение");
+						md.UseMarkup = false;
+						md.Text = String.Format("У договора изменился арендатор, но поэтому договору уже " +
+							"было создано {0} приходных ордеров. Заменить арендатора в приходных ордерах?", rowcount);
+						int result = md.Run ();
+						md.Destroy();
+
+						if(result == (int) ResponseType.Yes)
+						{
+							MainClass.StatusMessage("Меняем арендатора в приходных ордерах...");
+							sql = "UPDATE credit_slips SET lessee_id = @lessee_id " +
+								"WHERE contract_no = @contract AND lessee_id = @old_lessee ";
+							cmd = new MySqlCommand(sql, MainClass.connectionDB);
+							cmd.Parameters.AddWithValue("@contract", entryNumber.Text);
+							cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
+							cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
+							cmd.ExecuteNonQuery();
+						}
+					}
+				}
+
 				MainClass.StatusMessage("Ok");
 				Respond (ResponseType.Ok);
 			} 
