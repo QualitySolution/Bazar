@@ -23,8 +23,22 @@ public partial class MainWindow : Gtk.Window
 		MainClass.ComboFillReference(comboCashCash,"cash",1);
 		
 		//Создаем таблицу "Приходных ордеров"
-		CashIncomeListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string),
-		                                         typeof (int), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string), typeof (string), typeof (decimal));
+		CashIncomeListStore = new Gtk.ListStore (typeof (int), // 0-id
+		                                         typeof (string), // 1-date
+		                                         typeof (int), // 2 - id cash
+		                                         typeof (string), // 3 - cash
+		                                         typeof (int), // 4 - id org
+		                                         typeof (string), // 5 - org
+		                                         typeof (int), // 6 - lessee id
+		                                         typeof (string), // 7 - lessee
+		                                         typeof (int), // 8 - id employer
+		                                         typeof (string), // 9 - employer 
+		                                         typeof (int), // 10 - id income
+		                                         typeof (string), // 11 - income
+		                                         typeof (string), // 12 - text sum
+		                                         typeof (decimal), // 13 - sum
+		                                         typeof (decimal)  // 14 - income sum
+		                                         );
 		
 		treeviewIncome.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
 		treeviewIncome.AppendColumn("Дата", new Gtk.CellRendererText (), "text", 1);
@@ -219,10 +233,23 @@ public partial class MainWindow : Gtk.Window
 		MainClass.StatusMessage("Получаем таблицу приходных ордеров...");
 
 		TreeIter iter;
-		
+
+		string sqlpayments1 = " NULL as item_sum ";
+		string sqlpayments2 = "";
+		if(comboCashItem.GetActiveIter(out iter) && comboCashItem.Active != 0)
+		{
+			sqlpayments2 = "LEFT JOIN payments ON payments.credit_slip_id = credit_slips.id " +
+				"LEFT JOIN (SELECT payment_id, SUM(sum) as income_sum FROM payment_details WHERE income_id = '" +
+					comboCashItem.Model.GetValue(iter,1) + "' GROUP BY payment_id) as payment_sum ON " +
+					"payment_sum.payment_id = payments.id ";
+			sqlpayments1 = " payment_sum.income_sum as item_sum ";
+		}
+
 		string sql = "SELECT credit_slips.*, cash.name as cash, lessees.name as lessee, " +
-			"income_items.name as income_item,  organizations.name as organization, employees.name as employee " +
+			"income_items.name as income_item,  organizations.name as organization, employees.name as employee, " +
+				sqlpayments1 +
 			"FROM credit_slips " +
+				sqlpayments2 +
 			"LEFT JOIN cash ON credit_slips.cash_id = cash.id " +
 			"LEFT JOIN lessees ON credit_slips.lessee_id = lessees.id " +
 			"LEFT JOIN organizations ON credit_slips.org_id = organizations.id " +
@@ -239,7 +266,8 @@ public partial class MainWindow : Gtk.Window
 		}
 		if(comboCashItem.GetActiveIter(out iter) && comboCashItem.Active != 0)
 		{
-			sql += " AND credit_slips.income_id = '" + comboCashItem.Model.GetValue(iter,1) + "'";
+			sql += " AND ( credit_slips.income_id = '" + comboCashItem.Model.GetValue(iter,1) + "' OR " +
+				" payment_sum.income_sum IS NOT NULL)";
 		}
 
 		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
@@ -251,12 +279,19 @@ public partial class MainWindow : Gtk.Window
 		CashIncomeListStore.Clear();
 		while (rdr.Read())
 		{
+			decimal item_sum = 0;
 			int lessee_id = 0;
 			int employee_id = 0;
+			string SumFormat = "{0:C}";
 			if(rdr["lessee_id"] != DBNull.Value)
 				lessee_id = int.Parse (rdr["lessee_id"].ToString ());
 			if(rdr["employee_id"] != DBNull.Value)
 				employee_id = rdr.GetInt32("employee_id");
+			if(rdr["item_sum"] != DBNull.Value)
+			{
+				item_sum = rdr.GetDecimal("item_sum");
+				SumFormat = "{0:C} ({1:C})";
+			}
 			CashIncomeListStore.AppendValues(int.Parse (rdr["id"].ToString()),
 			                               DateTime.Parse(rdr["date"].ToString()).ToShortDateString(),
 			                               int.Parse(rdr["cash_id"].ToString ()),
@@ -269,8 +304,9 @@ public partial class MainWindow : Gtk.Window
 			                               rdr["employee"].ToString (),
 			                               0,
 			                               rdr["income_item"].ToString(),
-			                               String.Format ("{0:C}",rdr.GetDecimal ("sum")),
-			                               rdr.GetDecimal ("sum"));
+			                               String.Format (SumFormat, rdr.GetDecimal ("sum"), item_sum),
+			                               rdr.GetDecimal ("sum"),
+			                                 item_sum);
 		}
 		rdr.Close();
 		
