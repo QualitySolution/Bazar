@@ -342,7 +342,12 @@ namespace bazar
 					}
 					else
 					{ //Возможно у договора поменялся арендатор.
-					
+						MainClass.StatusMessage("Договор не найден у арендатора! Добавляем в список...");
+						comboContract.AppendText(DBContract_no.ToString());
+						MainClass.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter);
+						comboContract.SetActiveIter (iter);
+						OnComboContractChanged(null, null);
+						ContractOk = true;
 					}
 				}
 				if(DBAccrual != DBNull.Value && ContractOk)
