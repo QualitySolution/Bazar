@@ -1,5 +1,11 @@
 2013-06-23  Gankov Andrey  <gav@qsolution.ru>
 
+	* MainWinCash.cs:
+	* generated.cs:
+	* MainWindow.cs: 
+
+2013-06-23  Gankov Andrey  <gav@qsolution.ru>
+
 	* BazAr.csproj:
 	* PayList.rdl:
 	* Expense.rdl:

@@ -244,7 +244,7 @@ public partial class MainWindow : Gtk.Window
 
 		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
 		cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
-		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date.AddDays (1));
+		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date);
 		
 		MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -315,7 +315,7 @@ public partial class MainWindow : Gtk.Window
 		
 		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
 		cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
-		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date.AddDays (1));
+		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date);
 		
 		MySqlDataReader rdr = cmd.ExecuteReader();
 		
@@ -386,7 +386,7 @@ public partial class MainWindow : Gtk.Window
 		
 		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
 		cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
-		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date.AddDays (1));
+		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date);
 		
 		MySqlDataReader rdr = cmd.ExecuteReader();
 		
