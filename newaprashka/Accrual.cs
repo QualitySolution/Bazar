@@ -276,9 +276,13 @@ namespace bazar
 				MainClass.SearchListStore ((ListStore)comboAccuralYear.Model,DBYear.ToString (), out iter);
 				comboAccuralYear.SetActiveIter (iter);
 				if(DBContract_no != DBNull.Value)
+				{
 					if(MainClass.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
+					{
 						comboContract.SetActiveIter (iter);
-				
+						comboContract.Sensitive = false;
+					}
+				}
 				this.Title = "Начисление №" + entryNumber.Text;
 				
 				//Получаем таблицу услуг
