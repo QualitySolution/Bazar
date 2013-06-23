@@ -330,14 +330,21 @@ namespace bazar
 				rdr.Close();
 
 				MainClass.ComboContractFill (comboContract, Lessee_id, false);
+				bool ContractOk = false;
 				if(DBContract_no != DBNull.Value)
+				{
 					if(MainClass.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
 					{
 						comboContract.SetActiveIter (iter);
 						OnComboContractChanged(null, null);
+						ContractOk = true;
 					}
+					else
+					{ //Возможно у договора поменялся арендатор.
 
-				if(DBAccrual != DBNull.Value)
+					}
+				}
+				if(DBAccrual != DBNull.Value && ContractOk)
 				{
 					if(MainClass.SearchListStore((ListStore)comboAccrual.Model, Convert.ToInt32(DBAccrual) , out iter))
 						comboAccrual.SetActiveIter (iter);
