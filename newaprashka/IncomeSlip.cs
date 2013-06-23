@@ -58,6 +58,7 @@ namespace bazar
 			bool Itemok = comboIncomeItem.Active > 0;
 			bool Lesseeok = !LesseeNull;
 			bool Paymentok = separationpayment.CanSave;
+			bool Rightok = MainClass.User.edit_slips || NewSlip;
 			bool Sumok;
 			if(spinSum.Text != "")
 				Sumok = Convert.ToDecimal (spinSum.Text) != 0; 
@@ -68,13 +69,13 @@ namespace bazar
 			switch (comboOperation.Active) 
 			{
 			case 0:
-				buttonOk.Sensitive = Orgok && Cashok && Lesseeok && Itemok && Sumok;
+				buttonOk.Sensitive = Orgok && Cashok && Rightok && Lesseeok && Itemok && Sumok;
 				break;
 			case 1:
-				buttonOk.Sensitive = Orgok && Cashok && Accountableok && Sumok;
+				buttonOk.Sensitive = Orgok && Cashok && Rightok && Accountableok && Sumok;
 				break;
 			case 2:
-				buttonOk.Sensitive = Orgok && Cashok && Lesseeok && Paymentok && Sumok;
+				buttonOk.Sensitive = Orgok && Cashok && Rightok && Lesseeok && Paymentok && Sumok;
 				break;
 			default:
 				break;
@@ -341,7 +342,7 @@ namespace bazar
 					}
 					else
 					{ //Возможно у договора поменялся арендатор.
-
+					
 					}
 				}
 				if(DBAccrual != DBNull.Value && ContractOk)
