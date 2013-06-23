@@ -1,3 +1,18 @@
+2013-06-23  Gankov Andrey  <gav@qsolution.ru>
+
+	* BazAr.csproj:
+	* PayList.rdl:
+	* Expense.rdl:
+	* Expense2.rdl:
+	* DailyCash.rdl:
+	* Contracts.rdl:
+	* DailyCash2.rdl:
+	* LesseeDebts.rdl:
+	* CommonTicket.rdl:
+	* PaymentTicket.rdl:
+	* IncomeRegister.rdl:
+	* ExpenseRegister.rdl: 
+
 2013-04-23  Gankov Andrey  <gav@qsolution.ru>
 
 	* IncomeSlip.cs: 
