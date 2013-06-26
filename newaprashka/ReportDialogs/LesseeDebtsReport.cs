@@ -8,15 +8,16 @@ namespace bazar
 		{
 			this.Build ();
 
-			MainClass.ComboAccrualYearsFill (comboYear);
-			comboMonth.Active = DateTime.Now.Month;
+			dateReport.Date = DateTime.Today;
 		}
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
-			if(comboMonth.Active == 0)
+			if(dateReport.IsEmpty)
 				return;
-			string param = "Month=" + comboMonth.Active.ToString () + "&Year=" + comboYear.ActiveText;
+			string param = "Day=" + dateReport.Date.Day.ToString() +
+				"&Month=" + dateReport.Date.Month.ToString() +
+					"&Year=" + dateReport.Date.Year.ToString();
 			ReportsExt.ViewReport ("LesseeDebts", param);
 		}
 	}

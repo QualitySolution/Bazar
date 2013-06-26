@@ -1,5 +1,13 @@
 2013-06-27  Gankov Andrey  <gav@qsolution.ru>
 
+	* gui.stetic:
+	* LesseeDebts.rdl:
+	* bazar.DailyCashReport.cs:
+	* LesseeDebtsReport.cs:
+	* bazar.LesseeDebtsReport.cs: 
+
+2013-06-27  Gankov Andrey  <gav@qsolution.ru>
+
 	* DailyCash.rdl:
 	* DailyCash2.rdl: 
 

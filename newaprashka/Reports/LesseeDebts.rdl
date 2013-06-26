@@ -13,9 +13,23 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT accrual.id as id, month, year, contract_no, contracts.lessee_id as lessee_id, lessees.name as lessee, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum, (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt FROM accrual LEFT JOIN contracts ON contracts.number = contract_no LEFT JOIN lessees ON contracts.lessee_id = lessees.id LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable ON sumtable.accrual_id = accrual.id LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id) as paidtable ON paidtable.accrual_id = accrual.id WHERE accrual.paid = 'false' AND (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt;= @month))</CommandText>
+        <CommandText>SELECT accrual.id as id, month, year, contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
+ lessees.name as lessee, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
+ (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt 
+FROM accrual 
+LEFT JOIN contracts ON contracts.number = contract_no 
+LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
+LEFT JOIN (
+SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable 
+ON sumtable.accrual_id = accrual.id 
+LEFT JOIN (
+SELECT accrual_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id) as paidtable 
+ON paidtable.accrual_id = accrual.id 
+WHERE accrual.paid = 'false' AND 
+(accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
+OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day))</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!Month</Value>
@@ -23,9 +37,12 @@
           <QueryParameter Name="year">
             <Value>=Parameters!Year</Value>
           </QueryParameter>
+          <QueryParameter Name="day">
+            <Value>=Parameters!Day</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
@@ -66,7 +83,7 @@
     </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>22.8pt</Height>
+    <Height>22.0pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
     <ReportItems>
@@ -85,12 +102,12 @@
         </Style>
       </Textbox>
       <Textbox Name="Textbox26">
-        <Height>12.00pt</Height>
-        <Width>60.26pt</Width>
-        <Value>=Globals!ExecutionTime</Value>
+        <Height>12.75pt</Height>
+        <Width>71.51pt</Width>
+        <Value>= " " + {?Day} + "." + {?Month} + "." + {?Year}</Value>
         <ZIndex>1</ZIndex>
-        <Left>302.40pt</Left>
-        <Top>4.20pt</Top>
+        <Left>303.10pt</Left>
+        <Top>5.30pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -751,7 +768,7 @@
     <Height>66.8pt</Height>
   </Body>
   <PageFooter>
-    <Height>14pt</Height>
+    <Height>15.1pt</Height>
     <ReportItems>
       <Textbox Name="Textbox24">
         <Top>1pt</Top>
@@ -762,9 +779,22 @@
         <Style>
           <FontSize>10pt</FontSize>
           <FontWeight>Normal</FontWeight>
-          <BorderStyle  />
-          <BorderColor  />
-          <BorderWidth  />
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox6">
+        <Height>11.35pt</Height>
+        <Width>182.74pt</Width>
+        <Value>= "Напечатано: " + Globals!ExecutionTime</Value>
+        <ZIndex>1</ZIndex>
+        <Left>399.60pt</Left>
+        <Top>2.25pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
         </Style>
       </Textbox>
     </ReportItems>
@@ -780,7 +810,14 @@
       </ConnectionProperties>
     </DataSource>
   </DataSources>
-  <ReportParameters >
+  <ReportParameters>
+    <ReportParameter Name="Day">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
     <ReportParameter Name="Month">
       <DataType>Integer</DataType>
       <DefaultValue>

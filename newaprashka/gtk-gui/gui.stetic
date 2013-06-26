@@ -12260,7 +12260,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.LesseeDebtsReport" design-size="330 123">
+  <widget class="Gtk.Dialog" id="bazar.LesseeDebtsReport" design-size="331 149">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Отчет по долгам арендаторов</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -12272,37 +12272,13 @@
         <property name="MemberName" />
         <property name="BorderWidth">2</property>
         <child>
-          <widget class="Gtk.Label" id="label2">
-            <property name="MemberName" />
-            <property name="LabelProp" translatable="yes">Не учитывать начисления после</property>
-          </widget>
-          <packing>
-            <property name="Position">0</property>
-            <property name="AutoSize">False</property>
-            <property name="Fill">False</property>
-          </packing>
-        </child>
-        <child>
           <widget class="Gtk.HBox" id="hbox1">
             <property name="MemberName" />
             <property name="Spacing">6</property>
             <child>
-              <widget class="Gtk.ComboBox" id="comboMonth">
+              <widget class="Gtk.Label" id="label2">
                 <property name="MemberName" />
-                <property name="IsTextCombo">True</property>
-                <property name="Items" translatable="yes">Нет
-Января
-Февраля
-Марта
-Апреля
-Мая
-Июня
-Июля
-Августа
-Сентября
-Октября
-Ноября
-Декабря</property>
+                <property name="LabelProp" translatable="yes">Долги арендаторов на:</property>
               </widget>
               <packing>
                 <property name="Position">0</property>
@@ -12311,10 +12287,10 @@
               </packing>
             </child>
             <child>
-              <widget class="Gtk.ComboBox" id="comboYear">
+              <widget class="WidgetLib.DatePicker" id="dateReport">
                 <property name="MemberName" />
-                <property name="IsTextCombo">True</property>
-                <property name="Items" translatable="yes" />
+                <property name="Events">ButtonPressMask</property>
+                <property name="Date">0</property>
               </widget>
               <packing>
                 <property name="Position">1</property>
@@ -12322,6 +12298,19 @@
                 <property name="Fill">False</property>
               </packing>
             </child>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="label1">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">* Если в договоре не указан день оплаты,
+  долг попадет в отчет с первого числа.</property>
+            <property name="Wrap">True</property>
           </widget>
           <packing>
             <property name="Position">1</property>

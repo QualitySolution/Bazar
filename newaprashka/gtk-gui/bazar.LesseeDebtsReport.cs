@@ -4,13 +4,13 @@ namespace bazar
 {
 	public partial class LesseeDebtsReport
 	{
-		private global::Gtk.Label label2;
 		private global::Gtk.HBox hbox1;
-		private global::Gtk.ComboBox comboMonth;
-		private global::Gtk.ComboBox comboYear;
+		private global::Gtk.Label label2;
+		private global::WidgetLib.DatePicker dateReport;
+		private global::Gtk.Label label1;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -24,46 +24,37 @@ namespace bazar
 			w1.Name = "dialog1_VBox";
 			w1.BorderWidth = ((uint)(2));
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
-			this.label2 = new global::Gtk.Label ();
-			this.label2.Name = "label2";
-			this.label2.LabelProp = "Не учитывать начисления после";
-			w1.Add (this.label2);
-			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(w1 [this.label2]));
-			w2.Position = 0;
-			w2.Fill = false;
-			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.hbox1 = new global::Gtk.HBox ();
 			this.hbox1.Name = "hbox1";
 			this.hbox1.Spacing = 6;
 			// Container child hbox1.Gtk.Box+BoxChild
-			this.comboMonth = global::Gtk.ComboBox.NewText ();
-			this.comboMonth.AppendText ("Нет");
-			this.comboMonth.AppendText ("Января");
-			this.comboMonth.AppendText ("Февраля");
-			this.comboMonth.AppendText ("Марта");
-			this.comboMonth.AppendText ("Апреля");
-			this.comboMonth.AppendText ("Мая");
-			this.comboMonth.AppendText ("Июня");
-			this.comboMonth.AppendText ("Июля");
-			this.comboMonth.AppendText ("Августа");
-			this.comboMonth.AppendText ("Сентября");
-			this.comboMonth.AppendText ("Октября");
-			this.comboMonth.AppendText ("Ноября");
-			this.comboMonth.AppendText ("Декабря");
-			this.comboMonth.Name = "comboMonth";
-			this.hbox1.Add (this.comboMonth);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.comboMonth]));
-			w3.Position = 0;
-			w3.Fill = false;
+			this.label2 = new global::Gtk.Label ();
+			this.label2.Name = "label2";
+			this.label2.LabelProp = "Долги арендаторов на:";
+			this.hbox1.Add (this.label2);
+			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label2]));
+			w2.Position = 0;
+			w2.Fill = false;
 			// Container child hbox1.Gtk.Box+BoxChild
-			this.comboYear = global::Gtk.ComboBox.NewText ();
-			this.comboYear.Name = "comboYear";
-			this.hbox1.Add (this.comboYear);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.comboYear]));
-			w4.Position = 1;
-			w4.Fill = false;
+			this.dateReport = new global::WidgetLib.DatePicker ();
+			this.dateReport.Events = ((global::Gdk.EventMask)(256));
+			this.dateReport.Name = "dateReport";
+			this.dateReport.Date = new global::System.DateTime (0);
+			this.hbox1.Add (this.dateReport);
+			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.dateReport]));
+			w3.Position = 1;
+			w3.Fill = false;
 			w1.Add (this.hbox1);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox1]));
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox1]));
+			w4.Position = 0;
+			w4.Fill = false;
+			// Container child dialog1_VBox.Gtk.Box+BoxChild
+			this.label1 = new global::Gtk.Label ();
+			this.label1.Name = "label1";
+			this.label1.LabelProp = "* Если в договоре не указан день оплаты,\n  долг попадет в отчет с первого числа.";
+			this.label1.Wrap = true;
+			w1.Add (this.label1);
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(w1 [this.label1]));
 			w5.Position = 1;
 			w5.Fill = false;
 			// Internal child bazar.LesseeDebtsReport.ActionArea
@@ -100,8 +91,8 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 330;
-			this.DefaultHeight = 123;
+			this.DefaultWidth = 331;
+			this.DefaultHeight = 149;
 			this.Show ();
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
