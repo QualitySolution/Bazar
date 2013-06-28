@@ -33,10 +33,12 @@
   </ReportParameters>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT debit_slips.date as edate, debit_slips.sum as sum, debit_slips.details as details, expense_items.name as expense, employees.name as employee FROM debit_slips 
-LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id LEFT JOIN employees ON debit_slips.employee_id = employees.id 
+        <CommandText>SELECT debit_slips.date as edate, debit_slips.sum as sum, debit_slips.details as details, expense_items.name as expense, contractors.name as contractor, employees.name as employee FROM debit_slips 
+LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id 
+LEFT JOIN employees ON debit_slips.employee_id = employees.id 
+LEFT JOIN contractors ON debit_slips.contractor_id = contractors.id
 WHERE debit_slips.id=@id</CommandText>
         <QueryParameters>
           <QueryParameter Name="id">
@@ -44,7 +46,7 @@ WHERE debit_slips.id=@id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="edate">
           <DataField>edate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
@@ -63,6 +65,10 @@ WHERE debit_slips.id=@id</CommandText>
         </Field>
         <Field Name="employee">
           <DataField>employee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="contractor">
+          <DataField>contractor</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -144,10 +150,10 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="details">
-            <Top>33.20pt</Top>
+            <Top>48.95pt</Top>
             <Left>77.40pt</Left>
-            <Width>196.48pt</Width>
-            <Height>79.73pt</Height>
+            <Width>197.23pt</Width>
+            <Height>63.98pt</Height>
             <Value>=Fields!details.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
@@ -211,6 +217,33 @@ WHERE debit_slips.id=@id</CommandText>
               <BorderWidth />
             </Style>
           </Textbox>
+          <Textbox Name="Textbox16" >
+            <Height>12.00pt</Height>
+            <Width>196.37pt</Width>
+            <Value>=Fields!contractor.Value</Value>
+            <ZIndex>1</ZIndex>
+            <Left>79.9pt</Left>
+            <Top>33.1pt</Top>
+            <Style>
+              <BorderStyle />
+              <BorderColor />
+              <BorderWidth />
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox17" >
+            <Height>12pt</Height>
+            <Width>1in</Width>
+            <Value>Контрагент:</Value>
+            <ZIndex>1</ZIndex>
+            <Left>5.3pt</Left>
+            <Top>33.1pt</Top>
+            <Style>
+              <BorderStyle />
+              <BorderColor />
+              <BorderWidth />
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Width>285.90pt</Width>
         <Left>0.00pt</Left>
@@ -250,12 +283,12 @@ WHERE debit_slips.id=@id</CommandText>
         </Style>
       </Textbox>
       <Textbox Name="Textbox10" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Height>12pt</Height>
-        <Width>1in</Width>
+        <Height>12.00pt</Height>
+        <Width>72.27pt</Width>
         <Value>Основание:</Value>
         <ZIndex>1</ZIndex>
-        <Left>6.1pt</Left>
-        <Top>32.9pt</Top>
+        <Left>4.5pt</Left>
+        <Top>48.0pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -325,10 +358,10 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="Textbox22">
-            <Top>33.20pt</Top>
+            <Top>47.45pt</Top>
             <Left>77.40pt</Left>
-            <Width>196.48pt</Width>
-            <Height>79.73pt</Height>
+            <Width>197.98pt</Width>
+            <Height>65.48pt</Height>
             <Value>=Fields!details.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
@@ -353,6 +386,9 @@ WHERE debit_slips.id=@id</CommandText>
             <CanGrow>true</CanGrow>
             <Style>
               <PaddingLeft>2pt</PaddingLeft>
+              <BorderStyle  />
+              <BorderColor  />
+              <BorderWidth  />
             </Style>
           </Textbox>
           <Textbox Name="Textbox24">
@@ -425,8 +461,8 @@ WHERE debit_slips.id=@id</CommandText>
             <Width>1in</Width>
             <Value>Основание:</Value>
             <ZIndex>1</ZIndex>
-            <Left>4.9pt</Left>
-            <Top>32.9pt</Top>
+            <Left>3.3pt</Left>
+            <Top>48.1pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -447,10 +483,37 @@ WHERE debit_slips.id=@id</CommandText>
               <BorderWidth />
             </Style>
           </Textbox>
+          <Textbox Name="Textbox14" >
+            <Height>12pt</Height>
+            <Width>1in</Width>
+            <Value>Контрагент:</Value>
+            <ZIndex>1</ZIndex>
+            <Left>4.8pt</Left>
+            <Top>31.6pt</Top>
+            <Style>
+              <BorderStyle />
+              <BorderColor />
+              <BorderWidth />
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox15" >
+            <Height>12.00pt</Height>
+            <Width>196.37pt</Width>
+            <Value>=Fields!contractor.Value</Value>
+            <ZIndex>1</ZIndex>
+            <Left>79.70pt</Left>
+            <Top>31.80pt</Top>
+            <Style>
+              <BorderStyle />
+              <BorderColor />
+              <BorderWidth />
+            </Style>
+          </Textbox>
         </ReportItems>
         <Width>285.90pt</Width>
-        <Left>295.4pt</Left>
-        <Top>0.0pt</Top>
+        <Left>295.40pt</Left>
+        <Top>0.00pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
