@@ -38,7 +38,7 @@ namespace bazar
 		private global::Gtk.Button buttonPrint;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -150,7 +150,6 @@ namespace bazar
 			this.hbox4.Spacing = 6;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.entryAccountable = new global::Gtk.Entry ();
-			this.entryAccountable.Sensitive = false;
 			this.entryAccountable.CanFocus = true;
 			this.entryAccountable.Name = "entryAccountable";
 			this.entryAccountable.IsEditable = false;
@@ -160,7 +159,6 @@ namespace bazar
 			w16.Position = 0;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.buttonAccountableEdit = new global::Gtk.Button ();
-			this.buttonAccountableEdit.Sensitive = false;
 			this.buttonAccountableEdit.CanFocus = true;
 			this.buttonAccountableEdit.Name = "buttonAccountableEdit";
 			this.buttonAccountableEdit.UseUnderline = true;
@@ -240,7 +238,8 @@ namespace bazar
 			// Container child table1.Gtk.Table+TableChild
 			this.labelAccountable = new global::Gtk.Label ();
 			this.labelAccountable.Name = "labelAccountable";
-			this.labelAccountable.LabelProp = "Подотчетное лицо:";
+			this.labelAccountable.Xalign = 1F;
+			this.labelAccountable.LabelProp = "Получатель:";
 			this.labelAccountable.UseMarkup = true;
 			this.table1.Add (this.labelAccountable);
 			global::Gtk.Table.TableChild w31 = ((global::Gtk.Table.TableChild)(this.table1 [this.labelAccountable]));
@@ -427,6 +426,7 @@ namespace bazar
 			w49.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonPrint = new global::Gtk.Button ();
+			this.buttonPrint.Sensitive = false;
 			this.buttonPrint.CanFocus = true;
 			this.buttonPrint.Name = "buttonPrint";
 			this.buttonPrint.UseUnderline = true;

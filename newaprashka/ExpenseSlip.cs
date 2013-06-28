@@ -232,6 +232,7 @@ namespace bazar
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 				}
+				buttonPrint.Sensitive = true;
 				MainClass.StatusMessage("Ok");
 			}
 			catch (Exception ex)
@@ -270,17 +271,13 @@ namespace bazar
 				entryContractor.Sensitive = true;
 				buttonContractorEdit.Sensitive = true;
 				labelExpenseItem.LabelProp = "Статья расхода<span foreground=\"red\">*</span>:";
-				labelAccountable.LabelProp = "Подотчетное лицо:";
-				entryAccountable.Sensitive = false;
-				buttonAccountableEdit.Sensitive = false;
+				labelAccountable.LabelProp = "Получатель:";
 				break;
 			case 1: //advance
 				entryContractor.Sensitive = false;
 				buttonContractorEdit.Sensitive = false;
 				labelExpenseItem.LabelProp = "Статья расхода:";
 				labelAccountable.LabelProp = "Подотчетное лицо<span foreground=\"red\">*</span>:";
-				entryAccountable.Sensitive = true;
-				buttonAccountableEdit.Sensitive = true;
 				break;
 			}
 			TestCanSave ();

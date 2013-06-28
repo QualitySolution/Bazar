@@ -1,3 +1,9 @@
+2013-06-28  Gankov Andrey  <gav@qsolution.ru>
+
+	* ExpenseSlip.cs:
+	* gui.stetic:
+	* bazar.ExpenseSlip.cs: 
+
 2013-06-27  Gankov Andrey  <gav@qsolution.ru>
 
 	* gui.stetic:

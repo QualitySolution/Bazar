@@ -8119,7 +8119,6 @@
                         <child>
                           <widget class="Gtk.Entry" id="entryAccountable">
                             <property name="MemberName" />
-                            <property name="Sensitive">False</property>
                             <property name="CanFocus">True</property>
                             <property name="IsEditable">False</property>
                             <property name="InvisibleChar">●</property>
@@ -8132,7 +8131,6 @@
                         <child>
                           <widget class="Gtk.Button" id="buttonAccountableEdit">
                             <property name="MemberName" />
-                            <property name="Sensitive">False</property>
                             <property name="CanFocus">True</property>
                             <property name="Type">TextAndIcon</property>
                             <property name="Icon">stock:gtk-edit Menu</property>
@@ -8249,7 +8247,8 @@
                     <child>
                       <widget class="Gtk.Label" id="labelAccountable">
                         <property name="MemberName" />
-                        <property name="LabelProp" translatable="yes">Подотчетное лицо:</property>
+                        <property name="Xalign">1</property>
+                        <property name="LabelProp" translatable="yes">Получатель:</property>
                         <property name="UseMarkup">True</property>
                       </widget>
                       <packing>
@@ -8569,6 +8568,7 @@
         <child>
           <widget class="Gtk.Button" id="buttonPrint">
             <property name="MemberName" />
+            <property name="Sensitive">False</property>
             <property name="CanFocus">True</property>
             <property name="Type">TextAndIcon</property>
             <property name="Icon">stock:gtk-print Button</property>
