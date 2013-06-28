@@ -114,7 +114,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@contractor_id", Contractor_id);
 				else
 					cmd.Parameters.AddWithValue("@contractor_id", DBNull.Value);
-				if(comboOperation.Active == 1)
+				if(!AccountableNull)
 					cmd.Parameters.AddWithValue("@employee_id", Accountable_id);
 				else
 					cmd.Parameters.AddWithValue("@employee_id", DBNull.Value);
