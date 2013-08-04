@@ -264,6 +264,7 @@ namespace bazar
 				
 				entryNumber.Text = rdr["id"].ToString();
 				entryUser.Text = rdr["user"].ToString ();
+				textviewComments.Buffer.Text = rdr["comments"].ToString ();
 
 				//запоминаем переменные что бы освободить соединение
 				object DBContract_no = rdr["contract_no"];
@@ -491,13 +492,13 @@ namespace bazar
 				// записываем
 				if(NewAccrual)
 				{
-					sql = "INSERT INTO accrual (contract_no, month, year, user_id, no_complete) " +
-						"VALUES (@contract_no, @month, @year, @user_id, @no_complete)";
+					sql = "INSERT INTO accrual (contract_no, month, year, user_id, no_complete, comments) " +
+						"VALUES (@contract_no, @month, @year, @user_id, @no_complete, @comments)";
 				}
 				else
 				{
 					sql = "UPDATE accrual SET contract_no = @contract_no, month = @month, year = @year, " +
-						"no_complete = @no_complete, paid = @paid " +
+						"no_complete = @no_complete, paid = @paid, comments = @comments " +
 						"WHERE id = @id";
 				}
 				
@@ -508,6 +509,10 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
 				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
 				cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+				if(textviewComments.Buffer.Text != "")
+					cmd.Parameters.AddWithValue ("@comments", textviewComments.Buffer.Text);
+				else
+					cmd.Parameters.AddWithValue ("@comments", DBNull.Value);
 				cmd.Parameters.AddWithValue("@no_complete", NotComplete);
 				if(AccrualTotal - IncomeTotal > 0)
 					cmd.Parameters.AddWithValue("@paid", false);

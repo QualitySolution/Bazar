@@ -1,5 +1,11 @@
 2013-08-04  Gankov Andrey  <gav@qsolution.ru>
 
+	* Accrual.cs:
+	* gui.stetic:
+	* bazar.Accrual.cs: 
+
+2013-08-04  Gankov Andrey  <gav@qsolution.ru>
+
 	* DailyCash.rdl:
 	* DailyCash2.rdl: 
 
