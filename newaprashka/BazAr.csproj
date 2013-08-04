@@ -42,19 +42,10 @@
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="System.Data" />
-    <Reference Include="MySql.Data.Entity">
-      <HintPath>..\lib\MySql.Ddata.Entity.dll</HintPath>
-    </Reference>
     <Reference Include="Nini">
       <HintPath>..\lib\Nini.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="MonoReports">
-      <HintPath>..\..\MonoReports\build\MonoReports.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoReports.Model">
-      <HintPath>..\..\MonoReports\build\MonoReports.Model.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\lib\MySql.Data.dll</HintPath>
     </Reference>
@@ -150,9 +141,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WidgetLib\WidgetLib.csproj">
+    <ProjectReference Include="..\..\QSProjects\QSProjectsLib\QSProjectsLib.csproj">
+      <Project>{A6C1914F-7732-49F5-BABA-8BBBA521FAAB}</Project>
+      <Name>QSProjectsLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QSProjects\QSWidgetLib\QSWidgetLib.csproj">
       <Project>{5A2BB01E-E124-432E-8099-D1343D3897B9}</Project>
-      <Name>WidgetLib</Name>
+      <Name>QSWidgetLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
