@@ -98,7 +98,6 @@
     <Compile Include="gtk-gui\bazar.UserProperty.cs" />
     <Compile Include="AdvanceStatement.cs" />
     <Compile Include="gtk-gui\bazar.AdvanceStatement.cs" />
-    <Compile Include="Reports.cs" />
     <Compile Include="AccountableDebts.cs" />
     <Compile Include="gtk-gui\bazar.AccountableDebts.cs" />
     <Compile Include="AccountableSlips.cs" />

@@ -1,5 +1,10 @@
 2013-08-04  Gankov Andrey  <gav@qsolution.ru>
 
+	* Reports.cs:
+	* BazAr.csproj: 
+
+2013-08-04  Gankov Andrey  <gav@qsolution.ru>
+
 	* MainWinEvent.cs:
 	* gui.stetic:
 	* MainWindow.cs:
