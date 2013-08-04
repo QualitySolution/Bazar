@@ -9,7 +9,7 @@ namespace bazar
 		private global::Gtk.Table table2;
 		private global::Gtk.ComboBox comboOrg;
 		private global::Gtk.ComboBox comboPayDay;
-		private global::WidgetLib.DatePicker datepickerSign;
+		private global::QSWidgetLib.DatePicker datepickerSign;
 		private global::Gtk.Entry entryNumber;
 		private global::Gtk.HBox hbox1;
 		private global::Gtk.Entry entryLessee;
@@ -28,9 +28,9 @@ namespace bazar
 		private global::Gtk.Label label9;
 		private global::Gtk.VBox vbox3;
 		private global::Gtk.Table table3;
-		private global::WidgetLib.DatePicker datepickerCancel;
-		private global::WidgetLib.DatePicker datepickerEnd;
-		private global::WidgetLib.DatePicker datepickerStart;
+		private global::QSWidgetLib.DatePicker datepickerCancel;
+		private global::QSWidgetLib.DatePicker datepickerEnd;
+		private global::QSWidgetLib.DatePicker datepickerStart;
 		private global::Gtk.Label label11;
 		private global::Gtk.Label label12;
 		private global::Gtk.Label label13;
@@ -129,10 +129,12 @@ namespace bazar
 			w3.XOptions = ((global::Gtk.AttachOptions)(4));
 			w3.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table2.Gtk.Table+TableChild
-			this.datepickerSign = new global::WidgetLib.DatePicker ();
+			this.datepickerSign = new global::QSWidgetLib.DatePicker ();
 			this.datepickerSign.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerSign.Name = "datepickerSign";
 			this.datepickerSign.Date = new global::System.DateTime (0);
+			this.datepickerSign.IsEditable = false;
+			this.datepickerSign.AutoSeparation = false;
 			this.table2.Add (this.datepickerSign);
 			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table2 [this.datepickerSign]));
 			w4.TopAttach = ((uint)(4));
@@ -355,10 +357,12 @@ namespace bazar
 			this.table3.RowSpacing = ((uint)(6));
 			this.table3.ColumnSpacing = ((uint)(6));
 			// Container child table3.Gtk.Table+TableChild
-			this.datepickerCancel = new global::WidgetLib.DatePicker ();
+			this.datepickerCancel = new global::QSWidgetLib.DatePicker ();
 			this.datepickerCancel.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerCancel.Name = "datepickerCancel";
 			this.datepickerCancel.Date = new global::System.DateTime (0);
+			this.datepickerCancel.IsEditable = false;
+			this.datepickerCancel.AutoSeparation = false;
 			this.table3.Add (this.datepickerCancel);
 			global::Gtk.Table.TableChild w38 = ((global::Gtk.Table.TableChild)(this.table3 [this.datepickerCancel]));
 			w38.TopAttach = ((uint)(2));
@@ -367,10 +371,12 @@ namespace bazar
 			w38.RightAttach = ((uint)(2));
 			w38.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table3.Gtk.Table+TableChild
-			this.datepickerEnd = new global::WidgetLib.DatePicker ();
+			this.datepickerEnd = new global::QSWidgetLib.DatePicker ();
 			this.datepickerEnd.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerEnd.Name = "datepickerEnd";
 			this.datepickerEnd.Date = new global::System.DateTime (0);
+			this.datepickerEnd.IsEditable = false;
+			this.datepickerEnd.AutoSeparation = false;
 			this.table3.Add (this.datepickerEnd);
 			global::Gtk.Table.TableChild w39 = ((global::Gtk.Table.TableChild)(this.table3 [this.datepickerEnd]));
 			w39.TopAttach = ((uint)(1));
@@ -379,10 +385,12 @@ namespace bazar
 			w39.RightAttach = ((uint)(2));
 			w39.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table3.Gtk.Table+TableChild
-			this.datepickerStart = new global::WidgetLib.DatePicker ();
+			this.datepickerStart = new global::QSWidgetLib.DatePicker ();
 			this.datepickerStart.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerStart.Name = "datepickerStart";
 			this.datepickerStart.Date = new global::System.DateTime (0);
+			this.datepickerStart.IsEditable = false;
+			this.datepickerStart.AutoSeparation = false;
 			this.table3.Add (this.datepickerStart);
 			global::Gtk.Table.TableChild w40 = ((global::Gtk.Table.TableChild)(this.table3 [this.datepickerStart]));
 			w40.LeftAttach = ((uint)(1));

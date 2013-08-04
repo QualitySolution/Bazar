@@ -1,5 +1,36 @@
 2013-08-04  Gankov Andrey  <gav@qsolution.ru>
 
+	* MainWinEvent.cs:
+	* gui.stetic:
+	* MainWindow.cs:
+	* bazar.Event.cs:
+	* bazar.Login.cs:
+	* bazar.Users.cs:
+	* bazar.Place.cs:
+	* bazar.lessee.cs:
+	* bazar.Delete.cs:
+	* bazar.Service.cs:
+	* bazar.Contact.cs:
+	* bazar.Contract.cs:
+	* bazar.reference.cs:
+	* bazar.PayAccrual.cs:
+	* bazar.IncomeSlip.cs:
+	* bazar.CashBalance.cs:
+	* bazar.ExpenseSlip.cs:
+	* bazar.DocRegister.cs:
+	* bazar.UserProperty.cs:
+	* bazar.ViewReportsDlg.cs:
+	* bazar.DailyCashReport.cs:
+	* bazar.AccountableSlips.cs:
+	* bazar.SelectAccrualRow.cs:
+	* bazar.AdvanceStatement.cs:
+	* bazar.AccountableDebts.cs:
+	* bazar.LesseeDebtsReport.cs:
+	* bazar.SeparationPayment.cs:
+	* bazar.MassAccrualCreation.cs: 
+
+2013-08-04  Gankov Andrey  <gav@qsolution.ru>
+
 	* BazAr.csproj: 
 
 2013-08-04  Gankov Andrey  <gav@qsolution.ru>

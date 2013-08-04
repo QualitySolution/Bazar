@@ -27,7 +27,7 @@ namespace bazar
 		private global::Gtk.Label labelLessee;
 		private global::Gtk.Table table2;
 		private global::Gtk.ComboBox comboIncomeItem;
-		private global::WidgetLib.DatePicker dateSlip;
+		private global::QSWidgetLib.DatePicker dateSlip;
 		private global::Gtk.Entry entryNumber;
 		private global::Gtk.Entry entryUser;
 		private global::Gtk.Label label2;
@@ -320,11 +320,13 @@ namespace bazar
 			w37.XOptions = ((global::Gtk.AttachOptions)(4));
 			w37.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table2.Gtk.Table+TableChild
-			this.dateSlip = new global::WidgetLib.DatePicker ();
+			this.dateSlip = new global::QSWidgetLib.DatePicker ();
 			this.dateSlip.Sensitive = false;
 			this.dateSlip.Events = ((global::Gdk.EventMask)(256));
 			this.dateSlip.Name = "dateSlip";
 			this.dateSlip.Date = new global::System.DateTime (0);
+			this.dateSlip.IsEditable = false;
+			this.dateSlip.AutoSeparation = false;
 			this.table2.Add (this.dateSlip);
 			global::Gtk.Table.TableChild w38 = ((global::Gtk.Table.TableChild)(this.table2 [this.dateSlip]));
 			w38.TopAttach = ((uint)(1));

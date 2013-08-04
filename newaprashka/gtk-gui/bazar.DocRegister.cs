@@ -14,12 +14,12 @@ namespace bazar
 		private global::Gtk.RadioButton radioMonth;
 		private global::Gtk.RadioButton radioCash6Month;
 		private global::Gtk.HBox hbox15;
-		private global::WidgetLib.DatePicker dateCashStart;
+		private global::QSWidgetLib.DatePicker dateCashStart;
 		private global::Gtk.Label label32;
-		private global::WidgetLib.DatePicker dateCashEnd;
+		private global::QSWidgetLib.DatePicker dateCashEnd;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -128,10 +128,12 @@ namespace bazar
 			this.hbox15.Name = "hbox15";
 			this.hbox15.Spacing = 6;
 			// Container child hbox15.Gtk.Box+BoxChild
-			this.dateCashStart = new global::WidgetLib.DatePicker ();
+			this.dateCashStart = new global::QSWidgetLib.DatePicker ();
 			this.dateCashStart.Events = ((global::Gdk.EventMask)(256));
 			this.dateCashStart.Name = "dateCashStart";
 			this.dateCashStart.Date = new global::System.DateTime (0);
+			this.dateCashStart.IsEditable = false;
+			this.dateCashStart.AutoSeparation = false;
 			this.hbox15.Add (this.dateCashStart);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashStart]));
 			w10.Position = 0;
@@ -145,10 +147,12 @@ namespace bazar
 			w11.Expand = false;
 			w11.Fill = false;
 			// Container child hbox15.Gtk.Box+BoxChild
-			this.dateCashEnd = new global::WidgetLib.DatePicker ();
+			this.dateCashEnd = new global::QSWidgetLib.DatePicker ();
 			this.dateCashEnd.Events = ((global::Gdk.EventMask)(256));
 			this.dateCashEnd.Name = "dateCashEnd";
 			this.dateCashEnd.Date = new global::System.DateTime (0);
+			this.dateCashEnd.IsEditable = false;
+			this.dateCashEnd.AutoSeparation = false;
 			this.hbox15.Add (this.dateCashEnd);
 			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashEnd]));
 			w12.Position = 2;

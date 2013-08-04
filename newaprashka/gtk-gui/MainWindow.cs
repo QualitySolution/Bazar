@@ -160,9 +160,9 @@ public partial class MainWindow
 	private global::Gtk.RadioButton radioMonth;
 	private global::Gtk.RadioButton radioCash6Month;
 	private global::Gtk.HBox hbox15;
-	private global::WidgetLib.DatePicker dateCashStart;
+	private global::QSWidgetLib.DatePicker dateCashStart;
 	private global::Gtk.Label label32;
-	private global::WidgetLib.DatePicker dateCashEnd;
+	private global::QSWidgetLib.DatePicker dateCashEnd;
 	private global::Gtk.VBox vbox12;
 	private global::Gtk.Label label39;
 	private global::Gtk.Label labelCashSum;
@@ -208,9 +208,9 @@ public partial class MainWindow
 	private global::Gtk.RadioButton radiobuttonMonth;
 	private global::Gtk.RadioButton radiobutton6Month;
 	private global::Gtk.HBox hbox13;
-	private global::WidgetLib.DatePicker datepickerEventBegin;
+	private global::QSWidgetLib.DatePicker datepickerEventBegin;
 	private global::Gtk.Label label23;
-	private global::WidgetLib.DatePicker datepickerEventEnd;
+	private global::QSWidgetLib.DatePicker datepickerEventEnd;
 	private global::Gtk.VSeparator vseparator3;
 	private global::Gtk.VBox vbox7;
 	private global::Gtk.Label label24;
@@ -1692,10 +1692,12 @@ public partial class MainWindow
 		this.hbox15.Name = "hbox15";
 		this.hbox15.Spacing = 6;
 		// Container child hbox15.Gtk.Box+BoxChild
-		this.dateCashStart = new global::WidgetLib.DatePicker ();
+		this.dateCashStart = new global::QSWidgetLib.DatePicker ();
 		this.dateCashStart.Events = ((global::Gdk.EventMask)(256));
 		this.dateCashStart.Name = "dateCashStart";
 		this.dateCashStart.Date = new global::System.DateTime (0);
+		this.dateCashStart.IsEditable = false;
+		this.dateCashStart.AutoSeparation = false;
 		this.hbox15.Add (this.dateCashStart);
 		global::Gtk.Box.BoxChild w228 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashStart]));
 		w228.Position = 0;
@@ -1709,10 +1711,12 @@ public partial class MainWindow
 		w229.Expand = false;
 		w229.Fill = false;
 		// Container child hbox15.Gtk.Box+BoxChild
-		this.dateCashEnd = new global::WidgetLib.DatePicker ();
+		this.dateCashEnd = new global::QSWidgetLib.DatePicker ();
 		this.dateCashEnd.Events = ((global::Gdk.EventMask)(256));
 		this.dateCashEnd.Name = "dateCashEnd";
 		this.dateCashEnd.Date = new global::System.DateTime (0);
+		this.dateCashEnd.IsEditable = false;
+		this.dateCashEnd.AutoSeparation = false;
 		this.hbox15.Add (this.dateCashEnd);
 		global::Gtk.Box.BoxChild w230 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashEnd]));
 		w230.Position = 2;
@@ -2159,10 +2163,12 @@ public partial class MainWindow
 		this.hbox13.Name = "hbox13";
 		this.hbox13.Spacing = 6;
 		// Container child hbox13.Gtk.Box+BoxChild
-		this.datepickerEventBegin = new global::WidgetLib.DatePicker ();
+		this.datepickerEventBegin = new global::QSWidgetLib.DatePicker ();
 		this.datepickerEventBegin.Events = ((global::Gdk.EventMask)(256));
 		this.datepickerEventBegin.Name = "datepickerEventBegin";
 		this.datepickerEventBegin.Date = new global::System.DateTime (0);
+		this.datepickerEventBegin.IsEditable = false;
+		this.datepickerEventBegin.AutoSeparation = false;
 		this.hbox13.Add (this.datepickerEventBegin);
 		global::Gtk.Box.BoxChild w288 = ((global::Gtk.Box.BoxChild)(this.hbox13 [this.datepickerEventBegin]));
 		w288.Position = 0;
@@ -2176,10 +2182,12 @@ public partial class MainWindow
 		w289.Expand = false;
 		w289.Fill = false;
 		// Container child hbox13.Gtk.Box+BoxChild
-		this.datepickerEventEnd = new global::WidgetLib.DatePicker ();
+		this.datepickerEventEnd = new global::QSWidgetLib.DatePicker ();
 		this.datepickerEventEnd.Events = ((global::Gdk.EventMask)(256));
 		this.datepickerEventEnd.Name = "datepickerEventEnd";
 		this.datepickerEventEnd.Date = new global::System.DateTime (0);
+		this.datepickerEventEnd.IsEditable = false;
+		this.datepickerEventEnd.AutoSeparation = false;
 		this.hbox13.Add (this.datepickerEventEnd);
 		global::Gtk.Box.BoxChild w290 = ((global::Gtk.Box.BoxChild)(this.hbox13 [this.datepickerEventEnd]));
 		w290.Position = 2;

@@ -6,7 +6,7 @@ using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
-using WidgetLib;
+using QSWidgetLib;
 
 public partial class MainWindow : Gtk.Window
 {

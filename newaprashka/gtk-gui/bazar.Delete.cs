@@ -12,7 +12,7 @@ namespace bazar
 		private global::Gtk.TreeView treeviewObjects;
 		private global::Gtk.Button buttonNo;
 		private global::Gtk.Button buttonYes;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);

@@ -24,7 +24,7 @@ namespace bazar
 		private global::Gtk.Label labelDiffName;
 		private global::Gtk.Table table1;
 		private global::Gtk.ComboBox comboExpenseItem;
-		private global::WidgetLib.DatePicker dateStatement;
+		private global::QSWidgetLib.DatePicker dateStatement;
 		private global::Gtk.Entry entryNumber;
 		private global::Gtk.Entry entryUser;
 		private global::Gtk.Label label10;
@@ -42,7 +42,7 @@ namespace bazar
 		private global::Gtk.TextView textviewDetails;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -289,11 +289,13 @@ namespace bazar
 			w35.XOptions = ((global::Gtk.AttachOptions)(4));
 			w35.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table1.Gtk.Table+TableChild
-			this.dateStatement = new global::WidgetLib.DatePicker ();
+			this.dateStatement = new global::QSWidgetLib.DatePicker ();
 			this.dateStatement.Sensitive = false;
 			this.dateStatement.Events = ((global::Gdk.EventMask)(256));
 			this.dateStatement.Name = "dateStatement";
 			this.dateStatement.Date = new global::System.DateTime (0);
+			this.dateStatement.IsEditable = false;
+			this.dateStatement.AutoSeparation = false;
 			this.table1.Add (this.dateStatement);
 			global::Gtk.Table.TableChild w36 = ((global::Gtk.Table.TableChild)(this.table1 [this.dateStatement]));
 			w36.TopAttach = ((uint)(1));

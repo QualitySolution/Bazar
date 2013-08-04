@@ -8,7 +8,7 @@ namespace bazar
 		private global::Gtk.TreeView treeviewDebts;
 		private global::Gtk.Label labelTotal;
 		private global::Gtk.Button buttonClose;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);

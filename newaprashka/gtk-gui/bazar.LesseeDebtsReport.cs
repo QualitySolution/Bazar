@@ -6,7 +6,7 @@ namespace bazar
 	{
 		private global::Gtk.HBox hbox1;
 		private global::Gtk.Label label2;
-		private global::WidgetLib.DatePicker dateReport;
+		private global::QSWidgetLib.DatePicker dateReport;
 		private global::Gtk.Label label1;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
@@ -36,10 +36,12 @@ namespace bazar
 			w2.Position = 0;
 			w2.Fill = false;
 			// Container child hbox1.Gtk.Box+BoxChild
-			this.dateReport = new global::WidgetLib.DatePicker ();
+			this.dateReport = new global::QSWidgetLib.DatePicker ();
 			this.dateReport.Events = ((global::Gdk.EventMask)(256));
 			this.dateReport.Name = "dateReport";
 			this.dateReport.Date = new global::System.DateTime (0);
+			this.dateReport.IsEditable = false;
+			this.dateReport.AutoSeparation = false;
 			this.hbox1.Add (this.dateReport);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.dateReport]));
 			w3.Position = 1;

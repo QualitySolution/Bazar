@@ -12,7 +12,7 @@ namespace bazar
 		private global::Gtk.Button buttonAdd;
 		private global::Gtk.Button buttonDel;
 		private global::Gtk.Label labelNotSeparated;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);

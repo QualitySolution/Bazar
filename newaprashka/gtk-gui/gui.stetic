@@ -5,8 +5,8 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../../../MonoReports/build/MonoReports.dll" />
-    <widget-library name="../../WidgetLib/bin/Debug/WidgetLib.dll" />
+    <widget-library name="../../../QSProjects/QSProjectsLib/bin/Debug/QSProjectsLib.dll" />
+    <widget-library name="../../../QSProjects/QSWidgetLib/bin/Debug/QSWidgetLib.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="961 551">
@@ -2071,7 +2071,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2144,7 +2143,7 @@
                             <property name="MemberName" />
                             <property name="Spacing">6</property>
                             <child>
-                              <widget class="WidgetLib.DatePicker" id="dateCashStart">
+                              <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
@@ -2168,7 +2167,7 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="WidgetLib.DatePicker" id="dateCashEnd">
+                              <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
@@ -2739,7 +2738,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2812,7 +2810,7 @@
                             <property name="MemberName" />
                             <property name="Spacing">6</property>
                             <child>
-                              <widget class="WidgetLib.DatePicker" id="datepickerEventBegin">
+                              <widget class="QSWidgetLib.DatePicker" id="datepickerEventBegin">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
@@ -2835,7 +2833,7 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="WidgetLib.DatePicker" id="datepickerEventEnd">
+                              <widget class="QSWidgetLib.DatePicker" id="datepickerEventEnd">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
@@ -6549,7 +6547,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="datepickerSign">
+                      <widget class="QSWidgetLib.DatePicker" id="datepickerSign">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
@@ -6879,7 +6877,7 @@
                         <property name="RowSpacing">6</property>
                         <property name="ColumnSpacing">6</property>
                         <child>
-                          <widget class="WidgetLib.DatePicker" id="datepickerCancel">
+                          <widget class="QSWidgetLib.DatePicker" id="datepickerCancel">
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
                             <property name="Date">0</property>
@@ -6901,7 +6899,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="WidgetLib.DatePicker" id="datepickerEnd">
+                          <widget class="QSWidgetLib.DatePicker" id="datepickerEnd">
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
                             <property name="Date">0</property>
@@ -6923,7 +6921,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="WidgetLib.DatePicker" id="datepickerStart">
+                          <widget class="QSWidgetLib.DatePicker" id="datepickerStart">
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
                             <property name="Date">0</property>
@@ -7635,7 +7633,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="dateSlip">
+                      <widget class="QSWidgetLib.DatePicker" id="dateSlip">
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
@@ -8305,7 +8303,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="dateSlip">
+                      <widget class="QSWidgetLib.DatePicker" id="dateSlip">
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
@@ -9462,7 +9460,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="WidgetLib.DatePicker" id="dateStatement">
+                  <widget class="QSWidgetLib.DatePicker" id="dateStatement">
                     <property name="MemberName" />
                     <property name="Sensitive">False</property>
                     <property name="Events">ButtonPressMask</property>
@@ -10186,7 +10184,7 @@
                     <property name="MemberName" />
                     <property name="Spacing">6</property>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="dateCashStart">
+                      <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
@@ -10210,7 +10208,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="dateCashEnd">
+                      <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
@@ -10535,7 +10533,7 @@
                     <property name="MemberName" />
                     <property name="Spacing">6</property>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="dateCashStart">
+                      <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
@@ -10559,7 +10557,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="WidgetLib.DatePicker" id="dateCashEnd">
+                      <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
@@ -12033,7 +12031,7 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="WidgetLib.DatePicker" id="dateCashStart">
+                  <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
                     <property name="Date">0</property>
@@ -12056,7 +12054,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="WidgetLib.DatePicker" id="dateCashEnd">
+                  <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
                     <property name="Date">0</property>
@@ -12331,7 +12329,7 @@
               </packing>
             </child>
             <child>
-              <widget class="WidgetLib.DatePicker" id="dateReport">
+              <widget class="QSWidgetLib.DatePicker" id="dateReport">
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
                 <property name="Date">0</property>
@@ -12434,7 +12432,7 @@
               </packing>
             </child>
             <child>
-              <widget class="WidgetLib.DatePicker" id="datepickerCash">
+              <widget class="QSWidgetLib.DatePicker" id="datepickerCash">
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
                 <property name="Date">0</property>
