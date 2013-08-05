@@ -10,7 +10,6 @@ namespace bazar
 	class MainClass
 	{
 		public static MySqlConnection connectionDB; //FIXME Потом убить
-		public static string ConnectionString; //FIXME Потом убить
 		public static Label StatusBarLabel;
 		public static MainWindow MainWin;
 
@@ -49,7 +48,6 @@ namespace bazar
 				return;
 			//FIXME потом убить
 			connectionDB = QSMain.connectionDB;
-			ConnectionString = QSMain.ConnectionString;
 
 			LoginDialog.Destroy ();
 

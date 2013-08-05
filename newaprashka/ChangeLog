@@ -1,6 +1,11 @@
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:
+	* ReportsExt.cs: 
+
+2013-08-05  Gankov Andrey  <gav@qsolution.ru>
+
+	* Main.cs:
 	* Event.cs:
 	* Accrual.cs:
 	* MainWindow.cs:

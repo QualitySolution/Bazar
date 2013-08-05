@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -25,9 +26,9 @@ namespace bazar
 			foreach (XmlNode node in xmlDoc.GetElementsByTagName("ConnectString"))
 			{
 				if(UserVar)
-					node.InnerText = MainClass.ConnectionString + "Allow User Variables=True";
+					node.InnerText = QSMain.ConnectionString + "Allow User Variables=True";
 				else
-					node.InnerText = MainClass.ConnectionString;
+					node.InnerText = QSMain.ConnectionString;
 			}
 
 			ReportPath = System.IO.Path.Combine (System.IO.Path.GetTempPath (), ReportName + ".rdl");
