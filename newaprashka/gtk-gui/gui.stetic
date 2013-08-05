@@ -322,7 +322,7 @@
           <widget class="Gtk.Notebook" id="notebookMain">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">5</property>
+            <property name="CurrentPage">4</property>
             <signal name="SwitchPage" handler="OnNotebookMainSwitchPage" />
             <child>
               <widget class="Gtk.VBox" id="vbox2">
@@ -2306,7 +2306,7 @@
                   <widget class="Gtk.Notebook" id="notebookCash">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
-                    <property name="CurrentPage">0</property>
+                    <property name="CurrentPage">1</property>
                     <signal name="SwitchPage" handler="OnNotebook1SwitchPage" />
                     <child>
                       <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow4">
@@ -2343,6 +2343,7 @@
                             <property name="ShowScrollbars">True</property>
                             <signal name="CursorChanged" handler="OnTreeviewExpenseCursorChanged" />
                             <signal name="RowActivated" handler="OnTreeviewExpenseRowActivated" />
+                            <signal name="ButtonReleaseEvent" handler="OnTreeviewExpenseButtonReleaseEvent" />
                           </widget>
                         </child>
                       </widget>

@@ -1,3 +1,10 @@
+2013-08-05  ghost03080  <st.p.inomirie@gmail.com>
+
+	* MainWindow.cs:
+	* ExpenseSlip.cs:
+	* gui.stetic:
+	* MainWindow.cs: 
+
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:

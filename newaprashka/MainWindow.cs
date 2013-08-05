@@ -156,7 +156,7 @@ public partial class MainWindow : Gtk.Window
 				treeviewExpense.Selection.GetSelected(out iter);
 				itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
 				ExpenseSlip winExpense = new  ExpenseSlip();
-				winExpense.SlipFill(itemid);
+				winExpense.SlipFill(itemid, false);
 				winExpense.Show();
 				result = (ResponseType)winExpense.Run();
 				winExpense.Destroy();
@@ -794,6 +794,37 @@ public partial class MainWindow : Gtk.Window
 		WinReport.Show ();
 		WinReport.Run ();
 		WinReport.Destroy ();
+	}	
+
+	protected virtual void test (object o, EventArgs args)
+	{
+		TreeIter iter;
+		treeviewExpense.Selection.GetSelected(out iter);
+		int itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
+
+		ExpenseSlip winExpenseSlip = new ExpenseSlip();
+		winExpenseSlip.SlipFill(itemid, true);
+		winExpenseSlip.Show();
+		winExpenseSlip.Run();
+		winExpenseSlip.Destroy();
+		UpdateCashExpense();
+		CalculateTotalCash();
 	}
 
+	[GLib.ConnectBefore]
+	protected void OnTreeviewExpenseButtonReleaseEvent (object o, ButtonReleaseEventArgs args)
+	{
+		bool ItemSelected = treeviewExpense.Selection.CountSelectedRows() == 1;
+
+		if((int)args.Event.Button == 3)
+		{
+			Gtk.Menu popupBox = new Gtk.Menu();
+			Gtk.MenuItem MenuItemOpenPlace = new MenuItem("Создать копированием");
+			MenuItemOpenPlace.Activated += new EventHandler(test);
+			MenuItemOpenPlace.Sensitive = ItemSelected;
+			popupBox.Add(MenuItemOpenPlace);                     
+			popupBox.ShowAll();
+			popupBox.Popup();
+		}
+	}
 }
