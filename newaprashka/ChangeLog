@@ -1,5 +1,10 @@
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>
 
+	* ExpenseSlip.cs:
+	* gui.stetic: 
+
+2013-08-05  Gankov Andrey  <gav@qsolution.ru>
+
 	* Main.cs:
 	* logo.png:
 	* Login.cs:

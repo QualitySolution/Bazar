@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -17,14 +18,14 @@ namespace bazar
 		{
 			this.Build ();
 
-			MainClass.ComboFillReference(comboCash,"cash",2);
-			MainClass.ComboFillReference(comboOrg, "organizations", 2);
-			MainClass.ComboFillReference(comboExpenseItem,"expense_items",2);
+			ComboWorks.ComboFillReference(comboCash,"cash",2);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboExpenseItem,"expense_items",2);
 			
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;
-			entryUser.Text = MainClass.User.Name;
-			if(MainClass.User.Permissions["edit_slips"])
+			entryUser.Text = QSMain.User.Name;
+			if(QSMain.User.Permissions["edit_slips"])
 				dateSlip.Sensitive = true;
 		}
 
@@ -95,7 +96,7 @@ namespace bazar
 			MainClass.StatusMessage("Запись расходного ордера...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
 				if(comboOperation.Active == 1)
@@ -142,7 +143,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи расходного ордера!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			
 		}
@@ -161,7 +162,7 @@ namespace bazar
 					"WHERE debit_slips.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", SlipId);
 				
@@ -196,19 +197,19 @@ namespace bazar
 				if(rdr["date"] != DBNull.Value)
 					dateSlip.Date = DateTime.Parse( rdr["date"].ToString());
 				if(rdr["org_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 				comboOrg.SetActiveIter (iter);
 				if(rdr["cash_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboCash.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, -1, out iter);
 				comboCash.SetActiveIter (iter);
 				if(rdr["expense_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboExpenseItem.Model, int.Parse(rdr["expense_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, int.Parse(rdr["expense_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboExpenseItem.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, -1, out iter);
 				comboExpenseItem.SetActiveIter (iter);
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
 				if(rdr["user"] != DBNull.Value)
@@ -221,7 +222,7 @@ namespace bazar
 				
 				this.Title = "Расходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!MainClass.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
+				if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
 				{
 					comboOperation.Sensitive = false;
 					comboOrg.Sensitive = false;
@@ -239,7 +240,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения информации о расходном ордере!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			TestCanSave();
 		}
