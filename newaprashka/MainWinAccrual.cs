@@ -3,6 +3,7 @@ using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
+using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -73,7 +74,7 @@ public partial class MainWindow : Gtk.Window
 		{
 			sql += " AND paid = FALSE ";
 		}
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
 		MySqlDataReader rdr = cmd.ExecuteReader();
 

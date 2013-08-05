@@ -3,6 +3,7 @@ using System.Data;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -25,7 +26,7 @@ namespace bazar
 			string sql = "SELECT * FROM contact_persons WHERE id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", id);
 		
@@ -78,7 +79,7 @@ namespace bazar
 			MainClass.StatusMessage("Запись контактного лица...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", Contactid);
 				cmd.Parameters.AddWithValue("@name", entryFIO.Text);

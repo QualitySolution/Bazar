@@ -271,7 +271,7 @@ public partial class MainWindow : Gtk.Window
 				" payment_sum.income_sum IS NOT NULL)";
 		}
 
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
 		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date);
 		
@@ -350,7 +350,7 @@ public partial class MainWindow : Gtk.Window
 			sql += " AND debit_slips.expense_id = '" + comboCashItem.Model.GetValue(iter,1) + "'";
 		}
 		
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
 		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date);
 		
@@ -421,7 +421,7 @@ public partial class MainWindow : Gtk.Window
 			sql += " AND advance.expense_id = '" + comboCashItem.Model.GetValue(iter,1) + "'";
 		}
 		
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
 		cmd.Parameters.AddWithValue("@end", dateCashEnd.Date);
 		
@@ -639,7 +639,7 @@ public partial class MainWindow : Gtk.Window
 
 		sql += sqlwhere;
 
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 
 		if(comboCashOrg.GetActiveIter (out iter) && comboCashOrg.Active > 0)
 			cmd.Parameters.AddWithValue("@org_id", comboCashOrg.Model.GetValue(iter,1));
@@ -654,7 +654,7 @@ public partial class MainWindow : Gtk.Window
 		rdr.Close ();
 
 		sql = "SELECT SUM(debit_slips.sum) as total FROM debit_slips " + sqlwhere;
-		cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		if(comboCashOrg.GetActiveIter (out iter) && comboCashOrg.Active > 0)
 			cmd.Parameters.AddWithValue("@org_id", comboCashOrg.Model.GetValue(iter,1));
 		if(comboCashCash.GetActiveIter (out iter) && comboCashCash.Active > 0)

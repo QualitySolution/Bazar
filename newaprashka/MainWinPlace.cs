@@ -6,6 +6,7 @@ using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
+using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -70,7 +71,7 @@ public partial class MainWindow : Gtk.Window
 			sql += " places.org_id = '" + comboPlaceOrg.Model.GetValue(iter,1) + "' ";
 			WhereExist = true;
 		}
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
 		MySqlDataReader rdr = cmd.ExecuteReader();
 		int lessee_id;

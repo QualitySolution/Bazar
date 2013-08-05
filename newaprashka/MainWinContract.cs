@@ -3,6 +3,7 @@ using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
+using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -74,7 +75,7 @@ public partial class MainWindow : Gtk.Window
 				sql += " AND contracts.end_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
 			WhereExist = true;
 		}
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
 		MySqlDataReader rdr = cmd.ExecuteReader();
 		int lessee_id;

@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -29,7 +30,7 @@ namespace bazar
 			try
 			{
 				string sql = "SELECT COUNT(*) as count FROM organizations";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				object result = cmd.ExecuteScalar();
 				if(result != DBNull.Value)
 					countOrg = Convert.ToInt32(result);
@@ -37,7 +38,7 @@ namespace bazar
 					countOrg = 0;
 
 				sql = "SELECT COUNT(*) as count FROM cash";
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				result = cmd.ExecuteScalar();
 				if(result != DBNull.Value)
 					countCash = Convert.ToInt32(result);
@@ -63,7 +64,7 @@ namespace bazar
 						"LEFT JOIN cash ON result.cash_id = cash.id " +
 						"WHERE result.debt <> 0 " +
 						"ORDER BY employee" + sqlgroup;
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				if(rdr.Read () && rdr["debt"] != DBNull.Value && rdr["employee_id"] == DBNull.Value)
 					labelTotal.LabelProp = String.Format("Общая задолжность всех подотчетных лиц: {0:C}", rdr.GetDecimal("debt"));

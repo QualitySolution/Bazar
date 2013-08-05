@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -56,7 +57,7 @@ namespace bazar
 					"GROUP BY expense_id ) as result " +
 					"LEFT JOIN expense_items ON result.expense_id = expense_items.id GROUP BY expense_id ";
 
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
 				cmd.Parameters.AddWithValue("@end", dateCashEnd.Date.AddDays (1));
 				MySqlDataReader rdr = cmd.ExecuteReader();
@@ -91,7 +92,7 @@ namespace bazar
 					"LEFT JOIN income_items ON income_id = income_items.id " +
 					"GROUP BY sumtable.income_id";
 				
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@start", dateCashStart.Date);
 				cmd.Parameters.AddWithValue("@end", dateCashEnd.Date.AddDays (1));
 				rdr = cmd.ExecuteReader();

@@ -43,7 +43,7 @@ public partial class MainWindow : Gtk.Window
 			return;
 		}
 
-		if(MainClass.connectionDB.DataSource == "demo.qsolution.ru")
+		if(QSMain.connectionDB.DataSource == "demo.qsolution.ru")
 		{
 			string Message = "Вы подключились к демонстрационному серверу. Сервер предназначен для оценки " +
 				"возможностей программы, не используйте его для работы, так как ваши данные будут доступны " +
@@ -480,7 +480,7 @@ public partial class MainWindow : Gtk.Window
 			sql = "SET PASSWORD = PASSWORD('" + inputPassword.Text + "')";
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.ExecuteNonQuery();
 				MainClass.StatusMessage("Пароль изменен. Ok");
 			} 

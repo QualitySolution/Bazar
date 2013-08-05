@@ -3,6 +3,7 @@ using System.Data;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -96,7 +97,7 @@ namespace bazar
 			entryFilter.Text = "";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
 				MySqlDataReader rdr = cmd.ExecuteReader();
 					
@@ -224,7 +225,7 @@ namespace bazar
 				}
 				try 
 				{
-					MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					
 					cmd.Parameters.AddWithValue("@id",SelectedID);
 					cmd.Parameters.AddWithValue("@name", inputNameEntry.Text);

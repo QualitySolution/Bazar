@@ -184,7 +184,7 @@ namespace bazar
 						"ON paysum.accrual_pay_id = accrual_pays.id " +
 						"WHERE accrual_pays.accrual_id = @accrual_id";
 				
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@accrual_id", AccrualId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
@@ -290,7 +290,7 @@ namespace bazar
 				"accrual.contract_no as contract_no, month, year FROM accrual " +
 				"LEFT JOIN contracts ON contracts.number = accrual.contract_no " +
 				"WHERE accrual.id = @id";
-			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@id", Accrual_Id);
 			MySqlDataReader rdr = cmd.ExecuteReader();
 			if(!rdr.Read())
@@ -305,7 +305,7 @@ namespace bazar
 			DateTime Month = new DateTime(rdr.GetInt32("year"), rdr.GetInt32 ("month"), 1);
 			rdr.Close ();
 			//Записываем оплату
-			MySqlTransaction trans = MainClass.connectionDB.BeginTransaction ();
+			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 
 			try
 			{
@@ -330,7 +330,7 @@ namespace bazar
 						}
 					}
 					// Записываем приходный ордер
-					cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 					cmd.Parameters.AddWithValue("@operation", "payment");
 					cmd.Parameters.AddWithValue("@org_id", org_id);
 					cmd.Parameters.AddWithValue("@cash_id", item.CashId);
@@ -346,7 +346,7 @@ namespace bazar
 					item.DocId = Convert.ToInt32(cmd.LastInsertedId);
 
 					// Записываем платеж
-					cmd = new MySqlCommand(sql2, MainClass.connectionDB, trans);
+					cmd = new MySqlCommand(sql2, QSMain.connectionDB, trans);
 					cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
 					cmd.Parameters.AddWithValue("@accrual", Accrual_Id);
 					cmd.Parameters.AddWithValue("@slip", item.DocId);
@@ -363,7 +363,7 @@ namespace bazar
 					if((bool)row[0])
 					{
 						CashDoc CurrentDoc = PayList.Find( p => p.CashId == (int)row[3]);
-						cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+						cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 						cmd.Parameters.AddWithValue("@payment_id", CurrentDoc.PaymentId);
 						cmd.Parameters.AddWithValue("@accrual_pay_id", row[8]);
 						cmd.Parameters.AddWithValue("@sum", row[7]);

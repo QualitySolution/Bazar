@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -39,7 +40,7 @@ namespace bazar
 			try
 			{
 				string sql = "SELECT name FROM employees WHERE id = @id";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@id", id);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				rdr.Read ();
@@ -81,7 +82,7 @@ namespace bazar
 						" UNION ALL SELECT (2) as doc, date, id, null as expence, sum as income, details FROM advance " +
 						"WHERE employee_id = @employee_id AND date BETWEEN @start AND @end" + sqlwhere +
 						" ORDER BY date";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				if(!AccountableNull)
 					cmd.Parameters.AddWithValue("@employee_id", Accountable_id);
 				else

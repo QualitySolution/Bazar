@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -229,7 +230,7 @@ namespace bazar
 				"WHERE contracts.number = @number";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@number", ContractNumber);
 				
@@ -296,7 +297,7 @@ namespace bazar
 					"LEFT JOIN units ON services.units_id = units.id " +
 					"WHERE contract_pays.contract_no = @contract_no";
 
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@contract_no", ContractNumber);
 				rdr = cmd.ExecuteReader();
 
@@ -440,7 +441,7 @@ namespace bazar
 					"WHERE type_id = @type_id AND place_no = @place_no";
 				try
 				{
-					MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					
 					if(comboPlaceT.GetActiveIter(out iter))
 					{
@@ -502,7 +503,7 @@ namespace bazar
 			{
 				// Проверка номера договора на дубликат
 				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				rdr.Read();
@@ -525,7 +526,7 @@ namespace bazar
 				sql = "SELECT number, start_date AS start, IFNULL(cancel_date,end_date) AS end FROM contracts " +
 					"WHERE place_type_id = @type_id AND place_no = @place_no AND " +
 						"!(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date)" ;
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				if(comboPlaceT.GetActiveIter(out iter))
 				{
 					cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
@@ -576,7 +577,7 @@ namespace bazar
 						"WHERE number = @oldnumber";
 				}
 
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
 				cmd.Parameters.AddWithValue("@oldnumber", OriginalNumber);
@@ -634,7 +635,7 @@ namespace bazar
 					else
 						sql = "INSERT INTO contract_pays (contract_no, service_id, cash_id, count, price) " +
 							"VALUES (@contract_no, @service_id, @cash_id, @count, @price)";
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@contract_no", entryNumber.Text);
 					cmd.Parameters.AddWithValue("@service_id", ServiceListStore.GetValue(iter,0));
 					if((int)ServiceListStore.GetValue(iter,2) > 0)
@@ -653,7 +654,7 @@ namespace bazar
 				sql = "DELETE FROM contract_pays WHERE id = @id";
 				foreach( int id in DeletedRowId)
 				{
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@id", id);
 					cmd.ExecuteNonQuery();
 				}
@@ -662,7 +663,7 @@ namespace bazar
 				{
 					MainClass.StatusMessage("Арендатор изменился...");
 					sql = "SELECT COUNT(*) FROM credit_slips WHERE contract_no = @contract AND lessee_id = @old_lessee";
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@contract", entryNumber.Text);
 					cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
 					long rowcount = (long) cmd.ExecuteScalar();
@@ -682,7 +683,7 @@ namespace bazar
 							MainClass.StatusMessage("Меняем арендатора в приходных ордерах...");
 							sql = "UPDATE credit_slips SET lessee_id = @lessee_id " +
 								"WHERE contract_no = @contract AND lessee_id = @old_lessee ";
-							cmd = new MySqlCommand(sql, MainClass.connectionDB);
+							cmd = new MySqlCommand(sql, QSMain.connectionDB);
 							cmd.Parameters.AddWithValue("@contract", entryNumber.Text);
 							cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
 							cmd.Parameters.AddWithValue("@lessee_id", LesseeId);

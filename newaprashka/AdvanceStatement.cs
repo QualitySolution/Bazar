@@ -131,7 +131,7 @@ namespace bazar
 			MainClass.StatusMessage("Запись авансового отчета...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
 				if(comboOrg.GetActiveIter(out iter) && (int)comboOrg.Model.GetValue(iter,1) != -1)
@@ -190,7 +190,7 @@ namespace bazar
 						messagetext = "Дополнительно создан расходный ордер №{0}, на сумму {1:C}.\nНе забудьте доплатить подотчетному лицу!";
 					}
 
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					
 					cmd.Parameters.AddWithValue ("@operation","advance");
 
@@ -248,7 +248,7 @@ namespace bazar
 					"WHERE advance.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", StatementId);
 				
@@ -376,7 +376,7 @@ namespace bazar
 				"UNION ALL SELECT -SUM(advance.sum) as count FROM advance WHERE advance.employee_id = @employee_id " + sqlwhere + " ) AS slips";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@employee_id", Accountable_id);
 				
@@ -407,7 +407,7 @@ namespace bazar
 						"WHERE employee_id = @employee_id " + sqlwhere +
 						" ORDER BY date DESC, id DESC " +
 						"LIMIT 20";
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@employee_id", Accountable_id);
 				rdr = cmd.ExecuteReader();
 

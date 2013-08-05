@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -468,7 +469,7 @@ namespace bazar
 				{
 					GroupCount = 0;
 					string sql = Tables[pair.Key].SqlSelect + pair.Value.sqlwhere;
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					if(pair.Value.SqlParam.ParamStr != "")
 						cmd.Parameters.AddWithValue(pair.Value.SqlParam.ParamStr, ParametersIn.ParamStr);
 					if(pair.Value.SqlParam.ParamInt != "")
@@ -529,7 +530,7 @@ namespace bazar
 				{
 					GroupCount = 0;
 					string sql = Tables[pair.Key].SqlSelect + pair.Value.sqlwhere;
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					if(pair.Value.SqlParam.ParamStr != "")
 						cmd.Parameters.AddWithValue(pair.Value.SqlParam.ParamStr, ParametersIn.ParamStr);
 					if(pair.Value.SqlParam.ParamInt != "")
@@ -582,7 +583,7 @@ namespace bazar
 					if(Tables[pair.Key].DeleteItems.Count > 0 || Tables[pair.Key].ClearItems.Count > 0)
 					{
 						sql = "SELECT * FROM " +pair.Key + " " + pair.Value.sqlwhere;
-						cmd = new MySqlCommand(sql, MainClass.connectionDB);
+						cmd = new MySqlCommand(sql, QSMain.connectionDB);
 						if(pair.Value.SqlParam.ParamStr != "")
 							cmd.Parameters.AddWithValue(pair.Value.SqlParam.ParamStr, ParametersIn.ParamStr);
 						if(pair.Value.SqlParam.ParamInt != "")
@@ -609,7 +610,7 @@ namespace bazar
 					}
 
 					sql = "DELETE FROM " + pair.Key + " " + pair.Value.sqlwhere;
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					if(pair.Value.SqlParam.ParamStr != "")
 						cmd.Parameters.AddWithValue(pair.Value.SqlParam.ParamStr, ParametersIn.ParamStr);
 					if(pair.Value.SqlParam.ParamInt != "")
@@ -632,7 +633,7 @@ namespace bazar
 						first = false;
 					}
 					sql += pair.Value.sqlwhere;
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					if(pair.Value.SqlParam.ParamStr != "")
 						cmd.Parameters.AddWithValue(pair.Value.SqlParam.ParamStr, ParametersIn.ParamStr);
 					if(pair.Value.SqlParam.ParamInt != "")
@@ -655,7 +656,7 @@ namespace bazar
 				sql += Tables[Table].PrimaryKey.ParamStr + " = @StrParam ";
 				FirstKey = false;
 			}
-			cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			if(Tables[Table].PrimaryKey.ParamStr != "")
 				cmd.Parameters.AddWithValue("@StrParam", ParametersIn.ParamStr);
 			if(Tables[Table].PrimaryKey.ParamInt != "")

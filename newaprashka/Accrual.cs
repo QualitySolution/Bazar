@@ -256,7 +256,7 @@ namespace bazar
 				"WHERE accrual.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@id", AccrualId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 		
@@ -298,7 +298,7 @@ namespace bazar
 						"ON paysum.accrual_pay_id = accrual_pays.id " +
 						"WHERE accrual_pays.accrual_id = @accrual_id";
 				
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@accrual_id", AccrualId);
 				rdr = cmd.ExecuteReader();
 				
@@ -367,7 +367,7 @@ namespace bazar
 					"LEFT JOIN cash ON credit_slips.cash_id = cash.id " +
 					"WHERE credit_slips.accrual_id = @id";
 
-			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@id", entryNumber.Text);
 			
 			MySqlDataReader rdr = cmd.ExecuteReader();
@@ -407,7 +407,7 @@ namespace bazar
 					"LEFT JOIN organizations ON contracts.org_id = organizations.id " +
 					"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
 					"WHERE contracts.number = @number";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@number", comboContract.ActiveText);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				rdr.Read();
@@ -470,7 +470,7 @@ namespace bazar
 			{
 				// Проверка нет ли уже начисления по этому договору
 				string sql = "SELECT id FROM accrual WHERE contract_no = @contract AND month = @month AND year = @year";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@contract", comboContract.ActiveText);
 				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
 				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
@@ -503,7 +503,7 @@ namespace bazar
 						"WHERE id = @id";
 				}
 				
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
 				cmd.Parameters.AddWithValue("@contract_no", comboContract.ActiveText);
@@ -542,7 +542,7 @@ namespace bazar
 					else
 						sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
 							"VALUES (@accrual_id, @service_id, @cash_id, @count, @price)";
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					if(NewAccrual)
 						cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
 					else
@@ -566,7 +566,7 @@ namespace bazar
 				sql = "DELETE FROM accrual_pays WHERE id = @id";
 				foreach( long id in DeletedRowId)
 				{
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@id", id);
 					cmd.ExecuteNonQuery();
 				}
@@ -709,12 +709,12 @@ namespace bazar
 			decimal balance;
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@id", id);
 				balance = (decimal) cmd.ExecuteScalar ();
 
 				sql = "UPDATE accrual SET paid = @paid WHERE id = @id";
-				cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@id", id);
 				if(balance <= 0)
 					cmd.Parameters.AddWithValue("@paid", true);
@@ -770,7 +770,7 @@ namespace bazar
 			int year = Convert.ToInt32 (comboAccuralYear.ActiveText);
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@contract", comboContract.ActiveText);
 				MySqlDataReader rdr = cmd.ExecuteReader ();
 
@@ -830,7 +830,7 @@ namespace bazar
 					"GROUP BY accrual_pay_id";
 			TreeIter iter;
 			
-			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@accrual_id", entryNumber.Text);
 			MySqlDataReader rdr = cmd.ExecuteReader();
 

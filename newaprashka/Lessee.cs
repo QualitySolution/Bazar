@@ -3,6 +3,7 @@ using System.Data;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -69,7 +70,7 @@ namespace bazar
 			string sql = "SELECT lessees.*, goods.name as goods FROM lessees LEFT JOIN goods ON lessees.goods_id = goods.id WHERE lessees.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", id);
 		
@@ -137,7 +138,7 @@ namespace bazar
 			MainClass.StatusMessage("Запись арендатора...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", Lesseeid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
@@ -212,7 +213,7 @@ namespace bazar
 				sql += " AND ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) ";
 			
-	        MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+	        MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 	
 			cmd.Parameters.AddWithValue("@lessee",Lesseeid);
 		

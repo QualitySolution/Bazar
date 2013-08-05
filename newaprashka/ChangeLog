@@ -1,6 +1,34 @@
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:
+	* Event.cs:
+	* Place.cs:
+	* Lessee.cs:
+	* Delete.cs:
+	* Contact.cs:
+	* Service.cs:
+	* Accrual.cs:
+	* Contract.cs:
+	* reference.cs:
+	* IncomeSlip.cs:
+	* MainWindow.cs:
+	* PayAccrual.cs:
+	* MainWinCash.cs:
+	* CashBalance.cs:
+	* MainWinEvent.cs:
+	* MainWinPlace.cs:
+	* MainWinLessee.cs:
+	* MainWinAccrual.cs:
+	* MainWinContract.cs:
+	* AdvanceStatement.cs:
+	* AccountableSlips.cs:
+	* AccountableDebts.cs:
+	* SeparationPayment.cs:
+	* MassAccrualCreation.cs: 
+
+2013-08-05  Gankov Andrey  <gav@qsolution.ru>
+
+	* Main.cs:
 	* ReportsExt.cs: 
 
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>

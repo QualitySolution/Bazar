@@ -127,10 +127,10 @@ namespace bazar
 						"WHERE id = @id";
 			}
 			MainClass.StatusMessage("Запись Приходного ордера...");
-			MySqlTransaction trans = MainClass.connectionDB.BeginTransaction ();
+			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 				
 				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
 				switch (comboOperation.Active) 
@@ -203,7 +203,7 @@ namespace bazar
 						sql = "INSERT INTO payments (createdate, credit_slip_id, accrual_id) " +
 							"VALUES (@date, @slip, @accrual)";
 						// Записываем платеж
-						cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+						cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 						cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
 						cmd.Parameters.AddWithValue("@accrual", CurrentAccrualId);
 						cmd.Parameters.AddWithValue("@slip", Slip_id);
@@ -265,7 +265,7 @@ namespace bazar
 				"WHERE credit_slips.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", SlipId);
 				

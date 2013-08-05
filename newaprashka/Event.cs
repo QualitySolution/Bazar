@@ -35,7 +35,7 @@ namespace bazar
 				"WHERE events.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", id);
 		
@@ -127,7 +127,7 @@ namespace bazar
 			}
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", Eventid);
 				cmd.Parameters.AddWithValue("@date", EventDate);
@@ -192,7 +192,7 @@ namespace bazar
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))";
 				try
 				{
-					MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					
 					cmd.Parameters.AddWithValue("@type_id", PlaceTypeId);
 					cmd.Parameters.AddWithValue("@place_no", comboboxPlaceNo.ActiveText);

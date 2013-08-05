@@ -122,7 +122,7 @@ namespace bazar
 					"ON pays.contract = number " +
 					"LEFT JOIN accrual ON contracts.number = accrual.contract_no AND accrual.month = @month AND accrual.year = @year " +
 					"WHERE !(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date) ";
-			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			int Month = comboMonth.Active;
 			int Year = Convert.ToInt32(comboYear.ActiveText);
 			DateTime BeginOfMonth = new DateTime(Year, Month, 1);
@@ -204,7 +204,7 @@ namespace bazar
 					if( !(bool) row[0])
 						continue;
 					string sql = "SELECT MIN(count * price) FROM contract_pays WHERE contract_no = @number";
-					MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@number", row[1]);
 					object Result = cmd.ExecuteScalar();
 					bool NotComplete = true;
@@ -214,7 +214,7 @@ namespace bazar
 					sql = "INSERT INTO accrual (contract_no, month, year, user_id, no_complete) " +
 						"VALUES (@contract_no, @month, @year, @user_id, @no_complete)";
 
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 					cmd.Parameters.AddWithValue("@contract_no", row[1]);
 					cmd.Parameters.AddWithValue("@month", Month);
@@ -228,7 +228,7 @@ namespace bazar
 					sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
 						"SELECT @accrual_id, service_id, cash_id, count, price FROM contract_pays WHERE contract_no = @contract";
 
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@contract", row[1]);
 					cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
 					cmd.ExecuteNonQuery ();

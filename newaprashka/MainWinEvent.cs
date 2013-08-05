@@ -6,7 +6,7 @@ using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
-using QSWidgetLib;
+using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -107,7 +107,7 @@ public partial class MainWindow : Gtk.Window
 			sql += " AND MATCH (activity) AGAINST (@activity) > 0";
 		}
 
-		MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
 		cmd.Parameters.AddWithValue("@dateBegin", datepickerEventBegin.Date );
 		cmd.Parameters.AddWithValue("@dateEnd", datepickerEventEnd.Date.AddDays(1));

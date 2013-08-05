@@ -3,6 +3,7 @@ using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -140,7 +141,7 @@ namespace bazar
 						"SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details WHERE payment_id != @current_payment GROUP BY accrual_pay_id) as paysum " +
 						"ON paysum.accrual_pay_id = accrual_pays.id " +
 						"WHERE accrual_pays.accrual_id = @accrual_id";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue ("@accrual_id", _AccrualId);
 				cmd.Parameters.AddWithValue ("@current_payment", _PaymentId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
@@ -195,7 +196,7 @@ namespace bazar
 					"ON paysum.accrual_pay_id = payment_details.accrual_pay_id " +
 					"WHERE payment_details.payment_id = @current_payment";
 				
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@current_payment", _PaymentId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
@@ -372,7 +373,7 @@ namespace bazar
 						sql = "INSERT INTO payment_details(payment_id, accrual_pay_id, sum, income_id)" +
 							"VALUES (@payment_id, @accrual_pay_id, @sum, @income_id)";
 						
-					cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 					cmd.Parameters.AddWithValue("@id", row[0]);
 					cmd.Parameters.AddWithValue("@payment_id", Payment_id);
 					cmd.Parameters.AddWithValue("@accrual_pay_id", row[1]);
@@ -386,7 +387,7 @@ namespace bazar
 				sql = "DELETE FROM payment_details WHERE id = @id";
 				foreach( long id in DeletedRowId)
 				{
-					cmd = new MySqlCommand(sql, MainClass.connectionDB, trans);
+					cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 					cmd.Parameters.AddWithValue("@id", id);
 					cmd.ExecuteNonQuery();
 				}

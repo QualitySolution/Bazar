@@ -9,7 +9,6 @@ namespace bazar
 {
 	class MainClass
 	{
-		public static MySqlConnection connectionDB; //FIXME Потом убить
 		public static Label StatusBarLabel;
 		public static MainWindow MainWin;
 
@@ -46,8 +45,6 @@ namespace bazar
 			LoginResult = (ResponseType) LoginDialog.Run();
 			if (LoginResult == ResponseType.DeleteEvent || LoginResult == ResponseType.Cancel)
 				return;
-			//FIXME потом убить
-			connectionDB = QSMain.connectionDB;
 
 			LoginDialog.Destroy ();
 
@@ -77,7 +74,7 @@ namespace bazar
 				int count = 0;
 				string sql = "SELECT place_no FROM places " +
 					"WHERE type_id = @type_id";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@type_id", Type_id);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
@@ -111,7 +108,7 @@ namespace bazar
 				if(OnlyCurrent)
 					sql += "AND ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) ";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@lessee_id", Lessee_id);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -142,7 +139,7 @@ namespace bazar
 				int count = 0;
 				string sql = "SELECT number FROM contracts " +
 					"WHERE !(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date) ";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				DateTime BeginOfMonth = new DateTime(Year, Month, 1);
 				DateTime EndOfMonth = new DateTime(Year, Month, DateTime.DaysInMonth (Year,Month));
 				cmd.Parameters.AddWithValue("@start", BeginOfMonth);
@@ -177,7 +174,7 @@ namespace bazar
 				bool NextYear = false;
 				TreeIter iter;
 				string sql = "SELECT DISTINCT year FROM accrual";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
 				((ListStore)combo.Model).Clear();
@@ -225,7 +222,7 @@ namespace bazar
 	        {
 				int count = 0;
 				string sql = "SELECT id, name FROM " + TableRef;
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
 				switch (listmode) {
@@ -276,7 +273,7 @@ namespace bazar
 			try
 			{
 				int count = 0;
-				MySqlCommand cmd = new MySqlCommand(SqlSelect, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(SqlSelect, QSMain.connectionDB);
 				cmd.Parameters.AddRange (Parameters);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
@@ -322,7 +319,7 @@ namespace bazar
 	        {
 				string sql = "SELECT services.*, units.name as units FROM services " +
 					"LEFT JOIN units ON services.units_id = units.id";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				int units_id;
 				string units_name;
@@ -362,7 +359,7 @@ namespace bazar
 			try
 	        {
 				string sql = "SELECT user FROM " + TableDB + " GROUP BY user" ;
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 		
 				combo.AppendText("Все");

@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -28,7 +29,7 @@ namespace bazar
 			string sql = "SELECT services.*, units.name as unit FROM services LEFT JOIN units ON services.units_id = units.id WHERE services.id = @id";
 			try
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", id);
 				
@@ -85,7 +86,7 @@ namespace bazar
 			MainClass.StatusMessage("Запись услуги...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", Serviceid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);

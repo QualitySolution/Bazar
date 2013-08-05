@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -74,7 +75,7 @@ namespace bazar
 				"LEFT JOIN contact_persons ON places.contact_person_id = contact_persons.id " +
 				"LEFT JOIN organizations ON places.org_id = organizations.id " +
 				"WHERE places.type_id = @type_id AND places.place_no = @place";
-			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@type_id", type_id);
 			cmd.Parameters.AddWithValue("@place", PlaceNumber);
 			MySqlDataReader rdr = cmd.ExecuteReader();
@@ -118,7 +119,7 @@ namespace bazar
 				"WHERE contracts.place_type_id = @type AND contracts.place_no = @place AND " +
 				"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 				"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))";
-			MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@type", type_id);
 			cmd.Parameters.AddWithValue("@place", PlaceNumber);
 			MySqlDataReader rdr = cmd.ExecuteReader();
@@ -194,7 +195,7 @@ namespace bazar
 			}
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				if(comboPType.GetActiveIter(out iter))
 				{
@@ -279,7 +280,7 @@ namespace bazar
 			string sql = "SELECT contracts.*, lessees.name as lessee FROM contracts " +
 			 	"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 			 	"WHERE place_type_id = @place_type AND place_no = @place_no";
-	        MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
+	        MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			
 			if(comboPType.GetActiveIter(out iter))
 			{
