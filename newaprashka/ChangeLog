@@ -1,5 +1,9 @@
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>
 
+	* BazAr.csproj: 
+
+2013-08-05  Gankov Andrey  <gav@qsolution.ru>
+
 	* gui.stetic:
 	* MainWindow.cs:
 	* bazar.Contact.cs:
