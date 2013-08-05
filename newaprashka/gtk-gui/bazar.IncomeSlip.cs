@@ -325,8 +325,8 @@ namespace bazar
 			this.dateSlip.Events = ((global::Gdk.EventMask)(256));
 			this.dateSlip.Name = "dateSlip";
 			this.dateSlip.Date = new global::System.DateTime (0);
-			this.dateSlip.IsEditable = false;
-			this.dateSlip.AutoSeparation = false;
+			this.dateSlip.IsEditable = true;
+			this.dateSlip.AutoSeparation = true;
 			this.table2.Add (this.dateSlip);
 			global::Gtk.Table.TableChild w38 = ((global::Gtk.Table.TableChild)(this.table2 [this.dateSlip]));
 			w38.TopAttach = ((uint)(1));
@@ -573,7 +573,7 @@ namespace bazar
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 704;
-			this.DefaultHeight = 568;
+			this.DefaultHeight = 625;
 			this.Show ();
 			this.buttonLesseeEdit.Clicked += new global::System.EventHandler (this.OnButtonLesseeEditClicked);
 			this.buttonAccountableEdit.Clicked += new global::System.EventHandler (this.OnButtonAccountableEditClicked);

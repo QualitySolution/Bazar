@@ -232,8 +232,8 @@ namespace bazar
 			this.dateCashStart.Events = ((global::Gdk.EventMask)(256));
 			this.dateCashStart.Name = "dateCashStart";
 			this.dateCashStart.Date = new global::System.DateTime (0);
-			this.dateCashStart.IsEditable = false;
-			this.dateCashStart.AutoSeparation = false;
+			this.dateCashStart.IsEditable = true;
+			this.dateCashStart.AutoSeparation = true;
 			this.hbox15.Add (this.dateCashStart);
 			global::Gtk.Box.BoxChild w25 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashStart]));
 			w25.Position = 0;
@@ -251,8 +251,8 @@ namespace bazar
 			this.dateCashEnd.Events = ((global::Gdk.EventMask)(256));
 			this.dateCashEnd.Name = "dateCashEnd";
 			this.dateCashEnd.Date = new global::System.DateTime (0);
-			this.dateCashEnd.IsEditable = false;
-			this.dateCashEnd.AutoSeparation = false;
+			this.dateCashEnd.IsEditable = true;
+			this.dateCashEnd.AutoSeparation = true;
 			this.hbox15.Add (this.dateCashEnd);
 			global::Gtk.Box.BoxChild w27 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashEnd]));
 			w27.Position = 2;

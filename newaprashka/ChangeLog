@@ -1,3 +1,18 @@
+2013-08-05  Gankov Andrey  <gav@qsolution.ru>
+
+	* gui.stetic:
+	* MainWindow.cs:
+	* bazar.Contact.cs:
+	* bazar.Service.cs:
+	* bazar.Contract.cs:
+	* bazar.IncomeSlip.cs:
+	* bazar.CashBalance.cs:
+	* bazar.DocRegister.cs:
+	* bazar.DailyCashReport.cs:
+	* bazar.AccountableSlips.cs:
+	* bazar.AdvanceStatement.cs:
+	* bazar.LesseeDebtsReport.cs: 
+
 2013-08-04  Gankov Andrey  <gav@qsolution.ru>
 
 	* Reports.cs:

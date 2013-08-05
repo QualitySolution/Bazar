@@ -40,8 +40,8 @@ namespace bazar
 			this.dateReport.Events = ((global::Gdk.EventMask)(256));
 			this.dateReport.Name = "dateReport";
 			this.dateReport.Date = new global::System.DateTime (0);
-			this.dateReport.IsEditable = false;
-			this.dateReport.AutoSeparation = false;
+			this.dateReport.IsEditable = true;
+			this.dateReport.AutoSeparation = true;
 			this.hbox1.Add (this.dateReport);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.dateReport]));
 			w3.Position = 1;

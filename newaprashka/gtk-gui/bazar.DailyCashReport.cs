@@ -38,8 +38,8 @@ namespace bazar
 			this.datepickerCash.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerCash.Name = "datepickerCash";
 			this.datepickerCash.Date = new global::System.DateTime (0);
-			this.datepickerCash.IsEditable = false;
-			this.datepickerCash.AutoSeparation = false;
+			this.datepickerCash.IsEditable = true;
+			this.datepickerCash.AutoSeparation = true;
 			this.hbox1.Add (this.datepickerCash);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.datepickerCash]));
 			w3.Position = 1;

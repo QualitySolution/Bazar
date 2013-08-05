@@ -294,8 +294,8 @@ namespace bazar
 			this.dateStatement.Events = ((global::Gdk.EventMask)(256));
 			this.dateStatement.Name = "dateStatement";
 			this.dateStatement.Date = new global::System.DateTime (0);
-			this.dateStatement.IsEditable = false;
-			this.dateStatement.AutoSeparation = false;
+			this.dateStatement.IsEditable = true;
+			this.dateStatement.AutoSeparation = true;
 			this.table1.Add (this.dateStatement);
 			global::Gtk.Table.TableChild w36 = ((global::Gtk.Table.TableChild)(this.table1 [this.dateStatement]));
 			w36.TopAttach = ((uint)(1));

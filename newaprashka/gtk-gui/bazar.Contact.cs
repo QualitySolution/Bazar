@@ -237,7 +237,7 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 452;
+			this.DefaultWidth = 492;
 			this.DefaultHeight = 330;
 			this.Show ();
 			this.entryTel.Activated += new global::System.EventHandler (this.OnEntryActivated);

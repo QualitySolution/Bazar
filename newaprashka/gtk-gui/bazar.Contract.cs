@@ -133,8 +133,8 @@ namespace bazar
 			this.datepickerSign.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerSign.Name = "datepickerSign";
 			this.datepickerSign.Date = new global::System.DateTime (0);
-			this.datepickerSign.IsEditable = false;
-			this.datepickerSign.AutoSeparation = false;
+			this.datepickerSign.IsEditable = true;
+			this.datepickerSign.AutoSeparation = true;
 			this.table2.Add (this.datepickerSign);
 			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table2 [this.datepickerSign]));
 			w4.TopAttach = ((uint)(4));
@@ -361,8 +361,8 @@ namespace bazar
 			this.datepickerCancel.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerCancel.Name = "datepickerCancel";
 			this.datepickerCancel.Date = new global::System.DateTime (0);
-			this.datepickerCancel.IsEditable = false;
-			this.datepickerCancel.AutoSeparation = false;
+			this.datepickerCancel.IsEditable = true;
+			this.datepickerCancel.AutoSeparation = true;
 			this.table3.Add (this.datepickerCancel);
 			global::Gtk.Table.TableChild w38 = ((global::Gtk.Table.TableChild)(this.table3 [this.datepickerCancel]));
 			w38.TopAttach = ((uint)(2));
@@ -375,8 +375,8 @@ namespace bazar
 			this.datepickerEnd.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerEnd.Name = "datepickerEnd";
 			this.datepickerEnd.Date = new global::System.DateTime (0);
-			this.datepickerEnd.IsEditable = false;
-			this.datepickerEnd.AutoSeparation = false;
+			this.datepickerEnd.IsEditable = true;
+			this.datepickerEnd.AutoSeparation = true;
 			this.table3.Add (this.datepickerEnd);
 			global::Gtk.Table.TableChild w39 = ((global::Gtk.Table.TableChild)(this.table3 [this.datepickerEnd]));
 			w39.TopAttach = ((uint)(1));
@@ -389,8 +389,8 @@ namespace bazar
 			this.datepickerStart.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerStart.Name = "datepickerStart";
 			this.datepickerStart.Date = new global::System.DateTime (0);
-			this.datepickerStart.IsEditable = false;
-			this.datepickerStart.AutoSeparation = false;
+			this.datepickerStart.IsEditable = true;
+			this.datepickerStart.AutoSeparation = true;
 			this.table3.Add (this.datepickerStart);
 			global::Gtk.Table.TableChild w40 = ((global::Gtk.Table.TableChild)(this.table3 [this.datepickerStart]));
 			w40.LeftAttach = ((uint)(1));

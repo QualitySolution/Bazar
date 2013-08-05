@@ -6,8 +6,8 @@
   </configuration>
   <import>
     <widget-library name="../../../QSProjects/QSProjectsLib/bin/Debug/QSProjectsLib.dll" />
-    <widget-library name="../../../QSProjects/QSWidgetLib/bin/Debug/QSWidgetLib.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
+    <widget-library name="../../../QSProjects/QSWidgetLib/bin/Debug/QSWidgetLib.dll" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="961 551">
     <action-group name="Default">
@@ -322,7 +322,7 @@
           <widget class="Gtk.Notebook" id="notebookMain">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">3</property>
+            <property name="CurrentPage">5</property>
             <signal name="SwitchPage" handler="OnNotebookMainSwitchPage" />
             <child>
               <widget class="Gtk.VBox" id="vbox2">
@@ -2147,6 +2147,8 @@
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
+                                <property name="IsEditable">True</property>
+                                <property name="AutoSeparation">True</property>
                                 <signal name="DateChanged" handler="OnDateCashStartDateChanged" />
                               </widget>
                               <packing>
@@ -2171,6 +2173,8 @@
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
+                                <property name="IsEditable">True</property>
+                                <property name="AutoSeparation">True</property>
                                 <signal name="DateChanged" handler="OnDateCashEndDateChanged" />
                               </widget>
                               <packing>
@@ -2738,6 +2742,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2814,6 +2819,8 @@
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
+                                <property name="IsEditable">True</property>
+                                <property name="AutoSeparation">True</property>
                               </widget>
                               <packing>
                                 <property name="Position">0</property>
@@ -2837,6 +2844,8 @@
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
                                 <property name="Date">0</property>
+                                <property name="IsEditable">True</property>
+                                <property name="AutoSeparation">True</property>
                               </widget>
                               <packing>
                                 <property name="Position">2</property>
@@ -4458,7 +4467,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Contact" design-size="452 330">
+  <widget class="Gtk.Dialog" id="bazar.Contact" design-size="492 330">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый контакт</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -6206,7 +6215,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Service" design-size="379 166">
+  <widget class="Gtk.Dialog" id="bazar.Service" design-size="379 186">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новая услуга</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -6551,6 +6560,8 @@
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                       </widget>
                       <packing>
                         <property name="TopAttach">4</property>
@@ -6881,6 +6892,8 @@
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
                             <property name="Date">0</property>
+                            <property name="IsEditable">True</property>
+                            <property name="AutoSeparation">True</property>
                             <signal name="DateChanged" handler="OnDatepickerCancelDateChanged" />
                           </widget>
                           <packing>
@@ -6903,6 +6916,8 @@
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
                             <property name="Date">0</property>
+                            <property name="IsEditable">True</property>
+                            <property name="AutoSeparation">True</property>
                             <signal name="DateChanged" handler="OnDatepickerEndDateChanged" />
                           </widget>
                           <packing>
@@ -6925,6 +6940,8 @@
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
                             <property name="Date">0</property>
+                            <property name="IsEditable">True</property>
+                            <property name="AutoSeparation">True</property>
                             <signal name="DateChanged" handler="OnDatepickerStartDateChanged" />
                           </widget>
                           <packing>
@@ -7207,7 +7224,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.IncomeSlip" design-size="704 568">
+  <widget class="Gtk.Dialog" id="bazar.IncomeSlip" design-size="704 625">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый приходный ордер</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -7638,6 +7655,8 @@
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                       </widget>
                       <packing>
                         <property name="TopAttach">1</property>
@@ -8308,6 +8327,8 @@
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                       </widget>
                       <packing>
                         <property name="TopAttach">1</property>
@@ -9465,6 +9486,8 @@
                     <property name="Sensitive">False</property>
                     <property name="Events">ButtonPressMask</property>
                     <property name="Date">0</property>
+                    <property name="IsEditable">True</property>
+                    <property name="AutoSeparation">True</property>
                   </widget>
                   <packing>
                     <property name="TopAttach">1</property>
@@ -10080,6 +10103,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">3 месяца</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
@@ -10188,6 +10212,8 @@
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                         <signal name="DateChanged" handler="OnDateCashStartDateChanged" />
                       </widget>
                       <packing>
@@ -10212,6 +10238,8 @@
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                         <signal name="DateChanged" handler="OnDateCashEndDateChanged" />
                       </widget>
                       <packing>
@@ -10429,6 +10457,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">3 месяца</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
@@ -10537,6 +10566,8 @@
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                         <signal name="DateChanged" handler="OnDateCashStartDateChanged" />
                       </widget>
                       <packing>
@@ -10561,6 +10592,8 @@
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
                         <property name="Date">0</property>
+                        <property name="IsEditable">True</property>
+                        <property name="AutoSeparation">True</property>
                         <signal name="DateChanged" handler="OnDateCashEndDateChanged" />
                       </widget>
                       <packing>
@@ -11861,7 +11894,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.DocRegister" design-size="381 304">
+  <widget class="Gtk.Dialog" id="bazar.DocRegister" design-size="381 321">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Реестр документов</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -11959,6 +11992,7 @@
                 <property name="MemberName" />
                 <property name="CanFocus">True</property>
                 <property name="Label" translatable="yes">Сегодня</property>
+                <property name="Active">True</property>
                 <property name="DrawIndicator">True</property>
                 <property name="HasLabel">True</property>
                 <property name="UseUnderline">True</property>
@@ -12035,6 +12069,8 @@
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
                     <property name="Date">0</property>
+                    <property name="IsEditable">True</property>
+                    <property name="AutoSeparation">True</property>
                   </widget>
                   <packing>
                     <property name="Position">0</property>
@@ -12058,6 +12094,8 @@
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
                     <property name="Date">0</property>
+                    <property name="IsEditable">True</property>
+                    <property name="AutoSeparation">True</property>
                   </widget>
                   <packing>
                     <property name="Position">2</property>
@@ -12126,7 +12164,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Bin" id="bazar.SeparationPayment" design-size="503 190">
+  <widget class="Gtk.Bin" id="bazar.SeparationPayment" design-size="503 201">
     <property name="MemberName" />
     <property name="Visible">False</property>
     <child>
@@ -12333,6 +12371,8 @@
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
                 <property name="Date">0</property>
+                <property name="IsEditable">True</property>
+                <property name="AutoSeparation">True</property>
               </widget>
               <packing>
                 <property name="Position">1</property>
@@ -12436,6 +12476,8 @@
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
                 <property name="Date">0</property>
+                <property name="IsEditable">True</property>
+                <property name="AutoSeparation">True</property>
               </widget>
               <packing>
                 <property name="Position">1</property>

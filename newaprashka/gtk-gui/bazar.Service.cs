@@ -189,7 +189,7 @@ namespace bazar
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 379;
-			this.DefaultHeight = 166;
+			this.DefaultHeight = 186;
 			this.Show ();
 			this.entryName.Changed += new global::System.EventHandler (this.OnEntryNameChanged);
 			this.comboUnits.Changed += new global::System.EventHandler (this.OnComboUtitsChanged);

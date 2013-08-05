@@ -384,7 +384,7 @@ public partial class MainWindow
 		this.notebookMain = new global::Gtk.Notebook ();
 		this.notebookMain.CanFocus = true;
 		this.notebookMain.Name = "notebookMain";
-		this.notebookMain.CurrentPage = 3;
+		this.notebookMain.CurrentPage = 5;
 		// Container child notebookMain.Gtk.Notebook+NotebookChild
 		this.vbox2 = new global::Gtk.VBox ();
 		this.vbox2.Name = "vbox2";
@@ -1696,8 +1696,8 @@ public partial class MainWindow
 		this.dateCashStart.Events = ((global::Gdk.EventMask)(256));
 		this.dateCashStart.Name = "dateCashStart";
 		this.dateCashStart.Date = new global::System.DateTime (0);
-		this.dateCashStart.IsEditable = false;
-		this.dateCashStart.AutoSeparation = false;
+		this.dateCashStart.IsEditable = true;
+		this.dateCashStart.AutoSeparation = true;
 		this.hbox15.Add (this.dateCashStart);
 		global::Gtk.Box.BoxChild w228 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashStart]));
 		w228.Position = 0;
@@ -1715,8 +1715,8 @@ public partial class MainWindow
 		this.dateCashEnd.Events = ((global::Gdk.EventMask)(256));
 		this.dateCashEnd.Name = "dateCashEnd";
 		this.dateCashEnd.Date = new global::System.DateTime (0);
-		this.dateCashEnd.IsEditable = false;
-		this.dateCashEnd.AutoSeparation = false;
+		this.dateCashEnd.IsEditable = true;
+		this.dateCashEnd.AutoSeparation = true;
 		this.hbox15.Add (this.dateCashEnd);
 		global::Gtk.Box.BoxChild w230 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.dateCashEnd]));
 		w230.Position = 2;
@@ -2114,6 +2114,7 @@ public partial class MainWindow
 		this.radiobuttonToday = new global::Gtk.RadioButton ("Сегодня");
 		this.radiobuttonToday.CanFocus = true;
 		this.radiobuttonToday.Name = "radiobuttonToday";
+		this.radiobuttonToday.Active = true;
 		this.radiobuttonToday.DrawIndicator = true;
 		this.radiobuttonToday.UseUnderline = true;
 		this.radiobuttonToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
@@ -2167,8 +2168,8 @@ public partial class MainWindow
 		this.datepickerEventBegin.Events = ((global::Gdk.EventMask)(256));
 		this.datepickerEventBegin.Name = "datepickerEventBegin";
 		this.datepickerEventBegin.Date = new global::System.DateTime (0);
-		this.datepickerEventBegin.IsEditable = false;
-		this.datepickerEventBegin.AutoSeparation = false;
+		this.datepickerEventBegin.IsEditable = true;
+		this.datepickerEventBegin.AutoSeparation = true;
 		this.hbox13.Add (this.datepickerEventBegin);
 		global::Gtk.Box.BoxChild w288 = ((global::Gtk.Box.BoxChild)(this.hbox13 [this.datepickerEventBegin]));
 		w288.Position = 0;
@@ -2186,8 +2187,8 @@ public partial class MainWindow
 		this.datepickerEventEnd.Events = ((global::Gdk.EventMask)(256));
 		this.datepickerEventEnd.Name = "datepickerEventEnd";
 		this.datepickerEventEnd.Date = new global::System.DateTime (0);
-		this.datepickerEventEnd.IsEditable = false;
-		this.datepickerEventEnd.AutoSeparation = false;
+		this.datepickerEventEnd.IsEditable = true;
+		this.datepickerEventEnd.AutoSeparation = true;
 		this.hbox13.Add (this.datepickerEventEnd);
 		global::Gtk.Box.BoxChild w290 = ((global::Gtk.Box.BoxChild)(this.hbox13 [this.datepickerEventEnd]));
 		w290.Position = 2;
