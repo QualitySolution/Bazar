@@ -1,5 +1,26 @@
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>
 
+	* Main.cs:
+	* logo.png:
+	* Login.cs:
+	* Users.cs:
+	* BazAr.csproj:
+	* IncomeSlip.cs:
+	* MainWindow.cs:
+	* logo.png:
+	* MainWinCash.cs:
+	* ExpenseSlip.cs:
+	* UserProperty.cs:
+	* gui.stetic:
+	* AdvanceStatement.cs:
+	* MainWindow.cs:
+	* bazar.Login.cs:
+	* bazar.Users.cs:
+	* bazar.ExpenseSlip.cs:
+	* bazar.UserProperty.cs: 
+
+2013-08-05  Gankov Andrey  <gav@qsolution.ru>
+
 	* BazAr.csproj: 
 
 2013-08-05  Gankov Andrey  <gav@qsolution.ru>

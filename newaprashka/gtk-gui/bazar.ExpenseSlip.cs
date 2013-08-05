@@ -275,8 +275,8 @@ namespace bazar
 			this.dateSlip.Events = ((global::Gdk.EventMask)(256));
 			this.dateSlip.Name = "dateSlip";
 			this.dateSlip.Date = new global::System.DateTime (0);
-			this.dateSlip.IsEditable = false;
-			this.dateSlip.AutoSeparation = false;
+			this.dateSlip.IsEditable = true;
+			this.dateSlip.AutoSeparation = true;
 			this.table2.Add (this.dateSlip);
 			global::Gtk.Table.TableChild w34 = ((global::Gtk.Table.TableChild)(this.table2 [this.dateSlip]));
 			w34.TopAttach = ((uint)(1));

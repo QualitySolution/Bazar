@@ -27,7 +27,7 @@ namespace bazar
 			//Заполняем поля по умолчанию
 			dateStatement.Date = DateTime.Now.Date;
 			entryUser.Text = MainClass.User.Name;
-			if(MainClass.User.edit_slips)
+			if(MainClass.User.Permissions["edit_slips"])
 				dateStatement.Sensitive = true;
 
 			//Создаем таблицу авансов
@@ -298,7 +298,7 @@ namespace bazar
 				
 				this.Title = "Авансовый отчет №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!MainClass.User.edit_slips && dateStatement.Date != DateTime.Now.Date)
+				if(!MainClass.User.Permissions["edit_slips"] && dateStatement.Date != DateTime.Now.Date)
 				{
 					comboOrg.Sensitive = false;
 					comboCash.Sensitive = false;

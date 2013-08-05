@@ -1643,6 +1643,7 @@ public partial class MainWindow
 		this.radioCashToday = new global::Gtk.RadioButton ("Сегодня");
 		this.radioCashToday.CanFocus = true;
 		this.radioCashToday.Name = "radioCashToday";
+		this.radioCashToday.Active = true;
 		this.radioCashToday.DrawIndicator = true;
 		this.radioCashToday.UseUnderline = true;
 		this.radioCashToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);

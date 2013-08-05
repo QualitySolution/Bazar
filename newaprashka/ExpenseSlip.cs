@@ -24,7 +24,7 @@ namespace bazar
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;
 			entryUser.Text = MainClass.User.Name;
-			if(MainClass.User.edit_slips)
+			if(MainClass.User.Permissions["edit_slips"])
 				dateSlip.Sensitive = true;
 		}
 
@@ -221,7 +221,7 @@ namespace bazar
 				
 				this.Title = "Расходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!MainClass.User.edit_slips && dateSlip.Date != DateTime.Now.Date)
+				if(!MainClass.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
 				{
 					comboOperation.Sensitive = false;
 					comboOrg.Sensitive = false;

@@ -314,7 +314,7 @@ public partial class MainWindow : Gtk.Window
 		
 		bool isSelect = treeviewIncome.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.edit_slips)
+		if(MainClass.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -385,7 +385,7 @@ public partial class MainWindow : Gtk.Window
 		
 		bool isSelect = treeviewExpense.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.edit_slips)
+		if(MainClass.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -456,7 +456,7 @@ public partial class MainWindow : Gtk.Window
 		
 		bool isSelect = treeviewAdvance.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.edit_slips)
+		if(MainClass.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -532,7 +532,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		bool isSelect = treeviewIncome.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.edit_slips)
+		if(MainClass.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -542,7 +542,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		bool isSelect = treeviewExpense.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.edit_slips)
+		if(MainClass.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -552,7 +552,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		bool isSelect = treeviewAdvance.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.edit_slips)
+		if(MainClass.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;

@@ -2,59 +2,75 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
-
+using System.Collections.Generic;
+using QSProjectsLib;
 
 namespace bazar
 {
 	class MainClass
 	{
-		public static MySqlConnection connectionDB;
-		public static string ConnectionString;
+		public static MySqlConnection connectionDB; //FIXME Потом убить
+		public static string ConnectionString; //FIXME Потом убить
 		public static Label StatusBarLabel;
-		public static UserInfo User = new UserInfo();
+		public static UserInfo User; //FIXME Потом убить = new UserInfo();
 		public static MainWindow MainWin;
+
 		public static void Main (string[] args)
 		{
-			try
+			Application.Init ();
+			AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs e) 
 			{
-				Application.Init ();
-				Login LoginDialog = new Login ();
-				ResponseType LoginResult;
-				LoginResult = (ResponseType) LoginDialog.Run();
-				LoginDialog.Destroy ();
-				if (LoginResult == ResponseType.DeleteEvent || LoginResult == ResponseType.Cancel)
-					return;
-				MainWin = new MainWindow ();
-				if(User.Login == "root")
-					return;
-				MainWin.Show ();
-			}
-			catch (Exception ex)
+				QSMain.ErrorMessage(MainWin, (Exception) e.ExceptionObject);
+			};
+			CreateProjectParam();
+			//Настраиваем общую билиотеку
+			QSMain.NewStatusText += delegate(object sender, QSProjectsLib.QSMain.NewStatusTextEventArgs e) 
 			{
-				MessageDialog md = new MessageDialog ( (Window) MainWin, DialogFlags.DestroyWithParent,
-				                                      MessageType.Error, 
-				                                      ButtonsType.Close,"ошибка");
-				md.UseMarkup = false;
-				md.Text = "Произошла ошибка запуска. Пожалуйста сообщите разработчику об ошибке.\nТехническая информация:\n" + ex.ToString();
-				md.Run ();
-				md.Destroy();
-			}
+				StatusMessage (e.NewText);
+			};
+			// Создаем окно входа
+			Login LoginDialog = new QSProjectsLib.Login ();
+			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
+			LoginDialog.SetDefaultNames ("bazar");
+			LoginDialog.DefaultLogin = "demo";
+			LoginDialog.DefaultServer = "demo.qsolution.ru";
+			LoginDialog.DemoServer = "demo.qsolution.ru";
+			LoginDialog.DemoMessage = "Для подключения к демострационному серверу используйте следующие настройки:\n" +
+								"\n" +
+								"<b>Сервер:</b> demo.qsolution.ru\n" +
+								"<b>Пользователь:</b> demo\n" +
+								"<b>Пароль:</b> demo\n" +
+								"\n" +
+								"Для установки собственного сервера обратитесь к документации.";
+			LoginDialog.UpdateFromGConf ();
 
-			try
-			{
-				Application.Run ();
-			}
-			catch (Exception ex)
-			{
-				MessageDialog md = new MessageDialog ( (Window) MainWin, DialogFlags.DestroyWithParent,
-			                              MessageType.Error, 
-		                                  ButtonsType.Close,"ошибка");
-				md.UseMarkup = false;
-				md.Text = "Произошла критическая ошибка в программе. Пожалуйста сообщите разработчику об ошибке, " +
-					"указав сообщение об ошибке и какие действия вызвали ошибку.\nТехническая информация:\n" + ex.ToString();
-				md.Run ();
-				md.Destroy();
-			}
+			ResponseType LoginResult;
+			LoginResult = (ResponseType) LoginDialog.Run();
+			if (LoginResult == ResponseType.DeleteEvent || LoginResult == ResponseType.Cancel)
+				return;
+			//FIXME потом убить
+			connectionDB = QSMain.connectionDB;
+			ConnectionString = QSMain.ConnectionString;
+
+			LoginDialog.Destroy ();
+
+			//Запускаем программу
+			MainWin = new MainWindow ();
+			if(QSMain.User.Login == "root")
+				return;
+			MainWin.Show ();
+			Application.Run ();
+		}
+
+		static void CreateProjectParam()
+		{
+			QSMain.AdminFieldName = "admin";
+			QSMain.ProjectPermission = new Dictionary<string, UserPermission>();
+			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission("edit_slips", "Изменение кассы задним числом",
+			                                                             "Пользователь может изменять или добавлять кассовые документы задним числом."));
+
+			QSMain.User = new UserInfo();
+			User = QSMain.User;
 		}
 		
 		public static void ComboPlaceNoFill(ComboBox combo, int Type_id)
@@ -431,82 +447,6 @@ namespace bazar
 			{
    				Gtk.Main.Iteration();
 			}
-		}
-	}
-
-	class UserInfo
-	{
-		public string Name, Login;
-		public int id;
-		public bool admin, edit_slips;
-
-		public bool TestUserExistByLogin(bool CreateNotExist)
-		{
-			MainClass.StatusMessage("Проверка наличия пользователя в базе...");
-			try
-			{
-				string sql = "SELECT COUNT(*) AS cnt FROM users WHERE login = @login";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
-				cmd.Parameters.AddWithValue("@login", Login);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				rdr.Read();
-				bool Exist = false;
-				if (rdr["cnt"].ToString() != "0")
-					Exist = true;
-				rdr.Close();
-
-				if( CreateNotExist && !Exist)
-				{
-					bool FirstUser = false;
-					sql = "SELECT COUNT(*) AS cnt FROM users";
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
-					rdr = cmd.ExecuteReader();
-					rdr.Read();
-					if (rdr["cnt"].ToString() == "0")
-						FirstUser = true;
-					rdr.Close();
-					MainClass.StatusMessage("Создаем пользователя");
-					sql = "INSERT INTO users (login, name, admin) " +
-							"VALUES (@login, @login, @admin)";
-					cmd = new MySqlCommand(sql, MainClass.connectionDB);
-					cmd.Parameters.AddWithValue("@login", Login);
-					cmd.Parameters.AddWithValue("@admin", FirstUser);
-					cmd.ExecuteNonQuery();
-					Exist = true;
-				}
-				return Exist;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка проверки пользователя!");
-				return false;
-			}
-		}
-
-		public void UpdateUserInfoByLogin()
-		{
-			MainClass.StatusMessage("Чтение информации о пользователе...");
-			try
-			{
-				string sql = "SELECT * FROM users WHERE login = @login";
-				MySqlCommand cmd = new MySqlCommand(sql, MainClass.connectionDB);
-				cmd.Parameters.AddWithValue("@login", Login);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				rdr.Read();
-
-				Name = rdr["name"].ToString();
-				id = Convert.ToInt32(rdr["id"].ToString());
-				admin = Convert.ToBoolean (rdr["admin"].ToString());
-				edit_slips = Convert.ToBoolean (rdr["edit_slips"].ToString());
-				rdr.Close();
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка чтения информации о пользователе!");
-			}
-
 		}
 	}
 }
