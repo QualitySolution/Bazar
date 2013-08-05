@@ -27,7 +27,7 @@ public partial class MainWindow : Gtk.Window
 		//Передаем лебл
 		MainClass.StatusBarLabel = labelStatus;
 
-		if(MainClass.User.Login == "root")
+		if(QSMain.User.Login == "root")
 		{
 			string Message = "Вы зашли в программу под администратором базы данных. У вас есть только возможность создавать других пользователей.";
 			MessageDialog md = new MessageDialog ( this, DialogFlags.DestroyWithParent,
@@ -61,10 +61,10 @@ public partial class MainWindow : Gtk.Window
 		}
 
 		//Загружаем информацию о пользователе
-		if(MainClass.User.TestUserExistByLogin (true))
-			MainClass.User.UpdateUserInfoByLogin ();
-		UsersAction.Sensitive = MainClass.User.admin;
-		labelUser.LabelProp = MainClass.User.Name;
+		if(QSMain.User.TestUserExistByLogin (true))
+			QSMain.User.UpdateUserInfoByLogin ();
+		UsersAction.Sensitive = QSMain.User.admin;
+		labelUser.LabelProp = QSMain.User.Name;
 		
 		PreparePlaces();
 		PrepareLessee();

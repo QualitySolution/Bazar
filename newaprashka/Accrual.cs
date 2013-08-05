@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -508,7 +509,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@contract_no", comboContract.ActiveText);
 				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
 				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
-				cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+				cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 				if(textviewComments.Buffer.Text != "")
 					cmd.Parameters.AddWithValue ("@comments", textviewComments.Buffer.Text);
 				else

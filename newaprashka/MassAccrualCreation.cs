@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -218,7 +219,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@contract_no", row[1]);
 					cmd.Parameters.AddWithValue("@month", Month);
 					cmd.Parameters.AddWithValue("@year", Year);
-					cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 					cmd.Parameters.AddWithValue("@no_complete", NotComplete);
 					cmd.ExecuteNonQuery();
 

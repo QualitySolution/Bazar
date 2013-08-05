@@ -3,6 +3,7 @@ using System.Data;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -19,7 +20,7 @@ namespace bazar
 			textviewActivity.Buffer.Changed += OnTextViewChanged;
 			MainClass.ComboFillReference(comboEventPlaceT, "place_types", 2);
 			MainClass.ComboFillReference(comboEventType, "classes", 2);
-			labelUser.Text = MainClass.User.Name;
+			labelUser.Text = QSMain.User.Name;
 		}
 		
 		public void EventFill(int id)
@@ -134,7 +135,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@class_id", comboEventType.Model.GetValue(iter,1));
 				else
 					cmd.Parameters.AddWithValue("@class_id", DBNull.Value);
-				cmd.Parameters.AddWithValue("@user", MainClass.User.Name);
+				cmd.Parameters.AddWithValue("@user", QSMain.User.Name);
 				if(entryLessee.Text != "")
 					cmd.Parameters.AddWithValue("@lessee_id", lessee_id);
 				else

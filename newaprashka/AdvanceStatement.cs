@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -26,8 +27,8 @@ namespace bazar
 			
 			//Заполняем поля по умолчанию
 			dateStatement.Date = DateTime.Now.Date;
-			entryUser.Text = MainClass.User.Name;
-			if(MainClass.User.Permissions["edit_slips"])
+			entryUser.Text = QSMain.User.Name;
+			if(QSMain.User.Permissions["edit_slips"])
 				dateStatement.Sensitive = true;
 
 			//Создаем таблицу авансов
@@ -150,7 +151,7 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@employee_id", DBNull.Value);
 				if(NewStatement)
-					cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 				if(dateStatement.IsEmpty)
 					cmd.Parameters.AddWithValue("@date", DBNull.Value);
 				else
@@ -202,7 +203,7 @@ namespace bazar
 						cmd.Parameters.AddWithValue("@cash_id", comboCash.Model.GetValue(iter,1));
 					}	
 					cmd.Parameters.AddWithValue("@employee_id", Accountable_id);
-					cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 					if(dateStatement.IsEmpty)
 						cmd.Parameters.AddWithValue("@date", DBNull.Value);
 					else
@@ -298,7 +299,7 @@ namespace bazar
 				
 				this.Title = "Авансовый отчет №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!MainClass.User.Permissions["edit_slips"] && dateStatement.Date != DateTime.Now.Date)
+				if(!QSMain.User.Permissions["edit_slips"] && dateStatement.Date != DateTime.Now.Date)
 				{
 					comboOrg.Sensitive = false;
 					comboCash.Sensitive = false;

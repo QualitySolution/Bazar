@@ -12,7 +12,6 @@ namespace bazar
 		public static MySqlConnection connectionDB; //FIXME Потом убить
 		public static string ConnectionString; //FIXME Потом убить
 		public static Label StatusBarLabel;
-		public static UserInfo User; //FIXME Потом убить = new UserInfo();
 		public static MainWindow MainWin;
 
 		public static void Main (string[] args)
@@ -70,7 +69,6 @@ namespace bazar
 			                                                             "Пользователь может изменять или добавлять кассовые документы задним числом."));
 
 			QSMain.User = new UserInfo();
-			User = QSMain.User;
 		}
 		
 		public static void ComboPlaceNoFill(ComboBox combo, int Type_id)

@@ -6,6 +6,7 @@ using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
+using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -314,7 +315,7 @@ public partial class MainWindow : Gtk.Window
 		
 		bool isSelect = treeviewIncome.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.Permissions["edit_slips"])
+		if(QSMain.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -385,7 +386,7 @@ public partial class MainWindow : Gtk.Window
 		
 		bool isSelect = treeviewExpense.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.Permissions["edit_slips"])
+		if(QSMain.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -456,7 +457,7 @@ public partial class MainWindow : Gtk.Window
 		
 		bool isSelect = treeviewAdvance.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.Permissions["edit_slips"])
+		if(QSMain.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -532,7 +533,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		bool isSelect = treeviewIncome.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.Permissions["edit_slips"])
+		if(QSMain.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -542,7 +543,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		bool isSelect = treeviewExpense.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.Permissions["edit_slips"])
+		if(QSMain.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;
@@ -552,7 +553,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		bool isSelect = treeviewAdvance.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
-		if(MainClass.User.Permissions["edit_slips"])
+		if(QSMain.User.Permissions["edit_slips"])
 			buttonDel.Sensitive = isSelect;
 		else
 			buttonDel.Sensitive = false;

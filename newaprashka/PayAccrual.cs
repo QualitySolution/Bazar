@@ -3,6 +3,7 @@ using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -334,7 +335,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@org_id", org_id);
 					cmd.Parameters.AddWithValue("@cash_id", item.CashId);
 					cmd.Parameters.AddWithValue("@lessee_id", lessee_id);
-					cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 					cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
 					cmd.Parameters.AddWithValue("@sum", sum);
 					cmd.Parameters.AddWithValue("@contract_no", contract_no);

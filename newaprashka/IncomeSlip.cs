@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -25,8 +26,8 @@ namespace bazar
 
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;
-			entryUser.Text = MainClass.User.Name;
-			if(MainClass.User.Permissions["edit_slips"])
+			entryUser.Text = QSMain.User.Name;
+			if(QSMain.User.Permissions["edit_slips"])
 				dateSlip.Sensitive = true;
 			OnComboOperationChanged (null, null);
 		}
@@ -58,7 +59,7 @@ namespace bazar
 			bool Itemok = comboIncomeItem.Active > 0;
 			bool Lesseeok = !LesseeNull;
 			bool Paymentok = separationpayment.CanSave;
-			bool Rightok = MainClass.User.Permissions["edit_slips"] || NewSlip;
+			bool Rightok = QSMain.User.Permissions["edit_slips"] || NewSlip;
 			bool Sumok;
 			if(spinSum.Text != "")
 				Sumok = Convert.ToDecimal (spinSum.Text) != 0; 
@@ -161,7 +162,7 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@employee_id", DBNull.Value);
 				if(NewSlip)
-					cmd.Parameters.AddWithValue("@user_id", MainClass.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 				if(dateSlip.IsEmpty)
 					cmd.Parameters.AddWithValue("@date", DBNull.Value);
 				else
@@ -373,7 +374,7 @@ namespace bazar
 
 				this.Title = "Приходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!MainClass.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
+				if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
 				{
 					comboOrg.Sensitive = false;
 					comboCash.Sensitive = false;
