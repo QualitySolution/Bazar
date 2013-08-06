@@ -259,7 +259,7 @@ namespace bazar
 			SelectAccrualRow WinSelect = new SelectAccrualRow(AccrualRowsFilter);
 			if(WinSelect.GetResult ( out iter))
 			{
-				MainClass.SearchListStore ((ListStore) IncomeNameList, (int)AccrualRowsFilter.GetValue (iter, 6), out iter2);
+				ListStoreWorks.SearchListStore ((ListStore) IncomeNameList, (int)AccrualRowsFilter.GetValue (iter, 6), out iter2);
 				string IncomeName = (string) IncomeNameList.GetValue (iter2, 0);
 				ServiceListStore.AppendValues (null,
 				                               AccrualRowsFilter.GetValue (iter, 0),

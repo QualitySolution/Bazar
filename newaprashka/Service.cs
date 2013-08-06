@@ -41,12 +41,12 @@ namespace bazar
 				entryName.Text = rdr["name"].ToString();
 				if(rdr["units_id"] != DBNull.Value)
 				{
-					MainClass.SearchListStore((ListStore)comboUnits.Model, rdr.GetInt32("units_id"), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboUnits.Model, rdr.GetInt32("units_id"), out iter);
 					comboUnits.SetActiveIter(iter);
 				}
 				if(rdr["income_id"] != DBNull.Value)
 				{
-					MainClass.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
 					comboIncomeItem.SetActiveIter(iter);
 				}
 

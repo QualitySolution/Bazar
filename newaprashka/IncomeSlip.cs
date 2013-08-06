@@ -305,19 +305,19 @@ namespace bazar
 				if(rdr["date"] != DBNull.Value)
 					dateSlip.Date = DateTime.Parse( rdr["date"].ToString());
 				if(rdr["org_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 				comboOrg.SetActiveIter (iter);
 				if(rdr["cash_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboCash.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, -1, out iter);
 				comboCash.SetActiveIter (iter);
 				if(rdr["income_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboIncomeItem.Model, int.Parse(rdr["income_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, int.Parse(rdr["income_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboIncomeItem.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, -1, out iter);
 				comboIncomeItem.SetActiveIter (iter);
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
 				if(rdr["user"] != DBNull.Value)
@@ -335,7 +335,7 @@ namespace bazar
 				bool ContractOk = false;
 				if(DBContract_no != DBNull.Value)
 				{
-					if(MainClass.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
+					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
 					{
 						comboContract.SetActiveIter (iter);
 						OnComboContractChanged(null, null);
@@ -345,7 +345,7 @@ namespace bazar
 					{ //Возможно у договора поменялся арендатор.
 						MainClass.StatusMessage("Договор не найден у арендатора! Добавляем в список...");
 						comboContract.AppendText(DBContract_no.ToString());
-						MainClass.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter);
+						ListStoreWorks.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter);
 						comboContract.SetActiveIter (iter);
 						OnComboContractChanged(null, null);
 						ContractOk = true;
@@ -353,7 +353,7 @@ namespace bazar
 				}
 				if(DBAccrual != DBNull.Value && ContractOk)
 				{
-					if(MainClass.SearchListStore((ListStore)comboAccrual.Model, Convert.ToInt32(DBAccrual) , out iter))
+					if(ListStoreWorks.SearchListStore((ListStore)comboAccrual.Model, Convert.ToInt32(DBAccrual) , out iter))
 						comboAccrual.SetActiveIter (iter);
 					OriginalAccrual = Convert.ToInt32(DBAccrual);
 					// для возможности редактировать старые оплаты

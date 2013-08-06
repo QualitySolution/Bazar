@@ -1,6 +1,18 @@
 2013-08-06  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:
+	* Place.cs:
+	* Event.cs:
+	* Accrual.cs:
+	* Service.cs:
+	* Contract.cs:
+	* IncomeSlip.cs:
+	* AdvanceStatement.cs:
+	* SeparationPayment.cs: 
+
+2013-08-06  Gankov Andrey  <gav@qsolution.ru>
+
+	* Main.cs:
 	* Event.cs:
 	* Place.cs:
 	* Service.cs:

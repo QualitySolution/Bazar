@@ -47,7 +47,7 @@ namespace bazar
 				EventDate = (DateTime)rdr["date"];
 				if(rdr["class_id"] != DBNull.Value)
 				{
-					MainClass.SearchListStore((ListStore)comboEventType.Model, (int)(uint)rdr["class_id"], out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboEventType.Model, (int)(uint)rdr["class_id"], out iter);
 					comboEventType.SetActiveIter(iter);
 				}
 				if(rdr["lessee_id"] != DBNull.Value)
@@ -69,7 +69,7 @@ namespace bazar
 				
 				if(DBPlaceT != DBNull.Value)
 				{
-					MainClass.SearchListStore((ListStore)comboEventPlaceT.Model, (int)(uint)DBPlaceT, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboEventPlaceT.Model, (int)(uint)DBPlaceT, out iter);
 					comboEventPlaceT.SetActiveIter(iter);
 					//MainClass.ComboPlaceNoFill(comboboxPlaceNo,(int)(uint)rdr["place_type_id"]);
 				}

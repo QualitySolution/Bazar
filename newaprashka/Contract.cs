@@ -255,9 +255,9 @@ namespace bazar
 				if(rdr["cancel_date"] != DBNull.Value)
 					datepickerCancel.Date = DateTime.Parse(rdr["cancel_date"].ToString());
 				if(rdr["org_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 				comboOrg.SetActiveIter (iter);
 
 				if(rdr["pay_day"] != DBNull.Value)
@@ -278,13 +278,13 @@ namespace bazar
 				rdr.Close();
 
 				if(DBPlaceT != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboPlaceT.Model, int.Parse(DBPlaceT.ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, int.Parse(DBPlaceT.ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboPlaceT.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, -1, out iter);
 				comboPlaceT.SetActiveIter (iter);
 				if(DBPlaceNo != DBNull.Value)
 				{
-					MainClass.SearchListStore((ListStore)comboPlaceNo.Model, DBPlaceNo.ToString(), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, DBPlaceNo.ToString(), out iter);
 					comboPlaceNo.SetActiveIter(iter);
 				}
 				this.Title = "Договор №" + entryNumber.Text;
@@ -454,9 +454,9 @@ namespace bazar
 					if(rdr.Read() )
 					{
 						if(rdr["org_id"] != DBNull.Value)
-							MainClass.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 						else
-							MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 						comboOrg.SetActiveIter (iter);
 						float area = 0;
 						if(rdr["area"] != DBNull.Value)
@@ -773,9 +773,9 @@ namespace bazar
 			TreeIter iter;
 			try
 			{
-				MainClass.SearchListStore((ListStore)comboPlaceT.Model, place_type_id, out iter);
+				ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, place_type_id, out iter);
 				comboPlaceT.SetActiveIter (iter);
-				MainClass.SearchListStore((ListStore)comboPlaceNo.Model, place_no, out iter);
+				ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, place_no, out iter);
 				comboPlaceNo.SetActiveIter(iter);
 				return true;
 			}

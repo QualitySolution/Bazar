@@ -274,19 +274,19 @@ namespace bazar
 				if(rdr["date"] != DBNull.Value)
 					dateStatement.Date = DateTime.Parse( rdr["date"].ToString());
 				if(rdr["org_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 				comboOrg.SetActiveIter (iter);
 				if(rdr["cash_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboCash.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, -1, out iter);
 				comboCash.SetActiveIter (iter);
 				if(rdr["expense_id"] != DBNull.Value)
-					MainClass.SearchListStore((ListStore)comboExpenseItem.Model, int.Parse(rdr["expense_id"].ToString()), out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, int.Parse(rdr["expense_id"].ToString()), out iter);
 				else
-					MainClass.SearchListStore((ListStore)comboExpenseItem.Model, -1, out iter);
+					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, -1, out iter);
 				comboExpenseItem.SetActiveIter (iter);
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
 				if(rdr["user"] != DBNull.Value)

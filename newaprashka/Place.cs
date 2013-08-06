@@ -82,12 +82,12 @@ namespace bazar
 
 			rdr.Read ();
 
-			MainClass.SearchListStore((ListStore)comboPType.Model, int.Parse(rdr["type_id"].ToString()), out iter);
+			ListStoreWorks.SearchListStore((ListStore)comboPType.Model, int.Parse(rdr["type_id"].ToString()), out iter);
 			comboPType.SetActiveIter(iter);
 			if(rdr["org_id"] != DBNull.Value)
-				MainClass.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 			else
-				MainClass.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 			comboOrg.SetActiveIter(iter);
 			entryNumber.Text = rdr["place_no"].ToString();
 			if(rdr["area"] != DBNull.Value)

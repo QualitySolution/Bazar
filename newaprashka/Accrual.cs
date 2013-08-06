@@ -275,11 +275,11 @@ namespace bazar
 				rdr.Close();
 
 				comboAccrualMonth.Active = Convert.ToInt32(DBMonth);
-				MainClass.SearchListStore ((ListStore)comboAccuralYear.Model,DBYear.ToString (), out iter);
+				ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model,DBYear.ToString (), out iter);
 				comboAccuralYear.SetActiveIter (iter);
 				if(DBContract_no != DBNull.Value)
 				{
-					if(MainClass.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
+					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
 					{
 						comboContract.SetActiveIter (iter);
 						comboContract.Sensitive = false;
@@ -843,7 +843,7 @@ namespace bazar
 			
 			while (rdr.Read())
 			{
-				if( MainClass.SearchListStore (ServiceListStore, rdr.GetInt64("accrual_pay_id"), 9, out iter))
+				if( ListStoreWorks.SearchListStore (ServiceListStore, rdr.GetInt64("accrual_pay_id"), 9, out iter))
 				{
 					paid = rdr.GetDecimal ("sum");
 					ServiceListStore.SetValue (iter, 10, String.Format ("{0:0.00}", paid));
