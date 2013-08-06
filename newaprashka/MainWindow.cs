@@ -10,10 +10,6 @@ using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
 {
-	Dialog changePassword;
-	Entry inputPassword;
-	Entry inputPassword2;
-	Button changePasswordOk;
 	
 	AccelGroup grup;
 	
