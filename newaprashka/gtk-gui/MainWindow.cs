@@ -1811,7 +1811,7 @@ public partial class MainWindow
 		this.notebookCash = new global::Gtk.Notebook ();
 		this.notebookCash.CanFocus = true;
 		this.notebookCash.Name = "notebookCash";
-		this.notebookCash.CurrentPage = 1;
+		this.notebookCash.CurrentPage = 2;
 		// Container child notebookCash.Gtk.Notebook+NotebookChild
 		this.GtkScrolledWindow4 = new global::Gtk.ScrolledWindow ();
 		this.GtkScrolledWindow4.Name = "GtkScrolledWindow4";
@@ -2596,11 +2596,13 @@ public partial class MainWindow
 		this.notebookCash.SwitchPage += new global::Gtk.SwitchPageHandler (this.OnNotebook1SwitchPage);
 		this.treeviewIncome.CursorChanged += new global::System.EventHandler (this.OnTreeviewIncomeCursorChanged);
 		this.treeviewIncome.RowActivated += new global::Gtk.RowActivatedHandler (this.OnTreeviewIncomeRowActivated);
+		this.treeviewIncome.ButtonReleaseEvent += new global::Gtk.ButtonReleaseEventHandler (this.OnTreeviewIncomeButtonReleaseEvent);
 		this.treeviewExpense.CursorChanged += new global::System.EventHandler (this.OnTreeviewExpenseCursorChanged);
 		this.treeviewExpense.RowActivated += new global::Gtk.RowActivatedHandler (this.OnTreeviewExpenseRowActivated);
 		this.treeviewExpense.ButtonReleaseEvent += new global::Gtk.ButtonReleaseEventHandler (this.OnTreeviewExpenseButtonReleaseEvent);
 		this.treeviewAdvance.CursorChanged += new global::System.EventHandler (this.OnTreeviewAdvanceCursorChanged);
 		this.treeviewAdvance.RowActivated += new global::Gtk.RowActivatedHandler (this.OnTreeviewAdvanceRowActivated);
+		this.treeviewAdvance.ButtonReleaseEvent += new global::Gtk.ButtonReleaseEventHandler (this.OnTreeviewAdvanceButtonReleaseEvent);
 		this.buttonEventLesseeClean.Clicked += new global::System.EventHandler (this.OnButtonEventLesseeCleanClicked);
 		this.buttonEventLesseeEdit.Clicked += new global::System.EventHandler (this.OnButtonEventLesseeEditClicked);
 		this.comboEventPlaceT.Changed += new global::System.EventHandler (this.OnComboEventPlaceTChanged);

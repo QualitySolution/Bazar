@@ -138,7 +138,7 @@ public partial class MainWindow : Gtk.Window
 				treeviewIncome.Selection.GetSelected(out iter);
 				itemid = Convert.ToInt32(CashIncomeFilter.GetValue(iter,0));
 				IncomeSlip winIncome = new IncomeSlip();
-				winIncome.SlipFill(itemid);
+				winIncome.SlipFill(itemid, false);
 				winIncome.Show();
 				result = (ResponseType)winIncome.Run();
 				winIncome.Destroy();
@@ -166,7 +166,7 @@ public partial class MainWindow : Gtk.Window
 				treeviewAdvance.Selection.GetSelected(out iter);
 				itemid = Convert.ToInt32(CashAdvanceFilter.GetValue(iter,0));
 				AdvanceStatement winAdvance = new AdvanceStatement();
-				winAdvance.StatementFill(itemid);
+				winAdvance.StatementFill(itemid, false);
 				winAdvance.Show();
 				result = (ResponseType)winAdvance.Run();
 				winAdvance.Destroy();
@@ -715,36 +715,4 @@ public partial class MainWindow : Gtk.Window
 		WinReport.Run ();
 		WinReport.Destroy ();
 	}	
-
-	protected virtual void test (object o, EventArgs args)
-	{
-		TreeIter iter;
-		treeviewExpense.Selection.GetSelected(out iter);
-		int itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
-
-		ExpenseSlip winExpenseSlip = new ExpenseSlip();
-		winExpenseSlip.SlipFill(itemid, true);
-		winExpenseSlip.Show();
-		winExpenseSlip.Run();
-		winExpenseSlip.Destroy();
-		UpdateCashExpense();
-		CalculateTotalCash();
-	}
-
-	[GLib.ConnectBefore]
-	protected void OnTreeviewExpenseButtonReleaseEvent (object o, ButtonReleaseEventArgs args)
-	{
-		bool ItemSelected = treeviewExpense.Selection.CountSelectedRows() == 1;
-
-		if((int)args.Event.Button == 3)
-		{
-			Gtk.Menu popupBox = new Gtk.Menu();
-			Gtk.MenuItem MenuItemOpenPlace = new MenuItem("Создать копированием");
-			MenuItemOpenPlace.Activated += new EventHandler(test);
-			MenuItemOpenPlace.Sensitive = ItemSelected;
-			popupBox.Add(MenuItemOpenPlace);                     
-			popupBox.ShowAll();
-			popupBox.Popup();
-		}
-	}
 }

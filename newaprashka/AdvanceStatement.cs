@@ -234,9 +234,13 @@ namespace bazar
 			}
 		}
 
-		public void StatementFill(int StatementId)
+		public void StatementFill(int StatementId, bool Copy)
 		{
-			NewStatement = false;
+			if(Copy)
+				NewStatement = true;
+			else
+				NewStatement = false;
+
 			TreeIter iter;
 			
 			MainClass.StatusMessage("Запрос авансового отчета №" + StatementId +"...");
@@ -255,8 +259,8 @@ namespace bazar
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
 				rdr.Read();
-				
-				entryNumber.Text = rdr["id"].ToString();
+				if(!Copy)
+					entryNumber.Text = rdr["id"].ToString();
 				if(rdr["contractor_id"] != DBNull.Value)
 				{
 					Contractor_id = Convert.ToInt32(rdr["contractor_id"].ToString());
@@ -271,8 +275,11 @@ namespace bazar
 					entryAccountable.TooltipText = rdr["employee"].ToString();
 					AccountableNull = false;
 				}
-				if(rdr["date"] != DBNull.Value)
-					dateStatement.Date = DateTime.Parse( rdr["date"].ToString());
+				if(!Copy)
+				{
+					if(rdr["date"] != DBNull.Value)
+						dateStatement.Date = DateTime.Parse( rdr["date"].ToString());
+				}
 				if(rdr["org_id"] != DBNull.Value)
 					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
@@ -289,25 +296,32 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, -1, out iter);
 				comboExpenseItem.SetActiveIter (iter);
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
-				if(rdr["user"] != DBNull.Value)
-					entryUser.Text = rdr["user"].ToString ();
-				else
-					entryUser.Text = "";
+				if(!Copy)
+				{
+					if(rdr["user"] != DBNull.Value)
+						entryUser.Text = rdr["user"].ToString ();
+					else
+						entryUser.Text = "";
+				}
 				textviewDetails.Buffer.Text = rdr["details"].ToString();
 				
 				rdr.Close();
-				
-				this.Title = "Авансовый отчет №" + entryNumber.Text;
+
+				if(!NewStatement)
+					this.Title = "Авансовый отчет №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!QSMain.User.Permissions["edit_slips"] && dateStatement.Date != DateTime.Now.Date)
+				if(!Copy)
 				{
-					comboOrg.Sensitive = false;
-					comboCash.Sensitive = false;
-					buttonContractorEdit.Sensitive = false;
-					buttonAccountableEdit.Sensitive = false;
-					comboExpenseItem.Sensitive = false;
-					spinSum.Sensitive = false;
-					textviewDetails.Sensitive = false;
+					if(!QSMain.User.Permissions["edit_slips"] && dateStatement.Date != DateTime.Now.Date)
+					{
+						comboOrg.Sensitive = false;
+						comboCash.Sensitive = false;
+						buttonContractorEdit.Sensitive = false;
+						buttonAccountableEdit.Sensitive = false;
+						comboExpenseItem.Sensitive = false;
+						spinSum.Sensitive = false;
+						textviewDetails.Sensitive = false;
+					}
 				}
 				checkCreateSlip.Sensitive = false;
 				MainClass.StatusMessage("Ok");

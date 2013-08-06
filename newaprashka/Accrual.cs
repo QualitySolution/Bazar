@@ -62,7 +62,7 @@ namespace bazar
 			CellCash.HasEntry = false;
 			CellCash.Edited += OnCashComboEdited;
 			CashColumn.PackStart (CellCash, true);
-			
+
 			Gtk.TreeViewColumn CountColumn = new Gtk.TreeViewColumn ();
 			CountColumn.Title = "Количество";
 			Gtk.CellRendererSpin CellCount = new CellRendererSpin();
@@ -71,7 +71,7 @@ namespace bazar
 			CellCount.Adjustment = adjCount;
 			CellCount.Edited += OnCountSpinEdited;
 			CountColumn.PackStart (CellCount, true);
-			
+
 			Gtk.TreeViewColumn PriceColumn = new Gtk.TreeViewColumn ();
 			PriceColumn.Title = "Цена";
 			PriceColumn.MinWidth = 90;
@@ -82,7 +82,7 @@ namespace bazar
 			CellPrice.Adjustment = adjPrice;
 			CellPrice.Edited += OnPriceSpinEdited;
 			PriceColumn.PackStart (CellPrice, true);
-			
+		
 			Gtk.TreeViewColumn SumColumn = new Gtk.TreeViewColumn ();
 			SumColumn.Title = "Сумма";
 			Gtk.CellRendererText CellSum = new CellRendererText();
@@ -859,7 +859,7 @@ namespace bazar
 			treeviewIncomes.Selection.GetSelected(out iter);
 			int itemid = Convert.ToInt32(IncomeListStore.GetValue(iter,0));
 			IncomeSlip winIncome = new IncomeSlip();
-			winIncome.SlipFill(itemid);
+			winIncome.SlipFill(itemid, false);
 			winIncome.Show();
 			ResponseType result = (ResponseType)winIncome.Run();
 			winIncome.Destroy();

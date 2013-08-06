@@ -38,7 +38,8 @@ public partial class MainWindow : Gtk.Window
 		                                         typeof (string), // 11 - income
 		                                         typeof (string), // 12 - text sum
 		                                         typeof (decimal), // 13 - sum
-		                                         typeof (decimal)  // 14 - income sum
+		                                         typeof (decimal),  // 14 - income sum
+		                                         typeof (string)   //15 - operation
 		                                         );
 		
 		treeviewIncome.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
@@ -307,7 +308,8 @@ public partial class MainWindow : Gtk.Window
 			                               rdr["income_item"].ToString(),
 			                               String.Format (SumFormat, rdr.GetDecimal ("sum"), item_sum),
 			                               rdr.GetDecimal ("sum"),
-			                                 item_sum);
+			                                 item_sum,
+			                                 rdr["operation"].ToString());
 		}
 		rdr.Close();
 		
@@ -699,5 +701,104 @@ public partial class MainWindow : Gtk.Window
 	protected void OnButtonCashContractorClearClicked (object sender, EventArgs e)
 	{
 		entryCashContractor.Text = "";
+	}
+
+	protected virtual void ExpenseCopy (object o, EventArgs args)
+	{
+		TreeIter iter;
+		treeviewExpense.Selection.GetSelected(out iter);
+		int itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
+
+		ExpenseSlip winExpenseSlip = new ExpenseSlip();
+		winExpenseSlip.SlipFill(itemid, true);
+		winExpenseSlip.Show();
+		winExpenseSlip.Run();
+		winExpenseSlip.Destroy();
+		UpdateCashExpense();
+		CalculateTotalCash();
+	}
+
+	[GLib.ConnectBefore]
+	protected void OnTreeviewExpenseButtonReleaseEvent (object o, ButtonReleaseEventArgs args)
+	{
+		bool ItemSelected = treeviewExpense.Selection.CountSelectedRows() == 1;
+
+		if((int)args.Event.Button == 3)
+		{
+			Gtk.Menu popupBox = new Gtk.Menu();
+			Gtk.MenuItem MenuItem = new MenuItem("Создать копированием");
+			MenuItem.Activated += new EventHandler(ExpenseCopy);
+			MenuItem.Sensitive = ItemSelected;
+			popupBox.Add(MenuItem);                     
+			popupBox.ShowAll();
+			popupBox.Popup();
+		}
+	}
+
+	[GLib.ConnectBefore]
+	protected void OnTreeviewIncomeButtonReleaseEvent (object o, ButtonReleaseEventArgs args)
+	{
+		bool ItemSelected = treeviewIncome.Selection.CountSelectedRows() == 1;
+
+		TreeIter iter;
+		treeviewIncome.Selection.GetSelected(out iter);
+		if(CashIncomeFilter.GetValue(iter,15).ToString() == "payment")
+			ItemSelected=false;
+
+		if((int)args.Event.Button == 3)
+		{
+			Gtk.Menu popupBox = new Gtk.Menu();
+			Gtk.MenuItem MenuItem = new MenuItem("Создать копированием");
+			MenuItem.Activated += new EventHandler(IncomeCopy);
+			MenuItem.Sensitive = ItemSelected;
+			popupBox.Add(MenuItem);                     
+			popupBox.ShowAll();
+			popupBox.Popup();
+		}
+	}
+
+	protected virtual void IncomeCopy (object o, EventArgs args)
+	{
+		TreeIter iter;
+		treeviewIncome.Selection.GetSelected(out iter);
+		int itemid = Convert.ToInt32(CashIncomeFilter.GetValue(iter,0));
+		IncomeSlip winIncomeSlip = new IncomeSlip();
+		winIncomeSlip.SlipFill(itemid, true);
+		winIncomeSlip.Show();
+		winIncomeSlip.Run();
+		winIncomeSlip.Destroy();
+		UpdateCashIncome();
+		CalculateTotalCash();
+	}	
+
+	[GLib.ConnectBefore]
+	protected void OnTreeviewAdvanceButtonReleaseEvent (object o, ButtonReleaseEventArgs args)
+	{
+		bool ItemSelected = treeviewAdvance.Selection.CountSelectedRows() == 1;
+
+		if((int)args.Event.Button == 3)
+		{
+			Gtk.Menu popupBox = new Gtk.Menu();
+			Gtk.MenuItem MenuItem = new MenuItem("Создать копированием");
+			MenuItem.Activated += new EventHandler(AdvanceCopy);
+			MenuItem.Sensitive = ItemSelected;
+			popupBox.Add(MenuItem);                     
+			popupBox.ShowAll();
+			popupBox.Popup();
+		}
+	}
+
+	protected virtual void AdvanceCopy (object o, EventArgs args)
+	{
+		TreeIter iter;
+		treeviewAdvance.Selection.GetSelected(out iter);
+		int itemid = Convert.ToInt32(CashAdvanceFilter.GetValue(iter,0));
+
+		AdvanceStatement winAdvance = new AdvanceStatement();
+		winAdvance.StatementFill(itemid, true);
+		winAdvance.Show();
+		winAdvance.Run();
+		winAdvance.Destroy();
+		UpdateCashAdvance();
 	}
 }

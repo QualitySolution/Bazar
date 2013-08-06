@@ -1,3 +1,4 @@
+<<<<<<< OURS
 2013-08-06  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:
@@ -53,6 +54,18 @@
 2013-08-06  Gankov Andrey  <gav@qsolution.ru>
 
 	* MainWindow.cs: 
+=======
+2013-08-06  ghost03080  <st.p.inomirie@gmail.com>
+
+	* Accrual.cs:
+	* IncomeSlip.cs:
+	* MainWindow.cs:
+	* MainWinCash.cs:
+	* gui.stetic:
+	* AdvanceStatement.cs:
+	* MainWindow.cs:
+	* bazar.IncomeSlip.cs: 
+>>>>>>> THEIRS
 
 2013-08-05  ghost03080  <st.p.inomirie@gmail.com>
 

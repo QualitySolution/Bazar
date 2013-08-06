@@ -250,9 +250,13 @@ namespace bazar
 
 		}
 
-		public void SlipFill(int SlipId)
+		public void SlipFill(int SlipId, bool Copy)
 		{
-			NewSlip = false;
+			if(Copy)
+				NewSlip = true;
+			else
+				NewSlip = false;
+
 			TreeIter iter;
 			
 			MainClass.StatusMessage(String.Format ("Запрос приходного ордера №{0}...", SlipId));
@@ -285,7 +289,8 @@ namespace bazar
 					comboOperation.Active = 0;
 					break;
 				}
-				entryNumber.Text = rdr["id"].ToString();
+				if(!Copy)
+					entryNumber.Text = rdr["id"].ToString();
 				if(rdr["payment"] != DBNull.Value)
 					Payment = rdr.GetInt32 ("payment");
 				if(rdr["lessee_id"] != DBNull.Value)
@@ -302,8 +307,11 @@ namespace bazar
 					entryAccountable.TooltipText = rdr["employee"].ToString();
 					AccountableNull = false;
 				}
-				if(rdr["date"] != DBNull.Value)
-					dateSlip.Date = DateTime.Parse( rdr["date"].ToString());
+				if(!Copy)
+				{
+					if(rdr["date"] != DBNull.Value)
+						dateSlip.Date = DateTime.Parse( rdr["date"].ToString());
+				}
 				if(rdr["org_id"] != DBNull.Value)
 					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
@@ -320,10 +328,13 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, -1, out iter);
 				comboIncomeItem.SetActiveIter (iter);
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
-				if(rdr["user"] != DBNull.Value)
-					entryUser.Text = rdr["user"].ToString ();
-				else
-					entryUser.Text = "";
+				if(!Copy)
+				{
+					if(rdr["user"] != DBNull.Value)
+						entryUser.Text = rdr["user"].ToString ();
+					else
+						entryUser.Text = "";
+				}
 				textviewDetails.Buffer.Text = rdr["details"].ToString();
 				//запоминаем переменные что бы освободить соединение
 				object DBContract_no = rdr["contract_no"];
@@ -372,20 +383,24 @@ namespace bazar
 				if(comboOperation.Active == 0)
 					buttonPrint.Sensitive = true;
 
-				this.Title = "Приходный ордер №" + entryNumber.Text;
+				if(!NewSlip)
+					this.Title = "Приходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
+				if(!Copy)
 				{
-					comboOrg.Sensitive = false;
-					comboCash.Sensitive = false;
-					buttonLesseeEdit.Sensitive = false;
-					buttonAccountableEdit.Sensitive = false;
-					comboContract.Sensitive = false;
-					comboAccrual.Sensitive = false;
-					comboIncomeItem.Sensitive = false;
-					spinSum.Sensitive = false;
-					textviewDetails.Sensitive = false;
-					separationpayment.Sensitive = false;
+					if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
+					{
+						comboOrg.Sensitive = false;
+						comboCash.Sensitive = false;
+						buttonLesseeEdit.Sensitive = false;
+						buttonAccountableEdit.Sensitive = false;
+						comboContract.Sensitive = false;
+						comboAccrual.Sensitive = false;
+						comboIncomeItem.Sensitive = false;
+						spinSum.Sensitive = false;
+						textviewDetails.Sensitive = false;
+						separationpayment.Sensitive = false;
+					}
 				}
 				comboOperation.Sensitive = false;
 

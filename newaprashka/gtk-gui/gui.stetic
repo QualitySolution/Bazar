@@ -2306,7 +2306,7 @@
                   <widget class="Gtk.Notebook" id="notebookCash">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
-                    <property name="CurrentPage">1</property>
+                    <property name="CurrentPage">2</property>
                     <signal name="SwitchPage" handler="OnNotebook1SwitchPage" />
                     <child>
                       <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow4">
@@ -2319,6 +2319,7 @@
                             <property name="ShowScrollbars">True</property>
                             <signal name="CursorChanged" handler="OnTreeviewIncomeCursorChanged" />
                             <signal name="RowActivated" handler="OnTreeviewIncomeRowActivated" />
+                            <signal name="ButtonReleaseEvent" handler="OnTreeviewIncomeButtonReleaseEvent" />
                           </widget>
                         </child>
                       </widget>
@@ -2371,6 +2372,7 @@
                             <property name="ShowScrollbars">True</property>
                             <signal name="CursorChanged" handler="OnTreeviewAdvanceCursorChanged" />
                             <signal name="RowActivated" handler="OnTreeviewAdvanceRowActivated" />
+                            <signal name="ButtonReleaseEvent" handler="OnTreeviewAdvanceButtonReleaseEvent" />
                           </widget>
                         </child>
                       </widget>
@@ -6922,7 +6924,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.IncomeSlip" design-size="704 625">
+  <widget class="Gtk.Dialog" id="bazar.IncomeSlip" design-size="709 625">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый приходный ордер</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -10476,7 +10478,7 @@
           <widget class="Gtk.Notebook" id="notebook1">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">1</property>
+            <property name="CurrentPage">0</property>
             <child>
               <widget class="Gtk.VBox" id="vbox3">
                 <property name="MemberName" />
