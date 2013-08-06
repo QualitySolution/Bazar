@@ -414,85 +414,9 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnDialogAuthenticationActionActivated (object sender, System.EventArgs e)
 	{
-		changePassword = new Dialog("Смена своего пароля", this, Gtk.DialogFlags.DestroyWithParent);
-    	changePassword.Modal = true;
-		changePassword.AddButton ("Отмена", ResponseType.Cancel);
-    	changePasswordOk =(Button) changePassword.AddButton ("Ok", ResponseType.Ok);
-		Label changepassLabel = new Label ("Пароль должен содержать не менее 6 символов.\nНе используйте русские буквы в пароле.\nПароль не может состоять только из цифр.");
-		changepassLabel.Wrap = true;
-		changePassword.VBox.Add(changepassLabel);
-		Table tablepassword = new Table (2, 2, true);
-		changePassword.VBox.Add(tablepassword);
-		Label newpassword = new Label ("Новый пароль:");
-		newpassword.Justify = Justification.Right;
-		Label newpassword2 = new Label ("Еще раз:");
-		newpassword2.Justify = Justification.Right;
-		tablepassword.Attach(newpassword,0,1,0,1);
-		tablepassword.Attach(newpassword2,0,1,1,2);
-		inputPassword = new Entry();
-		inputPassword.Visibility = false;
-		inputPassword.Changed += new EventHandler (OnInputPasswordChanged);
-		changePassword.SetResponseSensitive(ResponseType.Ok,false);
-		tablepassword.Attach(inputPassword,1,2,0,1);
-		inputPassword2 = new Entry();
-		inputPassword2.Visibility = false;
-		inputPassword2.Changed += new EventHandler (OnInputPasswordChanged);
-		changePassword.SetResponseSensitive(ResponseType.Ok,false);
-		tablepassword.Attach(inputPassword2,1,2,1,2);
-    	changePassword.Response += new ResponseHandler (OnChangePasswordResponse);
-		changePassword.ShowAll();
-    	changePassword.Run ();
-		newpassword.Destroy();
-		newpassword2.Destroy();
-		inputPassword.Destroy();
-		inputPassword2.Destroy();
-		tablepassword.Destroy();
-    	changePassword.Destroy ();
+		QSMain.User.ChangeUserPassword (this);
 	}
-	
-	void OnInputPasswordChanged (object sender, System.EventArgs e)
-	{
-		long tempout;
-		bool CanSaveEmpty = inputPassword.Text != "" || inputPassword2.Text != "";
-		bool CanSaveEqual = inputPassword.Text == inputPassword2.Text;
-		bool CanSaveLength = inputPassword.Text.Length > 4;
-		bool CanSaveSpace = inputPassword.Text.IndexOf(' ') == -1;
-		bool CanSaveNumbers = !long.TryParse(inputPassword.Text, out tempout);
-		bool CanSaveCyrillic = !System.Text.RegularExpressions.Regex.IsMatch (inputPassword.Text, "\\p{IsCyrillic}");
-		if(!CanSaveCyrillic) changePasswordOk.TooltipText = "Пароль не может содержать русские буквы";
-		if(!CanSaveNumbers) changePasswordOk.TooltipText = "Пароль не может состоять только из цифр";
-		if(!CanSaveLength) changePasswordOk.TooltipText = "Пароль должен быть длиннее 4 символов";
-		if(!CanSaveSpace) changePasswordOk.TooltipText = "Пароль не может содержать пробелов";
-		if(!CanSaveEqual) changePasswordOk.TooltipText = "Оба введенных пароля должны совпадать";
-		if(!CanSaveEmpty) changePasswordOk.TooltipText = "Сначала заполните оба поля";
-		
-		bool CanSave = CanSaveEmpty && CanSaveEqual && CanSaveLength && CanSaveNumbers && CanSaveSpace && CanSaveCyrillic;
-		if(CanSave) changePasswordOk.TooltipText = "Сохранить новый пароль";
-		changePassword.SetResponseSensitive(ResponseType.Ok, CanSave);
-	}
-	
-	void OnChangePasswordResponse (object obj, ResponseArgs args)
-    {
-        if(args.ResponseId == ResponseType.Ok)
-		{
-			MainClass.StatusMessage("Отправляем новый пароль на сервер...");
-			string sql;
-			sql = "SET PASSWORD = PASSWORD('" + inputPassword.Text + "')";
-			try 
-			{
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Пароль изменен. Ok");
-			} 
-			catch (Exception ex) 
-			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка установки пароля!");
-				MainClass.ErrorMessage(this,ex);
-			}
-		}
-    }
-	
+
 	protected virtual void OnQuitActionActivated (object sender, System.EventArgs e)
 	{
 		Application.Quit();
