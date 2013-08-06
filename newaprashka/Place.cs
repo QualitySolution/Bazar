@@ -20,8 +20,8 @@ namespace bazar
 		public Place ()
 		{
 			this.Build ();
-			MainClass.ComboFillReference(comboPType,"place_types",2);
-			MainClass.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboPType,"place_types",2);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
 			contactNull = true;
 
 			grup = new AccelGroup ();

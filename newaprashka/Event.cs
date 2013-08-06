@@ -18,8 +18,8 @@ namespace bazar
 			this.Build ();
 			textviewCause.Buffer.Changed += OnTextViewChanged;
 			textviewActivity.Buffer.Changed += OnTextViewChanged;
-			MainClass.ComboFillReference(comboEventPlaceT, "place_types", 2);
-			MainClass.ComboFillReference(comboEventType, "classes", 2);
+			ComboWorks.ComboFillReference(comboEventPlaceT, "place_types", 2);
+			ComboWorks.ComboFillReference(comboEventType, "classes", 2);
 			labelUser.Text = QSMain.User.Name;
 		}
 		

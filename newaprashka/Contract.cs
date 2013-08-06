@@ -24,16 +24,16 @@ namespace bazar
 		{
 			this.Build ();
 
-			MainClass.ComboFillReference(comboPlaceT,"place_types",2);
-			MainClass.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboPlaceT,"place_types",2);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
 
 			ComboBox ServiceCombo = new ComboBox();
-			MainClass.ComboFillReference(ServiceCombo,"services",0);
+			ComboWorks.ComboFillReference(ServiceCombo,"services",0);
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 
 			ComboBox CashCombo = new ComboBox();
-			MainClass.ComboFillReference(CashCombo,"cash",0);
+			ComboWorks.ComboFillReference(CashCombo,"cash",0);
 			CashNameList = CashCombo.Model;
 			CashCombo.Destroy ();
 

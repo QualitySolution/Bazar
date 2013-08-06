@@ -17,8 +17,8 @@ namespace bazar
 		{
 			this.Build ();
 
-			MainClass.ComboFillReference(comboCash,"cash",1);
-			MainClass.ComboFillReference(comboOrg, "organizations", 1);
+			ComboWorks.ComboFillReference(comboCash,"cash",1);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", 1);
 
 			SlipsListStore = new ListStore (typeof (string), typeof (string), typeof (string), typeof (string), typeof (string));
 			

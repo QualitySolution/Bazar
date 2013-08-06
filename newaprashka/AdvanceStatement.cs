@@ -21,9 +21,9 @@ namespace bazar
 		{
 			this.Build ();
 
-			MainClass.ComboFillReference(comboCash,"cash",2);
-			MainClass.ComboFillReference(comboOrg, "organizations", 2);
-			MainClass.ComboFillReference(comboExpenseItem,"expense_items",2);
+			ComboWorks.ComboFillReference(comboCash,"cash",2);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboExpenseItem,"expense_items",2);
 			
 			//Заполняем поля по умолчанию
 			dateStatement.Date = DateTime.Now.Date;

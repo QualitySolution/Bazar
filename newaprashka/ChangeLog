@@ -1,5 +1,26 @@
 2013-08-06  Gankov Andrey  <gav@qsolution.ru>
 
+	* Main.cs:
+	* Event.cs:
+	* Place.cs:
+	* Service.cs:
+	* Accrual.cs:
+	* Contract.cs:
+	* PayAccrual.cs:
+	* MainWindow.cs:
+	* IncomeSlip.cs:
+	* MainWinCash.cs:
+	* CashBalance.cs:
+	* MainWinEvent.cs:
+	* MainWinPlace.cs:
+	* MainWinAccrual.cs:
+	* MainWinContract.cs:
+	* AdvanceStatement.cs:
+	* AccountableSlips.cs:
+	* SeparationPayment.cs: 
+
+2013-08-06  Gankov Andrey  <gav@qsolution.ru>
+
 	* MainWindow.cs: 
 
 2013-08-05  ghost03080  <st.p.inomirie@gmail.com>

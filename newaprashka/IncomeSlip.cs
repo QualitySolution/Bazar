@@ -20,9 +20,9 @@ namespace bazar
 		{
 			this.Build ();
 
-			MainClass.ComboFillReference(comboCash,"cash",2);
-			MainClass.ComboFillReference(comboOrg, "organizations", 2);
-			MainClass.ComboFillReference(comboIncomeItem,"income_items",2);
+			ComboWorks.ComboFillReference(comboCash,"cash",2);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboIncomeItem,"income_items",2);
 
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;

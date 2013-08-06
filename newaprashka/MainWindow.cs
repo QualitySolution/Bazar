@@ -596,29 +596,29 @@ public partial class MainWindow : Gtk.Window
 		switch (RefTable)
 		{
 		case "place_types":
-			MainClass.ComboFillReference(comboPlaceType,"place_types",1);
-			MainClass.ComboFillReference(comboContractPlaceT,"place_types",1);
-			MainClass.ComboFillReference(comboEventPlaceT,"place_types",1);
+			ComboWorks.ComboFillReference(comboPlaceType,"place_types",1);
+			ComboWorks.ComboFillReference(comboContractPlaceT,"place_types",1);
+			ComboWorks.ComboFillReference(comboEventPlaceT,"place_types",1);
 			break;
 		case "organizations":
-			MainClass.ComboFillReference(comboPlaceOrg,"organizations",1);
-			MainClass.ComboFillReference(comboContractOrg, "organizations", 1);
-			MainClass.ComboFillReference(comboAccrualOrg, "organizations", 1);
-			MainClass.ComboFillReference(comboCashOrg, "organizations", 1);
+			ComboWorks.ComboFillReference(comboPlaceOrg,"organizations",1);
+			ComboWorks.ComboFillReference(comboContractOrg, "organizations", 1);
+			ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", 1);
+			ComboWorks.ComboFillReference(comboCashOrg, "organizations", 1);
 			break;
 		case "cash":
-			MainClass.ComboFillReference(comboCashCash,"cash",1);
+			ComboWorks.ComboFillReference(comboCashCash,"cash",1);
 			break;
 		case "income_items":
 			if(notebookCash.CurrentPage == 0)
-				MainClass.ComboFillReference(comboCashItem,"income_items",1);
+				ComboWorks.ComboFillReference(comboCashItem,"income_items",1);
 			break;
 		case "expense_items": 
 			if(notebookCash.CurrentPage >= 1)
-				MainClass.ComboFillReference(comboCashItem,"expense_items",1);
+				ComboWorks.ComboFillReference(comboCashItem,"expense_items",1);
 			break;
 		case "classes":
-			MainClass.ComboFillReference(comboEventType, "classes", 1);
+			ComboWorks.ComboFillReference(comboEventType, "classes", 1);
 			break;
 		default:
 				break;
