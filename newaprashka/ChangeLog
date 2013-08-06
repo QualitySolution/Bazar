@@ -1,6 +1,25 @@
 2013-08-06  Gankov Andrey  <gav@qsolution.ru>
 
 	* Main.cs:
+	* Event.cs:
+	* Place.cs:
+	* Lessee.cs:
+	* Accrual.cs:
+	* Service.cs:
+	* Contact.cs:
+	* Contract.cs:
+	* reference.cs:
+	* IncomeSlip.cs:
+	* PayAccrual.cs:
+	* CashBalance.cs:
+	* AccountableSlips.cs:
+	* AdvanceStatement.cs:
+	* AccountableDebts.cs:
+	* MassAccrualCreation.cs: 
+
+2013-08-06  Gankov Andrey  <gav@qsolution.ru>
+
+	* Main.cs:
 	* Place.cs:
 	* Event.cs:
 	* Accrual.cs:

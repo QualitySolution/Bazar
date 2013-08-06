@@ -245,7 +245,7 @@ namespace bazar
 				trans.Rollback ();
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи приходного ордера!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 
 		}
@@ -395,7 +395,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения информации о приходном ордере!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			TestCanSave();
 		}

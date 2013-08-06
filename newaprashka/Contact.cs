@@ -47,7 +47,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения контактного лица!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			TestCanSave();
 		}
@@ -97,7 +97,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи контактного лица!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 
 		}

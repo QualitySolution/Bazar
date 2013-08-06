@@ -53,7 +53,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Не удалось получить имя сотрудника!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 
 
@@ -141,7 +141,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Не удалось сформировать отчет!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 		}
 

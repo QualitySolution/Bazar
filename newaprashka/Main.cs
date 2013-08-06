@@ -330,17 +330,6 @@ namespace bazar
 
 		}
 
-		public static void ErrorMessage(Window parent, Exception ex)
-		{
-			MessageDialog md = new MessageDialog ( parent, DialogFlags.DestroyWithParent,
-		                              MessageType.Error, 
-	                                  ButtonsType.Close,"ошибка");
-			md.UseMarkup = false;
-			md.Text = ex.ToString();
-			md.Run ();
-			md.Destroy();
-		}
-		
 		public static void StatusMessage(string message)
 		{
 			StatusBarLabel.Text = message;

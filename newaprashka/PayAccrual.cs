@@ -234,7 +234,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения информации о начисление!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			
 			TestCanSave();
@@ -380,7 +380,7 @@ namespace bazar
 				trans.Rollback ();
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи оплаты!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			Accrual.GetAccrualPaidBalance (Accrual_Id);
 		}

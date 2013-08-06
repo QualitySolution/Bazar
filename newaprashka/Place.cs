@@ -241,7 +241,7 @@ namespace bazar
 				else
 				{
 					MainClass.StatusMessage("Ошибка записи места!");
-					MainClass.ErrorMessage(this,ex);
+					QSMain.ErrorMessage(this,ex);
 				}
 			}
 		}

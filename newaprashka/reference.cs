@@ -116,7 +116,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения таблицы!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 			OnTreeviewrefCursorChanged((object)treeviewref,EventArgs.Empty);
 		}
@@ -239,7 +239,7 @@ namespace bazar
 				{
 					Console.WriteLine(ex.ToString());
 					MainClass.StatusMessage("Ошибка записи "+ nameNode + "!");
-					MainClass.ErrorMessage(this,ex);
+					QSMain.ErrorMessage(this,ex);
 				}
 			}
         }

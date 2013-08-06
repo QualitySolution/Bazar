@@ -338,7 +338,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения информации о договоре!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 
 			TestCanSave();
@@ -470,7 +470,7 @@ namespace bazar
 				{
 					Console.WriteLine(ex.ToString());
 					MainClass.StatusMessage("Ошибка получения места!");
-					MainClass.ErrorMessage(this,ex);
+					QSMain.ErrorMessage(this,ex);
 				}				
 			}
 			TestCanSave();
@@ -699,7 +699,7 @@ namespace bazar
 			{
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи договора!");
-				MainClass.ErrorMessage(this,ex);
+				QSMain.ErrorMessage(this,ex);
 			}
 
 		}
