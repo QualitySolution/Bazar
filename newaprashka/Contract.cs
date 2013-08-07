@@ -120,11 +120,14 @@ namespace bazar
 			treeviewServices.AppendColumn (SumColumn);
 			SumColumn.AddAttribute (CellSum,"text", 8);
 
+			CountColumn.SetCellDataFunc(CellCount, RenderCountColumn);
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
 
 			treeviewServices.Model = ServiceListStore;
+			treeviewServices.Columns[5].Visible=false;
 			treeviewServices.ShowAll();
+
 			OnTreeviewServicesCursorChanged(null, null);
 		}
 
@@ -204,6 +207,17 @@ namespace bazar
 			ServiceListStore.SetValue(iter, 7, Price);
 			ServiceListStore.SetValue(iter, 8, Price * count);
 			CalculateServiceSum ();
+		}
+
+		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			string Unit;
+			int Count = (int) model.GetValue (iter, 6);
+			if(model.GetValue(iter,5) != null)
+				Unit = (string) model.GetValue(iter,5);
+			else
+				Unit = "";
+			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
 		}
 
 		private void RenderPriceColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)

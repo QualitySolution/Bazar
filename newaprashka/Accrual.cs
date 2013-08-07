@@ -82,7 +82,7 @@ namespace bazar
 			CellPrice.Adjustment = adjPrice;
 			CellPrice.Edited += OnPriceSpinEdited;
 			PriceColumn.PackStart (CellPrice, true);
-		
+
 			Gtk.TreeViewColumn SumColumn = new Gtk.TreeViewColumn ();
 			SumColumn.Title = "Сумма";
 			Gtk.CellRendererText CellSum = new CellRendererText();
@@ -102,7 +102,8 @@ namespace bazar
 			// ID long - 9
 			treeviewServices.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", 10);
 			//Оплачено цифровое - 11
-			
+
+			CountColumn.SetCellDataFunc(CellCount, RenderCountColumn);
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
 			
@@ -123,6 +124,8 @@ namespace bazar
 			
 			treeviewIncomes.Model = IncomeListStore;
 			treeviewIncomes.ShowAll();
+
+			treeviewServices.Columns[2].Visible=false;
 
 			OnTreeviewServicesCursorChanged(null, null);
 		}
@@ -223,6 +226,17 @@ namespace bazar
 		{
 			double Price = (double) model.GetValue (iter, 7);
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:0.00}", Price);
+		}
+
+		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			string Unit;
+			int Count = (int) model.GetValue (iter, 6);
+			if(model.GetValue(iter,5) != null)
+				Unit = (string) model.GetValue(iter,5);
+			else
+				Unit = "";
+			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
 		}
 		
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)

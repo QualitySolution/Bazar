@@ -252,10 +252,7 @@ namespace bazar
 
 		public void SlipFill(int SlipId, bool Copy)
 		{
-			if(Copy)
-				NewSlip = true;
-			else
-				NewSlip = false;
+			Copy = NewSlip;
 
 			TreeIter iter;
 			
@@ -307,11 +304,8 @@ namespace bazar
 					entryAccountable.TooltipText = rdr["employee"].ToString();
 					AccountableNull = false;
 				}
-				if(!Copy)
-				{
-					if(rdr["date"] != DBNull.Value)
-						dateSlip.Date = DateTime.Parse( rdr["date"].ToString());
-				}
+				if(rdr["date"] != DBNull.Value && !Copy)
+					dateSlip.Date = DateTime.Parse( rdr["date"].ToString());
 				if(rdr["org_id"] != DBNull.Value)
 					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
 				else
@@ -328,13 +322,8 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, -1, out iter);
 				comboIncomeItem.SetActiveIter (iter);
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
-				if(!Copy)
-				{
-					if(rdr["user"] != DBNull.Value)
-						entryUser.Text = rdr["user"].ToString ();
-					else
-						entryUser.Text = "";
-				}
+				if(rdr["user"] != DBNull.Value && !Copy)
+					entryUser.Text = rdr["user"].ToString ();
 				textviewDetails.Buffer.Text = rdr["details"].ToString();
 				//запоминаем переменные что бы освободить соединение
 				object DBContract_no = rdr["contract_no"];
@@ -386,21 +375,18 @@ namespace bazar
 				if(!NewSlip)
 					this.Title = "Приходный ордер №" + entryNumber.Text;
 				// Проверяем права на редактирование
-				if(!Copy)
+				if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date && !Copy)
 				{
-					if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date)
-					{
-						comboOrg.Sensitive = false;
-						comboCash.Sensitive = false;
-						buttonLesseeEdit.Sensitive = false;
-						buttonAccountableEdit.Sensitive = false;
-						comboContract.Sensitive = false;
-						comboAccrual.Sensitive = false;
-						comboIncomeItem.Sensitive = false;
-						spinSum.Sensitive = false;
-						textviewDetails.Sensitive = false;
-						separationpayment.Sensitive = false;
-					}
+					comboOrg.Sensitive = false;
+					comboCash.Sensitive = false;
+					buttonLesseeEdit.Sensitive = false;
+					buttonAccountableEdit.Sensitive = false;
+					comboContract.Sensitive = false;
+					comboAccrual.Sensitive = false;
+					comboIncomeItem.Sensitive = false;
+					spinSum.Sensitive = false;
+					textviewDetails.Sensitive = false;
+					separationpayment.Sensitive = false;
 				}
 				comboOperation.Sensitive = false;
 
