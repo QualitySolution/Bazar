@@ -319,7 +319,7 @@ namespace bazar
 				this.Title = "Договор №" + entryNumber.Text;
 
 				//Получаем таблицу услуг
-				sql = "SELECT contract_pays.*, cash.name as cash, services.name as service," +
+				sql = "SELECT contract_pays.*, cash.name as cash, services.name as service, services.by_area as by_area," +
 					"units.id as units_id, units.name as units FROM contract_pays " +
 					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
 					"LEFT JOIN services ON contract_pays.service_id = services.id " +
@@ -356,7 +356,8 @@ namespace bazar
 					                             count,
 					                             price,
 					                             sum,
-					                             int.Parse(rdr["id"].ToString()));
+					                             int.Parse(rdr["id"].ToString()),
+					                             rdr.GetBoolean("by_area"));
 				}
 				rdr.Close();
 				CalculateServiceSum();
