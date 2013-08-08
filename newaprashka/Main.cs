@@ -204,61 +204,6 @@ namespace bazar
 			
 		}
 
-		public static void ComboFillUniversal(ComboBox combo, string SqlSelect, string DisplayString, MySqlParameter[] Parameters, int KeyField, int listmode)
-		{   //Заполняем универсальный комбобокс
-			// Режимы списка:
-			// 0 - Только элементы
-			// 1 - Есть пункт "Все" с кодом 0
-			// 2 - Есть пункт "Нет" с кодом -1
-			
-			combo.Clear ();
-			CellRendererText text = new CellRendererText ();
-			ListStore store = new ListStore (typeof (string), typeof (int));
-			combo.Model = store;
-			combo.PackStart (text, false);
-			combo.AddAttribute (text, "text", 0);
-			MainClass.StatusMessage("Запрос элементов комбобокс...");
-			try
-			{
-				int count = 0;
-				MySqlCommand cmd = new MySqlCommand(SqlSelect, QSMain.connectionDB);
-				cmd.Parameters.AddRange (Parameters);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				
-				switch (listmode) {
-				case 1: //Все
-					store.AppendValues("Все", 0);
-					break;
-				case 2: //Нет
-					store.AppendValues("нет", -1);
-					break;
-				default:
-					break;
-				}
-				
-				while (rdr.Read())
-				{
-					object[] Fields = new object[rdr.FieldCount];
-					rdr.GetValues(Fields);
-					store.AppendValues(String.Format(DisplayString, Fields),
-					                   Convert.ToInt32(Fields[KeyField]));
-					count++;
-				}
-				rdr.Close();
-				if(listmode == 2 && count == 1)
-					combo.Active = 1;
-				if(listmode == 0 && count == 1)
-					combo.Active = 0;
-				MainClass.StatusMessage("Ok");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения данных для комбобокс!");
-			}
-			
-		}
-
 		public static void FillServiceListStore(out ListStore list)
 		{   			
             list = new ListStore (typeof (int), typeof (string), typeof (int), typeof (string));

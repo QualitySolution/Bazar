@@ -493,7 +493,7 @@ namespace bazar
 				"WHERE contract_no = @contract";
 			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.ActiveText) };
 			string Display = "№{0} - {1:MMMM} {2}";
-			MainClass.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, 2);
+			ComboWorks.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, 2);
 		}
 
 		protected void OnComboAccrualChanged (object sender, EventArgs e)
