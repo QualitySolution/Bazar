@@ -463,7 +463,7 @@ namespace bazar
 		protected void OnComboPlaceNoChanged (object sender, EventArgs e)
 		{
 			TreeIter iter;
-			if(NewContract && comboPlaceNo.ActiveText != null)
+			if(comboPlaceNo.ActiveText != null)
 			{
 				MainClass.StatusMessage("Запрос информации о месте...");
 				string sql = "SELECT org_id, area FROM places " +
