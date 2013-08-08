@@ -503,9 +503,15 @@ namespace bazar
 								bool b = (bool) ServiceListStore.GetValue(ServiceIter, 10);
 								int i = (int) ServiceListStore.GetValue(ServiceIter, 6);
 								if( b && i == old_area)
-									ServiceListStore.SetValue(ServiceIter, 6, (int) g_area);
+								{
+									int ar = (int) g_area;
+									ServiceListStore.SetValue(ServiceIter, 6, ar);
+									double Price = (double)ServiceListStore.GetValue (ServiceIter, 7);
+									ServiceListStore.SetValue(ServiceIter, 8, Price * ar);
+								}
 							}
 							while(ServiceListStore.IterNext (ref ServiceIter));
+							CalculateServiceSum ();
 						}
 					}
 					rdr.Close();
@@ -853,4 +859,3 @@ namespace bazar
 		}
 	}
 }
-
