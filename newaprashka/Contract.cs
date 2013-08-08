@@ -19,7 +19,7 @@ namespace bazar
 		bool LesseeisNull = true;
 		string OriginalNumber;
 		List<int> DeletedRowId = new List<int>();
-
+		float g_area = 0;
 		public Contract ()
 		{
 			this.Build ();
@@ -40,9 +40,17 @@ namespace bazar
 			MainClass.FillServiceListStore(out ServiceRefListStore);
 
 			//Создаем таблицу "Услуги"
-			ServiceListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string),
-			                                      typeof (int), typeof (string), typeof (int), typeof (double),
-			                                      typeof (double), typeof (int));
+			ServiceListStore = new Gtk.ListStore (typeof (int), 	// 0 - idServiceColumn
+			                                      typeof (string),	// 1 - Наименование
+			                                      typeof (int),		// 2 - idКасса
+			                                      typeof (string),	// 3 - Касса
+			                                      typeof (int), 	// 4 - idЕдиница
+			                                      typeof (string), 	// 5 - Ед. изм.
+			                                      typeof (int), 	// 6 - Количество
+			                                      typeof (double),	// 7 - Цена
+			                                      typeof (double),	// 8 - Сумма
+			                                      typeof (int), 	// 9 - 
+			                                      typeof (bool));	// 10 - Есть ли расчет по метражу
 			
 			Gtk.TreeViewColumn idServiceColumn = new Gtk.TreeViewColumn ();
 			idServiceColumn.Title = "idServiceColumn";
@@ -152,6 +160,11 @@ namespace bazar
 					ServiceListStore.SetValue (iter, 0, ServiceRefListStore.GetValue (ServiceIter,0));
 					ServiceListStore.SetValue (iter, 4, ServiceRefListStore.GetValue (ServiceIter,2));
 					ServiceListStore.SetValue (iter, 5, ServiceRefListStore.GetValue (ServiceIter,3));
+
+					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter,4);
+					ServiceListStore.SetValue (iter, 10, choice);
+					if(choice)
+						ServiceListStore.SetValue (iter, 6, (int) g_area);
 					break;
 				}
 			}
@@ -213,10 +226,12 @@ namespace bazar
 		{
 			string Unit;
 			int Count = (int) model.GetValue (iter, 6);
+
 			if(model.GetValue(iter,5) != null)
 				Unit = (string) model.GetValue(iter,5);
 			else
 				Unit = "";
+
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
 		}
 
@@ -283,7 +298,7 @@ namespace bazar
 				if(rdr["area"] != DBNull.Value)
 					area = rdr.GetFloat("area");
 				labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
-
+				g_area = area;
 				textComments.Buffer.Text = rdr["comments"].ToString();
 				//запоминаем переменные что бы освободить соединение
 				object DBPlaceT = rdr["place_type_id"];
@@ -304,7 +319,7 @@ namespace bazar
 				this.Title = "Договор №" + entryNumber.Text;
 
 				//Получаем таблицу услуг
-				sql = "SELECT contract_pays.*, cash.name as cash, services.name as service, " +
+				sql = "SELECT contract_pays.*, cash.name as cash, services.name as service," +
 					"units.id as units_id, units.name as units FROM contract_pays " +
 					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
 					"LEFT JOIN services ON contract_pays.service_id = services.id " +
@@ -472,10 +487,23 @@ namespace bazar
 						else
 							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 						comboOrg.SetActiveIter (iter);
-						float area = 0;
+						int old_area = (int) g_area;
 						if(rdr["area"] != DBNull.Value)
-							area = rdr.GetFloat("area");
-						labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
+							g_area = rdr.GetFloat("area");
+						labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", g_area);
+
+						TreeIter ServiceIter;
+						if (ServiceListStore.GetIterFirst (out ServiceIter))
+						{
+							do
+							{
+								bool b = (bool) ServiceListStore.GetValue(ServiceIter, 10);
+								int i = (int) ServiceListStore.GetValue(ServiceIter, 6);
+								if( b && i == old_area)
+									ServiceListStore.SetValue(ServiceIter, 6, (int) g_area);
+							}
+							while(ServiceListStore.IterNext (ref ServiceIter));
+						}
 					}
 					rdr.Close();
 					MainClass.StatusMessage("Ok");

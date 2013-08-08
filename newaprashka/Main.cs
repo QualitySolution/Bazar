@@ -206,7 +206,7 @@ namespace bazar
 
 		public static void FillServiceListStore(out ListStore list)
 		{   			
-            list = new ListStore (typeof (int), typeof (string), typeof (int), typeof (string));
+            list = new ListStore (typeof (int), typeof (string), typeof (int), typeof (string), typeof (bool));
 			MainClass.StatusMessage("Запрос справочника услуг...");
 			try
 	        {
@@ -232,7 +232,8 @@ namespace bazar
 					list.AppendValues(int.Parse(rdr["id"].ToString()),
 					                   rdr["name"].ToString(),
 					                   units_id,
-					                   units_name);
+					                   units_name,
+					                   rdr.GetBoolean("by_area"));
 	   			}
 				rdr.Close();
 				MainClass.StatusMessage("Ok");

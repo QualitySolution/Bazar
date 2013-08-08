@@ -19,6 +19,8 @@ namespace bazar
 		decimal AccrualTotal = 0, IncomeTotal = 0;
 		bool NotComplete;
 
+		float area = 0;
+
 		public Accrual ()
 		{
 			this.Build ();
@@ -40,7 +42,7 @@ namespace bazar
 			//Создаем таблицу "Услуги"
 			ServiceListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string),
 			                                      typeof (int), typeof (string), typeof (int), typeof (double),
-			                                      typeof (double), typeof (long), typeof (string), typeof (decimal));
+			                                      typeof (double), typeof (long), typeof (string), typeof (decimal), typeof(bool));
 
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
 			ServiceColumn.Title = "Наименование";
@@ -165,6 +167,7 @@ namespace bazar
 					ServiceListStore.SetValue (iter, 0, ServiceRefListStore.GetValue (ServiceIter,0));
 					ServiceListStore.SetValue (iter, 4, ServiceRefListStore.GetValue (ServiceIter,2));
 					ServiceListStore.SetValue (iter, 5, ServiceRefListStore.GetValue (ServiceIter,3));
+					ServiceListStore.SetValue (iter, 12, ServiceRefListStore.GetValue (ServiceIter,4));
 					break;
 				}
 			}
@@ -232,10 +235,19 @@ namespace bazar
 		{
 			string Unit;
 			int Count = (int) model.GetValue (iter, 6);
-			if(model.GetValue(iter,5) != null)
-				Unit = (string) model.GetValue(iter,5);
+
+			if((bool) model.GetValue (iter, 12))
+			{
+				Count = (int) area;
+				Unit = "кв.м.";
+			}
 			else
-				Unit = "";
+			{ //изменить запиьс ареа в модел
+				if(model.GetValue(iter,5) != null)
+					Unit = (string) model.GetValue(iter,5);
+				else
+					Unit = "";
+			}
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
 		}
 		
@@ -416,10 +428,11 @@ namespace bazar
 			}
 			try
 			{
-				string sql = "SELECT lessees.name as lessee, organizations.name as organization, place_no, place_types.name as place_type FROM contracts " +
+				string sql = "SELECT lessees.name as lessee, organizations.name as organization, contracts.place_no, place_types.name as place_type, places.area as area FROM contracts " +
 					"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 					"LEFT JOIN organizations ON contracts.org_id = organizations.id " +
 					"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
+					"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no=contracts.place_no " +
 					"WHERE contracts.number = @number";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@number", comboContract.ActiveText);
@@ -429,6 +442,9 @@ namespace bazar
 				labelLessee.LabelProp = rdr["lessee"].ToString();
 				labelOrg.LabelProp = rdr["organization"].ToString();
 				labelPlace.LabelProp = rdr["place_type"].ToString () + " - " + rdr["place_no"].ToString ();
+
+				area = rdr.GetFloat("area");
+
 				rdr.Close ();
 				buttonOpenContract.Sensitive = true;
 			}

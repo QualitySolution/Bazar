@@ -49,7 +49,7 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
 					comboIncomeItem.SetActiveIter(iter);
 				}
-
+				checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
 				rdr.Close();
 				MainClass.StatusMessage("Ok");
 				this.Title = entryName.Text;
@@ -75,13 +75,13 @@ namespace bazar
 			string sql;
 			if(NewService)
 			{
-				sql = "INSERT INTO services (name, units_id, income_id) " +
-					"VALUES (@name, @units_id, @income_id)";
+				sql = "INSERT INTO services (name, units_id, income_id, by_area) " +
+					"VALUES (@name, @units_id, @income_id, @by_area)";
 			}
 			else
 			{
-				sql = "UPDATE services SET name = @name, units_id = @units_id, income_id = @income_id " +
-						"WHERE id = @id";
+				sql = "UPDATE services SET name = @name, units_id = @units_id, income_id = @income_id, " +
+						"by_area = @by_area WHERE id = @id";
 			}
 			MainClass.StatusMessage("Запись услуги...");
 			try 
@@ -96,7 +96,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@income_id",comboIncomeItem.Model.GetValue(iter,1));
 				else
 					cmd.Parameters.AddWithValue("@income_id", DBNull.Value);
-
+				cmd.Parameters.AddWithValue("by_area", checkArea.Active);
 				cmd.ExecuteNonQuery();
 				MainClass.StatusMessage("Ok");
 				Respond (ResponseType.Ok);
@@ -120,4 +120,3 @@ namespace bazar
 		}
 	}
 }
-
