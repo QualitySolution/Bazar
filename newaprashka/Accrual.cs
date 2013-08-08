@@ -428,21 +428,13 @@ namespace bazar
 			}
 			try
 			{
-<<<<<<< Upstream, based on origin/master
-				string sql = "SELECT lessees.name as lessee, organizations.name as organization, contracts.place_no, place_types.name as place_type, places.area as area FROM contracts " +
-=======
 				TreeIter iter;
-				string sql = "SELECT lessees.name as lessee, organizations.name as organization, place_no, place_types.name as place_type FROM contracts " +
->>>>>>> 435595a Перевод проекта на использования ID договора вместо номера. И частичная чистка старого не удачного кода.
+				string sql = "SELECT lessees.name as lessee, organizations.name as organization, contracts.place_no, place_types.name as place_type, places.area as area FROM contracts " +
 					"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 					"LEFT JOIN organizations ON contracts.org_id = organizations.id " +
 					"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
-<<<<<<< Upstream, based on origin/master
 					"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no=contracts.place_no " +
-					"WHERE contracts.number = @number";
-=======
 					"WHERE contracts.id = @contract_id";
->>>>>>> 435595a Перевод проекта на использования ID договора вместо номера. И частичная чистка старого не удачного кода.
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				comboContract.GetActiveIter ( out iter);
 				cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue (iter, 1));
