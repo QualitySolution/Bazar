@@ -82,7 +82,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		TreeIter iter;
 		int type, itemid;
-		string ItemNumber, place;
+		string place;
 		ResponseType result;
 		
 		switch (notebookMain.CurrentPage) {
@@ -111,9 +111,9 @@ public partial class MainWindow : Gtk.Window
 		break;
 		case 2:
 			treeviewContract.Selection.GetSelected(out iter);
-			ItemNumber = Contractfilter.GetValue(iter,1).ToString();
+			itemid = (int) Contractfilter.GetValue(iter, 0);
 			Contract winContract = new Contract();
-			winContract.ContractFill(ItemNumber);
+			winContract.ContractFill(itemid);
 			winContract.Show();
 			result = (ResponseType)winContract.Run();
 			winContract.Destroy();
@@ -424,7 +424,7 @@ public partial class MainWindow : Gtk.Window
 		TreeIter iter;
 		int type, itemid;
 		Delete winDelete = new Delete();
-		string ItemNumber, place;
+		string place;
 		
 		switch (notebookMain.CurrentPage) {
 		case 0:
@@ -442,8 +442,8 @@ public partial class MainWindow : Gtk.Window
 		break;
 		case 2:
 			treeviewContract.Selection.GetSelected(out iter);
-			ItemNumber = Contractfilter.GetValue(iter, 1).ToString();
-			winDelete.RunDeletion("contracts", ItemNumber);
+			itemid = Convert.ToInt32(Contractfilter.GetValue(iter, 1));
+			winDelete.RunDeletion("contracts", itemid);
 			UpdateContract();
 		break;
 		case 3:

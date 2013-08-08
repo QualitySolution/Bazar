@@ -9,8 +9,8 @@ namespace bazar
 	public partial class Place : Gtk.Dialog
 	{
 		public bool NewPlace;
-		string PlaceNumber, ContractNumber;
-		int lessee_id, contact_id, type_id;
+		string PlaceNumber;
+		int lessee_id, contact_id, type_id, ContractId;
 		bool contactNull = true;
 
 		Gtk.ListStore HistoryStore;
@@ -28,13 +28,9 @@ namespace bazar
 			this.AddAccelGroup(grup);
 			
 			//Создаем таблицу "История"
-			HistoryStore = new Gtk.ListStore (typeof (string), typeof (string), typeof (string), typeof (string),
+			HistoryStore = new Gtk.ListStore (typeof(int), typeof (string), typeof (string), typeof (string), typeof (string),
 			                                  typeof (int), typeof (string), typeof (string));
 	 
-			Gtk.TreeViewColumn idlesseesColumn = new Gtk.TreeViewColumn ();
-			idlesseesColumn.Title = "idАрендатор";
-			idlesseesColumn.Visible = false;
-			idlesseesColumn.PackStart (new Gtk.CellRendererText (), true);
 			Gtk.TreeViewColumn CommentsColumn = new Gtk.TreeViewColumn ();
 			CommentsColumn.Title = "Комментарии";
 			Gtk.CellRendererText CommentsCell = new Gtk.CellRendererText ();
@@ -43,14 +39,13 @@ namespace bazar
 			CommentsColumn.MaxWidth = 500;
 			CommentsColumn.PackStart (CommentsCell, true);
 			
-			treeviewHistory.AppendColumn ("Договор", new Gtk.CellRendererText (), "text", 0);
-			treeviewHistory.AppendColumn ("с", new Gtk.CellRendererText (), "text", 1);
-			treeviewHistory.AppendColumn ("по", new Gtk.CellRendererText (), "text", 2);
-			treeviewHistory.AppendColumn ("Расторгнут", new Gtk.CellRendererText (), "text", 3);
-			treeviewHistory.AppendColumn (idlesseesColumn);
-			treeviewHistory.AppendColumn ("Арендатор", new Gtk.CellRendererText (), "text", 5);
+			treeviewHistory.AppendColumn ("Договор", new Gtk.CellRendererText (), "text", 1);
+			treeviewHistory.AppendColumn ("с", new Gtk.CellRendererText (), "text", 2);
+			treeviewHistory.AppendColumn ("по", new Gtk.CellRendererText (), "text", 3);
+			treeviewHistory.AppendColumn ("Расторгнут", new Gtk.CellRendererText (), "text", 4);
+			treeviewHistory.AppendColumn ("Арендатор", new Gtk.CellRendererText (), "text", 6);
 			treeviewHistory.AppendColumn(CommentsColumn);
-			CommentsColumn.AddAttribute(CommentsCell, "text" , 6);
+			CommentsColumn.AddAttribute(CommentsCell, "text" , 7);
 			
 			treeviewHistory.Model = HistoryStore;
 			treeviewHistory.ShowAll();
@@ -113,8 +108,9 @@ namespace bazar
 		void FillCurrentContract()
 		{
 			string sql = "SELECT lessees.name as lessee, lessees.comments as l_comments, " +
-			 	"contracts.lessee_id as contr_lessee_id, contracts.number as contr_number, " +
-			 	"contracts.start_date as start_date, contracts.end_date as end_date, contracts.cancel_date as cancel_date FROM contracts " +
+			 	"contracts.id as contract_id, contracts.lessee_id as contr_lessee_id, contracts.number as contr_number, " +
+			 	"contracts.start_date as start_date, contracts.end_date as end_date, " +
+			 	"contracts.cancel_date as cancel_date FROM contracts " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 				"WHERE contracts.place_type_id = @type AND contracts.place_no = @place AND " +
 				"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
@@ -126,9 +122,9 @@ namespace bazar
 					
 			if(rdr.Read())
 			{
-				if( rdr["contr_number"] != DBNull.Value)
+				if( rdr["contract_id"] != DBNull.Value)
 				{
-					ContractNumber = rdr["contr_number"].ToString();
+					ContractId = rdr.GetInt32 ("contract_id");
 					labelContractNumber.Text = rdr["contr_number"].ToString();
 					if(rdr["cancel_date"] == DBNull.Value)
 						labelContractDates.Text = DateTime.Parse (rdr["start_date"].ToString ()).ToShortDateString() +
@@ -140,7 +136,7 @@ namespace bazar
 				}
 				if( rdr["contr_lessee_id"] != DBNull.Value)
 				{
-					lessee_id = Convert.ToInt32(rdr["contr_lessee_id"].ToString());
+					lessee_id = rdr.GetInt32("contr_lessee_id");
 					labelLessee.Text = rdr["lessee"].ToString();
 					labelLessee.TooltipText = rdr["lessee"].ToString() + "\n" + rdr["l_comments"].ToString();
 					buttonLessee.Sensitive = true;
@@ -148,7 +144,7 @@ namespace bazar
 			}
 			else
 			{
-				ContractNumber = String.Empty;
+				ContractId = -1;
 				labelContractNumber.Text = "Нет активного договора";
 				labelContractDates.Text = String.Empty;
 				buttonContract.Sensitive = false;
@@ -294,17 +290,18 @@ namespace bazar
 			string Cancel_date;
 			while (rdr.Read())
 			{
-				if(rdr["number"].ToString() == ContractNumber)
+				if(rdr.GetInt32("id") == ContractId)
 					continue;
 				if(rdr["cancel_date"] != DBNull.Value)
 					Cancel_date = ((DateTime)rdr["cancel_date"]).ToShortDateString();
 				else
 					Cancel_date = "";
-				HistoryStore.AppendValues(rdr["number"].ToString(),
+				HistoryStore.AppendValues(rdr.GetInt32 ("id"),
+											rdr["number"].ToString(),
 											((DateTime)rdr["start_date"]).ToShortDateString(),
 				                             ((DateTime)rdr["end_date"]).ToShortDateString(),
 				                          	 Cancel_date,
-											 int.Parse(rdr["lessee_id"].ToString()),
+											 rdr.GetInt32("lessee_id"),
 				                             rdr["lessee"].ToString(),
 				                             rdr["comments"].ToString());
 	   		}
@@ -340,11 +337,11 @@ namespace bazar
 				
 		protected virtual void OnHistoryOpenContract (object o, EventArgs args)
 		{
-			string itemid;
+			int itemid;
 			TreeIter iter;
 			
 			treeviewHistory.Selection.GetSelected(out iter);
-			itemid = (HistoryStore.GetValue(iter,0)).ToString();
+			itemid = (int) HistoryStore.GetValue(iter,0);
 			Contract winContract = new Contract();
 			winContract.ContractFill(itemid);
 			winContract.Show();
@@ -359,7 +356,7 @@ namespace bazar
 			TreeIter iter;
 			
 			treeviewHistory.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(HistoryStore.GetValue(iter,4));
+			itemid = Convert.ToInt32(HistoryStore.GetValue(iter,5));
 			lessee winLessee = new lessee();
 			winLessee.LesseeFill(itemid);
 			winLessee.Show();
@@ -389,7 +386,7 @@ namespace bazar
 		protected void OnButtonContractClicked (object sender, EventArgs e)
 		{
 			Contract winContract = new Contract();
-			winContract.ContractFill(ContractNumber);
+			winContract.ContractFill(ContractId);
 			winContract.Show();
 			winContract.Run();
 			winContract.Destroy();

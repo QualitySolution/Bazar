@@ -115,14 +115,14 @@ namespace bazar
 			if(NewSlip)
 			{
 				sql = "INSERT INTO credit_slips (operation, org_id, cash_id, lessee_id, user_id, date, sum, " +
-					"contract_no, accrual_id, income_id, employee_id, details) " +
+					"contract_id, accrual_id, income_id, employee_id, details) " +
 						"VALUES (@operation, @org_id, @cash_id, @lessee_id, @user_id, @date, @sum, " +
-						"@contract_no, @accrual_id, @income_id, @employee_id, @details)";
+						"@contract_id, @accrual_id, @income_id, @employee_id, @details)";
 			}
 			else
 			{
 				sql = "UPDATE credit_slips SET operation = @operation, org_id = @org_id, cash_id = @cash_id, lessee_id = @lessee_id, " +
-						"date = @date, sum = @sum, contract_no = @contract_no, accrual_id = @accrual_id, income_id = @income_id, " +
+						"date = @date, sum = @sum, contract_id = @contract_id, accrual_id = @accrual_id, income_id = @income_id, " +
 						"employee_id = @employee_id, details = @details " +
 						"WHERE id = @id";
 			}
@@ -168,10 +168,11 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@date", dateSlip.Date);
 				cmd.Parameters.AddWithValue("@sum", spinSum.Value);
+				comboContract.GetActiveIter(out iter);
 				if((comboOperation.Active == 0 || comboOperation.Active == 2) && comboContract.Active >= 0)
-					cmd.Parameters.AddWithValue("@contract_no", comboContract.ActiveText);
+					cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue (iter, 1));
 				else
-					cmd.Parameters.AddWithValue("@contract_no", DBNull.Value);
+					cmd.Parameters.AddWithValue("@contract_id", DBNull.Value);
 				int CurrentAccrualId;
 				if((comboOperation.Active == 0 || comboOperation.Active == 2) && comboAccrual.Active > 0 && comboAccrual.GetActiveIter(out AccrualIter))
 				{
@@ -258,11 +259,12 @@ namespace bazar
 			
 			MainClass.StatusMessage(String.Format ("Запрос приходного ордера №{0}...", SlipId));
 			string sql = "SELECT credit_slips.*, lessees.name as lessee, users.name as user, " +
-				"employees.name as employee, payments.id as payment FROM credit_slips " +
+				"employees.name as employee, payments.id as payment, contracts.number as contract, contracts.sign_date FROM credit_slips " +
 				"LEFT JOIN lessees ON credit_slips.lessee_id = lessees.id " +
 				"LEFT JOIN users ON credit_slips.user_id = users.id " +
 				"LEFT JOIN employees ON credit_slips.employee_id = employees.id " +
 				"LEFT JOIN payments ON payments.credit_slip_id = credit_slips.id " +
+				"LEFT JOIN contracts ON contracts.id = credit_slips.contract_id " +
 				"WHERE credit_slips.id = @id";
 			try
 			{
@@ -326,16 +328,18 @@ namespace bazar
 					entryUser.Text = rdr["user"].ToString ();
 				textviewDetails.Buffer.Text = rdr["details"].ToString();
 				//запоминаем переменные что бы освободить соединение
-				object DBContract_no = rdr["contract_no"];
+				object DBContract_id = rdr["contract_id"];
+				object DBContract_number = rdr["contract"];
+				object DBContract_sign = rdr["sign_date"];
 				object DBAccrual = rdr["accrual_id"];
 
 				rdr.Close();
 
 				MainClass.ComboContractFill (comboContract, Lessee_id, false);
 				bool ContractOk = false;
-				if(DBContract_no != DBNull.Value)
+				if(DBContract_id != DBNull.Value)
 				{
-					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
+					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, Convert.ToInt32(DBContract_id), out iter))
 					{
 						comboContract.SetActiveIter (iter);
 						OnComboContractChanged(null, null);
@@ -344,8 +348,8 @@ namespace bazar
 					else
 					{ //Возможно у договора поменялся арендатор.
 						MainClass.StatusMessage("Договор не найден у арендатора! Добавляем в список...");
-						comboContract.AppendText(DBContract_no.ToString());
-						ListStoreWorks.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter);
+						string ContractText = String.Format("{0} от {1}", DBContract_number, DBContract_sign);
+						iter = ((ListStore) comboContract.Model).AppendValues(ContractText, Convert.ToInt32 (DBContract_id));
 						comboContract.SetActiveIter (iter);
 						OnComboContractChanged(null, null);
 						ContractOk = true;
@@ -489,9 +493,11 @@ namespace bazar
 
 		protected void OnComboContractChanged (object sender, EventArgs e)
 		{
+			TreeIter iter;
 			string sql = "SELECT id, DATE(CONCAT('2012-', month, '-1')) as month, year FROM accrual " +
-				"WHERE contract_no = @contract";
-			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.ActiveText) };
+				"WHERE contract_id = @contract";
+			comboContract.GetActiveIter (out iter);
+			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.Model.GetValue (iter, 1)) };
 			string Display = "№{0} - {1:MMMM} {2}";
 			ComboWorks.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, 2);
 		}

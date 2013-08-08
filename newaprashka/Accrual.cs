@@ -294,18 +294,18 @@ namespace bazar
 				textviewComments.Buffer.Text = rdr["comments"].ToString ();
 
 				//запоминаем переменные что бы освободить соединение
-				object DBContract_no = rdr["contract_no"];
+				object DBContract_id = rdr["contract_id"];
 				object DBMonth = rdr["month"];
 				object DBYear = rdr["year"];
 
 				rdr.Close();
 
 				comboAccrualMonth.Active = Convert.ToInt32(DBMonth);
-				ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model,DBYear.ToString (), out iter);
+				ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model, DBYear.ToString (), out iter);
 				comboAccuralYear.SetActiveIter (iter);
-				if(DBContract_no != DBNull.Value)
+				if(DBContract_id != DBNull.Value)
 				{
-					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, DBContract_no.ToString(), out iter))
+					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, Convert.ToInt32(DBContract_id), out iter))
 					{
 						comboContract.SetActiveIter (iter);
 						comboContract.Sensitive = false;
@@ -428,14 +428,24 @@ namespace bazar
 			}
 			try
 			{
+<<<<<<< Upstream, based on origin/master
 				string sql = "SELECT lessees.name as lessee, organizations.name as organization, contracts.place_no, place_types.name as place_type, places.area as area FROM contracts " +
+=======
+				TreeIter iter;
+				string sql = "SELECT lessees.name as lessee, organizations.name as organization, place_no, place_types.name as place_type FROM contracts " +
+>>>>>>> 435595a Перевод проекта на использования ID договора вместо номера. И частичная чистка старого не удачного кода.
 					"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 					"LEFT JOIN organizations ON contracts.org_id = organizations.id " +
 					"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
+<<<<<<< Upstream, based on origin/master
 					"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no=contracts.place_no " +
 					"WHERE contracts.number = @number";
+=======
+					"WHERE contracts.id = @contract_id";
+>>>>>>> 435595a Перевод проекта на использования ID договора вместо номера. И частичная чистка старого не удачного кода.
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@number", comboContract.ActiveText);
+				comboContract.GetActiveIter ( out iter);
+				cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue (iter, 1));
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				rdr.Read();
 
@@ -499,9 +509,10 @@ namespace bazar
 			try 
 			{
 				// Проверка нет ли уже начисления по этому договору
-				string sql = "SELECT id FROM accrual WHERE contract_no = @contract AND month = @month AND year = @year";
+				string sql = "SELECT id FROM accrual WHERE contract_id = @contract AND month = @month AND year = @year";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@contract", comboContract.ActiveText);
+				comboContract.GetActiveIter ( out iter);
+				cmd.Parameters.AddWithValue("@contract", comboContract.Model.GetValue (iter, 1));
 				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
 				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
 				MySqlDataReader rdr = cmd.ExecuteReader();
@@ -523,12 +534,12 @@ namespace bazar
 				// записываем
 				if(NewAccrual)
 				{
-					sql = "INSERT INTO accrual (contract_no, month, year, user_id, no_complete, comments) " +
-						"VALUES (@contract_no, @month, @year, @user_id, @no_complete, @comments)";
+					sql = "INSERT INTO accrual (contract_id, month, year, user_id, no_complete, comments) " +
+						"VALUES (@contract_id, @month, @year, @user_id, @no_complete, @comments)";
 				}
 				else
 				{
-					sql = "UPDATE accrual SET contract_no = @contract_no, month = @month, year = @year, " +
+					sql = "UPDATE accrual SET contract_id = @contract_id, month = @month, year = @year, " +
 						"no_complete = @no_complete, paid = @paid, comments = @comments " +
 						"WHERE id = @id";
 				}
@@ -536,7 +547,8 @@ namespace bazar
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
 				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
-				cmd.Parameters.AddWithValue("@contract_no", comboContract.ActiveText);
+				comboContract.GetActiveIter ( out iter);
+				cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue (iter, 1));
 				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
 				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
 				cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
@@ -787,10 +799,10 @@ namespace bazar
 		{
 			string sql = "SELECT accrual.month, accrual.year, SUM(money) as debt FROM (" +
 				"SELECT accrual_id, SUM(count * price) as money FROM accrual_pays WHERE accrual_id IN " +
-				"(SELECT id FROM accrual WHERE contract_no = @contract)" +
+				"(SELECT id FROM accrual WHERE contract_id = @contract)" +
 				"GROUP BY accrual_id " +
 				"UNION ALL SELECT accrual_id, -SUM(sum) as money FROM credit_slips WHERE accrual_id IN " +
-				"(SELECT id FROM accrual WHERE contract_no = @contract) " +
+				"(SELECT id FROM accrual WHERE contract_id = @contract) " +
 				"GROUP BY accrual_id ) as sumtable " +
 				"LEFT JOIN accrual ON accrual.id = sumtable.accrual_id " +
 				"GROUP BY accrual_id";
@@ -800,8 +812,10 @@ namespace bazar
 			int year = Convert.ToInt32 (comboAccuralYear.ActiveText);
 			try
 			{
+				TreeIter iter;
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@contract", comboContract.ActiveText);
+				comboContract.GetActiveIter ( out iter);
+				cmd.Parameters.AddWithValue("@contract", comboContract.Model.GetValue (iter, 1));
 				MySqlDataReader rdr = cmd.ExecuteReader ();
 
 				while(rdr.Read ())
@@ -845,8 +859,12 @@ namespace bazar
 
 		protected void OnButtonOpenContractClicked (object sender, EventArgs e)
 		{
+			TreeIter iter;
+			comboContract.GetActiveIter(out iter);
+			int itemid = (int) comboContract.Model.GetValue (iter, 1);
+
 			Contract winContract = new Contract();
-			winContract.ContractFill(comboContract.ActiveText);
+			winContract.ContractFill(itemid);
 			winContract.Show();
 			winContract.Run();
 			winContract.Destroy();

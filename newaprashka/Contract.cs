@@ -14,7 +14,8 @@ namespace bazar
 
 		Gtk.ListStore ServiceListStore, ServiceRefListStore;
 		TreeModel ServiceNameList, CashNameList;
-		int LesseeId;
+		int LesseeId; 
+		int ContractId = -1;
 		int OrigLesseeId = -1;
 		bool LesseeisNull = true;
 		string OriginalNumber;
@@ -247,21 +248,22 @@ namespace bazar
 			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
 		}
 
-		public void ContractFill(string ContractNumber)
+		public void ContractFill(int Id)
 		{
 			NewContract = false;
+			ContractId = Id;
 			TreeIter iter;
 			
-			MainClass.StatusMessage("Запрос договора №" + ContractNumber +"...");
+			MainClass.StatusMessage("Запрос договора ID:" + Id +"...");
 			string sql = "SELECT contracts.*, lessees.name as lessee, places.area FROM contracts " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 				"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no = contracts.place_no " +
-				"WHERE contracts.number = @number";
+				"WHERE contracts.id = @id";
 			try
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
-				cmd.Parameters.AddWithValue("@number", ContractNumber);
+				cmd.Parameters.AddWithValue("@id", Id);
 				
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
@@ -324,10 +326,10 @@ namespace bazar
 					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
 					"LEFT JOIN services ON contract_pays.service_id = services.id " +
 					"LEFT JOIN units ON services.units_id = units.id " +
-					"WHERE contract_pays.contract_no = @contract_no";
+					"WHERE contract_pays.contract_id = @contract_id";
 
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@contract_no", ContractNumber);
+				cmd.Parameters.AddWithValue("@contract_id", ContractId);
 				rdr = cmd.ExecuteReader();
 
 				int cash_id, units_id, count;
@@ -545,9 +547,13 @@ namespace bazar
 			try 
 			{
 				// Проверка номера договора на дубликат
-				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number";
+				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number AND sign_date = @sign_date ";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
+				if(datepickerSign.IsEmpty)
+					cmd.Parameters.AddWithValue("@sign_date", DBNull.Value);
+				else
+					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				rdr.Read();
 				
@@ -558,7 +564,7 @@ namespace bazar
                           MessageType.Error, 
                           ButtonsType.Ok,"ошибка");
 					md.UseMarkup = false;
-					md.Text = "Договор с номером " + entryNumber.Text + " уже существует в базе данных!";
+					md.Text = String.Format ("Договор с номером {0} от {1:d}, уже существует в базе данных!",  entryNumber.Text, datepickerSign.Date);
 					md.Run ();
 					md.Destroy();
 					rdr.Close();
@@ -617,13 +623,13 @@ namespace bazar
 					sql = "UPDATE contracts SET number = @number, lessee_id = @lessee_id, org_id = @org_id, " +
 						"place_type_id = @place_type_id, place_no = @place_no, sign_date = @sign_date, start_date = @start_date, " +
 						"end_date = @end_date, pay_day = @pay_day, cancel_date = @cancel_date, comments = @comments " +
-						"WHERE number = @oldnumber";
+						"WHERE id = @id";
 				}
 
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				
+
+				cmd.Parameters.AddWithValue("@id", ContractId);
 				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
-				cmd.Parameters.AddWithValue("@oldnumber", OriginalNumber);
 				cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
 				if(comboOrg.GetActiveIter(out iter) && (int)comboOrg.Model.GetValue(iter,1) != -1)
 					cmd.Parameters.AddWithValue("@org_id",comboOrg.Model.GetValue(iter,1));
@@ -662,7 +668,8 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@comments", textComments.Buffer.Text);
 				
 				cmd.ExecuteNonQuery();
-
+				if(NewContract)
+					ContractId = (int) cmd.LastInsertedId;
 				//записываем таблицу услуг
 				ServiceListStore.GetIterFirst(out iter);
 				do
@@ -676,10 +683,10 @@ namespace bazar
 							"cash_id = @cash_id, count = @count, price = @price " +
 							"WHERE id = @id";
 					else
-						sql = "INSERT INTO contract_pays (contract_no, service_id, cash_id, count, price) " +
-							"VALUES (@contract_no, @service_id, @cash_id, @count, @price)";
+						sql = "INSERT INTO contract_pays (contract_id, service_id, cash_id, count, price) " +
+							"VALUES (@contract_id, @service_id, @cash_id, @count, @price)";
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@contract_no", entryNumber.Text);
+					cmd.Parameters.AddWithValue("@contract_id", ContractId);
 					cmd.Parameters.AddWithValue("@service_id", ServiceListStore.GetValue(iter,0));
 					if((int)ServiceListStore.GetValue(iter,2) > 0)
 						cmd.Parameters.AddWithValue("@cash_id", ServiceListStore.GetValue(iter,2));
@@ -705,9 +712,9 @@ namespace bazar
 				if(!NewContract && OrigLesseeId != LesseeId && !LesseeisNull)
 				{
 					MainClass.StatusMessage("Арендатор изменился...");
-					sql = "SELECT COUNT(*) FROM credit_slips WHERE contract_no = @contract AND lessee_id = @old_lessee";
+					sql = "SELECT COUNT(*) FROM credit_slips WHERE contract_id = @contract AND lessee_id = @old_lessee";
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@contract", entryNumber.Text);
+					cmd.Parameters.AddWithValue("@contract", ContractId);
 					cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
 					long rowcount = (long) cmd.ExecuteScalar();
 					if( rowcount > 0)
@@ -725,9 +732,9 @@ namespace bazar
 						{
 							MainClass.StatusMessage("Меняем арендатора в приходных ордерах...");
 							sql = "UPDATE credit_slips SET lessee_id = @lessee_id " +
-								"WHERE contract_no = @contract AND lessee_id = @old_lessee ";
+								"WHERE contract_id = @contract AND lessee_id = @old_lessee ";
 							cmd = new MySqlCommand(sql, QSMain.connectionDB);
-							cmd.Parameters.AddWithValue("@contract", entryNumber.Text);
+							cmd.Parameters.AddWithValue("@contract", ContractId);
 							cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
 							cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
 							cmd.ExecuteNonQuery();

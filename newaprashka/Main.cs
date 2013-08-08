@@ -94,75 +94,30 @@ namespace bazar
 	           	Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения номеров мест!");
 	       	}
-
 		}
 
 		public static void ComboContractFill(ComboBox combo, int Lessee_id, bool OnlyCurrent)
 		{   //Заполняем комбобокс текущими договорами по арендатору
-			try
-			{
-				MainClass.StatusMessage("Запрос договоров...");
-				int count = 0;
-				string sql = "SELECT number FROM contracts " +
-					"WHERE lessee_id = @lessee_id ";
-				if(OnlyCurrent)
-					sql += "AND ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
+			string sql = "SELECT id, number, sign_date FROM contracts " +
+				"WHERE lessee_id = @lessee_id ";
+			if(OnlyCurrent)
+				sql += "AND ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) ";
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@lessee_id", Lessee_id);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-
-				((ListStore)combo.Model).Clear();
-				while (rdr.Read())
-				{
-					combo.AppendText(rdr["number"].ToString());
-					count++;
-				}
-				rdr.Close();
-				if (count == 1)
-					combo.Active = 0;
-				MainClass.StatusMessage("Ok");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения списка договоров!");
-			}
-			
+			MySqlParameter[] Param = { new MySqlParameter("@lessee_id", Lessee_id) };
+			string Display = "{1} от {2:d}";
+			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, 0);
 		}
 
 		public static void ComboContractFill(ComboBox combo, int Month, int Year)
 		{   //Заполняем комбобокс активными договорами на определенный месяц
-			try
-			{
-				MainClass.StatusMessage("Запрос договоров...");
-				int count = 0;
-				string sql = "SELECT number FROM contracts " +
-					"WHERE !(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date) ";
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				DateTime BeginOfMonth = new DateTime(Year, Month, 1);
-				DateTime EndOfMonth = new DateTime(Year, Month, DateTime.DaysInMonth (Year,Month));
-				cmd.Parameters.AddWithValue("@start", BeginOfMonth);
-				cmd.Parameters.AddWithValue("@end", EndOfMonth);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				
-				((ListStore)combo.Model).Clear();
-				while (rdr.Read())
-				{
-					combo.AppendText(rdr["number"].ToString());
-					count++;
-				}
-				rdr.Close();
-				if (count == 1)
-					combo.Active = 0;
-				MainClass.StatusMessage("Ok");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения списка договоров!");
-			}
-			
+			string sql = "SELECT id, number, sign_date FROM contracts " +
+				"WHERE !(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date) ";
+			DateTime BeginOfMonth = new DateTime(Year, Month, 1);
+			DateTime EndOfMonth = new DateTime(Year, Month, DateTime.DaysInMonth (Year,Month));
+			MySqlParameter[] Param = { new MySqlParameter("@start", BeginOfMonth),
+										new MySqlParameter("@end", EndOfMonth) };
+			string Display = "{1} от {2:d}";
+			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, 0);
 		}
 
 		public static void ComboAccrualYearsFill(ComboBox combo)

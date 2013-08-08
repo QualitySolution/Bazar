@@ -287,8 +287,8 @@ namespace bazar
 			}
 			// Получаем общую информацию
 			string sql = "SELECT contracts.org_id as org_id, contracts.lessee_id as lessee_id, " +
-				"accrual.contract_no as contract_no, month, year FROM accrual " +
-				"LEFT JOIN contracts ON contracts.number = accrual.contract_no " +
+				"accrual.contract_id as contract_id, month, year FROM accrual " +
+				"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"WHERE accrual.id = @id";
 			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@id", Accrual_Id);
@@ -301,7 +301,7 @@ namespace bazar
 			}
 			int org_id = rdr.GetInt32("org_id");
 			int lessee_id = rdr.GetInt32 ("lessee_id");
-			string contract_no = rdr.GetString ("contract_no");
+			int contract_id = rdr.GetInt32 ("contract_id");
 			DateTime Month = new DateTime(rdr.GetInt32("year"), rdr.GetInt32 ("month"), 1);
 			rdr.Close ();
 			//Записываем оплату
@@ -310,9 +310,9 @@ namespace bazar
 			try
 			{
 				sql = "INSERT INTO credit_slips (operation, org_id, cash_id, lessee_id, user_id, date, sum, " +
-					"contract_no, accrual_id, details) " +
+					"contract_id, accrual_id, details) " +
 					"VALUES (@operation, @org_id, @cash_id, @lessee_id, @user_id, @date, @sum, " +
-					"@contract_no, @accrual_id, @details)";
+					"@contract_id, @accrual_id, @details)";
 				string sql2 = "INSERT INTO payments (createdate, credit_slip_id, accrual_id) " +
 					"VALUES (@date, @slip, @accrual)";
 				foreach(CashDoc item in PayList)
@@ -338,7 +338,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
 					cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
 					cmd.Parameters.AddWithValue("@sum", sum);
-					cmd.Parameters.AddWithValue("@contract_no", contract_no);
+					cmd.Parameters.AddWithValue("@contract_id", contract_id);
 					cmd.Parameters.AddWithValue("@accrual_id", Accrual_Id);
 					cmd.Parameters.AddWithValue("@details", details);
 

@@ -26,35 +26,18 @@ namespace bazar
 			this.AddAccelGroup(grup);
 									
 			//Создаем таблицу "Договора"
-			ContractsListStore = new Gtk.ListStore (typeof (bool), typeof (string), typeof (string), typeof (string),
+			ContractsListStore = new Gtk.ListStore (typeof(int), typeof (bool), typeof (string), typeof (string), typeof (string),
 			                                     typeof (int), typeof (string), typeof (string), typeof (string), 
 			                                     typeof (int), typeof (string), typeof (string));
-	 
-			Gtk.TreeViewColumn PlaceTypeIdColumn = new Gtk.TreeViewColumn ();
-			PlaceTypeIdColumn.Title = "idТип";
-			PlaceTypeIdColumn.Visible = false;
-			PlaceTypeIdColumn.PackStart (new Gtk.CellRendererText (), true);
-			Gtk.TreeViewColumn PlaceNoColumn = new Gtk.TreeViewColumn ();
-			PlaceNoColumn.Title = "Номер места";
-			PlaceNoColumn.Visible = false;
-			PlaceNoColumn.PackStart (new Gtk.CellRendererText (), true);
 
-			Gtk.TreeViewColumn idContactsColumn = new Gtk.TreeViewColumn ();
-			idContactsColumn.Title = "idКонтакт";
-			idContactsColumn.Visible = false;
-			idContactsColumn.PackStart (new Gtk.CellRendererText (), true);
-			
-			treeviewContracts.AppendColumn("Акт.", new Gtk.CellRendererToggle (), "active", 0);
-			treeviewContracts.AppendColumn ("с", new Gtk.CellRendererText (), "text", 1);
-			treeviewContracts.AppendColumn ("по", new Gtk.CellRendererText (), "text", 2);
-			treeviewContracts.AppendColumn ("Договор", new Gtk.CellRendererText (), "text", 3);
-			treeviewContracts.AppendColumn (PlaceTypeIdColumn);
-			treeviewContracts.AppendColumn (PlaceNoColumn);
-			treeviewContracts.AppendColumn ("Место", new Gtk.CellRendererText (), "text", 6);
-			treeviewContracts.AppendColumn ("Площадь", new Gtk.CellRendererText (), "text", 7);
-			treeviewContracts.AppendColumn (idContactsColumn);
-			treeviewContracts.AppendColumn ("Контактное лицо", new Gtk.CellRendererText (), "text", 9);
-			treeviewContracts.AppendColumn ("Расторгнут", new Gtk.CellRendererText (), "text", 10);
+			treeviewContracts.AppendColumn("Акт.", new Gtk.CellRendererToggle (), "active", 1);
+			treeviewContracts.AppendColumn ("с", new Gtk.CellRendererText (), "text", 2);
+			treeviewContracts.AppendColumn ("по", new Gtk.CellRendererText (), "text", 3);
+			treeviewContracts.AppendColumn ("Договор", new Gtk.CellRendererText (), "text", 4);
+			treeviewContracts.AppendColumn ("Место", new Gtk.CellRendererText (), "text", 7);
+			treeviewContracts.AppendColumn ("Площадь", new Gtk.CellRendererText (), "text", 8);
+			treeviewContracts.AppendColumn ("Контактное лицо", new Gtk.CellRendererText (), "text", 10);
+			treeviewContracts.AppendColumn ("Расторгнут", new Gtk.CellRendererText (), "text", 11);
 			
 			treeviewContracts.Model = ContractsListStore;
 			treeviewContracts.ShowAll();
@@ -239,11 +222,12 @@ namespace bazar
 					cancel_date = "";
 					ActiveContract = ((DateTime)rdr["start_date"] <= DateTime.Now.Date && (DateTime)rdr["end_date"] >= DateTime.Now.Date);
 				}
-				ContractsListStore.AppendValues(ActiveContract,
+				ContractsListStore.AppendValues(rdr.GetInt32 ("id"),
+				                                ActiveContract,
 				                             ((DateTime)rdr["start_date"]).ToShortDateString(),
 				                             ((DateTime)rdr["end_date"]).ToShortDateString(),
 				                             rdr["number"].ToString(),
-											 int.Parse(rdr["place_type_id"].ToString()),
+											 rdr.GetInt32("place_type_id"),
 				                             rdr["place_no"].ToString(),
 				                             rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),				                             
 				                             rdr["area"].ToString(),
@@ -283,11 +267,11 @@ namespace bazar
 
 		protected virtual void OnContractsOpenContract (object o, EventArgs args)
 		{
-			string itemid;
+			int itemid;
 			TreeIter iter;
 			
 			treeviewContracts.Selection.GetSelected(out iter);
-			itemid = (ContractsListStore.GetValue(iter,3)).ToString();
+			itemid = (int) ContractsListStore.GetValue(iter,0);
 			Contract winContract = new Contract();
 			winContract.ContractFill(itemid);
 			winContract.Show();
@@ -303,8 +287,8 @@ namespace bazar
 			TreeIter iter;
 			
 			treeviewContracts.Selection.GetSelected(out iter);
-			type = Convert.ToInt32(ContractsListStore.GetValue(iter,4));
-			place = (string)ContractsListStore.GetValue(iter,5);
+			type = Convert.ToInt32(ContractsListStore.GetValue(iter,5));
+			place = (string)ContractsListStore.GetValue(iter,6);
 			Place winPlace = new Place();
 			winPlace.PlaceFill(type, place);
 			winPlace.Show();

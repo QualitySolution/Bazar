@@ -52,7 +52,7 @@ namespace bazar
 		private global::Gtk.Button buttonPrint;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -132,7 +132,7 @@ namespace bazar
 			this.hbox5.Name = "hbox5";
 			this.hbox5.Spacing = 6;
 			// Container child hbox5.Gtk.Box+BoxChild
-			this.comboContract = global::Gtk.ComboBox.NewText ();
+			this.comboContract = new global::Gtk.ComboBox ();
 			this.comboContract.Name = "comboContract";
 			this.hbox5.Add (this.comboContract);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.comboContract]));

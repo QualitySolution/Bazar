@@ -17,20 +17,25 @@ public partial class MainWindow : Gtk.Window
 		ComboWorks.ComboFillReference(comboContractPlaceT,"place_types",1);
 		
 		//Создаем таблицу "Договора"
-		ContractListStore = new Gtk.ListStore (typeof (bool), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string), typeof (string),
-		                                       typeof (int), typeof (string), typeof (string));
+		ContractListStore = new Gtk.ListStore (typeof (int), 	//0 - ID
+		                                       typeof (bool),	//1 - active
+		                                       typeof (string),	//2 - number
+		                                       typeof (int),	//3 - Id org
+		                                       typeof (string), //4 - org
+		                                       typeof (int),	//5 - Id place type
+		                                       typeof (string), //6 - place number
+		                                       typeof (string), //7 - place
+		                                       typeof (int), 	//8 - id leesse
+		                                       typeof (string),	//9 - lesse
+		                                       typeof (string)	//10 - end date
+		                                       );
 		
-		treeviewContract.AppendColumn("Актив.", new Gtk.CellRendererToggle (), "active", 0);
-		treeviewContract.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 1);
-		//ID организации - 2
-		treeviewContract.AppendColumn("Организация", new Gtk.CellRendererText (), "text", 3);
-		//ID Тип места -4
-		//ID Номер мета - 5
-		treeviewContract.AppendColumn("Место", new Gtk.CellRendererText (), "text", 6);
-		//ID Арендатора - 7
-		treeviewContract.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 8);
-		treeviewContract.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", 9);
-
+		treeviewContract.AppendColumn("Актив.", new Gtk.CellRendererToggle (), "active", 1);
+		treeviewContract.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 2);
+		treeviewContract.AppendColumn("Организация", new Gtk.CellRendererText (), "text", 4);
+		treeviewContract.AppendColumn("Место", new Gtk.CellRendererText (), "text", 7);
+		treeviewContract.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 9);
+		treeviewContract.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", 10);
 
 		Contractfilter = new Gtk.TreeModelFilter (ContractListStore, null);
 		Contractfilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeContract);
@@ -80,14 +85,20 @@ public partial class MainWindow : Gtk.Window
 		MySqlDataReader rdr = cmd.ExecuteReader();
 		int lessee_id;
 		int org_id;
-		bool parsed, active, cancaled;
+		bool active, cancaled;
 		String End_date;
 		
 		ContractListStore.Clear();
 		while (rdr.Read())
 		{
-			parsed = int.TryParse (rdr["lessee_id"].ToString(), out lessee_id);
-			parsed = int.TryParse (rdr["org_id"].ToString(), out org_id);
+			if (rdr ["lessee_id"] != DBNull.Value)
+				lessee_id = rdr.GetInt32 ("lessee_id");
+			else
+				lessee_id = -1;
+			if (rdr ["org_id"] != DBNull.Value)
+				org_id = rdr.GetInt32 ("org_id");
+			else
+				org_id = -1;
 			cancaled = (rdr["cancel_date"] != DBNull.Value);
 			if(cancaled)
 			{
@@ -99,11 +110,12 @@ public partial class MainWindow : Gtk.Window
 				active = ((DateTime)rdr["start_date"] <= DateTime.Now.Date && (DateTime)rdr["end_date"] >= DateTime.Now.Date);
 				End_date = DateTime.Parse( rdr["end_date"].ToString ()).ToShortDateString();
 			}
-			ContractListStore.AppendValues(active,
+			ContractListStore.AppendValues(rdr.GetInt32 ("id"),
+											active,
 			                             rdr["number"].ToString(),
 			                             org_id,
 			                             rdr["organization"].ToString(),
-			                             int.Parse(rdr["place_type_id"].ToString()),
+			                             rdr.GetInt32("place_type_id"),
 			                             rdr["place_no"].ToString(),
 			                             rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),
 			                             lessee_id,
@@ -131,19 +143,19 @@ public partial class MainWindow : Gtk.Window
 		if(model.GetValue (iter, 1) == null)
 			return false;
 		
-		if (entryContractLessee.Text != "" && model.GetValue (iter, 8) != null)
+		if (entryContractLessee.Text != "" && model.GetValue (iter, 9) != null)
 		{
-			cellvalue  = model.GetValue (iter, 8).ToString();
+			cellvalue  = model.GetValue (iter, 9).ToString();
 			filterLessee = cellvalue.IndexOf (entryContractLessee.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryContractNumber.Text != "" && model.GetValue (iter, 1) != null)
+		if (entryContractNumber.Text != "" && model.GetValue (iter, 2) != null)
 		{
-			cellvalue  = model.GetValue (iter, 1).ToString();
+			cellvalue  = model.GetValue (iter, 2).ToString();
 			filterNumber = cellvalue.IndexOf (entryContractNumber.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryContractPlaceN.Text != "" && model.GetValue (iter, 5) != null)
+		if (entryContractPlaceN.Text != "" && model.GetValue (iter, 6) != null)
 		{
-			cellvalue  = model.GetValue (iter, 5).ToString();
+			cellvalue  = model.GetValue (iter, 6).ToString();
 			filterPlaceN = cellvalue.IndexOf (entryContractPlaceN.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 		return (filterLessee && filterNumber && filterPlaceN);

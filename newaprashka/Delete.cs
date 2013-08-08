@@ -124,11 +124,11 @@ namespace bazar
 			PrepareTable.SqlSelect = "SELECT number, sign_date, lessees.name as lessee FROM contracts " +
 				"LEFT JOIN lessees ON lessees.id = lessee_id ";
 			PrepareTable.DisplayString = "Договор №{0} от {1:d} с арендатором {2}";
-			PrepareTable.PrimaryKey = new PrimaryKeys("number","");
+			PrepareTable.PrimaryKey = new PrimaryKeys("","id");
 			PrepareTable.DeleteItems.Add ("accrual", 
-			                              new DeleteDependenceItem ("WHERE contract_no = @contract_no ", "@contract_no", ""));
+			                              new DeleteDependenceItem ("WHERE contract_id = @contract_id ", "", "@contract_id"));
 			PrepareTable.ClearItems.Add ("credit_slips", 
-			                              new ClearDependenceItem ("WHERE contract_no = @contract_no ", "@contract_no", "", "contract_no"));
+			                             new ClearDependenceItem ("WHERE contract_id = @contract_id ", "", "@contract_id", "contract_id"));
 			Tables.Add ("contracts", PrepareTable);
 
 			PrepareTable = new TableInfo();
@@ -171,8 +171,8 @@ namespace bazar
 			PrepareTable = new TableInfo();
 			PrepareTable.ObjectsName = "Начисления";
 			PrepareTable.ObjectName = "начисление"; 
-			PrepareTable.SqlSelect = "SELECT DATE(CONCAT('2012-', month, '-1')) as month, year, lessees.name as lessee, contract_no, accrual.id as id FROM accrual " +
-				"LEFT JOIN contracts ON accrual.contract_no = contracts.number " +
+			PrepareTable.SqlSelect = "SELECT DATE(CONCAT('2012-', month, '-1')) as month, year, lessees.name as lessee, contracts.number, accrual.id as id FROM accrual " +
+				"LEFT JOIN contracts ON accrual.contract_id = contracts.id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id ";
 			PrepareTable.DisplayString = "Начисление за {0:MMMM} {1} арендатору {2} по договору {3}";
 			PrepareTable.PrimaryKey = new PrimaryKeys("","id");
@@ -219,8 +219,9 @@ namespace bazar
 			PrepareTable = new TableInfo();
 			PrepareTable.ObjectsName = "Строки услуг в договоре";
 			PrepareTable.ObjectName = "строку услуги в договоре"; 
-			PrepareTable.SqlSelect = "SELECT services.name as service, contract_no, (count * price) as sum, contract_pays.id as id FROM contract_pays " +
-				"LEFT JOIN services ON service_id = services.id "; 
+			PrepareTable.SqlSelect = "SELECT services.name as service, contracts.number, (count * price) as sum, contract_pays.id as id FROM contract_pays " +
+				"LEFT JOIN services ON service_id = services.id " +
+				"LEFT JOIN contracts ON contracts.id = contract_pays.contract_id "; 
 			PrepareTable.DisplayString = "Строка услуги {0} в договоре {1} на сумму {2:C}";
 			PrepareTable.PrimaryKey = new PrimaryKeys("","id");
 			Tables.Add ("contract_pays", PrepareTable);

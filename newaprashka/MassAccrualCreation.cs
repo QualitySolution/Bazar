@@ -19,7 +19,7 @@ namespace bazar
 			MainClass.ComboAccrualYearsFill (comboYear);
 
 			//Создаем таблицу "Договора"
-			ContractsListStore = new Gtk.ListStore (typeof (bool), typeof (string), typeof (string), typeof (string), typeof (string),
+			ContractsListStore = new Gtk.ListStore (typeof (bool), typeof(int), typeof (string), typeof (string), typeof (string), typeof (string),
 			                                       typeof (string), typeof (decimal), typeof (bool));
 
 			CellRendererToggle CellSelect = new CellRendererToggle();
@@ -29,13 +29,13 @@ namespace bazar
 			SelectColumn.SetCellDataFunc (CellSelect, new Gtk.TreeCellDataFunc (RenderSelectColumn));
 
 			treeviewContracts.AppendColumn(SelectColumn);
-			treeviewContracts.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 1);
-			treeviewContracts.AppendColumn("Место", new Gtk.CellRendererText (), "text", 2);
-			treeviewContracts.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 3);
-			treeviewContracts.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", 4);
-			treeviewContracts.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 5);
-			// Сумма цифровое -6
-			// Существует ли уже начисление -7
+			treeviewContracts.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 2);
+			treeviewContracts.AppendColumn("Место", new Gtk.CellRendererText (), "text", 3);
+			treeviewContracts.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 4);
+			treeviewContracts.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", 5);
+			treeviewContracts.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 6);
+			// Сумма цифровое -7
+			// Существует ли уже начисление -8
 			
 			treeviewContracts.Model = ContractsListStore;
 			treeviewContracts.ShowAll();
@@ -46,7 +46,7 @@ namespace bazar
 
 		private void RenderSelectColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
-			if((bool) model.GetValue (iter, 7))
+			if((bool) model.GetValue (iter, 8))
 				(cell as Gtk.CellRendererToggle).Visible = false;
 			else
 				(cell as Gtk.CellRendererToggle).Visible = true;
@@ -60,7 +60,7 @@ namespace bazar
 			if (ContractsListStore.GetIter (out iter, new TreePath(args.Path))) 
 			{
 				bool old = (bool) ContractsListStore.GetValue(iter,0);
-				if(!(bool) ContractsListStore.GetValue(iter,7))
+				if(!(bool) ContractsListStore.GetValue(iter,8))
 					ContractsListStore.SetValue(iter, 0, !old);
 			}
 			CalculateSelected ();
@@ -77,7 +77,7 @@ namespace bazar
 				if((bool) row[0] == true)
 				{
 					Count++;
-					Sum += Convert.ToDecimal(row[6]);
+					Sum += Convert.ToDecimal(row[7]);
 					ItemsSelected = true;
 				}
 			}
@@ -92,11 +92,11 @@ namespace bazar
 			TreeIter iter;
 			if(ContractsListStore.GetIterFirst(out iter))
 			{
-				if(!(bool) ContractsListStore.GetValue(iter, 7))
+				if(!(bool) ContractsListStore.GetValue(iter, 8))
 					ContractsListStore.SetValue (iter, 0, checkAll.Active);
 				while (ContractsListStore.IterNext(ref iter)) 
 				{
-					if(!(bool) ContractsListStore.GetValue(iter, 7))
+					if(!(bool) ContractsListStore.GetValue(iter, 8))
 						ContractsListStore.SetValue (iter, 0, checkAll.Active);
 				}
 			}
@@ -118,9 +118,9 @@ namespace bazar
 			string sql = "SELECT contracts.*, place_types.name as type, lessees.name as lessee, pays.sum as sum, accrual.id as exist_accrual FROM contracts " +
 				"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
 					"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
-					"LEFT JOIN (SELECT contract_no as contract, SUM(count * price) as sum FROM contract_pays GROUP BY contract_no) as pays " +
-					"ON pays.contract = number " +
-					"LEFT JOIN accrual ON contracts.number = accrual.contract_no AND accrual.month = @month AND accrual.year = @year " +
+					"LEFT JOIN (SELECT contract_id as contract, SUM(count * price) as sum FROM contract_pays GROUP BY contract_id) as pays " +
+					"ON pays.contract = contracts.id " +
+					"LEFT JOIN accrual ON contracts.id = accrual.contract_id AND accrual.month = @month AND accrual.year = @year " +
 					"WHERE !(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date) ";
 			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			int Month = comboMonth.Active;
@@ -160,6 +160,7 @@ namespace bazar
 				Count++;
 				AccrualExist = (rdr["exist_accrual"] != DBNull.Value);
 				ContractsListStore.AppendValues(false,
+				                                rdr.GetInt32 ("id"),
 				                               rdr["number"].ToString(),
 				                               rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),
 				                               rdr["lessee"].ToString(),
@@ -203,20 +204,20 @@ namespace bazar
 				{
 					if( !(bool) row[0])
 						continue;
-					string sql = "SELECT MIN(count * price) FROM contract_pays WHERE contract_no = @number";
+					string sql = "SELECT MIN(count * price) FROM contract_pays WHERE contract_id = @id";
 					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@number", row[1]);
+					cmd.Parameters.AddWithValue("@id", row[1]);
 					object Result = cmd.ExecuteScalar();
 					bool NotComplete = true;
 					if (Result != DBNull.Value)
 						NotComplete = (Convert.ToDecimal(Result) == 0);
 
-					sql = "INSERT INTO accrual (contract_no, month, year, user_id, no_complete) " +
-						"VALUES (@contract_no, @month, @year, @user_id, @no_complete)";
+					sql = "INSERT INTO accrual (contract_id, month, year, user_id, no_complete) " +
+						"VALUES (@contract_id, @month, @year, @user_id, @no_complete)";
 
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
-					cmd.Parameters.AddWithValue("@contract_no", row[1]);
+					cmd.Parameters.AddWithValue("@contract_id", row[1]);
 					cmd.Parameters.AddWithValue("@month", Month);
 					cmd.Parameters.AddWithValue("@year", Year);
 					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
@@ -226,7 +227,7 @@ namespace bazar
 					long NewAccrual_id = cmd.LastInsertedId;
 
 					sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
-						"SELECT @accrual_id, service_id, cash_id, count, price FROM contract_pays WHERE contract_no = @contract";
+						"SELECT @accrual_id, service_id, cash_id, count, price FROM contract_pays WHERE contract_id = @contract";
 
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@contract", row[1]);

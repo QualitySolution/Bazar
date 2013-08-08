@@ -17,7 +17,7 @@ public partial class MainWindow : Gtk.Window
 		MainClass.ComboAccrualYearsFill (comboAccuralYear);
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
-		//Создаем таблицу "Договора"
+		//Создаем таблицу "Начислений"
 		AccrualListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), 
 		                                      typeof (int), typeof (string), typeof (string), typeof (decimal),
 		                                      typeof (string), typeof (decimal),typeof (string), typeof (decimal),
@@ -49,9 +49,9 @@ public partial class MainWindow : Gtk.Window
 		
 		TreeIter iter;
 		
-		string sql = "SELECT accrual.id as id, month, year, contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
+		string sql = "SELECT accrual.id as id, month, year, contracts.number as contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
 			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
-			"LEFT JOIN contracts ON contracts.number = contract_no " +
+			"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 				"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable " +
 				"ON sumtable.accrual_id = accrual.id " +
