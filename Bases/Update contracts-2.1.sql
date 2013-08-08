@@ -2,6 +2,9 @@
 ALTER TABLE `bazar`.`contracts` ADD COLUMN `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT  FIRST 
 , DROP PRIMARY KEY 
 , ADD PRIMARY KEY (`id`) ;
+ALTER TABLE `bazar`.`contracts` 
+ADD UNIQUE INDEX `unique_number_date` (`number` ASC, `sign_date` ASC) 
+, DROP INDEX `Number_UNIQUE`;
 
 #Создаем колонки в других таблицах.
 ALTER TABLE `bazar`.`contract_pays` ADD COLUMN `contract_id` INT(10) UNSIGNED NOT NULL  AFTER `id`;
