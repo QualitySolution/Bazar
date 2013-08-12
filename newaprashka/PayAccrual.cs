@@ -116,9 +116,12 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			double Sum = double.Parse(args.NewText);
-			ServiceListStore.SetValue(iter, 7, Sum);
-			CalculateServiceSum ();
+			double Sum;
+			if(double.TryParse(args.NewText, out Sum))
+			{
+				ServiceListStore.SetValue(iter, 7, Sum);
+				CalculateServiceSum ();
+			}
 		}
 
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)

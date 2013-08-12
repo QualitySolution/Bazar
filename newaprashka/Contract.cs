@@ -205,10 +205,13 @@ namespace bazar
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
 			double Price = (double)ServiceListStore.GetValue (iter, 7);
-			int count = int.Parse(args.NewText);
-			ServiceListStore.SetValue(iter, 6, count);
-			ServiceListStore.SetValue(iter, 8, Price * count);
-			CalculateServiceSum ();
+			int count;
+			if(int.TryParse(args.NewText, out count))
+			{
+				ServiceListStore.SetValue (iter, 6, count);
+				ServiceListStore.SetValue (iter, 8, Price * count);
+				CalculateServiceSum ();
+			}
 		}
 
 		void OnPriceSpinEdited (object o, EditedArgs args)
@@ -216,11 +219,14 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			double Price = double.Parse(args.NewText);
+			double Price;
 			int count = (int)ServiceListStore.GetValue (iter, 6);
-			ServiceListStore.SetValue(iter, 7, Price);
-			ServiceListStore.SetValue(iter, 8, Price * count);
-			CalculateServiceSum ();
+			if (double.TryParse (args.NewText, out Price)) 
+			{
+				ServiceListStore.SetValue (iter, 7, Price);
+				ServiceListStore.SetValue (iter, 8, Price * count);
+				CalculateServiceSum ();
+			}
 		}
 
 		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)

@@ -303,9 +303,12 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			double Paid = double.Parse(args.NewText);
-			ServiceListStore.SetValue(iter, 6, Paid);
-			CalculateTotal ();
+			double Paid;
+			if (double.TryParse (args.NewText, out Paid)) 
+			{
+				ServiceListStore.SetValue (iter, 6, Paid);
+				CalculateTotal ();
+			}
 		}
 
 		private void RenderAccrualColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
