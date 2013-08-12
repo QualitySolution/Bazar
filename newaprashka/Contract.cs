@@ -582,7 +582,7 @@ namespace bazar
 					return;
 				}
 				// Проверка не занято ли место другим арендатором
-				sql = "SELECT number, start_date AS start, IFNULL(cancel_date,end_date) AS end FROM contracts " +
+				sql = "SELECT id, number, start_date AS start, IFNULL(cancel_date,end_date) AS end FROM contracts " +
 					"WHERE place_type_id = @type_id AND place_no = @place_no AND " +
 						"!(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date)" ;
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -603,7 +603,7 @@ namespace bazar
 
 				while(rdr.Read())
 				{
-					if(rdr["number"].ToString () == OriginalNumber)
+					if(rdr.GetInt32("id") == ContractId)
 						continue;
 					MainClass.StatusMessage("Место уже занято!");
 					MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
