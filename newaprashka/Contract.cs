@@ -18,7 +18,6 @@ namespace bazar
 		int ContractId = -1;
 		int OrigLesseeId = -1;
 		bool LesseeisNull = true;
-		string OriginalNumber;
 		List<int> DeletedRowId = new List<int>();
 		float g_area = 0;
 		public Contract ()
@@ -276,7 +275,6 @@ namespace bazar
 				rdr.Read();
 				
 				entryNumber.Text = rdr["number"].ToString();
-				OriginalNumber = rdr["number"].ToString();
 				if(rdr["lessee_id"] != DBNull.Value)
 				{
 					LesseeId = Convert.ToInt32(rdr["lessee_id"].ToString());
