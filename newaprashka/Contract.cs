@@ -559,17 +559,17 @@ namespace bazar
 			try 
 			{
 				// Проверка номера договора на дубликат
-				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number AND sign_date = @sign_date ";
+				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number AND sign_date = @sign_date AND id <> @id ";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
+				cmd.Parameters.AddWithValue("@id", ContractId);
 				if(datepickerSign.IsEmpty)
 					cmd.Parameters.AddWithValue("@sign_date", DBNull.Value);
 				else
 					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				rdr.Read();
-				
-				if( rdr["cnt"].ToString() != "0" && OriginalNumber != entryNumber.Text)
+				long Count = (long) cmd.ExecuteScalar();
+
+				if( Count > 0)
 				{
 					MainClass.StatusMessage("Договор уже существует!");
 					MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
@@ -579,10 +579,8 @@ namespace bazar
 					md.Text = String.Format ("Договор с номером {0} от {1:d}, уже существует в базе данных!",  entryNumber.Text, datepickerSign.Date);
 					md.Run ();
 					md.Destroy();
-					rdr.Close();
 					return;
 				}
-				rdr.Close();
 				// Проверка не занято ли место другим арендатором
 				sql = "SELECT number, start_date AS start, IFNULL(cancel_date,end_date) AS end FROM contracts " +
 					"WHERE place_type_id = @type_id AND place_no = @place_no AND " +
@@ -601,7 +599,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@end", datepickerEnd.Date);
 				else
 					cmd.Parameters.AddWithValue("@end", datepickerCancel.Date);
-				rdr = cmd.ExecuteReader();
+				MySqlDataReader rdr = cmd.ExecuteReader();
 
 				while(rdr.Read())
 				{
