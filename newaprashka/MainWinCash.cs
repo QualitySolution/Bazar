@@ -741,8 +741,7 @@ public partial class MainWindow : Gtk.Window
 		bool ItemSelected = treeviewIncome.Selection.CountSelectedRows() == 1;
 
 		TreeIter iter;
-		treeviewIncome.Selection.GetSelected(out iter);
-		if(CashIncomeFilter.GetValue(iter,15).ToString() == "payment")
+		if(treeviewIncome.Selection.GetSelected(out iter) && CashIncomeFilter.GetValue(iter,15).ToString() == "payment")
 			ItemSelected=false;
 
 		if((int)args.Event.Button == 3)
