@@ -392,7 +392,7 @@ public partial class MainWindow : Gtk.Window
 		
 		dialog.Version = "2.0.3";
 		
-		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.logo.png");
+		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
 		
 		dialog.Comments = "Программа позволяет вести учет арендаторов, кассы и т.п. " +
 			"\nРазработана на MonoDevelop с использованием открытых технологий Mono, GTK#, MySQL." +
