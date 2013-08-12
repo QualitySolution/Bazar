@@ -62,12 +62,13 @@ WHERE credit_slips.id = @id</CommandText>
     <DataSet Name="credit_slip">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT `lessees`.`name` as lessee, `credit_slips`.`date` as docdate, `credit_slips`.`sum` as sum, `credit_slips`.`contract_no` as contract, 
+        <CommandText>SELECT `lessees`.`name` as lessee, `credit_slips`.`date` as docdate, `credit_slips`.`sum` as sum, `contracts`.`number` as contract, 
 `accrual`.`month` as month, `accrual`.`year` as year, users.name as user FROM credit_slips
 LEFT JOIN payments ON payments.credit_slip_id = credit_slips.id
 LEFT JOIN accrual ON accrual.id = credit_slips.accrual_id
 LEFT JOIN lessees ON credit_slips.lessee_id = lessees.id
 LEFT JOIN users ON users.id = credit_slips.user_id
+LEFT JOIN contracts ON credit_slips.contract_id = contracts.id 
 WHERE credit_slips.id = @id</CommandText>
         <QueryParameters>
           <QueryParameter Name="id">

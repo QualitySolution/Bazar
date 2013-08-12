@@ -51,9 +51,9 @@ WHERE accrual_pays.accrual_id = @id</CommandText>
     <DataSet Name="Accrual">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT accrual.id, accrual.month, accrual.year, accrual.contract_no, lessees.name as lessee, place_types.name as type, contracts.place_no as place_no 
+        <CommandText>SELECT accrual.id, accrual.month, accrual.year, contracts.number as contract_no, lessees.name as lessee, place_types.name as type, contracts.place_no as place_no 
 FROM accrual 
-LEFT JOIN contracts ON contracts.number = accrual.contract_no 
+LEFT JOIN contracts ON contracts.id = accrual.contract_id 
 LEFT JOIN lessees ON lessees.id = contracts.lessee_id 
 LEFT JOIN place_types ON place_types.id = contracts.place_type_id 
 WHERE accrual.id = @id</CommandText>

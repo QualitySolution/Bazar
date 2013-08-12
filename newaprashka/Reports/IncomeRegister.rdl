@@ -23,12 +23,13 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT credit_slips.*, cash.name as cash, lessees.name as lessee, income_items.name as income_item, organizations.name as organization, employees.name as employee FROM credit_slips 
+        <CommandText>SELECT credit_slips.*, cash.name as cash, lessees.name as lessee, income_items.name as income_item, organizations.name as organization, employees.name as employee, contracts.number as contract_no FROM credit_slips 
 LEFT JOIN cash ON credit_slips.cash_id = cash.id 
 LEFT JOIN lessees ON credit_slips.lessee_id = lessees.id 
 LEFT JOIN organizations ON credit_slips.org_id = organizations.id 
 LEFT JOIN income_items ON credit_slips.income_id = income_items.id 
-LEFT JOIN employees ON credit_slips.employee_id = employees.id 
+LEFT JOIN employees ON credit_slips.employee_id = employees.id
+LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
 WHERE credit_slips.date BETWEEN @start AND @end</CommandText>
         <QueryParameters>
           <QueryParameter Name="start">

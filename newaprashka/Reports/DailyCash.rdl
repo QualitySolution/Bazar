@@ -24,17 +24,19 @@
       <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>(SELECT *, IFNULL(table1.incomesum, 0) as incomesum0, IFNULL(table2.sum, 0) as expensesum FROM (SELECT @num1 := 0, @num2 := 0) as a, (
-SELECT @num1:=@num1 + 1 as num, credit_slips.contract_no as contract, services.name as service, payment_details.sum as incomesum 
+SELECT @num1:=@num1 + 1 as num, contracts.number as contract, services.name as service, payment_details.sum as incomesum 
 FROM payment_details
 LEFT JOIN accrual_pays ON accrual_pays.id = payment_details.accrual_pay_id
 LEFT JOIN services ON services.id = accrual_pays.service_id
 LEFT JOIN payments ON payments.id = payment_details.payment_id
-LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id
+LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id 
+LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
 WHERE credit_slips.date = @date
 UNION ALL
-SELECT @num1:=@num1 + 1 as num, credit_slips.contract_no as contract, IFNULL(credit_slips.details, income_items.name) as service, credit_slips.sum as incomesum
+SELECT @num1:=@num1 + 1 as num, contracts.number as contract, IFNULL(credit_slips.details, income_items.name) as service, credit_slips.sum as incomesum
 FROM credit_slips 
 LEFT JOIN income_items ON credit_slips.income_id = income_items.id
+LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
 WHERE credit_slips.date = @date AND credit_slips.operation != 'payment'
 ) as table1 
 LEFT OUTER JOIN (
@@ -44,17 +46,19 @@ LEFT JOIN contractors ON contractors.id = debit_slips.contractor_id WHERE date =
 ON table1.num = table2.num2 )
 UNION
 (SELECT *, IFNULL(table1.incomesum, 0) as incomesum0, IFNULL(table2.sum, 0) as expensesum FROM (SELECT @num3 := 0, @num4 := 0) as a, (
-SELECT @num3:=@num3 + 1 as num, credit_slips.contract_no as contract, services.name as service, payment_details.sum as incomesum 
+SELECT @num3:=@num3 + 1 as num, contracts.number as contract, services.name as service, payment_details.sum as incomesum 
 FROM payment_details
 LEFT JOIN accrual_pays ON accrual_pays.id = payment_details.accrual_pay_id
 LEFT JOIN services ON services.id = accrual_pays.service_id
 LEFT JOIN payments ON payments.id = payment_details.payment_id
 LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id
+LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
 WHERE credit_slips.date = @date
 UNION ALL
-SELECT @num3:=@num3 + 1 as num, credit_slips.contract_no as contract, IFNULL(credit_slips.details, income_items.name) as service, credit_slips.sum as incomesum
+SELECT @num3:=@num3 + 1 as num, contracts.number as contract, IFNULL(credit_slips.details, income_items.name) as service, credit_slips.sum as incomesum
 FROM credit_slips 
 LEFT JOIN income_items ON credit_slips.income_id = income_items.id
+LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
 WHERE credit_slips.date = @date AND credit_slips.operation != 'payment'
 ) as table1 
 RIGHT OUTER JOIN (

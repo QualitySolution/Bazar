@@ -15,11 +15,11 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT accrual.id as id, month, year, contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
+        <CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
  lessees.name as lessee, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
  (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt 
 FROM accrual 
-LEFT JOIN contracts ON contracts.number = contract_no 
+LEFT JOIN contracts ON contracts.id = contract_id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN (
 SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable 
