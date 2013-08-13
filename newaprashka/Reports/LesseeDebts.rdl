@@ -120,7 +120,7 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
     <ReportItems>
       <Table Name="Table1">
         <DataSetName>Data</DataSetName>
-        <NoRows>Query returned no rows!</NoRows>
+        <NoRows>Данные отсутствуют!</NoRows>
         <Style>
           <BorderStyle>
             <Default>Solid</Default>
