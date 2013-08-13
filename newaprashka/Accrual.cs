@@ -167,7 +167,11 @@ namespace bazar
 					ServiceListStore.SetValue (iter, 0, ServiceRefListStore.GetValue (ServiceIter,0));
 					ServiceListStore.SetValue (iter, 4, ServiceRefListStore.GetValue (ServiceIter,2));
 					ServiceListStore.SetValue (iter, 5, ServiceRefListStore.GetValue (ServiceIter,3));
-					ServiceListStore.SetValue (iter, 12, ServiceRefListStore.GetValue (ServiceIter,4));
+
+					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter,4);
+					ServiceListStore.SetValue (iter, 12, choice);
+					if(choice)
+						ServiceListStore.SetValue (iter, 6, (int) area);
 					break;
 				}
 			}
@@ -240,18 +244,11 @@ namespace bazar
 			string Unit;
 			int Count = (int) model.GetValue (iter, 6);
 
-			if((bool) model.GetValue (iter, 12))
-			{
-				Count = (int) area;
-				Unit = "кв.м.";
-			}
+			if(model.GetValue(iter,5) != null)
+				Unit = (string) model.GetValue(iter,5);
 			else
-			{ //изменить запиьс ареа в модел
-				if(model.GetValue(iter,5) != null)
-					Unit = (string) model.GetValue(iter,5);
-				else
-					Unit = "";
-			}
+				Unit = "";
+
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
 		}
 		
@@ -449,7 +446,27 @@ namespace bazar
 				labelOrg.LabelProp = rdr["organization"].ToString();
 				labelPlace.LabelProp = rdr["place_type"].ToString () + " - " + rdr["place_no"].ToString ();
 
+				float old_area = area;
 				area = rdr.GetFloat("area");
+
+				TreeIter ServiceIter;
+				if (ServiceListStore.GetIterFirst (out ServiceIter))
+				{
+					do
+					{
+						bool b = (bool) ServiceListStore.GetValue(ServiceIter, 12);
+						int i = (int) ServiceListStore.GetValue(ServiceIter, 6);
+						if( b && i == old_area)
+						{
+							int ar = (int) area;
+							ServiceListStore.SetValue(ServiceIter, 6, ar);
+							double Price = (double)ServiceListStore.GetValue (ServiceIter, 7);
+							ServiceListStore.SetValue(ServiceIter, 8, Price * ar);
+						}
+					}
+					while(ServiceListStore.IterNext (ref ServiceIter));
+					CalculateServiceSum ();
+				}
 
 				rdr.Close ();
 				buttonOpenContract.Sensitive = true;
