@@ -52,7 +52,7 @@ namespace bazar
 		private global::Gtk.Button buttonPrint;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
-
+		
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -140,6 +140,7 @@ namespace bazar
 			// Container child hbox5.Gtk.Box+BoxChild
 			this.buttonOpenContract = new global::Gtk.Button ();
 			this.buttonOpenContract.TooltipMarkup = "Открыть договор";
+			this.buttonOpenContract.Sensitive = false;
 			this.buttonOpenContract.CanFocus = true;
 			this.buttonOpenContract.Name = "buttonOpenContract";
 			this.buttonOpenContract.UseUnderline = true;
