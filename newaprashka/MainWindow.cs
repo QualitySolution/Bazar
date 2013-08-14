@@ -7,6 +7,7 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using bazar;
 using QSProjectsLib;
+using QSSupportLib;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -16,12 +17,27 @@ public partial class MainWindow : Gtk.Window
 	public MainWindow () : base(Gtk.WindowType.Toplevel)
 	{
 		Build ();
-		
 		grup = new AccelGroup ();
 		this.AddAccelGroup(grup);
 
 		//Передаем лебл
 		MainClass.StatusBarLabel = labelStatus;
+
+		try
+		{
+			MainSupport.Param = new BaseParam(QSMain.connectionDB);
+		}
+		catch(MySqlException)
+		{
+			MessageDialog BaseError = new MessageDialog ( this, DialogFlags.DestroyWithParent,
+	                                      MessageType.Warning, 
+	                                      ButtonsType.Close, 
+	                                      "Неизвестная база данных");
+			BaseError.Run();
+			BaseError.Destroy();
+			Environment.Exit(0);
+		}
+		TestVersion();
 
 		if(QSMain.User.Login == "root")
 		{
@@ -61,7 +77,7 @@ public partial class MainWindow : Gtk.Window
 			QSMain.User.UpdateUserInfoByLogin ();
 		UsersAction.Sensitive = QSMain.User.admin;
 		labelUser.LabelProp = QSMain.User.Name;
-		
+
 		PreparePlaces();
 		PrepareLessee();
 		PrepareContract();
@@ -389,8 +405,9 @@ public partial class MainWindow : Gtk.Window
 	{
 		AboutDialog dialog = new AboutDialog ();
 		dialog.ProgramName = "БазАр (База Арендаторов)";
-		
-		dialog.Version = "2.0.3";
+
+		Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+		dialog.Version = String.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
 		
 		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
 		
@@ -715,4 +732,40 @@ public partial class MainWindow : Gtk.Window
 		WinReport.Run ();
 		WinReport.Destroy ();
 	}	
+
+	private void TestVersion()
+	{
+		string errors = "";
+		string name = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.ToString();
+
+		string edition = "beta";
+		if(MainSupport.Param.Edition != edition)
+		{
+			errors += "\nРедакция продукта не совпадает с редакцией базы данных.\n";
+			errors += "Редакция продукта: " + edition + "\nРедакция базы данных: " + MainSupport.Param.Edition + "\n";
+		}
+
+		if(MainSupport.Param.Product != name)
+			errors += "\nБаза данных не для того продукта.\n";
+
+		Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+		string[] ver = MainSupport.Param.Version.Split('.');
+		if(version.Major.ToString() != ver[0] || version.Minor.ToString() != ver[1])
+		{
+			errors += "\nВерсия продукта не совпадает с версией базы данных.\n";
+			errors += "Версия продукта: " + String.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build); 
+			errors += "\nВерсия базы данных: " + MainSupport.Param.Version + "\n";
+		}
+
+		if(errors != "")
+		{
+			MessageDialog VersionError = new MessageDialog ( this, DialogFlags.DestroyWithParent,
+				                                      MessageType.Warning, 
+				                                      ButtonsType.Close, 
+				                                      errors);
+			VersionError.Run();
+			VersionError.Destroy();
+			Environment.Exit(0);
+		}
+	}
 }
