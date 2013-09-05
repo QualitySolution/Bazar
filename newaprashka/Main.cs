@@ -121,7 +121,7 @@ namespace bazar
 		}
 
 		public static void ComboAccrualYearsFill(ComboBox combo)
-		{   //Заполняем комбобокс активными договорами на определенный месяц
+		{   
 			try
 			{
 				MainClass.StatusMessage("Запрос лет для начислений...");
