@@ -446,12 +446,7 @@ namespace bazar
 			w48.Expand = false;
 			w48.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.separationpayment = new global::bazar.SeparationPayment ();
-			this.separationpayment.Events = ((global::Gdk.EventMask)(256));
-			this.separationpayment.Name = "separationpayment";
-			this.separationpayment.PaymentSum = 0m;
-			this.separationpayment.PaymentId = 0;
-			this.separationpayment.AccrualId = 0;
+			this.separationpayment = null;
 			this.vbox2.Add (this.separationpayment);
 			global::Gtk.Box.BoxChild w49 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.separationpayment]));
 			w49.Position = 1;
@@ -584,7 +579,6 @@ namespace bazar
 			this.comboAccrual.Changed += new global::System.EventHandler (this.OnComboAccrualChanged);
 			this.spinSum.ValueChanged += new global::System.EventHandler (this.OnSpinSumValueChanged);
 			this.comboIncomeItem.Changed += new global::System.EventHandler (this.OnComboIncomeItemChanged);
-			this.separationpayment.CanSaveStateChanged += new global::System.EventHandler (this.OnSeparationpaymentCanSaveStateChanged);
 			this.buttonPrint.Clicked += new global::System.EventHandler (this.OnButtonPrintClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
