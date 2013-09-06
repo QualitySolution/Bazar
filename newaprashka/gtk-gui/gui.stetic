@@ -3185,7 +3185,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Place" design-size="833 477">
+  <widget class="Gtk.Dialog" id="bazar.Place" design-size="810 477">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новое место</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -3217,128 +3217,10 @@
                           <widget class="Gtk.Table" id="table2">
                             <property name="MemberName" />
                             <property name="NRows">5</property>
-                            <property name="NColumns">5</property>
+                            <property name="NColumns">2</property>
                             <property name="RowSpacing">6</property>
                             <property name="ColumnSpacing">6</property>
                             <property name="BorderWidth">3</property>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <placeholder />
-                            </child>
-                            <child>
-                              <widget class="Gtk.Button" id="buttonContact">
-                                <property name="MemberName" />
-                                <property name="Tooltip" translatable="yes">Выбрать контактное лицо</property>
-                                <property name="CanFocus">True</property>
-                                <property name="Type">TextAndIcon</property>
-                                <property name="Icon">stock:gtk-edit Menu</property>
-                                <property name="Label" translatable="yes" />
-                                <property name="UseUnderline">True</property>
-                                <signal name="Clicked" handler="OnButtonContactClicked" />
-                              </widget>
-                              <packing>
-                                <property name="TopAttach">4</property>
-                                <property name="BottomAttach">5</property>
-                                <property name="LeftAttach">4</property>
-                                <property name="RightAttach">5</property>
-                                <property name="AutoSize">True</property>
-                                <property name="XOptions">Fill</property>
-                                <property name="YOptions">Fill</property>
-                                <property name="XExpand">False</property>
-                                <property name="XFill">True</property>
-                                <property name="XShrink">False</property>
-                                <property name="YExpand">False</property>
-                                <property name="YFill">True</property>
-                                <property name="YShrink">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="Gtk.Button" id="buttonContactClean">
-                                <property name="MemberName" />
-                                <property name="Tooltip" translatable="yes">Убрать контактное лицо</property>
-                                <property name="CanFocus">True</property>
-                                <property name="Type">TextAndIcon</property>
-                                <property name="Icon">stock:gtk-clear Menu</property>
-                                <property name="Label" translatable="yes" />
-                                <property name="UseUnderline">True</property>
-                                <signal name="Clicked" handler="OnButtonContactCleanClicked" />
-                              </widget>
-                              <packing>
-                                <property name="TopAttach">4</property>
-                                <property name="BottomAttach">5</property>
-                                <property name="LeftAttach">3</property>
-                                <property name="RightAttach">4</property>
-                                <property name="AutoSize">True</property>
-                                <property name="XOptions">Fill</property>
-                                <property name="YOptions">Fill</property>
-                                <property name="XExpand">False</property>
-                                <property name="XFill">True</property>
-                                <property name="XShrink">False</property>
-                                <property name="YExpand">False</property>
-                                <property name="YFill">True</property>
-                                <property name="YShrink">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="Gtk.Button" id="buttonContactOpen">
-                                <property name="MemberName" />
-                                <property name="Sensitive">False</property>
-                                <property name="Tooltip" translatable="yes">Открыть текущее контактное лицо</property>
-                                <property name="CanFocus">True</property>
-                                <property name="Type">TextAndIcon</property>
-                                <property name="Icon">stock:gtk-file Menu</property>
-                                <property name="Label" translatable="yes" />
-                                <property name="UseUnderline">True</property>
-                                <signal name="Clicked" handler="OnButtonContactOpenClicked" />
-                              </widget>
-                              <packing>
-                                <property name="TopAttach">4</property>
-                                <property name="BottomAttach">5</property>
-                                <property name="LeftAttach">2</property>
-                                <property name="RightAttach">3</property>
-                                <property name="AutoSize">True</property>
-                                <property name="XOptions">Fill</property>
-                                <property name="YOptions">Fill</property>
-                                <property name="XExpand">False</property>
-                                <property name="XFill">True</property>
-                                <property name="XShrink">False</property>
-                                <property name="YExpand">False</property>
-                                <property name="YFill">True</property>
-                                <property name="YShrink">False</property>
-                              </packing>
-                            </child>
                             <child>
                               <widget class="Gtk.ComboBox" id="comboOrg">
                                 <property name="MemberName" />
@@ -3383,15 +3265,16 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="Gtk.Entry" id="entryContact">
+                              <widget class="Gtk.Entry" id="entryNumber">
                                 <property name="MemberName" />
                                 <property name="CanFocus">True</property>
-                                <property name="IsEditable">False</property>
+                                <property name="IsEditable">True</property>
                                 <property name="InvisibleChar">●</property>
+                                <signal name="Changed" handler="OnEntryNumberChanged" />
                               </widget>
                               <packing>
-                                <property name="TopAttach">4</property>
-                                <property name="BottomAttach">5</property>
+                                <property name="TopAttach">1</property>
+                                <property name="BottomAttach">2</property>
                                 <property name="LeftAttach">1</property>
                                 <property name="RightAttach">2</property>
                                 <property name="AutoSize">True</property>
@@ -3406,16 +3289,80 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="Gtk.Entry" id="entryNumber">
+                              <widget class="Gtk.HBox" id="hbox3">
                                 <property name="MemberName" />
-                                <property name="CanFocus">True</property>
-                                <property name="IsEditable">True</property>
-                                <property name="InvisibleChar">●</property>
-                                <signal name="Changed" handler="OnEntryNumberChanged" />
+                                <property name="Spacing">6</property>
+                                <child>
+                                  <widget class="Gtk.Entry" id="entryContact">
+                                    <property name="MemberName" />
+                                    <property name="CanFocus">True</property>
+                                    <property name="IsEditable">False</property>
+                                    <property name="InvisibleChar">●</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="Position">0</property>
+                                    <property name="AutoSize">True</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="Gtk.Button" id="buttonContactOpen">
+                                    <property name="MemberName" />
+                                    <property name="Sensitive">False</property>
+                                    <property name="Tooltip" translatable="yes">Открыть текущее контактное лицо</property>
+                                    <property name="CanFocus">True</property>
+                                    <property name="Type">TextAndIcon</property>
+                                    <property name="Icon">stock:gtk-file Menu</property>
+                                    <property name="Label" translatable="yes" />
+                                    <property name="UseUnderline">True</property>
+                                    <signal name="Clicked" handler="OnButtonContactOpenClicked" />
+                                  </widget>
+                                  <packing>
+                                    <property name="Position">1</property>
+                                    <property name="AutoSize">True</property>
+                                    <property name="Expand">False</property>
+                                    <property name="Fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="Gtk.Button" id="buttonContactClean">
+                                    <property name="MemberName" />
+                                    <property name="Tooltip" translatable="yes">Убрать контактное лицо</property>
+                                    <property name="CanFocus">True</property>
+                                    <property name="Type">TextAndIcon</property>
+                                    <property name="Icon">stock:gtk-clear Menu</property>
+                                    <property name="Label" translatable="yes" />
+                                    <property name="UseUnderline">True</property>
+                                    <signal name="Clicked" handler="OnButtonContactCleanClicked" />
+                                  </widget>
+                                  <packing>
+                                    <property name="Position">2</property>
+                                    <property name="AutoSize">True</property>
+                                    <property name="Expand">False</property>
+                                    <property name="Fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="Gtk.Button" id="buttonContact">
+                                    <property name="MemberName" />
+                                    <property name="Tooltip" translatable="yes">Выбрать контактное лицо</property>
+                                    <property name="CanFocus">True</property>
+                                    <property name="Type">TextAndIcon</property>
+                                    <property name="Icon">stock:gtk-edit Menu</property>
+                                    <property name="Label" translatable="yes" />
+                                    <property name="UseUnderline">True</property>
+                                    <signal name="Clicked" handler="OnButtonContactClicked" />
+                                  </widget>
+                                  <packing>
+                                    <property name="Position">3</property>
+                                    <property name="AutoSize">True</property>
+                                    <property name="Expand">False</property>
+                                    <property name="Fill">False</property>
+                                  </packing>
+                                </child>
                               </widget>
                               <packing>
-                                <property name="TopAttach">1</property>
-                                <property name="BottomAttach">2</property>
+                                <property name="TopAttach">4</property>
+                                <property name="BottomAttach">5</property>
                                 <property name="LeftAttach">1</property>
                                 <property name="RightAttach">2</property>
                                 <property name="AutoSize">True</property>
