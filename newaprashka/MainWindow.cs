@@ -285,7 +285,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnAction7Activated (object sender, System.EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference(true);
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("place_types","Тип места", "Типы мест");
 		winref.Show();
