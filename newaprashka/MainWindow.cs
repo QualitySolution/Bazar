@@ -19,21 +19,27 @@ public partial class MainWindow : Gtk.Window
 		//Передаем лебл
 		MainClass.StatusBarLabel = labelStatus;
 
+		//Test version of base
 		try
 		{
 			MainSupport.Param = new BaseParam(QSMain.connectionDB);
 		}
-		catch(MySqlException)
+		catch(MySqlException e)
 		{
+			Console.WriteLine(e.Message);
 			MessageDialog BaseError = new MessageDialog ( this, DialogFlags.DestroyWithParent,
-	                                      MessageType.Warning, 
-	                                      ButtonsType.Close, 
-	                                      "Неизвестная база данных");
+			                                             MessageType.Warning, 
+			                                             ButtonsType.Close, 
+			                                             "Не удалось получить информацию о базе данных.");
 			BaseError.Run();
 			BaseError.Destroy();
 			Environment.Exit(0);
 		}
-		TestVersion();
+
+		MainSupport.ProjectVerion = new AppVersion(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.ToString(),
+		                                           "gpl",
+		                                           System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+		MainSupport.TestVersion(this);
 
 		if(QSMain.User.Login == "root")
 		{
@@ -728,40 +734,4 @@ public partial class MainWindow : Gtk.Window
 		WinReport.Run ();
 		WinReport.Destroy ();
 	}	
-
-	private void TestVersion()
-	{
-		string errors = "";
-		string name = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.ToString();
-
-		string edition = "beta";
-		if(MainSupport.Param.Edition != edition)
-		{
-			errors += "\nРедакция продукта не совпадает с редакцией базы данных.\n";
-			errors += "Редакция продукта: " + edition + "\nРедакция базы данных: " + MainSupport.Param.Edition + "\n";
-		}
-
-		if(MainSupport.Param.Product != name)
-			errors += "\nБаза данных не для того продукта.\n";
-
-		Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-		string[] ver = MainSupport.Param.Version.Split('.');
-		if(version.Major.ToString() != ver[0] || version.Minor.ToString() != ver[1])
-		{
-			errors += "\nВерсия продукта не совпадает с версией базы данных.\n";
-			errors += "Версия продукта: " + String.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build); 
-			errors += "\nВерсия базы данных: " + MainSupport.Param.Version + "\n";
-		}
-
-		if(errors != "")
-		{
-			MessageDialog VersionError = new MessageDialog ( this, DialogFlags.DestroyWithParent,
-				                                      MessageType.Warning, 
-				                                      ButtonsType.Close, 
-				                                      errors);
-			VersionError.Run();
-			VersionError.Destroy();
-			Environment.Exit(0);
-		}
-	}
 }
