@@ -52,11 +52,6 @@ namespace bazar
 			                                      typeof (int), 	// 9 - 
 			                                      typeof (bool));	// 10 - Есть ли расчет по метражу
 			
-			Gtk.TreeViewColumn idServiceColumn = new Gtk.TreeViewColumn ();
-			idServiceColumn.Title = "idServiceColumn";
-			idServiceColumn.Visible = false;
-			idServiceColumn.PackStart (new Gtk.CellRendererText (), true);
-
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
 			ServiceColumn.Title = "Наименование";
 			Gtk.CellRendererCombo CellService = new CellRendererCombo();
@@ -66,11 +61,6 @@ namespace bazar
 			CellService.HasEntry = false;
 			CellService.Edited += OnServiceComboEdited;
 			ServiceColumn.PackStart (CellService, true);
-
-			Gtk.TreeViewColumn idCashColumn = new Gtk.TreeViewColumn ();
-			idCashColumn.Title = "idКасса";
-			idCashColumn.Visible = false;
-			idCashColumn.PackStart (new Gtk.CellRendererText (), true);
 
 			Gtk.TreeViewColumn CashColumn = new Gtk.TreeViewColumn ();
 			CashColumn.Title = "Касса";
@@ -82,11 +72,6 @@ namespace bazar
 			CellCash.HasEntry = false;
 			CellCash.Edited += OnCashComboEdited;
 			CashColumn.PackStart (CellCash, true);
-
-			Gtk.TreeViewColumn idUnitsColumn = new Gtk.TreeViewColumn ();
-			idUnitsColumn.Title = "idЕдиница";
-			idUnitsColumn.Visible = false;
-			idUnitsColumn.PackStart (new Gtk.CellRendererText (), true);
 
 			Gtk.TreeViewColumn CountColumn = new Gtk.TreeViewColumn ();
 			CountColumn.Title = "Количество";
@@ -113,13 +98,10 @@ namespace bazar
 			Gtk.CellRendererText CellSum = new CellRendererText();
 			SumColumn.PackStart (CellSum, true);
 
-			treeviewServices.AppendColumn (idServiceColumn);
 			treeviewServices.AppendColumn (ServiceColumn);
 			ServiceColumn.AddAttribute (CellService,"text", 1);
-			treeviewServices.AppendColumn (idCashColumn);
 			treeviewServices.AppendColumn (CashColumn);
 			CashColumn.AddAttribute (CellCash,"text", 3);
-			treeviewServices.AppendColumn (idUnitsColumn);
 			treeviewServices.AppendColumn ("Ед. изм.", new Gtk.CellRendererText (), "text", 5);
 			treeviewServices.AppendColumn (CountColumn);
 			CountColumn.AddAttribute (CellCount,"text", 6);
