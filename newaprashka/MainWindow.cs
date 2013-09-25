@@ -712,6 +712,7 @@ public partial class MainWindow : Gtk.Window
 			break;
 		case 4:
 			UpdateCash ();
+			CalculateTotalCash ();
 			break;
 		case 5:
 			UpdateEvents();
