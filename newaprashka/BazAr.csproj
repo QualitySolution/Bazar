@@ -116,6 +116,12 @@
     <Compile Include="ReportDialogs\DailyCashReport.cs" />
     <Compile Include="gtk-gui\bazar.DailyCashReport.cs" />
     <Compile Include="ReportDialogs\DocRegister.cs" />
+    <Compile Include="MeterType.cs" />
+    <Compile Include="gtk-gui\bazar.MeterType.cs" />
+    <Compile Include="Meter.cs" />
+    <Compile Include="gtk-gui\bazar.Meter.cs" />
+    <Compile Include="MeterReading.cs" />
+    <Compile Include="gtk-gui\bazar.MeterReading.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

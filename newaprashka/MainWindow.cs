@@ -18,6 +18,8 @@ public partial class MainWindow : Gtk.Window
 
 		//Передаем лебл
 		MainClass.StatusBarLabel = labelStatus;
+		Reference.RunReferenceItemDlg += OnRunReferenceItemDialog;
+		QSMain.ReferenceUpdated += OnReferenceUpdate;
 
 		//Test version of base
 		try
@@ -108,7 +110,7 @@ public partial class MainWindow : Gtk.Window
 			treeviewPlaces.Selection.GetSelected(out iter);
 			place = Placefilter.GetValue(iter,2).ToString ();
 			type = Convert.ToInt32(Placefilter.GetValue(iter,0));
-			Place winPlace = new Place();
+			Place winPlace = new Place(false);
 			winPlace.PlaceFill(type,place);
 			winPlace.Show();
 			result = (ResponseType)winPlace.Run();
@@ -214,8 +216,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		switch (notebookMain.CurrentPage) {
 		case 0:
-			Place winPlace = new Place();
-			winPlace.NewPlace = true;
+			Place winPlace = new Place(true);
 			winPlace.Show();
 			winPlace.Run();
 			winPlace.Destroy();
@@ -606,6 +607,35 @@ public partial class MainWindow : Gtk.Window
 		winref.Destroy();
 	}
 
+	protected void OnRunReferenceItemDialog(object sender, Reference.RunReferenceItemDlgEventArgs e)
+	{
+		ResponseType Result;
+		switch (e.TableName)
+		{
+		case "meter_types":
+			MeterType MeterTypeEdit = new MeterType(e.NewItem);
+			if(!e.NewItem)
+				MeterTypeEdit.Fill(e.ItemId);
+			MeterTypeEdit.Show();
+			Result = (ResponseType)MeterTypeEdit.Run();
+			MeterTypeEdit.Destroy();
+			break;
+		default:
+			Result = ResponseType.None;
+			break;
+		}
+		e.Result = Result;
+	}
+
+	protected void OnReferenceUpdate(object sender, QSMain.ReferenceUpdatedEventArgs e)
+	{
+		/*	switch (e.ReferenceTable) {
+		case "doc_types":
+			ComboWorks.ComboFillReference (comboDocType, "doc_types", 0);
+		break;
+		} */
+	}
+	
 	public void ReferenceUpdated(string RefTable)
 	{
 		switch (RefTable)
@@ -735,4 +765,14 @@ public partial class MainWindow : Gtk.Window
 		WinReport.Run ();
 		WinReport.Destroy ();
 	}	
+	protected void OnAction41Activated(object sender, EventArgs e)
+	{
+		Reference winref = new Reference();
+		winref.SetMode(false,false,true,true,true);
+		winref.FillList("meter_types","Тип счётчика", "Типы счётчиков");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
+	}
+	
 }

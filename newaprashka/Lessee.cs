@@ -289,7 +289,7 @@ namespace bazar
 			treeviewContracts.Selection.GetSelected(out iter);
 			type = Convert.ToInt32(ContractsListStore.GetValue(iter,5));
 			place = (string)ContractsListStore.GetValue(iter,6);
-			Place winPlace = new Place();
+			Place winPlace = new Place(false);
 			winPlace.PlaceFill(type, place);
 			winPlace.Show();
 			winPlace.Run();

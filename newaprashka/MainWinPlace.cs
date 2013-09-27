@@ -247,7 +247,7 @@ public partial class MainWindow : Gtk.Window
 		treeviewPlaces.Selection.GetSelected(out iter);
 		place = Placefilter.GetValue(iter,2).ToString ();
 		type = Convert.ToInt32(Placefilter.GetValue(iter,0));
-		Place winPlace = new Place();
+		Place winPlace = new Place(false);
 		winPlace.PlaceFill(type,place);
 		winPlace.Show();
 		result = winPlace.Run();

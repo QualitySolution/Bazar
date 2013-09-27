@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
@@ -8,21 +9,23 @@ namespace bazar
 {
 	public partial class Place : Gtk.Dialog
 	{
-		public bool NewPlace;
+		private bool NewPlace;
 		string PlaceNumber;
 		int lessee_id, contact_id, type_id, ContractId;
 		bool contactNull = true;
+		MeterTable[] Meters;
 
 		Gtk.ListStore HistoryStore;
 		
 		AccelGroup grup;
 		
-		public Place ()
+		public Place (bool New)
 		{
 			this.Build ();
 			ComboWorks.ComboFillReference(comboPType,"place_types",2);
 			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
 			contactNull = true;
+			NewPlace = New;
 
 			grup = new AccelGroup ();
 			this.AddAccelGroup(grup);
@@ -49,6 +52,8 @@ namespace bazar
 			
 			treeviewHistory.Model = HistoryStore;
 			treeviewHistory.ShowAll();
+			if(New)
+				notebookMain.GetNthPage (1).Hide (); //FIXME отключил вкладку что бы пользователь не мог создавать счетчики у не записаного места, надо исправить.
 		}
 
 		public void PlaceFill(int type, string place)
@@ -402,6 +407,253 @@ namespace bazar
 			winContract.Run();
 			winContract.Destroy();
 			FillCurrentContract ();
+		}
+
+		protected void OnButtonAddMeterClicked(object sender, EventArgs e)
+		{
+			Meter WinMeter = new Meter (true);
+			WinMeter.SetPlace (type_id, PlaceNumber);
+			WinMeter.Show ();
+			ResponseType result = (ResponseType) WinMeter.Run ();
+			WinMeter.Destroy ();
+			if(result == ResponseType.Ok)
+				UpdateMeters ();
+		}
+
+		private void UpdateMeters()
+		{
+			MainClass.StatusMessage("Получаем счетчики места...");
+			try
+			{
+				string sql = "SELECT meters.id, meters.name, meter_types.name as type FROM meters " +
+					"LEFT JOIN meter_types ON meter_types.id = meters.meter_type_id " +
+					"WHERE place_type_id = @place_type AND place_no = @place_no";
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
+
+				cmd.Parameters.AddWithValue("@place_type", ComboWorks.GetActiveId (comboPType));
+				cmd.Parameters.AddWithValue("@place_no", entryNumber.Text);
+
+				List<object[]> DBRead = new List<object[]>();
+				using(MySqlDataReader rdr = cmd.ExecuteReader())
+				{
+					while (rdr.Read())
+					{
+						object[] values = new object[rdr.FieldCount];
+						rdr.GetValues (values);
+						DBRead.Add (values);
+					}
+				}
+				if(DBRead.Count == 0)
+					return;
+				if(Meters == null)
+				{
+					int i = 0;
+					Meters = new MeterTable[DBRead.Count];
+					foreach(object[] row in DBRead)
+					{
+						Meters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2]);
+						if(i == 0) // Удаляем вкладку по умочанию, только после добавления новой, иначе проблемы с отображением.
+						{
+							notebookMeters.RemovePage (0); //FIXME Подумать о обработки ситуации когда все счетчики удалены.
+							buttonEditMeter.Sensitive = true;
+							buttonDeleteMeter.Sensitive = true;
+							buttonAddReading.Sensitive = true;
+						}
+						i++;
+					}
+				}
+				else
+				{
+					int offset = 0, i = 0;
+					MeterTable[] NewMeters = new MeterTable[DBRead.Count];
+					foreach(MeterTable meter in Meters)
+					{
+						bool Found = false;
+						foreach(object[] row in DBRead)
+						{
+							if(Convert.ToInt32 (row[0]) == meter.ID && row[2].ToString () == meter.Name)
+								Found = true;
+						}
+						if(!Found)
+						{
+							notebookMeters.RemovePage (i);
+							offset++;
+						}
+						else
+						{
+							NewMeters[i] = meter;
+							i++;
+						}
+					}
+
+					foreach(object[] row in DBRead)
+					{
+						bool Found = false;
+						foreach(MeterTable meter in NewMeters)
+						{
+							if(meter != null && meter.ID == Convert.ToInt32 (row[0]))
+							{
+								Found = true;
+								break;
+							}
+						}
+						if(Found)
+							continue;
+						NewMeters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2]);
+						i++;
+					}
+					Meters = NewMeters;
+				}
+				MainClass.StatusMessage("Ok");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				MainClass.StatusMessage("Ошибка получения информации о счётчиках!");
+				QSMain.ErrorMessage(this, ex);
+			}
+		}
+		
+		private void UpdateReadings()
+		{
+			MainClass.StatusMessage("Получаем показания счетчика...");
+			try
+			{
+				string sql = "SELECT meter_reading.id, meter_reading.date, meter_reading.value, meter_tariffs.name as tariff, units.name as unit FROM meter_reading " +
+					"LEFT JOIN meter_tariffs ON meter_tariffs.id = meter_reading.meter_tariff_id " +
+					"LEFT JOIN services ON services.id = meter_tariffs.service_id " +
+					"LEFT JOIN units ON units.id = services.units_id " +
+					"WHERE meter_reading.meter_id = @id " +
+						"ORDER BY meter_reading.date DESC, tariff";
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
+				MeterTable meter = Meters[notebookMeters.CurrentPage];
+
+				cmd.Parameters.AddWithValue("@id", meter.ID);
+
+				using(MySqlDataReader rdr = cmd.ExecuteReader())
+				{
+					meter.liststore.Clear();
+					while (rdr.Read())
+					{
+						string ValueFormat = rdr["unit"] != DBNull.Value ? "{0} {1}": "{0}";
+						meter.liststore.AppendValues (rdr.GetInt32 ("id"),
+						                              String.Format ("{0:d}", rdr.GetDateTime ("date")),
+						                              rdr["tariff"].ToString (),
+						                              String.Format (ValueFormat, rdr.GetInt32 ("value"), rdr["unit"].ToString ())
+						                              );
+					}
+				}
+				meter.Filled = true;
+				MainClass.StatusMessage("Ok");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				MainClass.StatusMessage("Ошибка получения показаний счётчика!");
+				QSMain.ErrorMessage(this, ex);
+			}
+		}		
+
+		private MeterTable AddMeterPage(int id, string name)
+		{
+			MeterTable meter = new MeterTable ();
+			meter.ID = id;
+			meter.Name = name;
+			meter.Filled = false;
+			meter.liststore = new ListStore (typeof(int), // 0 - ID
+			                             typeof(string), //1 - date
+			                             typeof(string), //2 - tariff
+			                             typeof(string) //3 - value
+			                             );
+			meter.treeview = new TreeView (meter.liststore);
+
+			meter.treeview.AppendColumn ("Дата", new CellRendererText (), "text", 1);
+			meter.treeview.AppendColumn ("Тариф", new CellRendererText (), "text", 2);
+			meter.treeview.AppendColumn ("Показания", new CellRendererText (), "text", 3);
+
+			ScrolledWindow Scroll = new ScrolledWindow ();
+			notebookMeters.AppendPage (Scroll, new Label (name));
+
+			Scroll.Add (meter.treeview);
+			meter.treeview.CursorChanged += OnTreeviewReadingCursorChanged;
+			meter.treeview.Show ();
+			notebookMeters.ShowAll ();
+
+			return meter;
+		}
+
+		protected void OnNotebookMainSwitchPage(object o, SwitchPageArgs args)
+		{
+			if (notebookMain.Page == 1 && Meters == null)
+				UpdateMeters ();
+		}
+
+		protected void OnButtonEditMeterClicked(object sender, EventArgs e)
+		{
+			int itemid = Meters[notebookMeters.CurrentPage].ID;
+			Meter winMeter = new Meter(false);
+			winMeter.Fill(itemid);
+			winMeter.Show();
+			ResponseType result = (ResponseType)winMeter.Run();
+			winMeter.Destroy();
+			if(result == ResponseType.Ok)
+				UpdateMeters();
+	}
+
+		protected void OnButtonDeleteMeterClicked(object sender, EventArgs e)
+		{
+			int itemid = Meters[notebookMeters.CurrentPage].ID;
+			Delete winDelete = new Delete();
+			if(winDelete.RunDeletion("meters", itemid))
+				UpdateMeters();
+		}
+
+		protected void OnNotebookMetersSwitchPage(object o, SwitchPageArgs args)
+		{
+			if (notebookMeters.CurrentPage < 0)
+				return;
+			if (!Meters [notebookMeters.CurrentPage].Filled)
+				UpdateReadings ();
+			OnTreeviewReadingCursorChanged (null, null);
+		}
+
+		protected void OnButtonAddReadingClicked(object sender, EventArgs e)
+		{
+			int itemid = Meters[notebookMeters.CurrentPage].ID;
+			MeterReading winMeterReading = new MeterReading(itemid);
+			winMeterReading.Show();
+			ResponseType result = (ResponseType)winMeterReading.Run();
+			winMeterReading.Destroy();
+			if(result == ResponseType.Ok)
+				UpdateReadings();
+		}
+
+		protected void OnTreeviewReadingCursorChanged(object sender, EventArgs e)
+		{
+			bool isSelect = Meters[notebookMeters.CurrentPage].treeview.Selection.CountSelectedRows() == 1;
+			buttonDeleteReading.Sensitive = isSelect;
+		}
+
+		protected void OnButtonDeleteReadingClicked(object sender, EventArgs e)
+		{
+			TreeIter iter;
+			Meters[notebookMeters.CurrentPage].treeview.Selection.GetSelected (out iter);
+			int itemid = (int) Meters [notebookMeters.CurrentPage].treeview.Model.GetValue (iter, 0);
+			Delete winDelete = new Delete();
+			if(winDelete.RunDeletion("meter_reading", itemid))
+				UpdateReadings();
+		}
+
+		class MeterTable
+		{
+			public int ID;
+			public string Name;
+			public TreeView treeview;
+			public ListStore liststore;
+			public bool Filled;
+
+			public MeterTable()
+			{}
 		}
 
 	}
