@@ -161,6 +161,31 @@ namespace bazar
 		{
 			TestCanSave();
 		}
+
+		protected void OnButtonParentCleanClicked(object sender, EventArgs e)
+		{
+			ParentId = -1;
+			entryParent.Text = "";
+		}
+
+		protected void OnButtonParentEditClicked(object sender, EventArgs e)
+		{
+			Reference MeterSelect = new Reference();
+			MeterSelect.SetMode(false, true, false, false, false);
+			MeterSelect.SqlSelect = "SELECT meters.id, meters.name, meter_types.name as type FROM meters " +
+				"LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id " +
+				"WHERE meters.disabled = FALSE ";
+			MeterSelect.Columns.Add (new Reference.ColumnInfo ("Тип счётчика", "{2}"));
+			MeterSelect.FillList("meters", "Счётчики", "Счётчик");
+			MeterSelect.Show();
+			int result = MeterSelect.Run();
+			if((ResponseType)result == ResponseType.Ok)
+			{
+				ParentId = MeterSelect.SelectedID;
+				entryParent.Text = MeterSelect.SelectedName;
+			}
+			MeterSelect.Destroy ();
+		}
 	}
 }
 

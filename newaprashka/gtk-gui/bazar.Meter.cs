@@ -325,6 +325,8 @@ namespace bazar
 			this.DefaultWidth = 412;
 			this.DefaultHeight = 268;
 			this.Show ();
+			this.buttonParentClean.Clicked += new global::System.EventHandler (this.OnButtonParentCleanClicked);
+			this.buttonParentEdit.Clicked += new global::System.EventHandler (this.OnButtonParentEditClicked);
 			this.comboPlaceType.Changed += new global::System.EventHandler (this.OnComboPlaceTypeChanged);
 			this.comboPlaceNo.Changed += new global::System.EventHandler (this.OnComboPlaceNoChanged);
 			this.entryName.Changed += new global::System.EventHandler (this.OnEntryNameChanged);
