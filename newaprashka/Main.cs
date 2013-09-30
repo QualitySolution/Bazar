@@ -79,6 +79,8 @@ namespace bazar
 			PrepareTable.PrimaryKey = new  TableInfo.PrimaryKeys("type_id", "place_no");
 			PrepareTable.DeleteItems.Add ("contracts", 
 			                              new TableInfo.DeleteDependenceItem ("WHERE contracts.place_type_id = @type_id AND contracts.place_no = @place_no", "@place_no", "@type_id"));
+			PrepareTable.DeleteItems.Add ("meters", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE meters.place_type_id = @type_id AND meters.place_no = @place_no ", "@place_no", "@type_id"));
 			PrepareTable.DeleteItems.Add ("events", 
 			                              new TableInfo.DeleteDependenceItem ("WHERE place_type_id = @type_id AND place_no = @place_no AND lessee_id IS NULL", "@place_no", "@type_id"));
 			PrepareTable.ClearItems.Add ("events", 
@@ -181,6 +183,8 @@ namespace bazar
 				"LEFT JOIN services ON service_id = services.id "; 
 			PrepareTable.DisplayString = "Строка в начислении {0} услуги {1} на сумму {2:C}";
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			PrepareTable.ClearItems.Add ("meter_reading", 
+			                             new TableInfo.ClearDependenceItem ("WHERE accrual_pay_id = @id", "", "@id", "accrual_pay_id"));
 			Tables.Add ("accrual_pays", PrepareTable);
 
 			PrepareTable = new TableInfo();
@@ -317,6 +321,8 @@ namespace bazar
 			                              new TableInfo.DeleteDependenceItem ("WHERE service_id = @id ", "", "@id"));
 			PrepareTable.DeleteItems.Add ("contract_pays", 
 			                              new TableInfo.DeleteDependenceItem ("WHERE service_id = @id ", "", "@id"));
+			PrepareTable.ClearItems.Add ("meter_tariffs", 
+			                             new TableInfo.ClearDependenceItem ("WHERE service_id = @id", "", "@id", "service_id"));
 			Tables.Add ("services", PrepareTable);
 
 			PrepareTable = new TableInfo();
@@ -328,6 +334,49 @@ namespace bazar
 			PrepareTable.DeleteItems.Add ("services", 
 			                              new TableInfo.DeleteDependenceItem ("WHERE units_id = @id ", "", "@id"));
 			Tables.Add ("units", PrepareTable);
+
+			PrepareTable = new TableInfo();
+			PrepareTable.ObjectsName = "Показания счётчика";
+			PrepareTable.ObjectName = "показание счётчика"; 
+			PrepareTable.SqlSelect = "SELECT date, value, id FROM meter_reading ";
+			PrepareTable.DisplayString = "Показания {1} на {0}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			Tables.Add ("meter_reading", PrepareTable); 
+
+			PrepareTable = new TableInfo();
+			PrepareTable.ObjectsName = "Тарифы счётчиков";
+			PrepareTable.ObjectName = "тариф счётчика"; 
+			PrepareTable.SqlSelect = "SELECT name, id FROM meter_tariffs ";
+			PrepareTable.DisplayString = "{0}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			PrepareTable.DeleteItems.Add ("meter_reading", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE meter_tariff_id = @id ", "", "@id"));
+			Tables.Add ("meter_tariffs", PrepareTable);
+
+			PrepareTable = new TableInfo();
+			PrepareTable.ObjectsName = "Типы счётчиков";
+			PrepareTable.ObjectName = "тип счётчика"; 
+			PrepareTable.SqlSelect = "SELECT name, id FROM meter_types ";
+			PrepareTable.DisplayString = "{0}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			PrepareTable.DeleteItems.Add ("meter_tariffs", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE meter_type_id = @id ", "", "@id"));
+			PrepareTable.DeleteItems.Add ("meters", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE meters.meter_type_id = @id ", "", "@id"));
+			Tables.Add ("meter_types", PrepareTable);
+
+			PrepareTable = new TableInfo();
+			PrepareTable.ObjectsName = "Cчётчики";
+			PrepareTable.ObjectName = "счётчик"; 
+			PrepareTable.SqlSelect = "SELECT meters.name, meter_types.name as type, meters.id FROM meters " +
+				"LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id ";
+			PrepareTable.DisplayString = "{0} ({1})";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			PrepareTable.DeleteItems.Add ("meter_reading", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE meter_id = @id ", "", "@id"));
+			PrepareTable.ClearItems.Add ("meters", 
+			                             new TableInfo.ClearDependenceItem ("WHERE meters.parent_meter_id = @id", "", "@id", "parent_meter_id"));
+			Tables.Add ("meters", PrepareTable);
 
 			PrepareTable = new TableInfo();
 			PrepareTable.ObjectsName = "Пользователи";
