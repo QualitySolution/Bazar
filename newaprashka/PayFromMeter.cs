@@ -172,11 +172,13 @@ namespace bazar
 									ReadingListStore.SetValue (iter, 3, rdr.GetInt32 ("id"));
 									ReadingListStore.SetValue (iter, 8, String.Format ("{0:d}", rdr.GetDateTime ("date")));
 									ReadingListStore.SetValue (iter, 2, rdr.GetDouble ("value"));
+									ReadingListStore.SetValue (iter, 7, rdr.GetInt32 ("value") - (int) ReadingListStore.GetValue (iter, 6));
 								}
 								else if((string) ReadingListStore.GetValue (iter, 5) == "" || (bool) ReadingListStore.GetValue (iter, 9))
 								{
 									ReadingListStore.SetValue (iter, 5, String.Format ("{0:d}", rdr.GetDateTime ("date")));
 									ReadingListStore.SetValue (iter, 6, rdr.GetInt32 ("value"));
+									ReadingListStore.SetValue (iter, 7, Convert.ToInt32 (ReadingListStore.GetValue (iter, 2)) - rdr.GetInt32 ("value"));
 									ReadingListStore.SetValue (iter, 9, false);
 								}
 							} 
@@ -239,6 +241,11 @@ namespace bazar
 				MainClass.StatusMessage("Ошибка записи показаний счётчиков!");
 				QSMain.ErrorMessage(this,ex);
 			}
+		}
+
+		protected void OnSpinPriceValueChanged(object sender, EventArgs e)
+		{
+			CalculateSum ();
 		}
 	}
 }

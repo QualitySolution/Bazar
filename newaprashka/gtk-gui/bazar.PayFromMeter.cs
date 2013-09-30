@@ -128,7 +128,7 @@ namespace bazar
 			w9.XOptions = ((global::Gtk.AttachOptions)(4));
 			w9.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table2.Gtk.Table+TableChild
-			this.spinPrice = new global::Gtk.SpinButton (0, 100, 1);
+			this.spinPrice = new global::Gtk.SpinButton (0, 100, 0.1);
 			this.spinPrice.CanFocus = true;
 			this.spinPrice.Name = "spinPrice";
 			this.spinPrice.Adjustment.PageIncrement = 10;
@@ -226,6 +226,7 @@ namespace bazar
 			this.DefaultWidth = 641;
 			this.DefaultHeight = 361;
 			this.Show ();
+			this.spinPrice.ValueChanged += new global::System.EventHandler (this.OnSpinPriceValueChanged);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
 	}

@@ -118,7 +118,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
 				cmd.Parameters.AddWithValue("@meter_type_id", DBWorks.ValueOrNull (comboMeterType.Active > 0, ComboWorks.GetActiveId (comboMeterType)));
 				cmd.Parameters.AddWithValue("@place_type_id", DBWorks.ValueOrNull (comboPlaceType.Active > 0, ComboWorks.GetActiveId (comboPlaceType)));
-				cmd.Parameters.AddWithValue("@place_no", DBWorks.ValueOrNull(comboPlaceNo.Active > 0, comboPlaceNo.ActiveText));
+				cmd.Parameters.AddWithValue("@place_no", DBWorks.ValueOrNull(comboPlaceNo.Active >= 0, comboPlaceNo.ActiveText));
 				cmd.Parameters.AddWithValue("@parent_meter_id", DBWorks.ValueOrNull(ParentId > 0, ParentId));
 				cmd.Parameters.AddWithValue("@disabled", checkDisabled.Active );
 

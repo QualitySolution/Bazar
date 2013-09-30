@@ -12843,10 +12843,11 @@
                             <property name="CanFocus">True</property>
                             <property name="Upper">100</property>
                             <property name="PageIncrement">10</property>
-                            <property name="StepIncrement">1</property>
+                            <property name="StepIncrement">0.1</property>
                             <property name="ClimbRate">1</property>
                             <property name="Digits">2</property>
                             <property name="Numeric">True</property>
+                            <signal name="ValueChanged" handler="OnSpinPriceValueChanged" />
                           </widget>
                           <packing>
                             <property name="TopAttach">1</property>
