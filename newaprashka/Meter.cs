@@ -14,7 +14,7 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboPlaceType,"place_types",2);
+			ComboWorks.ComboFillReference(comboPlaceType,"place_types", 2);
 			ComboWorks.ComboFillReference(comboMeterType, "meter_types", 2);
 			NewItem = New;
 		}
@@ -92,7 +92,7 @@ namespace bazar
 		{
 			bool Nameok = entryName.Text != "";
 			bool MeterTypeOk = ComboWorks.GetActiveId (comboMeterType) > 0;
-			bool PlaceOk = ComboWorks.GetActiveId (comboMeterType) > 0 && comboPlaceNo.Active > 0;
+			bool PlaceOk = ComboWorks.GetActiveId (comboMeterType) > 0 && comboPlaceNo.Active >= 0;
 			buttonOk.Sensitive = Nameok && MeterTypeOk && PlaceOk;
 		}
 
