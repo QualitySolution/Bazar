@@ -17,6 +17,8 @@ namespace bazar
 		List<long> DeletedRowId = new List<long>();
 
 		decimal AccrualTotal = 0, IncomeTotal = 0;
+		int Place_type_id;
+		string Place_no;
 		bool NotComplete;
 
 		float area = 0;
@@ -40,9 +42,21 @@ namespace bazar
 			MainClass.FillServiceListStore(out ServiceRefListStore);
 			
 			//Создаем таблицу "Услуги"
-			ServiceListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string),
-			                                      typeof (int), typeof (string), typeof (int), typeof (double),
-			                                      typeof (double), typeof (long), typeof (string), typeof (decimal), typeof(bool));
+			ServiceListStore = new Gtk.ListStore (typeof (int), 	//0 - service id
+			                                      typeof (string),	//1 - service name
+			                                      typeof (int),		//2 - cash id
+			                                      typeof (string),	//3 - cash name
+			                                      typeof (int),		//4 - units id
+			                                      typeof (string),	//5 - units name
+			                                      typeof (int),		//6 - quantity
+			                                      typeof (double),	//7 - price
+			                                      typeof (double),	//8 - summa
+			                                      typeof (long),	//9 - row id
+			                                      typeof (string),	//10 - paid text
+			                                      typeof (decimal),	//11 - paid value
+			                                      typeof(bool),		//12 - from area
+			                                      typeof(int)		//13 - number of counters
+			                                      );
 
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
 			ServiceColumn.Title = "Наименование";
@@ -316,17 +330,25 @@ namespace bazar
 				
 				//Получаем таблицу услуг
 				sql = "SELECT accrual_pays.*, cash.name as cash, services.name as service, " +
-					"units.id as units_id, units.name as units, paysum.sum as paid FROM accrual_pays " +
+					"units.id as units_id, units.name as units, paysum.sum as paid, metercount.number FROM accrual_pays " +
 						"LEFT JOIN cash ON cash.id = accrual_pays.cash_id " +
 						"LEFT JOIN services ON accrual_pays.service_id = services.id " +
 						"LEFT JOIN units ON services.units_id = units.id " +
 						"LEFT JOIN (" +
 						"SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum " +
 						"ON paysum.accrual_pay_id = accrual_pays.id " +
+						"LEFT JOIN (" +
+						"SELECT meter_tariffs.service_id, count(meter_tariffs.id) as number FROM meter_tariffs " +
+						"LEFT JOIN meter_types ON meter_types.id = meter_tariffs.meter_type_id " +
+						"LEFT JOIN meters ON meters.meter_type_id = meter_types.id " +
+						"WHERE meters.place_type_id = @place_type_id AND meters.place_no = @place_no " +
+						"GROUP BY service_id) as metercount ON metercount.service_id = accrual_pays.service_id " +
 						"WHERE accrual_pays.accrual_id = @accrual_id";
 				
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@accrual_id", AccrualId);
+				cmd.Parameters.AddWithValue("@place_type_id", Place_type_id);
+				cmd.Parameters.AddWithValue("@place_no", Place_no);
 				rdr = cmd.ExecuteReader();
 				
 				int cash_id, units_id, count;
@@ -362,7 +384,9 @@ namespace bazar
 					                              sum,
 					                              (object) rdr.GetInt64("id"),
 					                              String.Format ("{0:0.00}", paid),
-					                              paid);
+					                              paid,
+					                              null,
+					                              DBWorks.GetInt (rdr, "number", 0));
 				}
 				rdr.Close();
 				MainClass.StatusMessage("Ok");
@@ -430,7 +454,7 @@ namespace bazar
 			try
 			{
 				TreeIter iter;
-				string sql = "SELECT lessees.name as lessee, organizations.name as organization, contracts.place_no, place_types.name as place_type, places.area as area FROM contracts " +
+				string sql = "SELECT lessees.name as lessee, organizations.name as organization, contracts.place_no, contracts.place_type_id, place_types.name as place_type, places.area as area FROM contracts " +
 					"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 					"LEFT JOIN organizations ON contracts.org_id = organizations.id " +
 					"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
@@ -439,36 +463,38 @@ namespace bazar
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				comboContract.GetActiveIter ( out iter);
 				cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue (iter, 1));
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				rdr.Read();
-
-				labelLessee.LabelProp = rdr["lessee"].ToString();
-				labelOrg.LabelProp = rdr["organization"].ToString();
-				labelPlace.LabelProp = rdr["place_type"].ToString () + " - " + rdr["place_no"].ToString ();
-
-				float old_area = area;
-				area = rdr.GetFloat("area");
-
-				TreeIter ServiceIter;
-				if (ServiceListStore.GetIterFirst (out ServiceIter))
+				using(MySqlDataReader rdr = cmd.ExecuteReader())
 				{
-					do
-					{
-						bool b = (bool) ServiceListStore.GetValue(ServiceIter, 12);
-						int i = (int) ServiceListStore.GetValue(ServiceIter, 6);
-						if( b && i == old_area)
-						{
-							int ar = (int) area;
-							ServiceListStore.SetValue(ServiceIter, 6, ar);
-							double Price = (double)ServiceListStore.GetValue (ServiceIter, 7);
-							ServiceListStore.SetValue(ServiceIter, 8, Price * ar);
-						}
-					}
-					while(ServiceListStore.IterNext (ref ServiceIter));
-					CalculateServiceSum ();
-				}
+					rdr.Read();
 
-				rdr.Close ();
+					labelLessee.LabelProp = rdr["lessee"].ToString();
+					labelOrg.LabelProp = rdr["organization"].ToString();
+					labelPlace.LabelProp = rdr["place_type"].ToString () + " - " + rdr["place_no"].ToString ();
+					Place_type_id = rdr.GetInt32 ("place_type_id");
+					Place_no = rdr["place_no"].ToString ();
+
+					float old_area = area;
+					area = rdr.GetFloat("area");
+
+					TreeIter ServiceIter;
+					if (ServiceListStore.GetIterFirst (out ServiceIter))
+					{
+						do
+						{
+							bool b = (bool) ServiceListStore.GetValue(ServiceIter, 12);
+							int i = (int) ServiceListStore.GetValue(ServiceIter, 6);
+							if( b && i == old_area)
+							{
+								int ar = (int) area;
+								ServiceListStore.SetValue(ServiceIter, 6, ar);
+								double Price = (double)ServiceListStore.GetValue (ServiceIter, 7);
+								ServiceListStore.SetValue(ServiceIter, 8, Price * ar);
+							}
+						}
+						while(ServiceListStore.IterNext (ref ServiceIter));
+						CalculateServiceSum ();
+					}
+				}
 				buttonOpenContract.Sensitive = true;
 			}
 			catch (Exception ex)
@@ -650,6 +676,7 @@ namespace bazar
 				ServiceListStore.SetValue(iter, 3, CashNameList.GetValue (CashIter, 0));
 				ServiceListStore.SetValue (iter, 2, CashNameList.GetValue (CashIter, 1));
 			}
+			//FIXME Добавить вставку информации о счетчиках. Что бы кнопка зажигалась сразу после добавления услуги.
 			TestCanSave ();
 			ShowStatus ();
 		}
@@ -719,8 +746,13 @@ namespace bazar
 
 		protected void OnTreeviewServicesCursorChanged (object sender, EventArgs e)
 		{
+			TreeIter iter;
 			bool isSelect = treeviewServices.Selection.CountSelectedRows() == 1;
+			bool MeterOk = false;
+			if (isSelect && treeviewServices.Selection.GetSelected (out iter))
+				MeterOk = (int)ServiceListStore.GetValue (iter, 13) > 0;
 			buttonDelService.Sensitive = isSelect;
+			buttonFromMeter.Sensitive = MeterOk;
 		}
 
 		protected void ShowStatus()
@@ -930,6 +962,29 @@ namespace bazar
 				UpdatePaid ();
 			}
 
+		}
+
+		protected void OnButtonFromMeterClicked(object sender, EventArgs e)
+		{
+			TreeIter iter;
+			treeviewServices.Selection.GetSelected (out iter);
+
+			PayFromMeter WinMeter = new PayFromMeter ();
+			WinMeter.Price = (double) ServiceListStore.GetValue (iter, 7);
+			WinMeter.Fill (Convert.ToInt32 (ServiceListStore.GetValue (iter, 9)),
+			               (int) ServiceListStore.GetValue (iter, 0),
+			               Place_type_id,
+			               Place_no,
+			               ServiceListStore.GetValue (iter, 5).ToString ());
+			int result = WinMeter.Run ();
+			if(result == (int) ResponseType.Ok)
+			{
+				ServiceListStore.SetValue (iter, 7, WinMeter.Price);
+				ServiceListStore.SetValue (iter, 6, WinMeter.TotalCount);
+				ServiceListStore.SetValue (iter, 8, WinMeter.Price * WinMeter.TotalCount);
+				CalculateServiceSum ();
+			}
+			WinMeter.Destroy ();
 		}
 	}
 }

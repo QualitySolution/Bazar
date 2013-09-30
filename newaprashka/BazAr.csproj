@@ -56,6 +56,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="logo.ico" />
     <EmbeddedResource Include="icons\logo.png" />
+    <EmbeddedResource Include="icons\meter.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -122,6 +123,8 @@
     <Compile Include="gtk-gui\bazar.Meter.cs" />
     <Compile Include="MeterReading.cs" />
     <Compile Include="gtk-gui\bazar.MeterReading.cs" />
+    <Compile Include="PayFromMeter.cs" />
+    <Compile Include="gtk-gui\bazar.PayFromMeter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
