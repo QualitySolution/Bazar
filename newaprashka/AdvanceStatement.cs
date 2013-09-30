@@ -371,8 +371,8 @@ namespace bazar
 			if(comboCash.Active > 0 && comboCash.GetActiveIter(out iter))
 				sqlwhere += " AND cash_id = '" + comboCash.Model.GetValue(iter,1) + "' ";
 			string sql = "SELECT SUM(count) as debt FROM ( " +
-				"SELECT SUM(debit_slips.sum) as count FROM debit_slips WHERE debit_slips.employee_id = @employee_id " + sqlwhere +
-				"UNION ALL SELECT -SUM(credit_slips.sum) as count FROM credit_slips WHERE credit_slips.employee_id = @employee_id " + sqlwhere +
+				"SELECT SUM(debit_slips.sum) as count FROM debit_slips WHERE operation = 'advance' AND debit_slips.employee_id = @employee_id " + sqlwhere +
+				"UNION ALL SELECT -SUM(credit_slips.sum) as count FROM credit_slips WHERE operation = 'advance' AND credit_slips.employee_id = @employee_id " + sqlwhere +
 				"UNION ALL SELECT -SUM(advance.sum) as count FROM advance WHERE advance.employee_id = @employee_id " + sqlwhere + " ) AS slips";
 			try
 			{
@@ -404,7 +404,7 @@ namespace bazar
 				sql = "SELECT debit_slips.*,  cash.name as cash, organizations.name as organization FROM debit_slips " +
 						"LEFT JOIN cash ON debit_slips.cash_id = cash.id " +
 						"LEFT JOIN organizations ON debit_slips.org_id = organizations.id " +
-						"WHERE employee_id = @employee_id " + sqlwhere +
+						"WHERE operation = 'advance' AND employee_id = @employee_id " + sqlwhere +
 						" ORDER BY date DESC, id DESC " +
 						"LIMIT 20";
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
