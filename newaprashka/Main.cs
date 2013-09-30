@@ -145,9 +145,19 @@ namespace bazar
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id ";
 			PrepareTable.DisplayString = "Начисление за {0:MMMM} {1} арендатору {2} по договору {3}";
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			PrepareTable.DeleteItems.Add ("credit_slips", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE accrual_id = @id AND operation = 'payment'", "", "@id"));
 			PrepareTable.ClearItems.Add ("credit_slips", 
-			                             new TableInfo.ClearDependenceItem ("WHERE accrual_id = @id", "", "@id", "accrual_id"));
+			                             new TableInfo.ClearDependenceItem ("WHERE accrual_id = @id AND operation <> 'payment'", "", "@id", "accrual_id"));
 			Tables.Add ("accrual", PrepareTable);
+
+			PrepareTable = new TableInfo();
+			PrepareTable.ObjectsName = "Оплаты";
+			PrepareTable.ObjectName = "оплату"; 
+			PrepareTable.SqlSelect = "SELECT payments.createdate, accrual_id, payments.id FROM payments ";
+			PrepareTable.DisplayString = "Оплата от {0:d} по начислению № {1}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			Tables.Add ("payments", PrepareTable);
 
 			PrepareTable = new TableInfo();
 			PrepareTable.ObjectsName = "Авансовые отчеты";
@@ -225,6 +235,8 @@ namespace bazar
 			PrepareTable.SqlSelect = "SELECT id, date, sum FROM credit_slips ";
 			PrepareTable.DisplayString = "Приходный ордер №{0} от {1:d} на сумму {2:C}";
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			PrepareTable.DeleteItems.Add ("payments", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE credit_slip_id = @id ", "", "@id"));
 			Tables.Add ("credit_slips", PrepareTable);
 
 			PrepareTable = new TableInfo();
