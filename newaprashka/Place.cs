@@ -425,9 +425,10 @@ namespace bazar
 			MainClass.StatusMessage("Получаем счетчики места...");
 			try
 			{
-				string sql = "SELECT meters.id, meters.name, meter_types.name as type FROM meters " +
+				string sql = "SELECT meters.id, meters.name, meter_types.name as type, meters.disabled FROM meters " +
 					"LEFT JOIN meter_types ON meter_types.id = meters.meter_type_id " +
-					"WHERE place_type_id = @place_type AND place_no = @place_no";
+					"WHERE place_type_id = @place_type AND place_no = @place_no " +
+					"ORDER BY disabled";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 
 				cmd.Parameters.AddWithValue("@place_type", ComboWorks.GetActiveId (comboPType));
@@ -451,7 +452,7 @@ namespace bazar
 					Meters = new MeterTable[DBRead.Count];
 					foreach(object[] row in DBRead)
 					{
-						Meters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2]);
+						Meters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2], (bool)row[3]);
 						if(i == 0) // Удаляем вкладку по умочанию, только после добавления новой, иначе проблемы с отображением.
 						{
 							notebookMeters.RemovePage (0); //FIXME Подумать о обработки ситуации когда все счетчики удалены.
@@ -471,7 +472,7 @@ namespace bazar
 						bool Found = false;
 						foreach(object[] row in DBRead)
 						{
-							if(Convert.ToInt32 (row[0]) == meter.ID && row[2].ToString () == meter.Name)
+							if(Convert.ToInt32 (row[0]) == meter.ID && row[2].ToString () == meter.Name && (bool)row[3] == meter.Disabled)
 								Found = true;
 						}
 						if(!Found)
@@ -499,7 +500,7 @@ namespace bazar
 						}
 						if(Found)
 							continue;
-						NewMeters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2]);
+						NewMeters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2], (bool)row[3] );
 						i++;
 					}
 					Meters = NewMeters;
@@ -554,12 +555,13 @@ namespace bazar
 			}
 		}		
 
-		private MeterTable AddMeterPage(int id, string name)
+		private MeterTable AddMeterPage(int id, string name, bool disable)
 		{
 			MeterTable meter = new MeterTable ();
 			meter.ID = id;
 			meter.Name = name;
 			meter.Filled = false;
+			meter.Disabled = disable;
 			meter.liststore = new ListStore (typeof(int), // 0 - ID
 			                             typeof(string), //1 - date
 			                             typeof(string), //2 - tariff
@@ -572,6 +574,8 @@ namespace bazar
 			meter.treeview.AppendColumn ("Показания", new CellRendererText (), "text", 3);
 
 			ScrolledWindow Scroll = new ScrolledWindow ();
+			if (disable)
+				name += "(отк.)";
 			notebookMeters.AppendPage (Scroll, new Label (name));
 
 			Scroll.Add (meter.treeview);
@@ -614,6 +618,7 @@ namespace bazar
 				return;
 			if (!Meters [notebookMeters.CurrentPage].Filled)
 				UpdateReadings ();
+			buttonAddReading.Sensitive = !Meters [notebookMeters.CurrentPage].Disabled;
 			OnTreeviewReadingCursorChanged (null, null);
 		}
 
@@ -631,7 +636,8 @@ namespace bazar
 		protected void OnTreeviewReadingCursorChanged(object sender, EventArgs e)
 		{
 			bool isSelect = Meters[notebookMeters.CurrentPage].treeview.Selection.CountSelectedRows() == 1;
-			buttonDeleteReading.Sensitive = isSelect;
+			bool isEnabled = !Meters[notebookMeters.CurrentPage].Disabled;
+			buttonDeleteReading.Sensitive = isSelect && isEnabled;
 		}
 
 		protected void OnButtonDeleteReadingClicked(object sender, EventArgs e)
@@ -650,6 +656,7 @@ namespace bazar
 			public string Name;
 			public TreeView treeview;
 			public ListStore liststore;
+			public bool Disabled;
 			public bool Filled;
 
 			public MeterTable()

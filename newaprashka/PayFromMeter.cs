@@ -142,7 +142,7 @@ namespace bazar
 				"FROM meter_tariffs " +
 				"LEFT JOIN meter_types ON meter_types.id = meter_tariffs.meter_type_id " +
 				"LEFT JOIN meters ON meters.meter_type_id = meter_types.id " +
-				"WHERE meter_tariffs.service_id = @service_id AND meters.place_type_id = @place_type_id AND meters.place_no = @place_no";
+				"WHERE meter_tariffs.service_id = @service_id AND meters.place_type_id = @place_type_id AND meters.place_no = @place_no AND meters.disabled = 'FALSE'";
 			try
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -232,7 +232,7 @@ namespace bazar
 					"FROM (SELECT DISTINCT meter_reading.meter_id, meter_reading.meter_tariff_id FROM meter_reading) as selectedmeters" +
 					") as reading ON meters.id = reading.meter_id " +
 					"LEFT JOIN meter_tariffs ON meter_tariffs.id = reading.meter_tariff_id " +
-					"WHERE meters.parent_meter_id IN (" + MetersIds + ")";
+					"WHERE meters.parent_meter_id IN (" + MetersIds + ") AND meters.disabled = 'FALSE'";
 
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 
