@@ -525,7 +525,7 @@ namespace bazar
 					"LEFT JOIN services ON services.id = meter_tariffs.service_id " +
 					"LEFT JOIN units ON units.id = services.units_id " +
 					"WHERE meter_reading.meter_id = @id " +
-					"ORDER BY meter_reading.date DESC, tariff";
+					"ORDER BY meter_reading.date DESC, tariff, meter_reading.value DESC";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MeterTable meter = Meters[notebookMeters.CurrentPage];
 
