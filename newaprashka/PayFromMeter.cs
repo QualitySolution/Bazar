@@ -7,10 +7,11 @@ namespace bazar
 {
 	public partial class PayFromMeter : Gtk.Dialog
 	{
-		ListStore ReadingListStore;
-		int accrual_detail_id;
+		ListStore ReadingListStore, ChildListStore;
+		int accrual_detail_id, ChildCount;
 		public int TotalCount;
 		string Units;
+		bool LastValues;
 
 		public double Price {
 		get{return spinPrice.Value;}
@@ -20,7 +21,7 @@ namespace bazar
 		public PayFromMeter ()
 		{
 			this.Build ();
-
+			//Main meters
 			ReadingListStore = new Gtk.ListStore (typeof (int), 	// 0 - meter id
 			                                     typeof (int),		// 1 - tariff id
 			                                     typeof (double),	// 2 - value
@@ -39,7 +40,7 @@ namespace bazar
 			CellValue.Adjustment = adjValue;
 			CellValue.Edited += OnValueSpinEdited;
 
-			treeviewMeters.AppendColumn ("Счётчик/тариф", new Gtk.CellRendererText (), "text", 4);
+			treeviewMeters.AppendColumn ("Тип счетчика/тариф", new Gtk.CellRendererText (), "text", 4);
 			treeviewMeters.AppendColumn ("Дата", new Gtk.CellRendererText (), "text", 5);
 			treeviewMeters.AppendColumn ("Предыдущие", new Gtk.CellRendererText (), RenderPreValueColumn);
 			treeviewMeters.AppendColumn ("Дата", new Gtk.CellRendererText (), "text", 8);
@@ -48,6 +49,18 @@ namespace bazar
 
 			treeviewMeters.Model = ReadingListStore;
 			treeviewMeters.ShowAll ();
+
+			//Child meters
+			ChildListStore = new Gtk.ListStore (typeof (string), 	// 0 - meter name
+			                                      typeof (string),	// 1 - date
+			                                      typeof (int)		// 2 - value
+			                                      );
+
+			treeviewChilds.AppendColumn ("Тип счетчика/тариф", new Gtk.CellRendererText (), "text", 0);
+			treeviewChilds.AppendColumn ("Дата", new Gtk.CellRendererText (), "text", 1);
+			treeviewChilds.AppendColumn ("Расход", new Gtk.CellRendererText (), RenderChildValueColumn);
+			treeviewChilds.Model = ChildListStore;
+			treeviewChilds.ShowAll ();
 		}
 
 		void OnValueSpinEdited (object o, EditedArgs args)
@@ -72,6 +85,13 @@ namespace bazar
 			(cell as Gtk.CellRendererText).Text = String.Format("{0} {1}", LastReading, Units);
 		}
 
+		private void RenderChildValueColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			int ChildDelta = (int) model.GetValue (iter, 2);
+
+			(cell as Gtk.CellRendererText).Text = String.Format("{0} {1}", ChildDelta, Units);
+		}
+
 		private void RenderValueColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			double CurReading = (double) model.GetValue (iter, 2);
@@ -90,19 +110,25 @@ namespace bazar
 			{
 				(cell as Gtk.CellRendererText).Foreground = "red";
 			}
-			(cell as Gtk.CellRendererText).Text = String.Format("{0} {1}", Delta, Units);
+			if((double) model.GetValue (iter, 2) > 0)
+				(cell as Gtk.CellRendererText).Text = String.Format("{0} {1}", Delta, Units);
+			else
+				(cell as Gtk.CellRendererText).Text = "-//-";
 		}
 
 		protected void CalculateSum ()
 		{
 			TotalCount = 0;
+			int MeterValues = 0;
 
 			foreach(object[] row in ReadingListStore )
 			{
 				if((int) row[7] > 0)
-				TotalCount += (int) row[7];
+					MeterValues += (int) row[7];
 			}
-			labelCount.Text = string.Format("{0} {1}", TotalCount, Units);
+			TotalCount = MeterValues - ChildCount;
+			labelCount.LabelProp = string.Format("{0} {1}", MeterValues, Units);
+			labelTotal.LabelProp = string.Format("{0} {1}", TotalCount, Units);
 			labelSum.Text = string.Format("{0:C}", TotalCount * spinPrice.Value);
 		}
 
@@ -144,6 +170,7 @@ namespace bazar
 				}
 
 				//Получаем информацию о последних показаниях
+				LastValues = true;
 				ReadingListStore.GetIterFirst (out iter);
 				string MetersIds = ReadingListStore.GetValue (iter, 0).ToString ();
 				while(ReadingListStore.IterNext (ref iter))
@@ -168,6 +195,8 @@ namespace bazar
 							{
 								if(rdr["accrual_pay_id"] != DBNull.Value && rdr.GetInt32 ("accrual_pay_id") == AccrualRow)
 								{
+									if((string) ReadingListStore.GetValue (iter, 5) != "")
+										LastValues = false;
 									ReadingListStore.SetValue (iter, 9, true);
 									ReadingListStore.SetValue (iter, 3, rdr.GetInt32 ("id"));
 									ReadingListStore.SetValue (iter, 8, String.Format ("{0:d}", rdr.GetDateTime ("date")));
@@ -184,6 +213,49 @@ namespace bazar
 							} 
 						} while(ReadingListStore.IterNext (ref iter));
 					}
+				}
+				if(LastValues)
+					hboxMessage.Visible = false;
+				else
+				{
+					(treeviewMeters.Columns[4].CellRenderers[0] as CellRendererSpin).Editable = false;
+					buttonOk.Sensitive = false;
+				}
+
+				// take childs values
+				sql = "SELECT meters.name, meter_tariffs.name as tariff, reading.* FROM meters " +
+					"LEFT JOIN (" +
+					"SELECT  selectedmeters.*, " +
+					"(SELECT date FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastdate, " +
+					"(SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue, " +
+					"(SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1, 1) as prevalue " +
+					"FROM (SELECT DISTINCT meter_reading.meter_id, meter_reading.meter_tariff_id FROM meter_reading) as selectedmeters" +
+					") as reading ON meters.id = reading.meter_id " +
+					"LEFT JOIN meter_tariffs ON meter_tariffs.id = reading.meter_tariff_id " +
+					"WHERE meters.parent_meter_id IN (" + MetersIds + ")";
+
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
+
+				using(MySqlDataReader rdr = cmd.ExecuteReader())
+				{
+					if(!rdr.HasRows || !LastValues)
+					{
+						vboxChilds.Visible = false;
+						labelChilds.Visible = false;
+						labelChildText.Visible = false;
+						labelTotal.Visible = false;
+						labelTotalText.Visible = false;
+					}
+					ChildCount = 0;
+					while (rdr.Read())
+					{
+						ChildListStore.AppendValues (rdr["name"].ToString () + "/" + rdr["tariff"].ToString (),
+						                             String.Format ("{0:d}", DBWorks.GetDateTime (rdr, "lastdate", new DateTime(1,1,1))),
+						                             DBWorks.GetInt (rdr,"lastvalue", 0) - DBWorks.GetInt (rdr,"prevalue", 0)
+													);
+						ChildCount += DBWorks.GetInt (rdr,"lastvalue", 0) - DBWorks.GetInt (rdr,"prevalue", 0);
+					}
+					labelChilds.LabelProp = string.Format("{0} {1}", ChildCount, Units);
 				}
 				CalculateSum ();
 				MainClass.StatusMessage("Ok");

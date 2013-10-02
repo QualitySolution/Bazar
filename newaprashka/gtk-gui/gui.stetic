@@ -12672,9 +12672,9 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.PayFromMeter" design-size="641 361">
+  <widget class="Gtk.Dialog" id="bazar.PayFromMeter" design-size="619 377">
     <property name="MemberName" />
-    <property name="Title" translatable="yes">Ввод показаний счетчиков</property>
+    <property name="Title" translatable="yes">Расчет из показаний счетчиков</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="Modal">True</property>
     <property name="Buttons">2</property>
@@ -12684,6 +12684,41 @@
         <property name="MemberName" />
         <property name="BorderWidth">2</property>
         <child>
+          <widget class="Gtk.HBox" id="hboxMessage">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <widget class="Gtk.Image" id="image499">
+                <property name="MemberName" />
+                <property name="Pixbuf">stock:gtk-dialog-warning Dnd</property>
+              </widget>
+              <packing>
+                <property name="Position">0</property>
+                <property name="AutoSize">False</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Label" id="label9">
+                <property name="MemberName" />
+                <property name="Xalign">0</property>
+                <property name="LabelProp" translatable="yes">Вы не можете именять предыдущие значения счетчиков. Расчет доступен только
+для просмотра. В этом режиме подключенные счетчики не учитываются.</property>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">False</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">False</property>
+            <property name="Expand">False</property>
+          </packing>
+        </child>
+        <child>
           <widget class="Gtk.Label" id="label5">
             <property name="MemberName" />
             <property name="Xalign">0</property>
@@ -12691,7 +12726,7 @@
             <property name="UseMarkup">True</property>
           </widget>
           <packing>
-            <property name="Position">0</property>
+            <property name="Position">1</property>
             <property name="AutoSize">True</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
@@ -12711,7 +12746,7 @@
             </child>
           </widget>
           <packing>
-            <property name="Position">1</property>
+            <property name="Position">2</property>
             <property name="AutoSize">True</property>
           </packing>
         </child>
@@ -12720,7 +12755,45 @@
             <property name="MemberName" />
             <property name="Spacing">6</property>
             <child>
-              <placeholder />
+              <widget class="Gtk.VBox" id="vboxChilds">
+                <property name="MemberName" />
+                <property name="Spacing">6</property>
+                <child>
+                  <widget class="Gtk.Label" id="label1">
+                    <property name="MemberName" />
+                    <property name="Xalign">0</property>
+                    <property name="LabelProp" translatable="yes">&lt;b&gt;Подключенные счетчики&lt;/b&gt;</property>
+                    <property name="UseMarkup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="Position">0</property>
+                    <property name="AutoSize">True</property>
+                    <property name="Expand">False</property>
+                    <property name="Fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow1">
+                    <property name="MemberName" />
+                    <property name="ShadowType">In</property>
+                    <child>
+                      <widget class="Gtk.TreeView" id="treeviewChilds">
+                        <property name="MemberName" />
+                        <property name="CanFocus">True</property>
+                        <property name="ShowScrollbars">True</property>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="Position">1</property>
+                    <property name="AutoSize">True</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="Position">0</property>
+                <property name="AutoSize">False</property>
+              </packing>
             </child>
             <child>
               <widget class="Gtk.Frame" id="frame1">
@@ -12735,7 +12808,7 @@
                     <child>
                       <widget class="Gtk.Table" id="table2">
                         <property name="MemberName" />
-                        <property name="NRows">3</property>
+                        <property name="NRows">5</property>
                         <property name="NColumns">2</property>
                         <property name="RowSpacing">6</property>
                         <property name="ColumnSpacing">6</property>
@@ -12743,7 +12816,7 @@
                           <widget class="Gtk.Label" id="label6">
                             <property name="MemberName" />
                             <property name="Xalign">1</property>
-                            <property name="LabelProp" translatable="yes">Всего расход:</property>
+                            <property name="LabelProp" translatable="yes">Расход по счетчикам:</property>
                           </widget>
                           <packing>
                             <property name="AutoSize">True</property>
@@ -12760,11 +12833,12 @@
                         <child>
                           <widget class="Gtk.Label" id="label7">
                             <property name="MemberName" />
+                            <property name="Xalign">1</property>
                             <property name="LabelProp" translatable="yes">Цена за единицу:</property>
                           </widget>
                           <packing>
-                            <property name="TopAttach">1</property>
-                            <property name="BottomAttach">2</property>
+                            <property name="TopAttach">3</property>
+                            <property name="BottomAttach">4</property>
                             <property name="AutoSize">True</property>
                             <property name="XOptions">Fill</property>
                             <property name="YOptions">Fill</property>
@@ -12783,8 +12857,49 @@
                             <property name="LabelProp" translatable="yes">Сумма:</property>
                           </widget>
                           <packing>
-                            <property name="TopAttach">2</property>
-                            <property name="BottomAttach">3</property>
+                            <property name="TopAttach">4</property>
+                            <property name="BottomAttach">5</property>
+                            <property name="AutoSize">True</property>
+                            <property name="XOptions">Fill</property>
+                            <property name="YOptions">Fill</property>
+                            <property name="XExpand">False</property>
+                            <property name="XFill">True</property>
+                            <property name="XShrink">False</property>
+                            <property name="YExpand">False</property>
+                            <property name="YFill">True</property>
+                            <property name="YShrink">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="Gtk.Label" id="labelChilds">
+                            <property name="MemberName" />
+                            <property name="LabelProp" translatable="yes">label4</property>
+                          </widget>
+                          <packing>
+                            <property name="TopAttach">1</property>
+                            <property name="BottomAttach">2</property>
+                            <property name="LeftAttach">1</property>
+                            <property name="RightAttach">2</property>
+                            <property name="AutoSize">True</property>
+                            <property name="XOptions">Fill</property>
+                            <property name="YOptions">Fill</property>
+                            <property name="XExpand">False</property>
+                            <property name="XFill">True</property>
+                            <property name="XShrink">False</property>
+                            <property name="YExpand">False</property>
+                            <property name="YFill">True</property>
+                            <property name="YShrink">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="Gtk.Label" id="labelChildText">
+                            <property name="MemberName" />
+                            <property name="Xalign">1</property>
+                            <property name="LabelProp" translatable="yes">Расход подключенных:</property>
+                          </widget>
+                          <packing>
+                            <property name="TopAttach">1</property>
+                            <property name="BottomAttach">2</property>
                             <property name="AutoSize">True</property>
                             <property name="XOptions">Fill</property>
                             <property name="YOptions">Fill</property>
@@ -12823,10 +12938,51 @@
                             <property name="UseMarkup">True</property>
                           </widget>
                           <packing>
+                            <property name="TopAttach">4</property>
+                            <property name="BottomAttach">5</property>
+                            <property name="LeftAttach">1</property>
+                            <property name="RightAttach">2</property>
+                            <property name="AutoSize">True</property>
+                            <property name="XOptions">Fill</property>
+                            <property name="YOptions">Fill</property>
+                            <property name="XExpand">False</property>
+                            <property name="XFill">True</property>
+                            <property name="XShrink">False</property>
+                            <property name="YExpand">False</property>
+                            <property name="YFill">True</property>
+                            <property name="YShrink">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="Gtk.Label" id="labelTotal">
+                            <property name="MemberName" />
+                            <property name="LabelProp" translatable="yes">label5</property>
+                          </widget>
+                          <packing>
                             <property name="TopAttach">2</property>
                             <property name="BottomAttach">3</property>
                             <property name="LeftAttach">1</property>
                             <property name="RightAttach">2</property>
+                            <property name="AutoSize">True</property>
+                            <property name="XOptions">Fill</property>
+                            <property name="YOptions">Fill</property>
+                            <property name="XExpand">False</property>
+                            <property name="XFill">True</property>
+                            <property name="XShrink">False</property>
+                            <property name="YExpand">False</property>
+                            <property name="YFill">True</property>
+                            <property name="YShrink">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="Gtk.Label" id="labelTotalText">
+                            <property name="MemberName" />
+                            <property name="Xalign">1</property>
+                            <property name="LabelProp" translatable="yes">Итоговый расход:</property>
+                          </widget>
+                          <packing>
+                            <property name="TopAttach">2</property>
+                            <property name="BottomAttach">3</property>
                             <property name="AutoSize">True</property>
                             <property name="XOptions">Fill</property>
                             <property name="YOptions">Fill</property>
@@ -12851,8 +13007,8 @@
                             <signal name="ValueChanged" handler="OnSpinPriceValueChanged" />
                           </widget>
                           <packing>
-                            <property name="TopAttach">1</property>
-                            <property name="BottomAttach">2</property>
+                            <property name="TopAttach">3</property>
+                            <property name="BottomAttach">4</property>
                             <property name="LeftAttach">1</property>
                             <property name="RightAttach">2</property>
                             <property name="AutoSize">True</property>
@@ -12891,7 +13047,7 @@
             </child>
           </widget>
           <packing>
-            <property name="Position">2</property>
+            <property name="Position">3</property>
             <property name="AutoSize">True</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
