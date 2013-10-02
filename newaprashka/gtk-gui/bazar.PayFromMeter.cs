@@ -47,6 +47,7 @@ namespace bazar
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.GtkScrolledWindow = new global::Gtk.ScrolledWindow ();
 			this.GtkScrolledWindow.Name = "GtkScrolledWindow";
+			this.GtkScrolledWindow.HscrollbarPolicy = ((global::Gtk.PolicyType)(2));
 			this.GtkScrolledWindow.ShadowType = ((global::Gtk.ShadowType)(1));
 			// Container child GtkScrolledWindow.Gtk.Container+ContainerChild
 			this.treeviewMeters = new global::Gtk.TreeView ();
