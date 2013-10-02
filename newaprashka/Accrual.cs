@@ -474,7 +474,7 @@ namespace bazar
 					Place_no = rdr["place_no"].ToString ();
 
 					float old_area = area;
-					area = rdr.GetFloat("area");
+					area = DBWorks.GetFloat (rdr, "area", 0.0f);
 
 					TreeIter ServiceIter;
 					if (ServiceListStore.GetIterFirst (out ServiceIter))
