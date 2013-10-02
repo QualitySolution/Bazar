@@ -511,7 +511,7 @@ namespace bazar
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 682;
-			this.DefaultHeight = 319;
+			this.DefaultHeight = 340;
 			this.Show ();
 			this.buttonAccountableEdit.Clicked += new global::System.EventHandler (this.OnButtonAccountableEditClicked);
 			this.buttonContractorEdit.Clicked += new global::System.EventHandler (this.OnButtonContractorEditClicked);

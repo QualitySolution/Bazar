@@ -236,7 +236,7 @@ namespace bazar
 
 		public void StatementFill(int StatementId, bool Copy)
 		{
-			Copy = NewStatement;
+			NewStatement = Copy;
 
 			TreeIter iter;
 			
@@ -274,16 +274,6 @@ namespace bazar
 				}
 				if(rdr["date"] != DBNull.Value && !Copy)
 					dateStatement.Date = DateTime.Parse( rdr["date"].ToString());
-				if(rdr["org_id"] != DBNull.Value)
-					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
-				else
-					ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
-				comboOrg.SetActiveIter (iter);
-				if(rdr["cash_id"] != DBNull.Value)
-					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, int.Parse(rdr["cash_id"].ToString()), out iter);
-				else
-					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, -1, out iter);
-				comboCash.SetActiveIter (iter);
 				if(rdr["expense_id"] != DBNull.Value)
 					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, int.Parse(rdr["expense_id"].ToString()), out iter);
 				else
@@ -293,11 +283,18 @@ namespace bazar
 				if(rdr["user"] != DBNull.Value && !Copy)
 					entryUser.Text = rdr["user"].ToString ();
 				textviewDetails.Buffer.Text = rdr["details"].ToString();
-				
+				int DBOrg_id = DBWorks.GetInt(rdr, "org_id", -1);
+				int DBCash_id = DBWorks.GetInt(rdr, "cash_id", -1);
 				rdr.Close();
 
+				ComboWorks.SetActiveItem(comboOrg, DBOrg_id);
+				ComboWorks.SetActiveItem(comboCash, DBCash_id);
+
 				if(!NewStatement)
+				{
 					this.Title = "Авансовый отчет №" + entryNumber.Text;
+					checkCreateSlip.Sensitive = false;
+				}
 				// Проверяем права на редактирование
 				if(!QSMain.User.Permissions["edit_slips"] && dateStatement.Date != DateTime.Now.Date && !Copy)
 				{
@@ -309,7 +306,6 @@ namespace bazar
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 				}
-				checkCreateSlip.Sensitive = false;
 				MainClass.StatusMessage("Ok");
 			}
 			catch (Exception ex)

@@ -253,7 +253,7 @@ namespace bazar
 
 		public void SlipFill(int SlipId, bool Copy)
 		{
-			Copy = NewSlip;
+			NewSlip = Copy;
 
 			TreeIter iter;
 			
@@ -367,17 +367,17 @@ namespace bazar
 				{
 					separationpayment.PaymentId = Payment;
 					separationpayment.AccrualId = OriginalAccrual;
-					buttonPrint.Sensitive = true;
 					//FIXME Временно пока не налажено корректная обработка смены начисления у созданной оплаты
 					comboContract.Sensitive = false;
 					comboAccrual.Sensitive = false;
 					buttonLesseeEdit.Sensitive = false;
 				}
-				if(comboOperation.Active == 0)
-					buttonPrint.Sensitive = true;
 
 				if(!NewSlip)
+				{
 					this.Title = "Приходный ордер №" + entryNumber.Text;
+					buttonPrint.Sensitive = true;
+				}
 				// Проверяем права на редактирование
 				if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date && !Copy)
 				{
@@ -518,6 +518,9 @@ namespace bazar
 			{
 			case 0:
 				ReportsExt.ViewReport ("CommonTicket", param);
+				break;
+			case 1:
+				ReportsExt.ViewReport ("ReturnTicket", param);
 				break;
 			case 2:
 				ReportsExt.ViewReport ("PaymentTicket", param);

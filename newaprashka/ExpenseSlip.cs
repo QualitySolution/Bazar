@@ -150,7 +150,7 @@ namespace bazar
 		
 		public void SlipFill(int SlipId, bool Copy)
 		{
-			Copy = NewSlip;
+			NewSlip = Copy;
 
 			TreeIter iter;
 			
@@ -220,7 +220,10 @@ namespace bazar
 
 				rdr.Close();
 				if(!NewSlip)
+				{
 					this.Title = "Расходный ордер №" + entryNumber.Text;
+					buttonPrint.Sensitive = true;
+				}
 				// Проверяем права на редактирование
 				if(!QSMain.User.Permissions["edit_slips"] && dateSlip.Date != DateTime.Now.Date && !Copy)
 				{
@@ -233,7 +236,6 @@ namespace bazar
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 				}
-				buttonPrint.Sensitive = true;
 				MainClass.StatusMessage("Ok");
 			}
 			catch (Exception ex)
