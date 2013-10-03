@@ -520,7 +520,7 @@ namespace bazar
 			MainClass.StatusMessage("Получаем показания счетчика...");
 			try
 			{
-				string sql = "SELECT meter_reading.id, meter_reading.date, meter_reading.value, meter_tariffs.name as tariff, units.name as unit FROM meter_reading " +
+				string sql = "SELECT meter_reading.id, meter_reading.meter_tariff_id, meter_reading.date, meter_reading.value, meter_tariffs.name as tariff, units.name as unit FROM meter_reading " +
 					"LEFT JOIN meter_tariffs ON meter_tariffs.id = meter_reading.meter_tariff_id " +
 					"LEFT JOIN services ON services.id = meter_tariffs.service_id " +
 					"LEFT JOIN units ON units.id = services.units_id " +
@@ -528,6 +528,7 @@ namespace bazar
 					"ORDER BY meter_reading.date DESC, tariff, meter_reading.value DESC";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MeterTable meter = Meters[notebookMeters.CurrentPage];
+				Dictionary<int, TreeIter> LaterReading = new Dictionary<int, TreeIter>();
 
 				cmd.Parameters.AddWithValue("@id", meter.ID);
 
@@ -537,11 +538,20 @@ namespace bazar
 					while (rdr.Read())
 					{
 						string ValueFormat = rdr["unit"] != DBNull.Value ? "{0} {1}": "{0}";
-						meter.liststore.AppendValues (rdr.GetInt32 ("id"),
+						TreeIter CurIter = meter.liststore.AppendValues (rdr.GetInt32 ("id"),
 						                              String.Format ("{0:d}", rdr.GetDateTime ("date")),
 						                              rdr["tariff"].ToString (),
-						                              String.Format (ValueFormat, rdr.GetInt32 ("value"), rdr["unit"].ToString ())
+						                              String.Format (ValueFormat, rdr.GetInt32 ("value"), rdr["unit"].ToString ()),
+						                              "",
+						                              rdr.GetInt32 ("value")
 						                              );
+						int tariff_id = rdr.GetInt32 ("meter_tariff_id");
+						if(LaterReading.ContainsKey (tariff_id))
+						{
+							int delta = (int)meter.liststore.GetValue (LaterReading[tariff_id], 5) - rdr.GetInt32 ("value");
+							meter.liststore.SetValue (LaterReading[tariff_id], 4, String.Format (ValueFormat, delta, rdr["unit"].ToString ()));
+						}
+						LaterReading[tariff_id] = CurIter;
 					}
 				}
 				meter.Filled = true;
@@ -565,13 +575,16 @@ namespace bazar
 			meter.liststore = new ListStore (typeof(int), // 0 - ID
 			                             typeof(string), //1 - date
 			                             typeof(string), //2 - tariff
-			                             typeof(string) //3 - value
-			                             );
+			                             typeof(string), //3 - value
+			                             typeof(string),  //4 - delta
+			                             typeof(int)		//5 - digital value
+			                                 );
 			meter.treeview = new TreeView (meter.liststore);
 
 			meter.treeview.AppendColumn ("Дата", new CellRendererText (), "text", 1);
 			meter.treeview.AppendColumn ("Тариф", new CellRendererText (), "text", 2);
 			meter.treeview.AppendColumn ("Показания", new CellRendererText (), "text", 3);
+			meter.treeview.AppendColumn ("Расход", new CellRendererText (), "text", 4);
 
 			ScrolledWindow Scroll = new ScrolledWindow ();
 			if (disable)
