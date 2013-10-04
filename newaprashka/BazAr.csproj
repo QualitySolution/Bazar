@@ -196,5 +196,6 @@
     <None Include="Reports\ReturnTicket.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Reports\Meters.rdl" />
   </ItemGroup>
 </Project>

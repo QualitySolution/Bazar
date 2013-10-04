@@ -775,4 +775,9 @@ public partial class MainWindow : Gtk.Window
 		winref.Destroy();
 	}
 	
+	protected void OnAction42Activated(object sender, EventArgs e)
+	{
+		string param = "";
+		ReportsExt.ViewReport ("Meters", param);
+	}
 }
