@@ -1,4 +1,5 @@
 using System;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -18,7 +19,7 @@ namespace bazar
 			string param = "Day=" + dateReport.Date.Day.ToString() +
 				"&Month=" + dateReport.Date.Month.ToString() +
 					"&Year=" + dateReport.Date.Year.ToString();
-			ReportsExt.ViewReport ("LesseeDebts", param);
+			ViewReportExt.Run ("LesseeDebts", param);
 		}
 	}
 }

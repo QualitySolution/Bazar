@@ -396,7 +396,7 @@ namespace bazar
 			if((ResponseType) WinAsk.Run () == ResponseType.Yes)
 			{
 				string param = "id=" + id.ToString ();
-				ReportsExt.ViewReport ("PaymentTicket", param);
+				ViewReportExt.Run ("PaymentTicket", param);
 			}
 			WinAsk.Destroy ();
 		}

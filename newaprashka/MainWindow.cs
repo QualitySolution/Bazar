@@ -770,7 +770,7 @@ public partial class MainWindow : Gtk.Window
 	protected void OnAction39Activated (object sender, EventArgs e)
 	{
 		string param = "";
-		ReportsExt.ViewReport ("Contracts", param);
+		ViewReportExt.Run ("Contracts", param);
 	}
 
 	protected void OnAction40Activated (object sender, EventArgs e)
@@ -793,6 +793,6 @@ public partial class MainWindow : Gtk.Window
 	protected void OnAction42Activated(object sender, EventArgs e)
 	{
 		string param = "";
-		ReportsExt.ViewReport ("Meters", param);
+		ViewReportExt.Run ("Meters", param);
 	}
 }

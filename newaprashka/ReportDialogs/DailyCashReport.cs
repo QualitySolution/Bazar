@@ -1,4 +1,5 @@
 using System;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -15,7 +16,7 @@ namespace bazar
 			string date = String.Format ("{0:u}", datepickerCash.Date).Substring (0, 10);
 			string param = "date=" + date;
 			Console.WriteLine (param);                        
-			ReportsExt.ViewReport ("DailyCash", param, true);
+			ViewReportExt.Run ("DailyCash", param, true);
 		}
 	}
 }

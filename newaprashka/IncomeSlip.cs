@@ -517,13 +517,13 @@ namespace bazar
 			switch(comboOperation.Active)
 			{
 			case 0:
-				ReportsExt.ViewReport ("CommonTicket", param);
+				ViewReportExt.Run ("CommonTicket", param);
 				break;
 			case 1:
-				ReportsExt.ViewReport ("ReturnTicket", param);
+				ViewReportExt.Run ("ReturnTicket", param);
 				break;
 			case 2:
-				ReportsExt.ViewReport ("PaymentTicket", param);
+				ViewReportExt.Run ("PaymentTicket", param);
 				break;
 			}
 		}

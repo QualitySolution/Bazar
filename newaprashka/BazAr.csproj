@@ -102,9 +102,6 @@
     <Compile Include="gtk-gui\bazar.PayAccrual.cs" />
     <Compile Include="MassAccrualCreation.cs" />
     <Compile Include="gtk-gui\bazar.MassAccrualCreation.cs" />
-    <Compile Include="gtk-gui\bazar.ViewReportsDlg.cs" />
-    <Compile Include="ReportsExt.cs" />
-    <Compile Include="ViewReportsDlg.cs" />
     <Compile Include="gtk-gui\bazar.DocRegister.cs" />
     <Compile Include="SeparationPayment.cs" />
     <Compile Include="gtk-gui\bazar.SeparationPayment.cs" />

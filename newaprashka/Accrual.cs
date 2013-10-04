@@ -837,7 +837,7 @@ namespace bazar
 		protected void OnButtonPrintClicked (object sender, EventArgs e)
 		{
 			string param = "id=" + entryNumber.Text;
-			ReportsExt.ViewReport ("PayList", param);
+			ViewReportExt.Run ("PayList", param);
 		}
 
 		private void ShowOldDebts()

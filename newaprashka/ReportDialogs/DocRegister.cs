@@ -1,4 +1,5 @@
 using System;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -43,11 +44,11 @@ namespace bazar
 			switch (comboDoc.Active) {
 			case 0:
 				param = "Start=" + Startdate + "&End=" + Enddate;
-				ReportsExt.ViewReport ("IncomeRegister", param);
+				ViewReportExt.Run ("IncomeRegister", param);
 				break;
 			case 1:
 				param = "Start=" + Startdate + "&End=" + Enddate;
-				ReportsExt.ViewReport ("ExpenseRegister", param);
+				ViewReportExt.Run ("ExpenseRegister", param);
 				break;
 			default:
 				break;
