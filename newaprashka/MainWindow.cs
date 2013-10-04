@@ -32,7 +32,7 @@ public partial class MainWindow : Gtk.Window
 			MessageDialog BaseError = new MessageDialog ( this, DialogFlags.DestroyWithParent,
 			                                             MessageType.Warning, 
 			                                             ButtonsType.Close, 
-			                                             "Не удалось получить информацию о базе данных.");
+			                                             "Не удалось получить информацию о версии базы данных.");
 			BaseError.Run();
 			BaseError.Destroy();
 			Environment.Exit(0);
