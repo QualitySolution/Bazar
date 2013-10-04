@@ -319,7 +319,7 @@ namespace bazar
 
 		protected void OnButtonContractorEditClicked (object sender, EventArgs e)
 		{
-			reference ContractorSelect = new reference();
+			Reference ContractorSelect = new Reference();
 			ContractorSelect.SetMode(true,true,true,true,false);
 			ContractorSelect.FillList("contractors","Контрагент", "Контрагенты");
 			ContractorSelect.Show();
@@ -337,7 +337,7 @@ namespace bazar
 
 		protected void OnButtonAccountableEditClicked (object sender, EventArgs e)
 		{
-			reference AccountableSelect = new reference();
+			Reference AccountableSelect = new Reference();
 			AccountableSelect.SetMode(true,true,true,true,false);
 			AccountableSelect.FillList("employees","Сотрудник", "Сотрудники");
 			AccountableSelect.Show();

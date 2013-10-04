@@ -147,7 +147,7 @@ namespace bazar
 
 		protected void OnButtonAccountableEditClicked (object sender, EventArgs e)
 		{
-			reference AccountableSelect = new reference();
+			Reference AccountableSelect = new Reference();
 			AccountableSelect.SetMode(true,true,true,true,false);
 			AccountableSelect.FillList("employees","Сотрудник", "Сотрудники");
 			AccountableSelect.Show();

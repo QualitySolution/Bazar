@@ -216,7 +216,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnButtonEventLesseeEditClicked (object sender, System.EventArgs e)
 	{
-		reference LesseeSelect = new reference();
+		Reference LesseeSelect = new Reference();
 		LesseeSelect.SetMode(false,true,false,true,false);
 		LesseeSelect.FillList("lessees","Арендатор", "Арендаторы");
 		LesseeSelect.Show();

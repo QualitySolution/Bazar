@@ -249,7 +249,7 @@ namespace bazar
 		
 		protected virtual void OnButtonContactClicked (object sender, System.EventArgs e)
 		{
-			reference ContactSelect = new reference();
+			Reference ContactSelect = new Reference();
 			ContactSelect.SetMode(false,true,true,true,false);
 			ContactSelect.FillList("contact_persons","Контактное лицо", "Контактные лица");
 			ContactSelect.Show();

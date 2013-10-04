@@ -236,7 +236,7 @@ namespace bazar
 		
 		protected virtual void OnButtonLesseeEditClicked (object sender, System.EventArgs e)
 		{
-			reference LesseeSelect = new reference();
+			Reference LesseeSelect = new Reference();
 			LesseeSelect.SetMode(false,true,true,true,false);
 			LesseeSelect.FillList("lessees","Арендатор", "Арендаторы");
 			LesseeSelect.Show();

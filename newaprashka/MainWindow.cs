@@ -303,7 +303,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnAction6Activated (object sender, System.EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("goods","Группа товаров", "Группы товаров");
 		winref.Show();
@@ -314,7 +314,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnAction5Activated (object sender, System.EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("classes","Тип события", "Типы событий");
 		winref.Show();
@@ -324,7 +324,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnAction10Activated (object sender, System.EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(false,false,true,true,true);
 		winref.FillList("lessees","Арендатор", "Арендаторы");
 		winref.Show();
@@ -335,7 +335,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnAction3Activated (object sender, System.EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(false,false,true,true,true);
 		winref.FillList("contact_persons","Контактное лицо", "Контактные лица");
 		winref.Show();
@@ -346,7 +346,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction15Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("organizations","Организация", "Организации");
 		winref.Show();
@@ -509,7 +509,7 @@ public partial class MainWindow : Gtk.Window
 	
 	protected void OnAction17Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(false,false,true,true,true);
 		winref.FillList("services","Услуга", "Услуги");
 		winref.Show();
@@ -519,7 +519,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction18Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("units","Единица", "Единицы измерения");
 		winref.Show();
@@ -529,7 +529,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction19Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("cash","Касса", "Кассы");
 		winref.Show();
@@ -561,7 +561,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction24Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("expense_items","Статья расхода", "Статьи расходов");
 		winref.Show();
@@ -571,7 +571,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction25Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("income_items","Статья дохода", "Статьи доходов");
 		winref.Show();
@@ -581,7 +581,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction21Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("contractors","Контрагент", "Контрагенты");
 		winref.Show();
@@ -599,7 +599,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction27Activated (object sender, EventArgs e)
 	{
-		reference winref = new reference();
+		Reference winref = new Reference();
 		winref.SetMode(true,false,true,true,true);
 		winref.FillList("employees","Сотрудник", "Сотрудники");
 		winref.Show();
@@ -620,6 +620,34 @@ public partial class MainWindow : Gtk.Window
 			Result = (ResponseType)MeterTypeEdit.Run();
 			MeterTypeEdit.Destroy();
 			break;
+		case "contact_persons":
+			Contact ContactEdit = new Contact();
+			ContactEdit.NewContact = e.NewItem;
+			if(!e.NewItem)
+				ContactEdit.ContactFill(e.ItemId);
+			ContactEdit.Show();
+			Result = (ResponseType)ContactEdit.Run();
+			ContactEdit.Destroy();
+			break;
+		case "lessees":
+			lessee LesseeEdit = new lessee();
+			LesseeEdit.NewLessee = e.NewItem;
+			if(!e.NewItem)
+				LesseeEdit.LesseeFill(e.ItemId);
+			LesseeEdit.Show();
+			Result = (ResponseType)LesseeEdit.Run();
+			LesseeEdit.Destroy();
+			break;
+		case "services":
+			Service ServiceEdit = new Service();
+			ServiceEdit.NewService = e.NewItem;
+			if(!e.NewItem)
+				ServiceEdit.ServiceFill(e.ItemId);
+			ServiceEdit.Show();
+			Result = (ResponseType)ServiceEdit.Run();
+			ServiceEdit.Destroy();
+			break;
+
 		default:
 			Result = ResponseType.None;
 			break;
@@ -629,17 +657,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnReferenceUpdate(object sender, QSMain.ReferenceUpdatedEventArgs e)
 	{
-		/*	switch (e.ReferenceTable) {
-		case "doc_types":
-			ComboWorks.ComboFillReference (comboDocType, "doc_types", 0);
-		break;
-		} */
-	}
-	
-	public void ReferenceUpdated(string RefTable)
-	{
-		switch (RefTable)
-		{
+		switch (e.ReferenceTable) {
 		case "place_types":
 			ComboWorks.ComboFillReference(comboPlaceType,"place_types",1);
 			ComboWorks.ComboFillReference(comboContractPlaceT,"place_types",1);
@@ -665,11 +683,8 @@ public partial class MainWindow : Gtk.Window
 		case "classes":
 			ComboWorks.ComboFillReference(comboEventType, "classes", 1);
 			break;
-		default:
-				break;
-		}
+		} 
 	}
-	
 
 	protected void OnAction31Activated (object sender, EventArgs e)
 	{

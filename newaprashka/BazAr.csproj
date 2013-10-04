@@ -67,7 +67,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Place.cs" />
-    <Compile Include="reference.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Lessee.cs" />
     <Compile Include="Event.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="gtk-gui\bazar.Service.cs" />
     <Compile Include="gtk-gui\bazar.Place.cs" />
     <Compile Include="gtk-gui\bazar.Event.cs" />
-    <Compile Include="gtk-gui\bazar.reference.cs" />
     <Compile Include="gtk-gui\bazar.lessee.cs" />
     <Compile Include="gtk-gui\bazar.Contact.cs" />
     <Compile Include="Contract.cs" />

@@ -34,7 +34,7 @@ namespace bazar
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
 		{
-			reference LesseeSelect = new reference();
+			Reference LesseeSelect = new Reference();
 			LesseeSelect.SetMode(false,true,true,true,false);
 			LesseeSelect.FillList("lessees","Арендатор", "Арендаторы");
 			LesseeSelect.Show();
@@ -470,7 +470,7 @@ namespace bazar
 
 		protected void OnButtonAccountableEditClicked (object sender, EventArgs e)
 		{
-			reference AccountableSelect = new reference();
+			Reference AccountableSelect = new Reference();
 			AccountableSelect.SetMode(true,true,true,true,false);
 			AccountableSelect.FillList("employees","Сотрудник", "Сотрудники");
 			AccountableSelect.Show();
