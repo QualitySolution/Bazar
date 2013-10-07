@@ -13,11 +13,14 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT services.name as service, units.name as units, count, price, (count * price) as sum FROM accrual_pays 
+        <CommandText>SELECT services.name as service, units.name as units, count, price, (count * price) as sum, IFNULL(paysum.sum, 0) as paid FROM accrual_pays 
 LEFT JOIN services ON accrual_pays.service_id = services.id  
 LEFT JOIN units ON services.units_id = units.id 
+LEFT JOIN (
+SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
+ON paysum.accrual_pay_id = accrual_pays.id 
 WHERE accrual_pays.accrual_id = @id</CommandText>
         <QueryParameters>
           <QueryParameter Name="id">
@@ -25,7 +28,7 @@ WHERE accrual_pays.accrual_id = @id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="service">
           <DataField>service</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -44,6 +47,10 @@ WHERE accrual_pays.accrual_id = @id</CommandText>
         </Field>
         <Field Name="sum">
           <DataField>sum</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="paid">
+          <DataField>paid</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
@@ -124,19 +131,22 @@ WHERE accrual.id = @id</CommandText>
         </Style>
         <TableColumns>
           <TableColumn>
-            <Width>197.7pt</Width>
+            <Width>162.5pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>1in</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>1in</Width>
+            <Width>68.3pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>1in</Width>
           </TableColumn>
           <TableColumn>
             <Width>84.3pt</Width>
+          </TableColumn>
+          <TableColumn >
+            <Width>81.9pt</Width>
+          </TableColumn>
+          <TableColumn >
+            <Width>82.7pt</Width>
           </TableColumn>
         </TableColumns>
         <Header>
@@ -162,24 +172,8 @@ WHERE accrual.id = @id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="Textbox2">
-                      <Value>Ед. изм.</Value>
-                      <Style>
-                        <TextAlign>Center</TextAlign>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <FontWeight>Bold</FontWeight>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
                     <Textbox Name="Textbox3">
-                      <Value>Кол.</Value>
+                      <Value>Количество</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -195,7 +189,7 @@ WHERE accrual.id = @id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox4">
-                      <Value>Цена</Value>
+                      <Value>Цена за ед.</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -211,7 +205,39 @@ WHERE accrual.id = @id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox6">
-                      <Value>Сумма</Value>
+                      <Value>Начислено</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox10">
+                      <Value>Оплачено</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox13">
+                      <Value>Долг</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -250,25 +276,8 @@ WHERE accrual.id = @id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="units">
-                      <Value>=Fields!units.Value</Value>
-                      <CanGrow>true</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <TextAlign>Center</TextAlign>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
                     <Textbox Name="count">
-                      <Value>=Fields!count.Value</Value>
+                      <Value>=Fields!count.Value + " " + Fields!units.Value</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -295,6 +304,7 @@ WHERE accrual.id = @id</CommandText>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format >C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -311,6 +321,41 @@ WHERE accrual.id = @id</CommandText>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format >C</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox11">
+                      <Value>=Fields!paid.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format >C</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox14">
+                      <Value>=Fields!sum.Value - Fields!paid.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format >C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -327,25 +372,6 @@ WHERE accrual.id = @id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox8">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>None</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox9">
                       <Style>
                         <BorderStyle>
                           <Default>None</Default>
@@ -396,7 +422,7 @@ WHERE accrual.id = @id</CommandText>
                         <BorderWidth />
                         <TextAlign>Right</TextAlign>
                       </Style>
-                      <Value>К оплате:</Value>
+                      <Value>Итого:</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -410,8 +436,41 @@ WHERE accrual.id = @id</CommandText>
                         <BorderColor />
                         <BorderWidth />
                         <TextAlign>Right</TextAlign>
+                        <Format >C</Format>
                       </Style>
                       <Value>=Sum(Fields.sum.Value)</Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox12">
+                      <Value>=Sum(Fields.paid.Value)</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>Right</TextAlign>
+                        <Format >C</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox24">
+                      <Value>=Sum(Fields.sum.Value - Fields.paid.Value)</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>Right</TextAlign>
+                        <Format >C</Format>
+                      </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -480,10 +539,10 @@ WHERE accrual.id = @id</CommandText>
       </Textbox>
       <Textbox Name="Textbox22">
         <Height>14.27pt</Height>
-        <Width>513.41pt</Width>
+        <Width>505.16pt</Width>
         <Value>=First(Fields!lessee.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>85.10pt</Left>
+        <Left>93pt</Left>
         <Top>38.00pt</Top>
         <Style>
           <BorderStyle />
@@ -496,7 +555,7 @@ WHERE accrual.id = @id</CommandText>
         <Width>513.41pt</Width>
         <Value>=First(Fields!contract_no.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>84.7pt</Left>
+        <Left>93pt</Left>
         <Top>54.4pt</Top>
         <Style>
           <BorderStyle />
