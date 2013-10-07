@@ -12,6 +12,7 @@ namespace bazar
 		public int TotalCount;
 		string Units;
 		bool LastValues;
+		private decimal MinSum = 0m;
 
 		public double Price {
 		get{return spinPrice.Value;}
@@ -130,6 +131,8 @@ namespace bazar
 			labelCount.LabelProp = string.Format("{0} {1}", MeterValues, Units);
 			labelTotal.LabelProp = string.Format("{0} {1}", TotalCount, Units);
 			labelSum.Text = string.Format("{0:C}", TotalCount * spinPrice.Value);
+			if (TotalCount * spinPrice.Value < (double) MinSum)
+				TotalCount = Convert.ToInt32 ( MinSum / (decimal) spinPrice.Value);
 		}
 
 		public void Fill(int AccrualRow, int service_id, int place_type_id, string place_no, string units)
@@ -257,6 +260,26 @@ namespace bazar
 					}
 					labelChilds.LabelProp = string.Format("{0} {1}", ChildCount, Units);
 				}
+				sql = "SELECT contract_pays.min_sum FROM contract_pays " +
+					"LEFT JOIN contracts ON contracts.id = contract_pays.contract_id " +
+					"LEFT JOIN accrual ON accrual.contract_id = contracts.id " +
+					"LEFT JOIN accrual_pays ON accrual_pays.accrual_id = accrual.id " +
+					"WHERE accrual_pays.id = @accrual_pay_id AND contract_pays.service_id = @service_id";
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
+				cmd.Parameters.AddWithValue("@service_id", service_id);
+				cmd.Parameters.AddWithValue("@accrual_pay_id", accrual_detail_id);
+				object min_sum = cmd.ExecuteScalar();
+				if(min_sum != DBNull.Value)
+				{
+					MinSum = Convert.ToDecimal (min_sum);
+					labelMinSum.LabelProp = String.Format ("{0:C}", MinSum);
+				}
+				else
+				{
+					labelMinSum.Visible = false;
+					labelMinSumText.Visible = false;
+				}
+
 				CalculateSum ();
 				MainClass.StatusMessage("Ok");
 			}

@@ -40,17 +40,19 @@ namespace bazar
 			MainClass.FillServiceListStore(out ServiceRefListStore);
 
 			//Создаем таблицу "Услуги"
-			ServiceListStore = new Gtk.ListStore (typeof (int), 	// 0 - idServiceColumn
-			                                      typeof (string),	// 1 - Наименование
-			                                      typeof (int),		// 2 - idКасса
-			                                      typeof (string),	// 3 - Касса
-			                                      typeof (int), 	// 4 - idЕдиница
-			                                      typeof (string), 	// 5 - Ед. изм.
-			                                      typeof (int), 	// 6 - Количество
-			                                      typeof (double),	// 7 - Цена
-			                                      typeof (double),	// 8 - Сумма
-			                                      typeof (int), 	// 9 - 
-			                                      typeof (bool));	// 10 - Есть ли расчет по метражу
+			ServiceListStore = new Gtk.ListStore (typeof(int), 	// 0 - idServiceColumn
+			                                      typeof(string),	// 1 - Наименование
+			                                      typeof(int),		// 2 - idКасса
+			                                      typeof(string),	// 3 - Касса
+			                                      typeof(int), 	// 4 - idЕдиница
+			                                      typeof(string), 	// 5 - Ед. изм.
+			                                      typeof(int), 	// 6 - Количество
+			                                      typeof(double),	// 7 - Цена
+			                                      typeof(double),	// 8 - Сумма
+			                                      typeof(int), 	// 9 - 
+			                                      typeof(bool),	// 10 - Есть ли расчет по метражу
+			                                      typeof(double)	// 11 - Минимальный платеж.
+			);
 			
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
 			ServiceColumn.Title = "Наименование";
@@ -73,49 +75,38 @@ namespace bazar
 			CellCash.Edited += OnCashComboEdited;
 			CashColumn.PackStart (CellCash, true);
 
-			Gtk.TreeViewColumn CountColumn = new Gtk.TreeViewColumn ();
-			CountColumn.Title = "Количество";
 			Gtk.CellRendererSpin CellCount = new CellRendererSpin();
 			CellCount.Editable = true;
 			Adjustment adjCount = new Adjustment(0,0,1000000,1,10,0);
         	CellCount.Adjustment = adjCount; 
 			CellCount.Edited += OnCountSpinEdited;
-			CountColumn.PackStart (CellCount, true);
 
-			Gtk.TreeViewColumn PriceColumn = new Gtk.TreeViewColumn ();
-			PriceColumn.Title = "Цена";
-			PriceColumn.MinWidth = 90;
 			Gtk.CellRendererSpin CellPrice = new CellRendererSpin();
 			CellPrice.Editable = true;
 			CellPrice.Digits = 2;
 			Adjustment adjPrice = new Adjustment(0,0,100000000,10,1000,0);
         	CellPrice.Adjustment = adjPrice;
 			CellPrice.Edited += OnPriceSpinEdited;
-			PriceColumn.PackStart (CellPrice, true);
 
-			Gtk.TreeViewColumn SumColumn = new Gtk.TreeViewColumn ();
-			SumColumn.Title = "Сумма";
-			Gtk.CellRendererText CellSum = new CellRendererText();
-			SumColumn.PackStart (CellSum, true);
+			Gtk.CellRendererSpin CellMinSum = new CellRendererSpin();
+			CellMinSum.Editable = true;
+			CellMinSum.Digits = 2;
+			Adjustment adjMinSum = new Adjustment(0,0,100000000,10,1000,0);
+			CellMinSum.Adjustment = adjMinSum;
+			CellMinSum.Edited += OnMinSumSpinEdited;
 
 			treeviewServices.AppendColumn (ServiceColumn);
 			ServiceColumn.AddAttribute (CellService,"text", 1);
 			treeviewServices.AppendColumn (CashColumn);
 			CashColumn.AddAttribute (CellCash,"text", 3);
-			treeviewServices.AppendColumn ("Ед. изм.", new Gtk.CellRendererText (), "text", 5);
-			treeviewServices.AppendColumn (CountColumn);
-			CountColumn.AddAttribute (CellCount,"text", 6);
-			treeviewServices.AppendColumn (PriceColumn);
-			PriceColumn.AddAttribute (CellPrice,"text", 7);
-			treeviewServices.AppendColumn (SumColumn);
-			SumColumn.AddAttribute (CellSum,"text", 8);
+			treeviewServices.AppendColumn ("Количество", CellCount, RenderCountColumn);
+			treeviewServices.AppendColumn ("Цена", CellPrice, RenderPriceColumn);
+			treeviewServices.AppendColumn ("Сумма", new Gtk.CellRendererText (), RenderSumColumn);
+			treeviewServices.AppendColumn ("Мин. платеж", CellMinSum, RenderMinSumColumn);
 
-			CountColumn.SetCellDataFunc(CellCount, RenderCountColumn);
-			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
-			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
+			treeviewServices.Columns[3].MinWidth = 90;
 
 			treeviewServices.Model = ServiceListStore;
-			treeviewServices.Columns[5].Visible=false;
 			treeviewServices.ShowAll();
 
 			OnTreeviewServicesCursorChanged(null, null);
@@ -210,6 +201,18 @@ namespace bazar
 			}
 		}
 
+		void OnMinSumSpinEdited (object o, EditedArgs args)
+		{
+			TreeIter iter;
+			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
+				return;
+			double MinSum;
+			if (double.TryParse (args.NewText, out MinSum)) 
+			{
+				ServiceListStore.SetValue (iter, 11, MinSum);
+			}
+		}
+
 		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			string Unit;
@@ -233,6 +236,12 @@ namespace bazar
 		{
 			double Sum = (double) model.GetValue (iter, 8);
 			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
+		}
+
+		private void RenderMinSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			double Sum = (double) model.GetValue (iter, 11);
+			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:0.00}", Sum);
 		}
 
 		public void ContractFill(int Id)
@@ -345,7 +354,9 @@ namespace bazar
 					                             price,
 					                             sum,
 					                             int.Parse(rdr["id"].ToString()),
-					                             rdr.GetBoolean("by_area"));
+					                             rdr.GetBoolean("by_area"),
+					                              DBWorks.GetDouble (rdr, "min_sum", 0.0)
+					                              );
 				}
 				rdr.Close();
 				CalculateServiceSum();
@@ -670,11 +681,11 @@ namespace bazar
 						break; // не указано название услуги
 					if((int)ServiceListStore.GetValue(iter,9) > 0)
 						sql = "UPDATE contract_pays SET service_id = @service_id, " +
-							"cash_id = @cash_id, count = @count, price = @price " +
+							"cash_id = @cash_id, count = @count, price = @price, min_sum = @min_sum " +
 							"WHERE id = @id";
 					else
-						sql = "INSERT INTO contract_pays (contract_id, service_id, cash_id, count, price) " +
-							"VALUES (@contract_id, @service_id, @cash_id, @count, @price)";
+						sql = "INSERT INTO contract_pays (contract_id, service_id, cash_id, count, price, min_sum) " +
+							"VALUES (@contract_id, @service_id, @cash_id, @count, @price, @min_sum)";
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@contract_id", ContractId);
 					cmd.Parameters.AddWithValue("@service_id", ServiceListStore.GetValue(iter,0));
@@ -684,6 +695,7 @@ namespace bazar
 						cmd.Parameters.AddWithValue("@cash_id", DBNull.Value);
 					cmd.Parameters.AddWithValue("@count", ServiceListStore.GetValue(iter,6));
 					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter,7));
+					cmd.Parameters.AddWithValue("@min_sum", DBWorks.ValueOrNull ((double) ServiceListStore.GetValue(iter,11) > 0.0, ServiceListStore.GetValue(iter,11)));
 					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter,9));
 
 					cmd.ExecuteNonQuery();
