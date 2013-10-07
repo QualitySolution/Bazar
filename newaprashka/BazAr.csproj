@@ -11,7 +11,7 @@
     <AssemblyName>BazAr</AssemblyName>
     <CodePage>65001</CodePage>
     <StartupObject>bazar.MainClass</StartupObject>
-    <ReleaseVersion>2.0.3</ReleaseVersion>
+    <ReleaseVersion>2.1.0</ReleaseVersion>
     <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -191,6 +191,8 @@
     <None Include="Reports\ReturnTicket.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Reports\Meters.rdl" />
+    <None Include="Reports\Meters.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
