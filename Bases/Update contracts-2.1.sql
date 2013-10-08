@@ -2,9 +2,6 @@
 ALTER TABLE `bazar`.`contracts` ADD COLUMN `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT  FIRST 
 , DROP PRIMARY KEY 
 , ADD PRIMARY KEY (`id`) ;
-ALTER TABLE `bazar`.`contracts` 
-ADD UNIQUE INDEX `unique_number_date` (`number` ASC, `sign_date` ASC) 
-, DROP INDEX `Number_UNIQUE`;
 
 #Создаем колонки в других таблицах.
 ALTER TABLE `bazar`.`contract_pays` ADD COLUMN `contract_id` INT(10) UNSIGNED NOT NULL  AFTER `id`;
@@ -49,3 +46,8 @@ ALTER TABLE `bazar`.`accrual` DROP INDEX `Contract_per_month`, DROP COLUMN `cont
   ON UPDATE CASCADE
 , ADD INDEX `fk_accrual_contract_id_idx` (`contract_id` ASC)
 , ADD UNIQUE INDEX `Contract_per_month` (`contract_id` ASC, `year` ASC, `month` ASC)  ;
+
+#Заменяем основной индекс.
+ALTER TABLE `bazar`.`contracts` 
+ADD UNIQUE INDEX `unique_number_date` (`number` ASC, `sign_date` ASC) 
+, DROP INDEX `Number_UNIQUE`;
