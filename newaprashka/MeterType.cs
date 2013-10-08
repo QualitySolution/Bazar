@@ -13,6 +13,7 @@ namespace bazar
 
 		ListStore TariffListStore;
 		TreeModel ServiceNameList;
+		CellEditable ServiceCellEdit;
 
 		public MeterType ( bool New)
 		{
@@ -35,6 +36,7 @@ namespace bazar
 			CellService.Model = ServiceNameList;
 			CellService.HasEntry = false;
 			CellService.Edited += OnServiceComboEdited;
+			CellService.EditingStarted += OnServiceComboStartEdited;
 
 			Gtk.CellRendererText CellName = new CellRendererText();
 			CellName.Editable = true;
@@ -118,6 +120,8 @@ namespace bazar
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
+			if (ServiceCellEdit != null)
+				ServiceCellEdit.FinishEditing (); // Небходимо для исправления #29
 			string sql;
 			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			if(NewItem)
@@ -202,6 +206,11 @@ namespace bazar
 				TariffListStore.SetValue (iter, 2, ServiceNameList.GetValue (ServiceIter, 1));
 				TariffListStore.SetValue (iter, 3, args.NewText);
 			}
+		}
+
+		void OnServiceComboStartEdited (object o, EditingStartedArgs args)
+		{
+			ServiceCellEdit = args.Editable;
 		}
 
 		private void OnCellNameEdited (object o, Gtk.EditedArgs args)
