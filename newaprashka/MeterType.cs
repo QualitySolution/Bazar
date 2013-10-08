@@ -240,7 +240,8 @@ namespace bazar
 			{
 				int itemid = (int)TariffListStore.GetValue (iter, 0);
 				Delete winDelete = new Delete();
-				winDelete.RunDeletion("meter_tariffs", itemid);
+				if(winDelete.RunDeletion("meter_tariffs", itemid))
+					TariffListStore.Remove(ref iter);
 			}
 			else
 			{
