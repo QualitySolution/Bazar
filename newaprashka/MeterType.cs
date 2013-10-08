@@ -92,7 +92,7 @@ namespace bazar
 					{
 						TariffListStore.AppendValues(rdr.GetInt32 ("id"),
 						                              rdr["name"].ToString(),
-						                              DBWorks.GetInt (rdr, "service_id", -1),
+						                             DBWorks.GetInt (rdr, "service_id", -1),
 						                             DBWorks.GetString (rdr, "service", "нет")
 						                              );
 					}
@@ -119,6 +119,7 @@ namespace bazar
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
 			string sql;
+			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			if(NewItem)
 			{
 				sql = "INSERT INTO meter_types (name) " +
@@ -131,7 +132,7 @@ namespace bazar
 			MainClass.StatusMessage("Запись типа счетчика...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 
 				cmd.Parameters.AddWithValue("@id", Itemid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
@@ -156,7 +157,7 @@ namespace bazar
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@meter_type_id", Itemid);
 					if((int)TariffListStore.GetValue(iter, 2) > 0)
-						cmd.Parameters.AddWithValue("@service_id", TariffListStore.GetValue(iter,2));
+						cmd.Parameters.AddWithValue("@service_id", TariffListStore.GetValue(iter, 2));
 					else
 						cmd.Parameters.AddWithValue("@service_id", DBNull.Value);
 					cmd.Parameters.AddWithValue("@name", TariffListStore.GetValue(iter, 1));
@@ -167,10 +168,12 @@ namespace bazar
 				while(TariffListStore.IterNext(ref iter));
 
 				MainClass.StatusMessage("Ok");
+				trans.Commit();
 				Respond (Gtk.ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
+				trans.Rollback ();
 				Console.WriteLine(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи типа счетчика!");
 				QSMain.ErrorMessage(this,ex);
