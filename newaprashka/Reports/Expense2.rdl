@@ -33,12 +33,10 @@
   </ReportParameters>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT debit_slips.date as edate, debit_slips.sum as sum, debit_slips.details as details, expense_items.name as expense, contractors.name as contractor, employees.name as employee FROM debit_slips 
-LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id 
-LEFT JOIN employees ON debit_slips.employee_id = employees.id 
-LEFT JOIN contractors ON debit_slips.contractor_id = contractors.id
+        <CommandText>SELECT debit_slips.date as edate, debit_slips.sum as sum, debit_slips.details as details, expense_items.name as expense, employees.name as employee FROM debit_slips 
+LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id LEFT JOIN employees ON debit_slips.employee_id = employees.id 
 WHERE debit_slips.id=@id</CommandText>
         <QueryParameters>
           <QueryParameter Name="id">
@@ -46,7 +44,7 @@ WHERE debit_slips.id=@id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="edate">
           <DataField>edate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
@@ -67,61 +65,25 @@ WHERE debit_slips.id=@id</CommandText>
           <DataField>employee</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="contractor">
-          <DataField>contractor</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>24.5pt</Height>
+    <Height>.5in</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
-    <ReportItems>
-      <Textbox Name="Textbox6" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Top>4.40pt</Top>
-        <Left>5.50pt</Left>
-        <Width>270.24pt</Width>
-        <Height>17.32pt</Height>
-        <Value>="Расходный ордер № " + Convert.ToString({?id})</Value>
-        <Style>
-          <FontSize>15pt</FontSize>
-          <FontWeight>Bold</FontWeight>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-          <TextAlign>Center</TextAlign>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox2" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Top>4.1pt</Top>
-        <Left>306.4pt</Left>
-        <Width>270.24pt</Width>
-        <Height>17.32pt</Height>
-        <Value>="Расходный ордер № " + Convert.ToString({?id})</Value>
-        <Style>
-          <FontSize>15pt</FontSize>
-          <FontWeight>Bold</FontWeight>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-          <TextAlign>Center</TextAlign>
-        </Style>
-      </Textbox>
-    </ReportItems>
   </PageHeader>
   <Body>
-    <Height>218.1pt</Height>
+    <Height>489.7pt</Height>
     <ReportItems>
       <List Name="List1">
         <DataSetName>Data</DataSetName>
-        <Height>198.53pt</Height>
-        <NoRows>Нет данных!</NoRows>
+        <Height>213.59pt</Height>
+        <NoRows>Query returned no rows!</NoRows>
         <ReportItems>
           <Textbox Name="edate">
-            <Top>5.5pt</Top>
-            <Left>77.8pt</Left>
+            <Top>27.90pt</Top>
+            <Left>104.00pt</Left>
             <Width>61.76pt</Width>
             <Height>12.81pt</Height>
             <Value>=Fields!edate.Value</Value>
@@ -134,8 +96,8 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="sum">
-            <Top>120.7pt</Top>
-            <Left>77.4pt</Left>
+            <Top>126.80pt</Top>
+            <Left>99.70pt</Left>
             <Width>93.30pt</Width>
             <Height>14.32pt</Height>
             <Value>=Fields!sum.Value</Value>
@@ -146,14 +108,13 @@ WHERE debit_slips.id=@id</CommandText>
               <BorderStyle />
               <BorderColor />
               <BorderWidth />
-              <Format>C</Format>
             </Style>
           </Textbox>
           <Textbox Name="details">
-            <Top>48.95pt</Top>
-            <Left>77.40pt</Left>
-            <Width>197.23pt</Width>
-            <Height>63.98pt</Height>
+            <Top>59.30pt</Top>
+            <Left>102.20pt</Left>
+            <Width>473.54pt</Width>
+            <Height>56.38pt</Height>
             <Value>=Fields!details.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
@@ -170,8 +131,8 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="expense">
-            <Top>19.0pt</Top>
-            <Left>77.7pt</Left>
+            <Top>44.5pt</Top>
+            <Left>102.9pt</Left>
             <Width>142.89pt</Width>
             <Height>13.56pt</Height>
             <Value>=Fields!expense.Value</Value>
@@ -181,10 +142,10 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="employee">
-            <Top>169.00pt</Top>
-            <Left>140.80pt</Left>
-            <Width>132.44pt</Width>
-            <Height>25.60pt</Height>
+            <Top>157.4pt</Top>
+            <Left>240.5pt</Left>
+            <Width>251.41pt</Width>
+            <Height>14.31pt</Height>
             <Value>=Fields!employee.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
@@ -192,12 +153,12 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="Textbox12">
-            <Height>16.51pt</Height>
-            <Width>150.58pt</Width>
-            <Value>Подпись  ________________</Value>
+            <Height>15.76pt</Height>
+            <Width>207.79pt</Width>
+            <Value>Подпись  _________________________</Value>
             <ZIndex>1</ZIndex>
-            <Left>7.00pt</Left>
-            <Top>168.30pt</Top>
+            <Left>51.00pt</Left>
+            <Top>156.00pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -205,62 +166,45 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
           <Textbox Name="Textbox1">
-            <Height>24.80pt</Height>
-            <Width>268.76pt</Width>
+            <Height>13.50pt</Height>
+            <Width>363.67pt</Width>
             <Value>=SummaString_Val(Convert.ToString(Fields!sum.Value))</Value>
             <ZIndex>1</ZIndex>
-            <Left>6.10pt</Left>
-            <Top>133.20pt</Top>
+            <Left>189.3pt</Left>
+            <Top>127.0pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
               <BorderWidth />
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox16" >
-            <Height>12.00pt</Height>
-            <Width>196.37pt</Width>
-            <Value>=Fields!contractor.Value</Value>
-            <ZIndex>1</ZIndex>
-            <Left>79.9pt</Left>
-            <Top>33.1pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox17" >
-            <Height>12pt</Height>
-            <Width>1in</Width>
-            <Value>Контрагент:</Value>
-            <ZIndex>1</ZIndex>
-            <Left>5.3pt</Left>
-            <Top>33.1pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-              <TextAlign>Right</TextAlign>
             </Style>
           </Textbox>
         </ReportItems>
-        <Width>285.90pt</Width>
+        <Width>583.25pt</Width>
         <Left>0.00pt</Left>
         <Top>0.00pt</Top>
+      </List>
+      <Textbox Name="Textbox7" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Top>2.30pt</Top>
+        <Left>75.90pt</Left>
+        <Width>433.62pt</Width>
+        <Height>18.07pt</Height>
+        <Value>="Расходный ордер № " + Convert.ToString({?id})</Value>
         <Style>
+          <FontSize>15pt</FontSize>
+          <FontWeight>Bold</FontWeight>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
+          <TextAlign>Center</TextAlign>
         </Style>
-      </List>
+      </Textbox>
       <Textbox Name="Textbox8" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Height>12pt</Height>
         <Width>1in</Width>
         <Value>Дата:</Value>
         <ZIndex>1</ZIndex>
-        <Left>4.7pt</Left>
-        <Top>5.4pt</Top>
+        <Left>31.0pt</Left>
+        <Top>27.8pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -269,12 +213,12 @@ WHERE debit_slips.id=@id</CommandText>
         </Style>
       </Textbox>
       <Textbox Name="Textbox9" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Height>12.00pt</Height>
-        <Width>72.27pt</Width>
+        <Height>12pt</Height>
+        <Width>1in</Width>
         <Value>Расход:</Value>
         <ZIndex>1</ZIndex>
-        <Left>4.9pt</Left>
-        <Top>18.8pt</Top>
+        <Left>31.0pt</Left>
+        <Top>44.1pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -283,12 +227,12 @@ WHERE debit_slips.id=@id</CommandText>
         </Style>
       </Textbox>
       <Textbox Name="Textbox10" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Height>12.00pt</Height>
-        <Width>72.27pt</Width>
+        <Height>12pt</Height>
+        <Width>1in</Width>
         <Value>Основание:</Value>
         <ZIndex>1</ZIndex>
-        <Left>4.5pt</Left>
-        <Top>48.0pt</Top>
+        <Left>29.9pt</Left>
+        <Top>59.0pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -299,51 +243,35 @@ WHERE debit_slips.id=@id</CommandText>
       <Textbox Name="Textbox11" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Height>11.24pt</Height>
         <Width>55.73pt</Width>
-        <Value>Получено:</Value>
+        <Value>Получено</Value>
         <ZIndex>1</ZIndex>
-        <Left>27.6pt</Left>
-        <Top>119.7pt</Top>
+        <Left>54.3pt</Left>
+        <Top>126.7pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
         </Style>
       </Textbox>
-      <Line Name="Line1">
-        <Height>-209.28pt</Height>
-        <Width>0.00pt</Width>
-        <Style>
-          <BorderStyle>
-            <Default>Dashed</Default>
-          </BorderStyle>
-          <BorderColor />
-          <BorderWidth />
-        </Style>
-        <Left>290.00pt</Left>
-        <Top>210.82pt</Top>
-      </Line>
-      <List Name="List3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+      <List Name="List2" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <DataSetName>Data</DataSetName>
-        <Height>198.53pt</Height>
-        <NoRows>Нет данных!</NoRows>
+        <Height>206.08pt</Height>
+        <NoRows>Query returned no rows!</NoRows>
         <ReportItems>
-          <Textbox Name="Textbox7">
-            <Top>5.5pt</Top>
-            <Left>77.8pt</Left>
+          <Textbox Name="Textbox2">
+            <Top>27.90pt</Top>
+            <Left>104.00pt</Left>
             <Width>61.76pt</Width>
-            <Height>12.81pt</Height>
+            <Height>12.80pt</Height>
             <Value>=Fields!edate.Value</Value>
             <CanGrow>false</CanGrow>
             <Style>
               <PaddingLeft>2pt</PaddingLeft>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
             </Style>
           </Textbox>
-          <Textbox Name="Textbox21">
-            <Top>120.7pt</Top>
-            <Left>77.4pt</Left>
+          <Textbox Name="Textbox3">
+            <Top>126.80pt</Top>
+            <Left>99.70pt</Left>
             <Width>93.30pt</Width>
             <Height>14.32pt</Height>
             <Value>=Fields!sum.Value</Value>
@@ -354,14 +282,13 @@ WHERE debit_slips.id=@id</CommandText>
               <BorderStyle />
               <BorderColor />
               <BorderWidth />
-              <Format>C</Format>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox22">
-            <Top>47.45pt</Top>
-            <Left>77.40pt</Left>
-            <Width>197.98pt</Width>
-            <Height>65.48pt</Height>
+          <Textbox Name="Textbox4">
+            <Top>59.30pt</Top>
+            <Left>102.20pt</Left>
+            <Width>473.54pt</Width>
+            <Height>56.38pt</Height>
             <Value>=Fields!details.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
@@ -377,133 +304,48 @@ WHERE debit_slips.id=@id</CommandText>
               <BorderWidth />
             </Style>
           </Textbox>
-          <Textbox Name="Textbox23">
-            <Top>19.0pt</Top>
-            <Left>77.7pt</Left>
+          <Textbox Name="Textbox5">
+            <Top>44.5pt</Top>
+            <Left>102.9pt</Left>
             <Width>142.89pt</Width>
             <Height>13.56pt</Height>
             <Value>=Fields!expense.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
               <PaddingLeft>2pt</PaddingLeft>
-              <BorderStyle  />
-              <BorderColor  />
-              <BorderWidth  />
             </Style>
           </Textbox>
-          <Textbox Name="Textbox24">
-            <Top>169.00pt</Top>
-            <Left>140.80pt</Left>
-            <Width>132.44pt</Width>
-            <Height>25.60pt</Height>
+          <Textbox Name="Textbox13">
+            <Top>157.4pt</Top>
+            <Left>240.5pt</Left>
+            <Width>251.41pt</Width>
+            <Height>14.31pt</Height>
             <Value>=Fields!employee.Value</Value>
             <CanGrow>true</CanGrow>
             <Style>
               <PaddingLeft>2pt</PaddingLeft>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox25">
-            <Height>16.51pt</Height>
-            <Width>150.58pt</Width>
-            <Value>Подпись  ________________</Value>
+          <Textbox Name="Textbox14">
+            <Height>15.76pt</Height>
+            <Width>207.79pt</Width>
+            <Value>Подпись  _________________________</Value>
             <ZIndex>1</ZIndex>
-            <Left>7.00pt</Left>
-            <Top>168.30pt</Top>
+            <Left>51.00pt</Left>
+            <Top>156.00pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
               <BorderWidth />
             </Style>
           </Textbox>
-          <Textbox Name="Textbox26">
-            <Height>24.80pt</Height>
-            <Width>268.76pt</Width>
+          <Textbox Name="Textbox15">
+            <Height>13.50pt</Height>
+            <Width>363.67pt</Width>
             <Value>=SummaString_Val(Convert.ToString(Fields!sum.Value))</Value>
             <ZIndex>1</ZIndex>
-            <Left>6.10pt</Left>
-            <Top>133.20pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-            <Height>12pt</Height>
-            <Width>1in</Width>
-            <Value>Дата:</Value>
-            <ZIndex>1</ZIndex>
-            <Left>3.8pt</Left>
-            <Top>5.7pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-            <Height>12.00pt</Height>
-            <Width>72.27pt</Width>
-            <Value>Расход:</Value>
-            <ZIndex>1</ZIndex>
-            <Left>4.4pt</Left>
-            <Top>18.1pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox5" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-            <Height>12pt</Height>
-            <Width>1in</Width>
-            <Value>Основание:</Value>
-            <ZIndex>1</ZIndex>
-            <Left>3.3pt</Left>
-            <Top>48.1pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox13" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-            <Height>11.24pt</Height>
-            <Width>55.73pt</Width>
-            <Value>Получено:</Value>
-            <ZIndex>1</ZIndex>
-            <Left>27.1pt</Left>
-            <Top>120.4pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox14" >
-            <Height>12pt</Height>
-            <Width>1in</Width>
-            <Value>Контрагент:</Value>
-            <ZIndex>1</ZIndex>
-            <Left>4.8pt</Left>
-            <Top>31.6pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox15" >
-            <Height>12.00pt</Height>
-            <Width>196.37pt</Width>
-            <Value>=Fields!contractor.Value</Value>
-            <ZIndex>1</ZIndex>
-            <Left>79.70pt</Left>
-            <Top>31.80pt</Top>
+            <Left>189.3pt</Left>
+            <Top>127.0pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -511,15 +353,93 @@ WHERE debit_slips.id=@id</CommandText>
             </Style>
           </Textbox>
         </ReportItems>
-        <Width>285.90pt</Width>
-        <Left>295.40pt</Left>
-        <Top>0.00pt</Top>
+        <Width>581.74pt</Width>
+        <Left>0.80pt</Left>
+        <Top>236.40pt</Top>
+      </List>
+      <Textbox Name="Textbox16" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Height>12.00pt</Height>
+        <Width>72.27pt</Width>
+        <Value>Дата:</Value>
+        <ZIndex>1</ZIndex>
+        <Left>28.90pt</Left>
+        <Top>263.50pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <TextAlign>Right</TextAlign>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox17" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Height>12pt</Height>
+        <Width>1in</Width>
+        <Value>Расход:</Value>
+        <ZIndex>1</ZIndex>
+        <Left>28.9pt</Left>
+        <Top>279.8pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <TextAlign>Right</TextAlign>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox18" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Height>12pt</Height>
+        <Width>1in</Width>
+        <Value>Основание:</Value>
+        <ZIndex>1</ZIndex>
+        <Left>27.8pt</Left>
+        <Top>294.7pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <TextAlign>Right</TextAlign>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox19" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Height>11.24pt</Height>
+        <Width>55.73pt</Width>
+        <Value>Получено</Value>
+        <ZIndex>1</ZIndex>
+        <Left>52.2pt</Left>
+        <Top>362.4pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
         </Style>
-      </List>
+      </Textbox>
+      <Textbox Name="Textbox20" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Top>241.5pt</Top>
+        <Left>71.5pt</Left>
+        <Width>433.62pt</Width>
+        <Height>18.07pt</Height>
+        <Value>="Расходный ордер № " + Convert.ToString({?id})</Value>
+        <Style>
+          <FontSize>15pt</FontSize>
+          <FontWeight>Bold</FontWeight>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <TextAlign>Center</TextAlign>
+        </Style>
+      </Textbox>
+      <Line Name="Line1">
+        <Height>0.01pt</Height>
+        <Width>569.93pt</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Dashed</Default>
+          </BorderStyle>
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+        <Left>19.36pt</Left>
+        <Top>224.38pt</Top>
+      </Line>
     </ReportItems>
   </Body>
   <PageFooter>

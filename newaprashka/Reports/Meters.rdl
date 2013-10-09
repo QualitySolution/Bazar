@@ -386,7 +386,8 @@ WHERE meters.disabled = 'FALSE'
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <HideDuplicates>Data</HideDuplicates>
+                      <HideDuplicates>
+                      </HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -401,10 +402,11 @@ WHERE meters.disabled = 'FALSE'
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
                         <TextAlign>Center</TextAlign>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>
+                      </HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -422,7 +424,8 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <TextAlign>Center</TextAlign>
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>
+                      </HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -508,7 +511,7 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <TextAlign>Right</TextAlign>
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -527,7 +530,7 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -545,7 +548,7 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -564,7 +567,7 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -582,7 +585,7 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates >Data</HideDuplicates>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
