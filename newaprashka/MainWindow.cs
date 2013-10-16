@@ -792,7 +792,9 @@ public partial class MainWindow : Gtk.Window
 	
 	protected void OnAction42Activated(object sender, EventArgs e)
 	{
-		string param = "";
-		ViewReportExt.Run ("Meters", param);
+		MetersReport WinMeters = new MetersReport ();
+		WinMeters.Show ();
+		WinMeters.Run ();
+		WinMeters.Destroy ();
 	}
 }

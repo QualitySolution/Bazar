@@ -6,14 +6,6 @@
   </Author>
   <PageHeight>8.5in</PageHeight>
   <PageWidth>11in</PageWidth>
-  <DataSources>
-    <DataSource Name="DS1">
-      <ConnectionProperties>
-        <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>server=rs.qsolution.ru;user=admin;database=bazar;port=3306;password=;</ConnectString>
-      </ConnectionProperties>
-    </DataSource>
-  </DataSources>
   <Width>7.5in</Width>
   <TopMargin>.25in</TopMargin>
   <LeftMargin>.25in</LeftMargin>
@@ -24,7 +16,8 @@
       <Query>
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
- reading.*, accrual_pays.count, accrual_pays.price, paysum.sum as paid FROM meters 
+meter_types.name type, meter_tariffs.name as tariff, 
+ reading.*, accrual_pays.count, accrual_pays.price, paysum.sum as paid, IFNULL(reading.lastpayid, -1) as lastpayid0 FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
 (SELECT accrual_pay_id FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid, 
@@ -34,13 +27,20 @@ SELECT  selectedmeters.*,
 FROM (SELECT DISTINCT meter_reading.meter_id, meter_reading.meter_tariff_id FROM meter_reading) as selectedmeters
 ) as reading ON meters.id = reading.meter_id 
 LEFT JOIN place_types ON place_types.id = meters.place_type_id
+LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id
+LEFT JOIN meter_tariffs ON meter_tariffs.id = reading.meter_tariff_id
 LEFT JOIN active_contracts ON meters.place_type_id = active_contracts.place_type_id AND meters.place_no = active_contracts.place_no
 LEFT JOIN lessees ON active_contracts.lessee_id = lessees.id
 LEFT JOIN accrual_pays ON accrual_pays.id = reading.lastpayid
 LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
 ON paysum.accrual_pay_id = accrual_pays.id
-WHERE meters.disabled = 'FALSE'
+WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
  ORDER BY name, meter_id</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="types">
+            <Value>=Parameters!types</Value>
+          </QueryParameter>
+        </QueryParameters>
       </Query>
       <Fields>
         <Field Name="name">
@@ -57,6 +57,14 @@ WHERE meters.disabled = 'FALSE'
         </Field>
         <Field Name="place_no">
           <DataField>place_no</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="type">
+          <DataField>type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="tariff">
+          <DataField>tariff</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="meter_id">
@@ -95,21 +103,28 @@ WHERE meters.disabled = 'FALSE'
           <DataField>paid</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="lastpayid0">
+          <DataField>lastpayid0</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>.5in</Height>
+    <Height>32.2pt</Height>
     <ReportItems>
       <Textbox Name="Textbox1">
-        <Top>.1in</Top>
-        <Left>.1in</Left>
+        <Top>8.0pt</Top>
+        <Left>26.9pt</Left>
         <Width>6in</Width>
         <Height>.25in</Height>
         <Value>Счетчики</Value>
         <Style>
           <FontSize>15pt</FontSize>
           <FontWeight>Bold</FontWeight>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
         </Style>
       </Textbox>
     </ReportItems>
@@ -120,21 +135,23 @@ WHERE meters.disabled = 'FALSE'
     <ReportItems>
       <Table Name="Table1">
         <DataSetName>Data</DataSetName>
-        <NoRows>Query returned no rows!</NoRows>
+        <NoRows>Нет информации по счетчикам.</NoRows>
         <Style>
           <BorderStyle>
             <Default>Solid</Default>
           </BorderStyle>
+          <BorderColor />
+          <BorderWidth />
         </Style>
         <TableColumns>
-          <TableColumn>
-            <Width>100.1pt</Width>
-          </TableColumn>
           <TableColumn>
             <Width>46.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>49.9pt</Width>
+            <Width>52.3pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>96.8pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>59.7pt</Width>
@@ -146,19 +163,19 @@ WHERE meters.disabled = 'FALSE'
             <Width>65.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>59.5pt</Width>
+            <Width>50.7pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>68.3pt</Width>
+            <Width>62.7pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>47.5pt</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>1in</Width>
+            <Width>48.3pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>1in</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>72.3pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>1in</Width>
@@ -169,22 +186,6 @@ WHERE meters.disabled = 'FALSE'
             <TableRow>
               <Height>12pt</Height>
               <TableCells>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox2">
-                      <Value>Арендатор</Value>
-                      <Style>
-                        <TextAlign>Center</TextAlign>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <FontWeight>Bold</FontWeight>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox3">
@@ -206,6 +207,22 @@ WHERE meters.disabled = 'FALSE'
                     <Textbox Name="Textbox4">
                       <Value>Место</Value>
                       <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox30">
+                      <Value>Счётчик/Тариф</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -252,7 +269,7 @@ WHERE meters.disabled = 'FALSE'
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox11">
-                      <Value>Дата пок.</Value>
+                      <Value>Дата посл.</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -375,24 +392,6 @@ WHERE meters.disabled = 'FALSE'
               <TableCells>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="name">
-                      <Value>=Fields!name.Value</Value>
-                      <CanGrow>true</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <HideDuplicates>
-                      </HideDuplicates>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
                     <Textbox Name="contract">
                       <Value>=Fields!contract.Value</Value>
                       <CanGrow>true</CanGrow>
@@ -405,8 +404,6 @@ WHERE meters.disabled = 'FALSE'
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <HideDuplicates>
-                      </HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -424,8 +421,23 @@ WHERE meters.disabled = 'FALSE'
                         <BorderWidth />
                         <TextAlign>Center</TextAlign>
                       </Style>
-                      <HideDuplicates>
-                      </HideDuplicates>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox31">
+                      <Value>=Fields!tariff.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>Center</TextAlign>
+                      </Style>
+                      <CanGrow>true</CanGrow>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -500,92 +512,109 @@ WHERE meters.disabled = 'FALSE'
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="count">
-                      <Value>=Fields!count.Value</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!count.Value, null)</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Bottom>None</Bottom>
+                          <Left>Solid</Left>
+                          <Right>Solid</Right>
+                          <Top>Solid</Top>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <TextAlign>Right</TextAlign>
                       </Style>
-                      <HideDuplicates>Data</HideDuplicates>
+                      <Visibility>
+                        <Hidden>
+                        </Hidden>
+                      </Visibility>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="price">
-                      <Value>=Fields!price.Value</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!price.Value, "")</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Bottom>None</Bottom>
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox16">
-                      <Value>=Fields!count.Value*Fields!price.Value</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!count.Value*Fields!price.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Bottom>None</Bottom>
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="paid">
-                      <Value>=Fields!paid.Value</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!paid.Value, "")</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Bottom>None</Bottom>
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox18">
-                      <Value>=(Fields!count.Value*Fields!price.Value)-Fields!paid.Value</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), (Fields!count.Value*Fields!price.Value)-Fields!paid.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Bottom>None</Bottom>
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <Format>C</Format>
                       </Style>
-                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -593,11 +622,286 @@ WHERE meters.disabled = 'FALSE'
             </TableRow>
           </TableRows>
         </Details>
-        <Left>0.0pt</Left>
+        <Left>0.8pt</Left>
         <Top>0.0pt</Top>
+        <TableGroups>
+          <TableGroup>
+            <Grouping Name="Lesses">
+              <PageBreakAtStart>false</PageBreakAtStart>
+              <PageBreakAtEnd>false</PageBreakAtEnd>
+              <GroupExpressions>
+                <GroupExpression>=Fields!name.Value</GroupExpression>
+              </GroupExpressions>
+            </Grouping>
+            <Header>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
+              <TableRows>
+                <TableRow>
+                  <Height>.2in</Height>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox19">
+                          <Style>
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                          <Value>=Fields!name.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                      <ColSpan>12</ColSpan>
+                    </TableCell>
+                  </TableCells>
+                </TableRow>
+              </TableRows>
+            </Header>
+          </TableGroup>
+        </TableGroups>
+        <Footer>
+          <TableRows>
+            <TableRow>
+              <Height>8.1pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox22">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox23">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox24">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox25">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox26">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox27">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox28">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox29">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox32">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox33">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox34">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox35">
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Value>
+                      </Value>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+          <RepeatOnNewPage>true</RepeatOnNewPage>
+        </Footer>
       </Table>
     </ReportItems>
-    <Height>36pt</Height>
+    <Height>54.0pt</Height>
   </Body>
   <PageFooter>
     <Height>14pt</Height>
@@ -620,4 +924,28 @@ WHERE meters.disabled = 'FALSE'
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
+  <DataSources>
+    <DataSource Name="DS1">
+      <ConnectionProperties>
+        <DataProvider>MySQL.NET</DataProvider>
+        <ConnectString>server=rs.qsolution.ru;user=admin;database=bazar;port=3306;password=;</ConnectString>
+        <IntegratedSecurity>false</IntegratedSecurity>
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <ReportParameters>
+    <ReportParameter Name="types">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>true</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+  </ReportParameters>
 </Report>
