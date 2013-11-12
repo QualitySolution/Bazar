@@ -24,7 +24,7 @@ public partial class MainWindow : Gtk.Window
 		//Test version of base
 		try
 		{
-			MainSupport.Param = new BaseParam(QSMain.connectionDB);
+			MainSupport.BaseParameters = new BaseParam(QSMain.connectionDB);
 		}
 		catch(MySqlException e)
 		{
