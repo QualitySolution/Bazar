@@ -27,7 +27,7 @@ namespace bazar
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
-			this.label2.LabelProp = "Выберите услуги за которые производится оплата.";
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Выберите услуги за которые производится оплата.");
 			w1.Add (this.label2);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(w1 [this.label2]));
 			w2.Position = 0;
@@ -37,7 +37,7 @@ namespace bazar
 			this.checkAll = new global::Gtk.CheckButton ();
 			this.checkAll.CanFocus = true;
 			this.checkAll.Name = "checkAll";
-			this.checkAll.Label = "Выбрать все";
+			this.checkAll.Label = global::Mono.Unix.Catalog.GetString ("Выбрать все");
 			this.checkAll.DrawIndicator = true;
 			this.checkAll.UseUnderline = true;
 			w1.Add (this.checkAll);
@@ -66,7 +66,7 @@ namespace bazar
 			this.labelSum = new global::Gtk.Label ();
 			this.labelSum.Name = "labelSum";
 			this.labelSum.Xalign = 1F;
-			this.labelSum.LabelProp = "Сумма:";
+			this.labelSum.LabelProp = global::Mono.Unix.Catalog.GetString ("Сумма:");
 			this.hbox1.Add (this.labelSum);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.labelSum]));
 			w6.Position = 0;
@@ -76,7 +76,7 @@ namespace bazar
 			this.labelTotal = new global::Gtk.Label ();
 			this.labelTotal.Name = "labelTotal";
 			this.labelTotal.Xalign = 1F;
-			this.labelTotal.LabelProp = "label3";
+			this.labelTotal.LabelProp = global::Mono.Unix.Catalog.GetString ("label3");
 			this.labelTotal.UseMarkup = true;
 			this.hbox1.Add (this.labelTotal);
 			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.labelTotal]));
@@ -98,7 +98,7 @@ namespace bazar
 			this.buttonCancel.CanFocus = true;
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.UseUnderline = true;
-			this.buttonCancel.Label = "О_тменить";
+			this.buttonCancel.Label = global::Mono.Unix.Catalog.GetString ("О_тменить");
 			global::Gtk.Image w10 = new global::Gtk.Image ();
 			w10.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
 			this.buttonCancel.Image = w10;
@@ -112,7 +112,7 @@ namespace bazar
 			this.buttonOk.CanFocus = true;
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.UseUnderline = true;
-			this.buttonOk.Label = "_OK";
+			this.buttonOk.Label = global::Mono.Unix.Catalog.GetString ("_OK");
 			global::Gtk.Image w12 = new global::Gtk.Image ();
 			w12.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
 			this.buttonOk.Image = w12;

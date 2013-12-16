@@ -15,7 +15,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.DailyCashReport
 			this.Name = "bazar.DailyCashReport";
-			this.Title = "Кассовый отчет за день";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Кассовый отчет за день");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Modal = true;
 			// Internal child bazar.DailyCashReport.VBox
@@ -29,7 +29,7 @@ namespace bazar
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = "Отчет за:";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Отчет за:");
 			this.hbox1.Add (this.label1);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label1]));
 			w2.Position = 0;

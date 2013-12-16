@@ -14,7 +14,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.SelectAccrualRow
 			this.Name = "bazar.SelectAccrualRow";
-			this.Title = "Выберите услугу";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Выберите услугу");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Modal = true;
 			// Internal child bazar.SelectAccrualRow.VBox

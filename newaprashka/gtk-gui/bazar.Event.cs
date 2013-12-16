@@ -43,7 +43,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.Event
 			this.Name = "bazar.Event";
-			this.Title = "Событие";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Событие");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.DestroyWithParent = true;
 			// Internal child bazar.Event.VBox
@@ -78,7 +78,7 @@ namespace bazar
 			this.frame2.Add (this.GtkAlignment2);
 			this.GtkLabel2 = new global::Gtk.Label ();
 			this.GtkLabel2.Name = "GtkLabel2";
-			this.GtkLabel2.LabelProp = "<b>Причина<span foreground=\"blue\">*</span></b>";
+			this.GtkLabel2.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Причина<span foreground=\"blue\">*</span></b>");
 			this.GtkLabel2.UseMarkup = true;
 			this.frame2.LabelWidget = this.GtkLabel2;
 			this.table2.Add (this.frame2);
@@ -108,7 +108,7 @@ namespace bazar
 			this.frame3.Add (this.GtkAlignment3);
 			this.GtkLabel3 = new global::Gtk.Label ();
 			this.GtkLabel3.Name = "GtkLabel3";
-			this.GtkLabel3.LabelProp = "<b>Принятые меры<span foreground=\"blue\">*</span></b>";
+			this.GtkLabel3.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Принятые меры<span foreground=\"blue\">*</span></b>");
 			this.GtkLabel3.UseMarkup = true;
 			this.frame3.LabelWidget = this.GtkLabel3;
 			this.table2.Add (this.frame3);
@@ -120,7 +120,7 @@ namespace bazar
 			// Container child table2.Gtk.Table+TableChild
 			this.label12 = new global::Gtk.Label ();
 			this.label12.Name = "label12";
-			this.label12.LabelProp = "<b>Где произошло<span foreground=\"red\">*</span></b>";
+			this.label12.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Где произошло<span foreground=\"red\">*</span></b>");
 			this.label12.UseMarkup = true;
 			this.table2.Add (this.label12);
 			global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table2 [this.label12]));
@@ -129,7 +129,7 @@ namespace bazar
 			// Container child table2.Gtk.Table+TableChild
 			this.label13 = new global::Gtk.Label ();
 			this.label13.Name = "label13";
-			this.label13.LabelProp = "<b>Зарегистрировано</b>";
+			this.label13.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Зарегистрировано</b>");
 			this.label13.UseMarkup = true;
 			this.table2.Add (this.label13);
 			global::Gtk.Table.TableChild w11 = ((global::Gtk.Table.TableChild)(this.table2 [this.label13]));
@@ -206,7 +206,7 @@ namespace bazar
 			// Container child hbox5.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = "-";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("-");
 			this.hbox5.Add (this.label1);
 			global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.hbox5 [this.label1]));
 			w19.Position = 1;
@@ -230,7 +230,7 @@ namespace bazar
 			this.label14 = new global::Gtk.Label ();
 			this.label14.Name = "label14";
 			this.label14.Xalign = 1F;
-			this.label14.LabelProp = "Торговое место:";
+			this.label14.LabelProp = global::Mono.Unix.Catalog.GetString ("Торговое место:");
 			this.table3.Add (this.label14);
 			global::Gtk.Table.TableChild w22 = ((global::Gtk.Table.TableChild)(this.table3 [this.label14]));
 			w22.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -239,7 +239,7 @@ namespace bazar
 			this.label15 = new global::Gtk.Label ();
 			this.label15.Name = "label15";
 			this.label15.Xalign = 1F;
-			this.label15.LabelProp = "Арендатор:";
+			this.label15.LabelProp = global::Mono.Unix.Catalog.GetString ("Арендатор:");
 			this.table3.Add (this.label15);
 			global::Gtk.Table.TableChild w23 = ((global::Gtk.Table.TableChild)(this.table3 [this.label15]));
 			w23.TopAttach = ((uint)(1));
@@ -272,7 +272,7 @@ namespace bazar
 			this.label16 = new global::Gtk.Label ();
 			this.label16.Name = "label16";
 			this.label16.Xalign = 1F;
-			this.label16.LabelProp = "Дата:";
+			this.label16.LabelProp = global::Mono.Unix.Catalog.GetString ("Дата:");
 			this.table4.Add (this.label16);
 			global::Gtk.Table.TableChild w26 = ((global::Gtk.Table.TableChild)(this.table4 [this.label16]));
 			w26.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -281,7 +281,7 @@ namespace bazar
 			this.label17 = new global::Gtk.Label ();
 			this.label17.Name = "label17";
 			this.label17.Xalign = 1F;
-			this.label17.LabelProp = "Пользователь:";
+			this.label17.LabelProp = global::Mono.Unix.Catalog.GetString ("Пользователь:");
 			this.table4.Add (this.label17);
 			global::Gtk.Table.TableChild w27 = ((global::Gtk.Table.TableChild)(this.table4 [this.label17]));
 			w27.TopAttach = ((uint)(1));
@@ -292,7 +292,7 @@ namespace bazar
 			this.label20 = new global::Gtk.Label ();
 			this.label20.Name = "label20";
 			this.label20.Xalign = 1F;
-			this.label20.LabelProp = "Тип события<span foreground=\"red\">*</span>:";
+			this.label20.LabelProp = global::Mono.Unix.Catalog.GetString ("Тип события<span foreground=\"red\">*</span>:");
 			this.label20.UseMarkup = true;
 			this.table4.Add (this.label20);
 			global::Gtk.Table.TableChild w28 = ((global::Gtk.Table.TableChild)(this.table4 [this.label20]));
@@ -303,7 +303,7 @@ namespace bazar
 			// Container child table4.Gtk.Table+TableChild
 			this.labelDate = new global::Gtk.Label ();
 			this.labelDate.Name = "labelDate";
-			this.labelDate.LabelProp = "не указана";
+			this.labelDate.LabelProp = global::Mono.Unix.Catalog.GetString ("не указана");
 			this.labelDate.Selectable = true;
 			this.table4.Add (this.labelDate);
 			global::Gtk.Table.TableChild w29 = ((global::Gtk.Table.TableChild)(this.table4 [this.labelDate]));
@@ -313,7 +313,7 @@ namespace bazar
 			// Container child table4.Gtk.Table+TableChild
 			this.labelUser = new global::Gtk.Label ();
 			this.labelUser.Name = "labelUser";
-			this.labelUser.LabelProp = "не указан";
+			this.labelUser.LabelProp = global::Mono.Unix.Catalog.GetString ("не указан");
 			this.labelUser.Selectable = true;
 			this.table4.Add (this.labelUser);
 			global::Gtk.Table.TableChild w30 = ((global::Gtk.Table.TableChild)(this.table4 [this.labelUser]));

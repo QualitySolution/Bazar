@@ -14,7 +14,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.AccountableDebts
 			this.Name = "bazar.AccountableDebts";
-			this.Title = "Долги подотчетных лиц";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Долги подотчетных лиц");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.AccountableDebts.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -36,7 +36,7 @@ namespace bazar
 			this.labelTotal = new global::Gtk.Label ();
 			this.labelTotal.Name = "labelTotal";
 			this.labelTotal.Xalign = 1F;
-			this.labelTotal.LabelProp = "0";
+			this.labelTotal.LabelProp = global::Mono.Unix.Catalog.GetString ("0");
 			w1.Add (this.labelTotal);
 			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(w1 [this.labelTotal]));
 			w4.Position = 1;
@@ -53,7 +53,7 @@ namespace bazar
 			this.buttonClose.CanFocus = true;
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.UseUnderline = true;
-			this.buttonClose.Label = "_Закрыть";
+			this.buttonClose.Label = global::Mono.Unix.Catalog.GetString ("_Закрыть");
 			global::Gtk.Image w6 = new global::Gtk.Image ();
 			w6.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-close", global::Gtk.IconSize.Menu);
 			this.buttonClose.Image = w6;

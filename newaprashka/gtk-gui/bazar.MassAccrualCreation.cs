@@ -26,7 +26,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.MassAccrualCreation
 			this.Name = "bazar.MassAccrualCreation";
-			this.Title = "Выполнение массового начисления";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Выполнение массового начисления");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.MassAccrualCreation.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -48,7 +48,7 @@ namespace bazar
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = "Выберите месяц за который необходимо произвести начисления. Потом \nотметьте договора, по которым необходимо начислить ежемесячную плату.";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Выберите месяц за который необходимо произвести начисления. Потом \nотметьте договора, по которым необходимо начислить ежемесячную плату.");
 			this.hbox2.Add (this.label1);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label1]));
 			w3.Position = 1;
@@ -67,7 +67,7 @@ namespace bazar
 			this.checkAll = new global::Gtk.CheckButton ();
 			this.checkAll.CanFocus = true;
 			this.checkAll.Name = "checkAll";
-			this.checkAll.Label = "Выбрать все";
+			this.checkAll.Label = global::Mono.Unix.Catalog.GetString ("Выбрать все");
 			this.checkAll.DrawIndicator = true;
 			this.checkAll.UseUnderline = true;
 			this.hbox3.Add (this.checkAll);
@@ -77,7 +77,7 @@ namespace bazar
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
 			this.label3.Xalign = 1F;
-			this.label3.LabelProp = "Месяц:";
+			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("Месяц:");
 			this.hbox3.Add (this.label3);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label3]));
 			w6.Position = 1;
@@ -85,19 +85,19 @@ namespace bazar
 			w6.Fill = false;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.comboMonth = global::Gtk.ComboBox.NewText ();
-			this.comboMonth.AppendText ("Нет");
-			this.comboMonth.AppendText ("Январь");
-			this.comboMonth.AppendText ("Февраль");
-			this.comboMonth.AppendText ("Март");
-			this.comboMonth.AppendText ("Апрель");
-			this.comboMonth.AppendText ("Май");
-			this.comboMonth.AppendText ("Июнь");
-			this.comboMonth.AppendText ("Июль");
-			this.comboMonth.AppendText ("Август");
-			this.comboMonth.AppendText ("Сентябрь");
-			this.comboMonth.AppendText ("Октябрь");
-			this.comboMonth.AppendText ("Ноябрь");
-			this.comboMonth.AppendText ("Декабрь");
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Нет"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Январь"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Февраль"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Март"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Апрель"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Май"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Июнь"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Июль"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Август"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Сентябрь"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Октябрь"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Ноябрь"));
+			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Декабрь"));
 			this.comboMonth.Name = "comboMonth";
 			this.hbox3.Add (this.comboMonth);
 			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.comboMonth]));
@@ -137,7 +137,7 @@ namespace bazar
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.labelSelected = new global::Gtk.Label ();
 			this.labelSelected.Name = "labelSelected";
-			this.labelSelected.LabelProp = "label2";
+			this.labelSelected.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
 			this.hbox4.Add (this.labelSelected);
 			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelSelected]));
 			w12.Position = 0;
@@ -147,7 +147,7 @@ namespace bazar
 			this.labelTotal = new global::Gtk.Label ();
 			this.labelTotal.Name = "labelTotal";
 			this.labelTotal.Xalign = 1F;
-			this.labelTotal.LabelProp = "label4";
+			this.labelTotal.LabelProp = global::Mono.Unix.Catalog.GetString ("label4");
 			this.hbox4.Add (this.labelTotal);
 			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelTotal]));
 			w13.Position = 1;
@@ -177,7 +177,7 @@ namespace bazar
 			this.buttonCancel.CanFocus = true;
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.UseUnderline = true;
-			this.buttonCancel.Label = "О_тменить";
+			this.buttonCancel.Label = global::Mono.Unix.Catalog.GetString ("О_тменить");
 			global::Gtk.Image w17 = new global::Gtk.Image ();
 			w17.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
 			this.buttonCancel.Image = w17;
@@ -191,7 +191,7 @@ namespace bazar
 			this.buttonOk.CanFocus = true;
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.UseUnderline = true;
-			this.buttonOk.Label = "_OK";
+			this.buttonOk.Label = global::Mono.Unix.Catalog.GetString ("_OK");
 			global::Gtk.Image w19 = new global::Gtk.Image ();
 			w19.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
 			this.buttonOk.Image = w19;

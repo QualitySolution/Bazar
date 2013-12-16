@@ -29,7 +29,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.Contact
 			this.Name = "bazar.Contact";
-			this.Title = "Новый контакт";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Новый контакт");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.Contact.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -90,7 +90,7 @@ namespace bazar
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
 			this.label1.Xalign = 1F;
-			this.label1.LabelProp = "Код:";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Код:");
 			this.table1.Add (this.label1);
 			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table1 [this.label1]));
 			w4.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -99,7 +99,7 @@ namespace bazar
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
 			this.label2.Xalign = 1F;
-			this.label2.LabelProp = "Ф.И.О.<span foreground=\"red\">*</span>:";
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Ф.И.О.<span foreground=\"red\">*</span>:");
 			this.label2.UseMarkup = true;
 			this.table1.Add (this.label2);
 			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table1 [this.label2]));
@@ -110,7 +110,7 @@ namespace bazar
 			// Container child table1.Gtk.Table+TableChild
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
-			this.label3.LabelProp = "Телефоны:";
+			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("Телефоны:");
 			this.table1.Add (this.label3);
 			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.label3]));
 			w6.TopAttach = ((uint)(2));
@@ -120,7 +120,7 @@ namespace bazar
 			// Container child table1.Gtk.Table+TableChild
 			this.labelNumber = new global::Gtk.Label ();
 			this.labelNumber.Name = "labelNumber";
-			this.labelNumber.LabelProp = "не назначен";
+			this.labelNumber.LabelProp = global::Mono.Unix.Catalog.GetString ("не назначен");
 			this.labelNumber.Selectable = true;
 			this.table1.Add (this.labelNumber);
 			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.table1 [this.labelNumber]));
@@ -132,7 +132,7 @@ namespace bazar
 			this.frame1.Add (this.GtkAlignment2);
 			this.GtkLabel2 = new global::Gtk.Label ();
 			this.GtkLabel2.Name = "GtkLabel2";
-			this.GtkLabel2.LabelProp = "<b>Контактные данные</b>";
+			this.GtkLabel2.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Контактные данные</b>");
 			this.GtkLabel2.UseMarkup = true;
 			this.frame1.LabelWidget = this.GtkLabel2;
 			this.hbox1.Add (this.frame1);
@@ -166,7 +166,7 @@ namespace bazar
 			this.frame2.Add (this.GtkAlignment3);
 			this.GtkLabel3 = new global::Gtk.Label ();
 			this.GtkLabel3.Name = "GtkLabel3";
-			this.GtkLabel3.LabelProp = "<b>Комментарии</b>";
+			this.GtkLabel3.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Комментарии</b>");
 			this.GtkLabel3.UseMarkup = true;
 			this.frame2.LabelWidget = this.GtkLabel3;
 			this.vbox2.Add (this.frame2);
@@ -187,7 +187,7 @@ namespace bazar
 			this.buttonCancel.CanFocus = true;
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.UseUnderline = true;
-			this.buttonCancel.Label = "О_тменить";
+			this.buttonCancel.Label = global::Mono.Unix.Catalog.GetString ("О_тменить");
 			global::Gtk.Image w18 = new global::Gtk.Image ();
 			w18.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Button);
 			this.buttonCancel.Image = w18;
@@ -201,7 +201,7 @@ namespace bazar
 			this.buttonOk.CanFocus = true;
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.UseUnderline = true;
-			this.buttonOk.Label = "_OK";
+			this.buttonOk.Label = global::Mono.Unix.Catalog.GetString ("_OK");
 			global::Gtk.Image w20 = new global::Gtk.Image ();
 			w20.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Button);
 			this.buttonOk.Image = w20;

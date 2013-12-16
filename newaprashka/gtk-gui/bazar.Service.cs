@@ -23,7 +23,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.Service
 			this.Name = "bazar.Service";
-			this.Title = "Новая услуга";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Новая услуга");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.Service.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -88,7 +88,7 @@ namespace bazar
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
 			this.label1.Xalign = 1F;
-			this.label1.LabelProp = "Код:";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Код:");
 			this.table1.Add (this.label1);
 			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.label1]));
 			w6.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -97,7 +97,7 @@ namespace bazar
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
 			this.label2.Xalign = 1F;
-			this.label2.LabelProp = "Название<span foreground=\"red\">*</span>:";
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Название<span foreground=\"red\">*</span>:");
 			this.label2.UseMarkup = true;
 			this.table1.Add (this.label2);
 			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.table1 [this.label2]));
@@ -109,7 +109,7 @@ namespace bazar
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
 			this.label3.Xalign = 1F;
-			this.label3.LabelProp = "Единицы измерения<span foreground=\"red\">*</span>:";
+			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("Единицы измерения<span foreground=\"red\">*</span>:");
 			this.label3.UseMarkup = true;
 			this.table1.Add (this.label3);
 			global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.label3]));
@@ -120,7 +120,7 @@ namespace bazar
 			// Container child table1.Gtk.Table+TableChild
 			this.label4 = new global::Gtk.Label ();
 			this.label4.Name = "label4";
-			this.label4.LabelProp = "Статья дохода по умолчанию:";
+			this.label4.LabelProp = global::Mono.Unix.Catalog.GetString ("Статья дохода по умолчанию:");
 			this.table1.Add (this.label4);
 			global::Gtk.Table.TableChild w9 = ((global::Gtk.Table.TableChild)(this.table1 [this.label4]));
 			w9.TopAttach = ((uint)(3));
@@ -130,7 +130,7 @@ namespace bazar
 			// Container child table1.Gtk.Table+TableChild
 			this.label5 = new global::Gtk.Label ();
 			this.label5.Name = "label5";
-			this.label5.LabelProp = "Расчет количества по метражу:";
+			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString ("Расчет количества по метражу:");
 			this.table1.Add (this.label5);
 			global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table1 [this.label5]));
 			w10.TopAttach = ((uint)(4));
@@ -140,7 +140,7 @@ namespace bazar
 			// Container child table1.Gtk.Table+TableChild
 			this.labelID = new global::Gtk.Label ();
 			this.labelID.Name = "labelID";
-			this.labelID.LabelProp = "Не назначен";
+			this.labelID.LabelProp = global::Mono.Unix.Catalog.GetString ("Не назначен");
 			this.table1.Add (this.labelID);
 			global::Gtk.Table.TableChild w11 = ((global::Gtk.Table.TableChild)(this.table1 [this.labelID]));
 			w11.LeftAttach = ((uint)(1));
@@ -164,7 +164,7 @@ namespace bazar
 			this.buttonCancel.CanFocus = true;
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.UseUnderline = true;
-			this.buttonCancel.Label = "О_тменить";
+			this.buttonCancel.Label = global::Mono.Unix.Catalog.GetString ("О_тменить");
 			global::Gtk.Image w14 = new global::Gtk.Image ();
 			w14.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
 			this.buttonCancel.Image = w14;
@@ -179,7 +179,7 @@ namespace bazar
 			this.buttonOk.CanFocus = true;
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.UseUnderline = true;
-			this.buttonOk.Label = "_OK";
+			this.buttonOk.Label = global::Mono.Unix.Catalog.GetString ("_OK");
 			global::Gtk.Image w16 = new global::Gtk.Image ();
 			w16.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
 			this.buttonOk.Image = w16;

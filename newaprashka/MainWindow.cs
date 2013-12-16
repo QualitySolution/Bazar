@@ -797,4 +797,5 @@ public partial class MainWindow : Gtk.Window
 		WinMeters.Run ();
 		WinMeters.Destroy ();
 	}
+	
 }

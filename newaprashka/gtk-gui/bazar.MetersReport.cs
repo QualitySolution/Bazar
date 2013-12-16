@@ -23,7 +23,7 @@ namespace bazar
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = "Выберите счетчики по которым\nнеобходимо посторить отчет.";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Выберите счетчики по которым\nнеобходимо посторить отчет.");
 			w1.Add (this.label1);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(w1 [this.label1]));
 			w2.Position = 0;

@@ -16,7 +16,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.LesseeDebtsReport
 			this.Name = "bazar.LesseeDebtsReport";
-			this.Title = "Отчет по долгам арендаторов";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Отчет по долгам арендаторов");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Modal = true;
 			// Internal child bazar.LesseeDebtsReport.VBox
@@ -30,7 +30,7 @@ namespace bazar
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
-			this.label2.LabelProp = "Долги арендаторов на:";
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Долги арендаторов на:");
 			this.hbox1.Add (this.label2);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label2]));
 			w2.Position = 0;
@@ -53,7 +53,7 @@ namespace bazar
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = "* Если в договоре не указан день оплаты,\n  долг попадет в отчет с первого числа.";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("* Если в договоре не указан день оплаты,\n  долг попадет в отчет с первого числа.");
 			this.label1.Wrap = true;
 			w1.Add (this.label1);
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(w1 [this.label1]));

@@ -34,7 +34,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.AccountableSlips
 			this.Name = "bazar.AccountableSlips";
-			this.Title = "Движения по подотчетному лицу";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Движения по подотчетному лицу");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.AccountableSlips.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -107,7 +107,7 @@ namespace bazar
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
 			this.label1.Xalign = 1F;
-			this.label1.LabelProp = "Подотчетное лицо:";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Подотчетное лицо:");
 			this.table1.Add (this.label1);
 			global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.label1]));
 			w8.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -116,7 +116,7 @@ namespace bazar
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
 			this.label2.Xalign = 1F;
-			this.label2.LabelProp = "Организация:";
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Организация:");
 			this.table1.Add (this.label2);
 			global::Gtk.Table.TableChild w9 = ((global::Gtk.Table.TableChild)(this.table1 [this.label2]));
 			w9.TopAttach = ((uint)(1));
@@ -127,7 +127,7 @@ namespace bazar
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
 			this.label3.Xalign = 1F;
-			this.label3.LabelProp = "Касса:";
+			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("Касса:");
 			this.table1.Add (this.label3);
 			global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table1 [this.label3]));
 			w10.TopAttach = ((uint)(2));
@@ -147,7 +147,7 @@ namespace bazar
 			// Container child vbox11.Gtk.Box+BoxChild
 			this.label31 = new global::Gtk.Label ();
 			this.label31.Name = "label31";
-			this.label31.LabelProp = "<b>Выбор периода</b>";
+			this.label31.LabelProp = global::Mono.Unix.Catalog.GetString ("<b>Выбор периода</b>");
 			this.label31.UseMarkup = true;
 			this.vbox11.Add (this.label31);
 			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox11 [this.label31]));
@@ -160,7 +160,7 @@ namespace bazar
 			this.table4.RowSpacing = ((uint)(6));
 			this.table4.ColumnSpacing = ((uint)(6));
 			// Container child table4.Gtk.Table+TableChild
-			this.radio3month = new global::Gtk.RadioButton ("3 месяца");
+			this.radio3month = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("3 месяца"));
 			this.radio3month.CanFocus = true;
 			this.radio3month.Name = "radio3month";
 			this.radio3month.DrawIndicator = true;
@@ -172,7 +172,7 @@ namespace bazar
 			w13.BottomAttach = ((uint)(2));
 			w13.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table4.Gtk.Table+TableChild
-			this.radioAll = new global::Gtk.RadioButton ("Весь период");
+			this.radioAll = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Весь период"));
 			this.radioAll.CanFocus = true;
 			this.radioAll.Name = "radioAll";
 			this.radioAll.DrawIndicator = true;
@@ -186,7 +186,7 @@ namespace bazar
 			w14.RightAttach = ((uint)(2));
 			w14.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table4.Gtk.Table+TableChild
-			this.radioMonth = new global::Gtk.RadioButton ("Месяц");
+			this.radioMonth = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Месяц"));
 			this.radioMonth.CanFocus = true;
 			this.radioMonth.Name = "radioMonth";
 			this.radioMonth.DrawIndicator = true;
@@ -196,7 +196,7 @@ namespace bazar
 			global::Gtk.Table.TableChild w15 = ((global::Gtk.Table.TableChild)(this.table4 [this.radioMonth]));
 			w15.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table4.Gtk.Table+TableChild
-			this.radioYear = new global::Gtk.RadioButton ("Год");
+			this.radioYear = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Год"));
 			this.radioYear.CanFocus = true;
 			this.radioYear.Name = "radioYear";
 			this.radioYear.DrawIndicator = true;
@@ -229,7 +229,7 @@ namespace bazar
 			// Container child hbox15.Gtk.Box+BoxChild
 			this.label32 = new global::Gtk.Label ();
 			this.label32.Name = "label32";
-			this.label32.LabelProp = "-";
+			this.label32.LabelProp = global::Mono.Unix.Catalog.GetString ("-");
 			this.hbox15.Add (this.label32);
 			global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.hbox15 [this.label32]));
 			w19.Position = 1;
@@ -283,7 +283,7 @@ namespace bazar
 			this.buttonClose.CanFocus = true;
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.UseUnderline = true;
-			this.buttonClose.Label = "_Закрыть";
+			this.buttonClose.Label = global::Mono.Unix.Catalog.GetString ("_Закрыть");
 			global::Gtk.Image w27 = new global::Gtk.Image ();
 			w27.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-close", global::Gtk.IconSize.Menu);
 			this.buttonClose.Image = w27;

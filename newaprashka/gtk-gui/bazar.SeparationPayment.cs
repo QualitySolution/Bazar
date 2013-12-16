@@ -27,7 +27,7 @@ namespace bazar
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
 			this.label1.Xalign = 0F;
-			this.label1.LabelProp = "Разнесение платежа";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Разнесение платежа");
 			this.vbox2.Add (this.label1);
 			global::Gtk.Box.BoxChild w1 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.label1]));
 			w1.Position = 0;
@@ -56,7 +56,7 @@ namespace bazar
 			this.buttonAdd.CanFocus = true;
 			this.buttonAdd.Name = "buttonAdd";
 			this.buttonAdd.UseUnderline = true;
-			this.buttonAdd.Label = "Добавить";
+			this.buttonAdd.Label = global::Mono.Unix.Catalog.GetString ("Добавить");
 			global::Gtk.Image w4 = new global::Gtk.Image ();
 			w4.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-add", global::Gtk.IconSize.Menu);
 			this.buttonAdd.Image = w4;
@@ -70,7 +70,7 @@ namespace bazar
 			this.buttonDel.CanFocus = true;
 			this.buttonDel.Name = "buttonDel";
 			this.buttonDel.UseUnderline = true;
-			this.buttonDel.Label = "Удалить";
+			this.buttonDel.Label = global::Mono.Unix.Catalog.GetString ("Удалить");
 			global::Gtk.Image w6 = new global::Gtk.Image ();
 			w6.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-remove", global::Gtk.IconSize.Menu);
 			this.buttonDel.Image = w6;
@@ -83,7 +83,7 @@ namespace bazar
 			this.labelNotSeparated = new global::Gtk.Label ();
 			this.labelNotSeparated.Name = "labelNotSeparated";
 			this.labelNotSeparated.Xalign = 1F;
-			this.labelNotSeparated.LabelProp = "Не разнесено:";
+			this.labelNotSeparated.LabelProp = global::Mono.Unix.Catalog.GetString ("Не разнесено:");
 			this.hbox1.Add (this.labelNotSeparated);
 			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.labelNotSeparated]));
 			w8.Position = 2;
