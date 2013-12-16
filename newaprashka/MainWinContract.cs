@@ -227,4 +227,13 @@ public partial class MainWindow : Gtk.Window
 		if(CheckActived == checkActiveContracts.Active) //Чтобы не запрашивать обновление дважды
 			UpdateContract ();
 	}
+
+	protected void OnButtonProlongationClicked(object sender, EventArgs e)
+	{
+		ContractsProlongation winMass = new ContractsProlongation();
+		winMass.Show();
+		if (winMass.Run () == (int)ResponseType.Ok)
+			UpdateContract ();
+		winMass.Destroy();
+	}
 }

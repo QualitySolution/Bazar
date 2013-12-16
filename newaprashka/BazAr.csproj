@@ -125,6 +125,8 @@
     <Compile Include="gtk-gui\bazar.PayFromMeter.cs" />
     <Compile Include="ReportDialogs\MetersReport.cs" />
     <Compile Include="gtk-gui\bazar.MetersReport.cs" />
+    <Compile Include="ContractsProlongation.cs" />
+    <Compile Include="gtk-gui\bazar.ContractsProlongation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
