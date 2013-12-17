@@ -375,7 +375,7 @@ public partial class MainWindow
 		this.UIManager.InsertActionGroup (w1, 0);
 		this.AddAccelGroup (this.UIManager.AccelGroup);
 		this.Name = "MainWindow";
-		this.Title = global::Mono.Unix.Catalog.GetString ("База арендаторов (БазАр)");
+		this.Title = global::Mono.Unix.Catalog.GetString ("QS: База арендаторов");
 		this.Icon = global::Gdk.Pixbuf.LoadFromResource ("bazar.logo.ico");
 		this.WindowPosition = ((global::Gtk.WindowPosition)(1));
 		// Container child MainWindow.Gtk.Container+ContainerChild
