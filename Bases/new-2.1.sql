@@ -806,6 +806,61 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `bazar`.`organizations`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`organizations` (`id`, `name`) VALUES (NULL, 'Моя организация');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bazar`.`cash`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`cash` (`id`, `name`) VALUES (NULL, 'Наличная касса');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bazar`.`income_items`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`income_items` (`id`, `name`) VALUES (NULL, 'Доход от аренды');
+INSERT INTO `bazar`.`income_items` (`id`, `name`) VALUES (NULL, 'Комунальные платежы');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bazar`.`units`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`units` (`id`, `name`) VALUES (NULL, 'усл.');
+INSERT INTO `bazar`.`units` (`id`, `name`) VALUES (NULL, 'шт.');
+INSERT INTO `bazar`.`units` (`id`, `name`) VALUES (NULL, 'кв. м.');
+INSERT INTO `bazar`.`units` (`id`, `name`) VALUES (NULL, 'кВт');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bazar`.`services`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`services` (`id`, `name`, `units_id`, `income_id`, `by_area`) VALUES (NULL, 'Аренда', 3, 1, TRUE);
+INSERT INTO `bazar`.`services` (`id`, `name`, `units_id`, `income_id`, `by_area`) VALUES (NULL, 'Электричество', 4, 2, FALSE);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `bazar`.`base_parameters`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -813,6 +868,26 @@ USE `bazar`;
 INSERT INTO `bazar`.`base_parameters` (`name`, `str_value`) VALUES ('product_name', 'BazAr');
 INSERT INTO `bazar`.`base_parameters` (`name`, `str_value`) VALUES ('version', '2.1');
 INSERT INTO `bazar`.`base_parameters` (`name`, `str_value`) VALUES ('edition', 'gpl');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bazar`.`meter_types`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`meter_types` (`id`, `name`) VALUES (NULL, 'Эл. однотарифный');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bazar`.`meter_tariffs`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bazar`;
+INSERT INTO `bazar`.`meter_tariffs` (`id`, `name`, `meter_type_id`, `service_id`) VALUES (NULL, 'Основной', 1, 2);
 
 COMMIT;
 
