@@ -10158,6 +10158,7 @@
                             <property name="CanFocus">True</property>
                             <property name="ShowScrollbars">True</property>
                             <property name="Text" translatable="yes" />
+                            <property name="WrapMode">Word</property>
                           </widget>
                         </child>
                       </widget>
