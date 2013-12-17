@@ -132,7 +132,7 @@ namespace bazar
 			labelTotal.LabelProp = string.Format("{0} {1}", TotalCount, Units);
 			labelSum.Text = string.Format("{0:C}", TotalCount * spinPrice.Value);
 			if (TotalCount * spinPrice.Value < (double) MinSum)
-				TotalCount = Convert.ToInt32 ( MinSum / (decimal) spinPrice.Value);
+				TotalCount = (spinPrice.Value == 0) ? 0 : Convert.ToInt32 ( MinSum / (decimal) spinPrice.Value);
 		}
 
 		public void Fill(int AccrualRow, int service_id, int place_type_id, string place_no, string units)
