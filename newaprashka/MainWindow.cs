@@ -42,6 +42,7 @@ public partial class MainWindow : Gtk.Window
 		                                           "gpl",
 		                                           System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
 		MainSupport.TestVersion(this);
+		QSMain.CheckServer (this);
 
 		if(QSMain.User.Login == "root")
 		{
