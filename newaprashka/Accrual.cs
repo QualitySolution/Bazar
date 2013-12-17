@@ -60,6 +60,7 @@ namespace bazar
 
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
 			ServiceColumn.Title = "Наименование";
+			ServiceColumn.MinWidth = 180;
 			Gtk.CellRendererCombo CellService = new CellRendererCombo();
 			CellService.TextColumn = 0;
 			CellService.Editable = true;
