@@ -407,6 +407,23 @@ namespace bazar
 			Tables.Add ("users", PrepareTable);
 
 		}
+
+		public static void MinorDBVersionChange()
+		{
+			MainClass.StatusMessage("Делаем небольшие изменения в базе...");
+			string sql = "SHOW COLUMNS FROM contract_pays LIKE 'min_sum'";
+			MySqlCommand cmd = new MySqlCommand (sql, QSMain.connectionDB);
+			MySqlDataReader rdr = cmd.ExecuteReader ();
+			bool ColumnExist = rdr.HasRows;
+			rdr.Close ();
+
+			if(!ColumnExist)
+			{
+				sql = "ALTER TABLE `contract_pays` ADD COLUMN `min_sum` DECIMAL(10,2) NULL DEFAULT NULL AFTER `price`";
+				cmd = new MySqlCommand (sql, QSMain.connectionDB);
+				cmd.ExecuteNonQuery ();
+			}
+		}
 		
 		public static void ComboPlaceNoFill(ComboBox combo, int Type_id)
 		{   //Заполняем комбобокс Номерами мест

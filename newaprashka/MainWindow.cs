@@ -41,8 +41,9 @@ public partial class MainWindow : Gtk.Window
 		MainSupport.ProjectVerion = new AppVersion(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.ToString(),
 		                                           "gpl",
 		                                           System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
-		MainSupport.TestVersion(this);
-		QSMain.CheckServer (this);
+		MainSupport.TestVersion(this); //Проверяем версию базы
+		QSMain.CheckServer (this); // Проверяем настройки сервера
+		MainClass.MinorDBVersionChange (); // При необходимости корректируем базу.
 
 		if(QSMain.User.Login == "root")
 		{
