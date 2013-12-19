@@ -267,7 +267,7 @@
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">QS: База арендаторов</property>
-    <property name="Icon">resource:bazar.logo.ico</property>
+    <property name="Icon">resource:bazar.icons.logo.png</property>
     <property name="WindowPosition">Center</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
