@@ -714,7 +714,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnHelpActionActivated (object sender, EventArgs e)
 	{
-		System.Diagnostics.Process.Start("UserGuide_ru.pdf");
+		System.Diagnostics.Process.Start("bazar_ru.pdf");
 	}
 	
 	protected void OnAction33Activated (object sender, EventArgs e)
