@@ -195,6 +195,6 @@ Global
 		$33.inheritsSet = Mono
 		$33.inheritsScope = application/xml
 		$33.scope = application/xml
-		version = 2.1.0
+		version = 2.1.1
 	EndGlobalSection
 EndGlobal
