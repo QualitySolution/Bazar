@@ -423,8 +423,9 @@ namespace bazar
 			bool SignDateOk = !(checkSign.Active && dateSign.IsEmpty);
 			bool StartDateOk = !(checkStart.Active && dateStart.IsEmpty);
 			bool EndDateOk = !(checkEnd.Active && dateEnd.IsEmpty);
+			bool ActionsSelectedOk = checkSign.Active || checkStart.Active || checkEnd.Active;
 
-			bool ActionsOk = SignDateOk && StartDateOk && EndDateOk;
+			bool ActionsOk = SignDateOk && StartDateOk && EndDateOk && ActionsSelectedOk;
 			bool ModeOk = radioCopyMode.Active || radioChangeMode.Active;
 
 			buttonOk.Sensitive = ItemsSelected && ModeOk && ActionsOk;
