@@ -8,12 +8,14 @@ public partial class MainWindow : Gtk.Window
 {
 	Gtk.ListStore AccrualListStore;
 	Gtk.TreeModelFilter Accrualfilter;
+
+	private string NameOfAllOption = "Все";
 	
 	void PrepareAccrual()
 	{
 		//Заполняем комбобокс
 		ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", 1);
-		MainClass.ComboAccrualYearsFill (comboAccuralYear);
+		MainClass.ComboAccrualYearsFill (comboAccuralYear, NameOfAllOption);
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
 		//Создаем таблицу "Начислений"
@@ -47,34 +49,38 @@ public partial class MainWindow : Gtk.Window
 		MainClass.StatusMessage("Получаем таблицу начислений...");
 		
 		TreeIter iter;
-		
-		string sql = "SELECT accrual.id as id, month, year, contracts.number as contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
+
+		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
+			"SELECT accrual.id as id, month, year, contracts.number as contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
 			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
 			"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 				"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable " +
 				"ON sumtable.accrual_id = accrual.id " +
 				"LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id) as paidtable " +
-				"ON paidtable.accrual_id = accrual.id  WHERE year = @year ";
-	
+			"ON paidtable.accrual_id = accrual.id");
+		sql.StartNewList (" WHERE ", " AND ");
+
+		if (comboAccuralYear.ActiveText != NameOfAllOption)
+			sql.AddAsList (String.Format("year = '{0}'", comboAccuralYear.ActiveText));
+
 		if(comboAccrualMonth.Active > 0)
 		{
-			sql += "AND accrual.month = '" + comboAccrualMonth.Active + "' ";
+			sql.AddAsList("accrual.month = '" + comboAccrualMonth.Active + "' ");
 		}
 		if(comboAccrualOrg.GetActiveIter(out iter) && comboAccrualOrg.Active > 0)
 		{
-			sql += " AND contracts.org_id = '" + comboAccrualOrg.Model.GetValue(iter,1) + "' ";
+			sql.AddAsList ("contracts.org_id = '" + comboAccrualOrg.Model.GetValue(iter,1) + "' ");
 		}
 		if(checkNotComplete.Active)
 		{
-			sql += " AND no_complete = TRUE ";
+			sql.AddAsList("no_complete = TRUE");
 		}
 		if(checkOnlyNotPaid.Active)
 		{
-			sql += " AND paid = FALSE ";
+			sql.AddAsList("paid = FALSE");
 		}
-		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-		cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
+		MySqlCommand cmd = new MySqlCommand(sql.Text, QSMain.connectionDB);
 		MySqlDataReader rdr = cmd.ExecuteReader();
 
 		decimal rowsum, rowpaidsum;
