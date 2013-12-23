@@ -112,12 +112,8 @@ public partial class MainWindow : Gtk.Window
 		rdr.Close();
 		
 		MainClass.StatusMessage("Ok");
-
-		CalculateAccrualSum();
-		
-		bool isSelect = treeviewAccrual.Selection.CountSelectedRows() == 1;
-		buttonOpen.Sensitive = isSelect;
-		buttonDel.Sensitive = isSelect;
+		CalculateAccrualSum();		
+		OnTreeviewAccrualCursorChanged (null, EventArgs.Empty);
 	}
 	
 	private bool FilterTreeAccrual (Gtk.TreeModel model, Gtk.TreeIter iter)
