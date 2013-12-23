@@ -10721,7 +10721,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.MassAccrualCreation" design-size="591 380">
+  <widget class="Gtk.Dialog" id="bazar.MassAccrualCreation" design-size="656 451">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Выполнение массового начисления</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -10788,13 +10788,39 @@
               </packing>
             </child>
             <child>
+              <widget class="Gtk.Label" id="label2">
+                <property name="MemberName" />
+                <property name="LabelProp" translatable="yes">Поиск:</property>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Entry" id="entrySearch">
+                <property name="MemberName" />
+                <property name="Tooltip" translatable="yes">Поиск по номеру договора, месту и арендатору.</property>
+                <property name="CanFocus">True</property>
+                <property name="IsEditable">True</property>
+                <property name="InvisibleChar">●</property>
+                <signal name="Changed" handler="OnEntrySearchChanged" />
+              </widget>
+              <packing>
+                <property name="Position">2</property>
+                <property name="AutoSize">True</property>
+              </packing>
+            </child>
+            <child>
               <widget class="Gtk.Label" id="label3">
                 <property name="MemberName" />
                 <property name="Xalign">1</property>
                 <property name="LabelProp" translatable="yes">Месяц:</property>
               </widget>
               <packing>
-                <property name="Position">1</property>
+                <property name="Position">3</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
@@ -10820,7 +10846,7 @@
                 <signal name="Changed" handler="OnComboMonthChanged" />
               </widget>
               <packing>
-                <property name="Position">2</property>
+                <property name="Position">4</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
@@ -10834,7 +10860,7 @@
                 <signal name="Changed" handler="OnComboYearChanged" />
               </widget>
               <packing>
-                <property name="Position">3</property>
+                <property name="Position">5</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
@@ -13122,7 +13148,6 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">Только активные</property>
-                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
@@ -13291,7 +13316,6 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">Копирование</property>
-                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>

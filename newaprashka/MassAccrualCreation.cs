@@ -8,6 +8,8 @@ namespace bazar
 	public partial class MassAccrualCreation : Gtk.Dialog
 	{
 		Gtk.ListStore ContractsListStore;
+		Gtk.TreeModelFilter ContractsFilter;
+
 		bool ItemsSelected;
 		int SelectedItems;
 
@@ -36,7 +38,9 @@ namespace bazar
 			// Сумма цифровое -7
 			// Существует ли уже начисление -8
 			
-			treeviewContracts.Model = ContractsListStore;
+			ContractsFilter = new Gtk.TreeModelFilter (ContractsListStore, null);
+			ContractsFilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeContracts);
+			treeviewContracts.Model = ContractsFilter;
 			treeviewContracts.ShowAll();
 
 			comboMonth.Active = DateTime.Now.Month;
@@ -54,15 +58,45 @@ namespace bazar
 
 		void onCellSelectToggled(object o, ToggledArgs args) 
 		{
-			TreeIter iter;
-			
-			if (ContractsListStore.GetIter (out iter, new TreePath(args.Path))) 
+			TreeIter iter, filteriter;
+
+			if (ContractsFilter.GetIter (out filteriter, new TreePath(args.Path))) 
 			{
+				iter = ContractsFilter.ConvertIterToChildIter (filteriter);
 				bool old = (bool) ContractsListStore.GetValue(iter,0);
-				if(!(bool) ContractsListStore.GetValue(iter,8))
-					ContractsListStore.SetValue(iter, 0, !old);
+				ContractsListStore.SetValue(iter, 0, !old);
 			}
 			CalculateSelected ();
+		}
+
+		private bool FilterTreeContracts (Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			if (entrySearch.Text == "")
+				return true;
+			bool filterLessee = false;
+			bool filterNumber = false;
+			bool filterPlaceN = false;
+			string cellvalue;
+
+			if(model.GetValue (iter, 1) == null)
+				return false;
+
+			if (model.GetValue (iter, 4) != null)
+			{
+				cellvalue  = model.GetValue (iter, 4).ToString();
+				filterLessee = cellvalue.IndexOf (entrySearch.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
+			}
+			if (model.GetValue (iter, 2) != null)
+			{
+				cellvalue  = model.GetValue (iter, 2).ToString();
+				filterNumber = cellvalue.IndexOf (entrySearch.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
+			}
+			if (model.GetValue (iter, 3) != null)
+			{
+				cellvalue  = model.GetValue (iter, 3).ToString();
+				filterPlaceN = cellvalue.IndexOf (entrySearch.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
+			}
+			return (filterLessee || filterNumber || filterPlaceN);
 		}
 
 		void CalculateSelected()
@@ -88,18 +122,17 @@ namespace bazar
 
 		protected void OnCheckAllClicked (object sender, EventArgs e)
 		{
-			TreeIter iter;
-			if(ContractsListStore.GetIterFirst(out iter))
+			TreeIter iter, filteriter;
+			if(ContractsFilter.GetIterFirst(out filteriter))
 			{
-				if(!(bool) ContractsListStore.GetValue(iter, 8))
-					ContractsListStore.SetValue (iter, 0, checkAll.Active);
-				while (ContractsListStore.IterNext(ref iter)) 
+				iter = ContractsFilter.ConvertIterToChildIter (filteriter);
+				ContractsListStore.SetValue (iter, 0, checkAll.Active);
+				while (ContractsFilter.IterNext(ref filteriter)) 
 				{
-					if(!(bool) ContractsListStore.GetValue(iter, 8))
-						ContractsListStore.SetValue (iter, 0, checkAll.Active);
+					iter = ContractsFilter.ConvertIterToChildIter (filteriter);
+					ContractsListStore.SetValue (iter, 0, checkAll.Active);
 				}
-			}
-			CalculateSelected ();
+			}			CalculateSelected ();
 		}
 
 		void UpdateContracts()
@@ -250,6 +283,10 @@ namespace bazar
 			}
 		}
 
+		protected void OnEntrySearchChanged(object sender, EventArgs e)
+		{
+			ContractsFilter.Refilter ();
+		}
 	}
 }
 

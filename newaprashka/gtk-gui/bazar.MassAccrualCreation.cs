@@ -9,6 +9,8 @@ namespace bazar
 		private global::Gtk.Label label1;
 		private global::Gtk.HBox hbox3;
 		private global::Gtk.CheckButton checkAll;
+		private global::Gtk.Label label2;
+		private global::Gtk.Entry entrySearch;
 		private global::Gtk.Label label3;
 		private global::Gtk.ComboBox comboMonth;
 		private global::Gtk.ComboBox comboYear;
@@ -74,15 +76,34 @@ namespace bazar
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.checkAll]));
 			w5.Position = 0;
 			// Container child hbox3.Gtk.Box+BoxChild
+			this.label2 = new global::Gtk.Label ();
+			this.label2.Name = "label2";
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Поиск:");
+			this.hbox3.Add (this.label2);
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label2]));
+			w6.Position = 1;
+			w6.Expand = false;
+			w6.Fill = false;
+			// Container child hbox3.Gtk.Box+BoxChild
+			this.entrySearch = new global::Gtk.Entry ();
+			this.entrySearch.TooltipMarkup = "Поиск по номеру договора, месту и арендатору.";
+			this.entrySearch.CanFocus = true;
+			this.entrySearch.Name = "entrySearch";
+			this.entrySearch.IsEditable = true;
+			this.entrySearch.InvisibleChar = '●';
+			this.hbox3.Add (this.entrySearch);
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.entrySearch]));
+			w7.Position = 2;
+			// Container child hbox3.Gtk.Box+BoxChild
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
 			this.label3.Xalign = 1F;
 			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("Месяц:");
 			this.hbox3.Add (this.label3);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label3]));
-			w6.Position = 1;
-			w6.Expand = false;
-			w6.Fill = false;
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.label3]));
+			w8.Position = 3;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.comboMonth = global::Gtk.ComboBox.NewText ();
 			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Нет"));
@@ -100,23 +121,23 @@ namespace bazar
 			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Декабрь"));
 			this.comboMonth.Name = "comboMonth";
 			this.hbox3.Add (this.comboMonth);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.comboMonth]));
-			w7.Position = 2;
-			w7.Expand = false;
-			w7.Fill = false;
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.comboMonth]));
+			w9.Position = 4;
+			w9.Expand = false;
+			w9.Fill = false;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.comboYear = global::Gtk.ComboBox.NewText ();
 			this.comboYear.Name = "comboYear";
 			this.hbox3.Add (this.comboYear);
-			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.comboYear]));
-			w8.Position = 3;
-			w8.Expand = false;
-			w8.Fill = false;
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.comboYear]));
+			w10.Position = 5;
+			w10.Expand = false;
+			w10.Fill = false;
 			w1.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox3]));
-			w9.Position = 1;
-			w9.Expand = false;
-			w9.Fill = false;
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox3]));
+			w11.Position = 1;
+			w11.Expand = false;
+			w11.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.GtkScrolledWindow = new global::Gtk.ScrolledWindow ();
 			this.GtkScrolledWindow.Name = "GtkScrolledWindow";
@@ -127,8 +148,8 @@ namespace bazar
 			this.treeviewContracts.Name = "treeviewContracts";
 			this.GtkScrolledWindow.Add (this.treeviewContracts);
 			w1.Add (this.GtkScrolledWindow);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(w1 [this.GtkScrolledWindow]));
-			w11.Position = 2;
+			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(w1 [this.GtkScrolledWindow]));
+			w13.Position = 2;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.hbox4 = new global::Gtk.HBox ();
 			this.hbox4.Name = "hbox4";
@@ -139,38 +160,38 @@ namespace bazar
 			this.labelSelected.Name = "labelSelected";
 			this.labelSelected.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
 			this.hbox4.Add (this.labelSelected);
-			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelSelected]));
-			w12.Position = 0;
-			w12.Expand = false;
-			w12.Fill = false;
+			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelSelected]));
+			w14.Position = 0;
+			w14.Expand = false;
+			w14.Fill = false;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.labelTotal = new global::Gtk.Label ();
 			this.labelTotal.Name = "labelTotal";
 			this.labelTotal.Xalign = 1F;
 			this.labelTotal.LabelProp = global::Mono.Unix.Catalog.GetString ("label4");
 			this.hbox4.Add (this.labelTotal);
-			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelTotal]));
-			w13.Position = 1;
+			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelTotal]));
+			w15.Position = 1;
 			w1.Add (this.hbox4);
-			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox4]));
-			w14.Position = 3;
-			w14.Expand = false;
-			w14.Fill = false;
+			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox4]));
+			w16.Position = 3;
+			w16.Expand = false;
+			w16.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.progressOperation = new global::Gtk.ProgressBar ();
 			this.progressOperation.Name = "progressOperation";
 			this.progressOperation.Text = "";
 			w1.Add (this.progressOperation);
-			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(w1 [this.progressOperation]));
-			w15.Position = 4;
-			w15.Expand = false;
-			w15.Fill = false;
+			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(w1 [this.progressOperation]));
+			w17.Position = 4;
+			w17.Expand = false;
+			w17.Fill = false;
 			// Internal child bazar.MassAccrualCreation.ActionArea
-			global::Gtk.HButtonBox w16 = this.ActionArea;
-			w16.Name = "dialog1_ActionArea";
-			w16.Spacing = 10;
-			w16.BorderWidth = ((uint)(5));
-			w16.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w18 = this.ActionArea;
+			w18.Name = "dialog1_ActionArea";
+			w18.Spacing = 10;
+			w18.BorderWidth = ((uint)(5));
+			w18.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -178,13 +199,13 @@ namespace bazar
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = global::Mono.Unix.Catalog.GetString ("О_тменить");
-			global::Gtk.Image w17 = new global::Gtk.Image ();
-			w17.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
-			this.buttonCancel.Image = w17;
+			global::Gtk.Image w19 = new global::Gtk.Image ();
+			w19.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-cancel", global::Gtk.IconSize.Menu);
+			this.buttonCancel.Image = w19;
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w18 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w16 [this.buttonCancel]));
-			w18.Expand = false;
-			w18.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w20 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w18 [this.buttonCancel]));
+			w20.Expand = false;
+			w20.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -192,14 +213,14 @@ namespace bazar
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = global::Mono.Unix.Catalog.GetString ("_OK");
-			global::Gtk.Image w19 = new global::Gtk.Image ();
-			w19.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
-			this.buttonOk.Image = w19;
+			global::Gtk.Image w21 = new global::Gtk.Image ();
+			w21.Pixbuf = global::Stetic.IconLoader.LoadIcon (this, "gtk-ok", global::Gtk.IconSize.Menu);
+			this.buttonOk.Image = w21;
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w20 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w16 [this.buttonOk]));
-			w20.Position = 1;
-			w20.Expand = false;
-			w20.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w22 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w18 [this.buttonOk]));
+			w22.Position = 1;
+			w22.Expand = false;
+			w22.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
@@ -207,6 +228,7 @@ namespace bazar
 			this.DefaultHeight = 380;
 			this.Show ();
 			this.checkAll.Clicked += new global::System.EventHandler (this.OnCheckAllClicked);
+			this.entrySearch.Changed += new global::System.EventHandler (this.OnEntrySearchChanged);
 			this.comboMonth.Changed += new global::System.EventHandler (this.OnComboMonthChanged);
 			this.comboYear.Changed += new global::System.EventHandler (this.OnComboYearChanged);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
