@@ -464,7 +464,7 @@ public partial class MainWindow : Gtk.Window
 		break;
 		case 2:
 			treeviewContract.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(Contractfilter.GetValue(iter, 1));
+			itemid = Convert.ToInt32(Contractfilter.GetValue(iter, 0));
 			winDelete.RunDeletion("contracts", itemid);
 			UpdateContract();
 		break;

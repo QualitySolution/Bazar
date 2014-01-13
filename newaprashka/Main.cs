@@ -90,7 +90,7 @@ namespace bazar
 			PrepareTable = new TableInfo();
 			PrepareTable.ObjectsName = "Договора"; 
 			PrepareTable.ObjectName = "договор"; 
-			PrepareTable.SqlSelect = "SELECT number, sign_date, lessees.name as lessee FROM contracts " +
+			PrepareTable.SqlSelect = "SELECT number, sign_date, lessees.name as lessee, contracts.id as id FROM contracts " +
 				"LEFT JOIN lessees ON lessees.id = lessee_id ";
 			PrepareTable.DisplayString = "Договор №{0} от {1:d} с арендатором {2}";
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
