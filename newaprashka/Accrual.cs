@@ -34,7 +34,8 @@ namespace bazar
 			ServiceCombo.Destroy ();
 			
 			ComboBox CashCombo = new ComboBox();
-			ComboWorks.ComboFillReference(CashCombo,"cash",0);
+			string sqlSelect = "SELECT name, id, color FROM cash";
+			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, 0, true);
 			CashNameList = CashCombo.Model;
 			CashCombo.Destroy ();
 			
@@ -54,7 +55,8 @@ namespace bazar
 			                                      typeof (string),	//10 - paid text
 			                                      typeof (decimal),	//11 - paid value
 			                                      typeof(bool),		//12 - from area
-			                                      typeof(int)		//13 - number of counters
+			                                      typeof(int),		//13 - number of counters
+			                                      typeof(string)	//14 - marker color
 			                                      );
 
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
@@ -122,6 +124,11 @@ namespace bazar
 			CountColumn.SetCellDataFunc(CellCount, RenderCountColumn);
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
+
+			foreach(TreeViewColumn column in treeviewServices.Columns)
+			{
+				column.AddAttribute (column.CellRenderers [0], "background", 14);
+			}
 			
 			treeviewServices.Model = ServiceListStore;
 			treeviewServices.ShowAll();
@@ -212,6 +219,8 @@ namespace bazar
 				if(CashNameList.GetValue (CashIter,0).ToString () == args.NewText)
 				{
 					ServiceListStore.SetValue (iter, 2, CashNameList.GetValue (CashIter, 1));
+					object[] Values = (object[]) CashNameList.GetValue (CashIter, 2);
+					ServiceListStore.SetValue (iter, 14, Values[2] != DBNull.Value ? (string)Values[2] : null) ;
 					break;
 				}
 			}
@@ -329,7 +338,7 @@ namespace bazar
 				this.Title = "Начисление №" + entryNumber.Text;
 				
 				//Получаем таблицу услуг
-				sql = "SELECT accrual_pays.*, cash.name as cash, services.name as service, " +
+				sql = "SELECT accrual_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, " +
 					"units.id as units_id, units.name as units, paysum.sum as paid, metercount.number FROM accrual_pays " +
 						"LEFT JOIN cash ON cash.id = accrual_pays.cash_id " +
 						"LEFT JOIN services ON accrual_pays.service_id = services.id " +
@@ -386,7 +395,9 @@ namespace bazar
 					                              String.Format ("{0:0.00}", paid),
 					                              paid,
 					                              null,
-					                              DBWorks.GetInt (rdr, "number", 0));
+					                              DBWorks.GetInt (rdr, "number", 0),
+					                              DBWorks.GetString(rdr, "cashcolor", null)
+					                             );
 				}
 				rdr.Close();
 				MainClass.StatusMessage("Ok");

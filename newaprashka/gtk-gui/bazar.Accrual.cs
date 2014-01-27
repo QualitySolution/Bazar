@@ -296,6 +296,7 @@ namespace bazar
 			this.textviewComments = new global::Gtk.TextView ();
 			this.textviewComments.CanFocus = true;
 			this.textviewComments.Name = "textviewComments";
+			this.textviewComments.WrapMode = ((global::Gtk.WrapMode)(2));
 			this.GtkScrolledWindow2.Add (this.textviewComments);
 			this.table2.Add (this.GtkScrolledWindow2);
 			global::Gtk.Table.TableChild w22 = ((global::Gtk.Table.TableChild)(this.table2 [this.GtkScrolledWindow2]));
