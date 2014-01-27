@@ -24,8 +24,8 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboPlaceT,"place_types",2);
 			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboPlaceT,"place_types",2);
 
 			ComboBox ServiceCombo = new ComboBox();
 			ComboWorks.ComboFillReference(ServiceCombo,"services",0);
@@ -33,7 +33,8 @@ namespace bazar
 			ServiceCombo.Destroy ();
 
 			ComboBox CashCombo = new ComboBox();
-			ComboWorks.ComboFillReference(CashCombo,"cash",0);
+			string sqlSelect = "SELECT name, id, color FROM cash";
+			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, 0, true);
 			CashNameList = CashCombo.Model;
 			CashCombo.Destroy ();
 
@@ -51,7 +52,8 @@ namespace bazar
 			                                      typeof(double),	// 8 - Сумма
 			                                      typeof(int), 	// 9 - 
 			                                      typeof(bool),	// 10 - Есть ли расчет по метражу
-			                                      typeof(double)	// 11 - Минимальный платеж.
+			                                      typeof(double),	// 11 - Минимальный платеж.
+			                                      typeof(string) 	// 12 - Цвет строки
 			);
 			
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
@@ -97,13 +99,18 @@ namespace bazar
 			CellMinSum.Edited += OnMinSumSpinEdited;
 
 			treeviewServices.AppendColumn (ServiceColumn);
-			ServiceColumn.AddAttribute (CellService,"text", 1);
+			ServiceColumn.AddAttribute (CellService, "text", 1);
 			treeviewServices.AppendColumn (CashColumn);
 			CashColumn.AddAttribute (CellCash,"text", 3);
 			treeviewServices.AppendColumn ("Количество", CellCount, RenderCountColumn);
 			treeviewServices.AppendColumn ("Цена", CellPrice, RenderPriceColumn);
 			treeviewServices.AppendColumn ("Сумма", new Gtk.CellRendererText (), RenderSumColumn);
 			treeviewServices.AppendColumn ("Мин. платеж", CellMinSum, RenderMinSumColumn);
+
+			foreach(TreeViewColumn column in treeviewServices.Columns)
+			{
+				column.AddAttribute (column.CellRenderers [0], "background", 12);
+			}
 
 			treeviewServices.Columns[3].MinWidth = 90;
 
@@ -165,6 +172,8 @@ namespace bazar
 				if(CashNameList.GetValue (CashIter,0).ToString () == args.NewText)
 				{
 					ServiceListStore.SetValue (iter, 2, CashNameList.GetValue (CashIter, 1));
+					object[] Values = (object[]) CashNameList.GetValue (CashIter, 2);
+					ServiceListStore.SetValue (iter, 12, Values[2] != DBNull.Value ? (string)Values[2] : null) ;
 					break;
 				}
 			}
@@ -317,7 +326,7 @@ namespace bazar
 				this.Title = "Договор №" + entryNumber.Text;
 
 				//Получаем таблицу услуг
-				sql = "SELECT contract_pays.*, cash.name as cash, services.name as service, services.by_area as by_area," +
+				sql = "SELECT contract_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, services.by_area as by_area," +
 					"units.id as units_id, units.name as units FROM contract_pays " +
 					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
 					"LEFT JOIN services ON contract_pays.service_id = services.id " +
@@ -356,8 +365,9 @@ namespace bazar
 					                             sum,
 					                             int.Parse(rdr["id"].ToString()),
 					                             rdr.GetBoolean("by_area"),
-					                              DBWorks.GetDouble (rdr, "min_sum", 0.0)
-					                              );
+					                              DBWorks.GetDouble (rdr, "min_sum", 0.0),
+					                              DBWorks.GetString(rdr, "cashcolor", null)
+					                             );
 				}
 				rdr.Close();
 				CalculateServiceSum();
@@ -494,7 +504,7 @@ namespace bazar
 						labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", g_area);
 
 						TreeIter ServiceIter;
-						if (ServiceListStore.GetIterFirst (out ServiceIter))
+						if (ServiceListStore != null && ServiceListStore.GetIterFirst (out ServiceIter))
 						{
 							do
 							{

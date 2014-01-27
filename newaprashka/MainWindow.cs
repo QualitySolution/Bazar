@@ -532,7 +532,7 @@ public partial class MainWindow : Gtk.Window
 	protected void OnAction19Activated (object sender, EventArgs e)
 	{
 		Reference winref = new Reference();
-		winref.SetMode(true,false,true,true,true);
+		winref.SetMode(false,false,true,true,true);
 		winref.FillList("cash","Касса", "Кассы");
 		winref.Show();
 		winref.Run();
@@ -648,6 +648,15 @@ public partial class MainWindow : Gtk.Window
 			ServiceEdit.Show();
 			Result = (ResponseType)ServiceEdit.Run();
 			ServiceEdit.Destroy();
+			break;
+		case "cash":
+			Cash CashEdit = new Cash();
+			CashEdit.NewItem = e.NewItem;
+			if(!e.NewItem)
+				CashEdit.Fill(e.ItemId);
+			CashEdit.Show();
+			Result = (ResponseType)CashEdit.Run();
+			CashEdit.Destroy();
 			break;
 
 		default:
