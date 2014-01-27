@@ -13,11 +13,11 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
 meter_types.name type, meter_tariffs.name as tariff, 
- reading.*, accrual_pays.count, accrual_pays.price, paysum.sum as paid, IFNULL(reading.lastpayid, -1) as lastpayid0 FROM meters 
+ reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0 FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
 (SELECT accrual_pay_id FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid, 
@@ -42,7 +42,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
