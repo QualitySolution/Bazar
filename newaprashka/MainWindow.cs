@@ -420,7 +420,7 @@ public partial class MainWindow : Gtk.Window
 			"\nРазработана на MonoDevelop с использованием открытых технологий Mono, GTK#, MySQL." +
 			"\nТелефон тех. поддержки +7(812)575-79-44";
 		
-		dialog.Copyright = "Quality Solution 2013";
+		dialog.Copyright = "Quality Solution 2014";
 		
 		dialog.Authors = new string [] {"Ганьков Андрей <gav@qsolution.ru>"};
 		
