@@ -11430,7 +11430,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.LesseeDebtsReport" design-size="331 149">
+  <widget class="Gtk.Dialog" id="bazar.LesseeDebtsReport" design-size="374 410">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Отчет по долгам арендаторов</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -11474,6 +11474,7 @@
           <packing>
             <property name="Position">0</property>
             <property name="AutoSize">False</property>
+            <property name="Expand">False</property>
             <property name="Fill">False</property>
           </packing>
         </child>
@@ -11481,13 +11482,50 @@
           <widget class="Gtk.Label" id="label1">
             <property name="MemberName" />
             <property name="LabelProp" translatable="yes">* Если в договоре не указан день оплаты,
-  долг попадет в отчет с первого числа.</property>
+  долг попадет в отчет с первого числа.
+* Детализированный отчет покажет суммы
+  только по выбранным услугам.</property>
             <property name="Wrap">True</property>
           </widget>
           <packing>
             <property name="Position">1</property>
             <property name="AutoSize">False</property>
+            <property name="Expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.CheckButton" id="checkDetail">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Label" translatable="yes">Детализировать по услугам</property>
+            <property name="DrawIndicator">True</property>
+            <property name="HasLabel">True</property>
+            <property name="UseUnderline">True</property>
+            <signal name="Clicked" handler="OnCheckDetailClicked" />
+          </widget>
+          <packing>
+            <property name="Position">2</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
             <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow">
+            <property name="MemberName" />
+            <property name="ShadowType">In</property>
+            <child>
+              <widget class="Gtk.TreeView" id="treeviewServices">
+                <property name="MemberName" />
+                <property name="Sensitive">False</property>
+                <property name="CanFocus">True</property>
+                <property name="ShowScrollbars">True</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">3</property>
+            <property name="AutoSize">True</property>
           </packing>
         </child>
       </widget>
