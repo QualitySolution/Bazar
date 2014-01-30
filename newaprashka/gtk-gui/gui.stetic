@@ -2792,6 +2792,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -13808,7 +13809,8 @@
               <widget class="Gtk.Label" id="label1">
                 <property name="MemberName" />
                 <property name="Xalign">1</property>
-                <property name="LabelProp" translatable="yes">Имя:</property>
+                <property name="LabelProp" translatable="yes">Имя&lt;span foreground="red"&gt;*&lt;/span&gt;:</property>
+                <property name="UseMarkup">True</property>
               </widget>
               <packing>
                 <property name="TopAttach">1</property>

@@ -80,7 +80,8 @@ namespace bazar
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
 			this.label1.Xalign = 1F;
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Имя:");
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Имя<span foreground=\"red\">*</span>:");
+			this.label1.UseMarkup = true;
 			this.table1.Add (this.label1);
 			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.label1]));
 			w6.TopAttach = ((uint)(1));
