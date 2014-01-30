@@ -4,9 +4,11 @@ namespace bazar
 {
 	public partial class DailyCashReport
 	{
-		private global::Gtk.HBox hbox1;
-		private global::Gtk.Label label1;
+		private global::Gtk.Table table1;
+		private global::Gtk.ComboBox comboCash;
 		private global::QSWidgetLib.DatePicker datepickerCash;
+		private global::Gtk.Label label1;
+		private global::Gtk.Label label2;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
 
@@ -23,37 +25,67 @@ namespace bazar
 			w1.Name = "dialog1_VBox";
 			w1.BorderWidth = ((uint)(2));
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
-			this.hbox1 = new global::Gtk.HBox ();
-			this.hbox1.Name = "hbox1";
-			this.hbox1.Spacing = 6;
-			// Container child hbox1.Gtk.Box+BoxChild
-			this.label1 = new global::Gtk.Label ();
-			this.label1.Name = "label1";
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Отчет за:");
-			this.hbox1.Add (this.label1);
-			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label1]));
-			w2.Position = 0;
-			// Container child hbox1.Gtk.Box+BoxChild
+			this.table1 = new global::Gtk.Table (((uint)(2)), ((uint)(2)), false);
+			this.table1.Name = "table1";
+			this.table1.RowSpacing = ((uint)(6));
+			this.table1.ColumnSpacing = ((uint)(6));
+			this.table1.BorderWidth = ((uint)(9));
+			// Container child table1.Gtk.Table+TableChild
+			this.comboCash = new global::Gtk.ComboBox ();
+			this.comboCash.Name = "comboCash";
+			this.table1.Add (this.comboCash);
+			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.table1 [this.comboCash]));
+			w2.TopAttach = ((uint)(1));
+			w2.BottomAttach = ((uint)(2));
+			w2.LeftAttach = ((uint)(1));
+			w2.RightAttach = ((uint)(2));
+			w2.XOptions = ((global::Gtk.AttachOptions)(4));
+			w2.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
 			this.datepickerCash = new global::QSWidgetLib.DatePicker ();
 			this.datepickerCash.Events = ((global::Gdk.EventMask)(256));
 			this.datepickerCash.Name = "datepickerCash";
 			this.datepickerCash.Date = new global::System.DateTime (0);
 			this.datepickerCash.IsEditable = true;
 			this.datepickerCash.AutoSeparation = true;
-			this.hbox1.Add (this.datepickerCash);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.datepickerCash]));
-			w3.Position = 1;
-			w3.Fill = false;
-			w1.Add (this.hbox1);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(w1 [this.hbox1]));
-			w4.Position = 0;
-			w4.Fill = false;
+			this.table1.Add (this.datepickerCash);
+			global::Gtk.Table.TableChild w3 = ((global::Gtk.Table.TableChild)(this.table1 [this.datepickerCash]));
+			w3.LeftAttach = ((uint)(1));
+			w3.RightAttach = ((uint)(2));
+			w3.XOptions = ((global::Gtk.AttachOptions)(4));
+			w3.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.label1 = new global::Gtk.Label ();
+			this.label1.Name = "label1";
+			this.label1.Xalign = 1F;
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Отчет за<span foreground=\"red\">*</span>:");
+			this.label1.UseMarkup = true;
+			this.table1.Add (this.label1);
+			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table1 [this.label1]));
+			w4.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.label2 = new global::Gtk.Label ();
+			this.label2.Name = "label2";
+			this.label2.Xalign = 1F;
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("По кассе<span foreground=\"red\">*</span>:");
+			this.label2.UseMarkup = true;
+			this.table1.Add (this.label2);
+			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table1 [this.label2]));
+			w5.TopAttach = ((uint)(1));
+			w5.BottomAttach = ((uint)(2));
+			w5.XOptions = ((global::Gtk.AttachOptions)(4));
+			w5.YOptions = ((global::Gtk.AttachOptions)(4));
+			w1.Add (this.table1);
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(w1 [this.table1]));
+			w6.Position = 0;
+			w6.Expand = false;
+			w6.Fill = false;
 			// Internal child bazar.DailyCashReport.ActionArea
-			global::Gtk.HButtonBox w5 = this.ActionArea;
-			w5.Name = "dialog1_ActionArea";
-			w5.Spacing = 10;
-			w5.BorderWidth = ((uint)(5));
-			w5.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w7 = this.ActionArea;
+			w7.Name = "dialog1_ActionArea";
+			w7.Spacing = 10;
+			w7.BorderWidth = ((uint)(5));
+			w7.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -63,11 +95,12 @@ namespace bazar
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w6 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w5 [this.buttonCancel]));
-			w6.Expand = false;
-			w6.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w8 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w7 [this.buttonCancel]));
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
+			this.buttonOk.Sensitive = false;
 			this.buttonOk.CanDefault = true;
 			this.buttonOk.CanFocus = true;
 			this.buttonOk.Name = "buttonOk";
@@ -75,16 +108,18 @@ namespace bazar
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w7 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w5 [this.buttonOk]));
-			w7.Position = 1;
-			w7.Expand = false;
-			w7.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w9 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w7 [this.buttonOk]));
+			w9.Position = 1;
+			w9.Expand = false;
+			w9.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 316;
-			this.DefaultHeight = 111;
+			this.DefaultWidth = 279;
+			this.DefaultHeight = 138;
 			this.Show ();
+			this.datepickerCash.DateChanged += new global::System.EventHandler (this.OnDatepickerCashDateChanged);
+			this.comboCash.Changed += new global::System.EventHandler (this.OnComboCashChanged);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
 	}

@@ -21,7 +21,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <CommandText>(SELECT *, IFNULL(table1.incomesum, 0) as incomesum0, IFNULL(table2.sum, 0) as expensesum FROM (SELECT @num1 := 0, @num2 := 0) as a, (
 SELECT @num1:=@num1 + 1 as num, contracts.number as contract, services.name as service, payment_details.sum as incomesum 
@@ -31,18 +31,18 @@ LEFT JOIN services ON services.id = accrual_pays.service_id
 LEFT JOIN payments ON payments.id = payment_details.payment_id
 LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id 
 LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
-WHERE credit_slips.date = @date
+WHERE credit_slips.date = @date AND credit_slips.cash_id = @cash
 UNION ALL
 SELECT @num1:=@num1 + 1 as num, contracts.number as contract, IFNULL(credit_slips.details, income_items.name) as service, credit_slips.sum as incomesum
 FROM credit_slips 
 LEFT JOIN income_items ON credit_slips.income_id = income_items.id
 LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
-WHERE credit_slips.date = @date AND credit_slips.operation != 'payment'
+WHERE credit_slips.date = @date AND credit_slips.cash_id = @cash AND credit_slips.operation != 'payment'
 ) as table1 
 LEFT OUTER JOIN (
 SELECT @num2:= @num2 + 1 as num2, contractors.name as contractor, IFNULL(debit_slips.details, expense_items.name) as details, sum FROM debit_slips
 LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id
-LEFT JOIN contractors ON contractors.id = debit_slips.contractor_id WHERE date = @date) as table2
+LEFT JOIN contractors ON contractors.id = debit_slips.contractor_id WHERE date = @date AND cash_id = @cash) as table2
 ON table1.num = table2.num2 )
 UNION
 (SELECT *, IFNULL(table1.incomesum, 0) as incomesum0, IFNULL(table2.sum, 0) as expensesum FROM (SELECT @num3 := 0, @num4 := 0) as a, (
@@ -53,26 +53,29 @@ LEFT JOIN services ON services.id = accrual_pays.service_id
 LEFT JOIN payments ON payments.id = payment_details.payment_id
 LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id
 LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
-WHERE credit_slips.date = @date
+WHERE credit_slips.date = @date AND credit_slips.cash_id = @cash
 UNION ALL
 SELECT @num3:=@num3 + 1 as num, contracts.number as contract, IFNULL(credit_slips.details, income_items.name) as service, credit_slips.sum as incomesum
 FROM credit_slips 
 LEFT JOIN income_items ON credit_slips.income_id = income_items.id
 LEFT JOIN contracts ON contracts.id = credit_slips.contract_id 
-WHERE credit_slips.date = @date AND credit_slips.operation != 'payment'
+WHERE credit_slips.date = @date AND credit_slips.cash_id = @cash AND credit_slips.operation != 'payment'
 ) as table1 
 RIGHT OUTER JOIN (
 SELECT @num4:= @num4 + 1 as num2, contractors.name as contractor, IFNULL(debit_slips.details, expense_items.name) as details, sum FROM debit_slips
 LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id 
-LEFT JOIN contractors ON contractors.id = debit_slips.contractor_id WHERE date = @date) as table2
+LEFT JOIN contractors ON contractors.id = debit_slips.contractor_id WHERE date = @date AND cash_id = @cash) as table2
 ON table1.num = table2.num2 )</CommandText>
         <QueryParameters>
           <QueryParameter Name="date">
             <Value>=Parameters!date</Value>
           </QueryParameter>
+          <QueryParameter Name="cash">
+            <Value>=Parameters!cash</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="num">
           <DataField>num</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
@@ -116,26 +119,29 @@ ON table1.num = table2.num2 )</CommandText>
       </Fields>
     </DataSet>
     <DataSet Name="Total">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT * FROM (
-SELECT 1 as r, SUM(credit_slips.sum) as beginincome FROM credit_slips WHERE credit_slips.date &lt; @date) as begini
+SELECT 1 as r, SUM(credit_slips.sum) as beginincome FROM credit_slips WHERE credit_slips.date &lt; @date AND credit_slips.cash_id = @cash) as begini
 LEFT JOIN (
-SELECT 1 as r, SUM(debit_slips.sum) as beginexpense FROM debit_slips WHERE debit_slips.date &lt; @date) as begine
+SELECT 1 as r, SUM(debit_slips.sum) as beginexpense FROM debit_slips WHERE debit_slips.date &lt; @date AND debit_slips.cash_id = @cash) as begine
 USING (r)
 LEFT JOIN (
-SELECT 1 as r, SUM(credit_slips.sum) as endincome FROM credit_slips WHERE credit_slips.date &lt;= @date) as endi
+SELECT 1 as r, SUM(credit_slips.sum) as endincome FROM credit_slips WHERE credit_slips.date &lt;= @date AND credit_slips.cash_id = @cash) as endi
 USING (r)
 LEFT JOIN (
-SELECT 1 as r, SUM(debit_slips.sum) as endexpense FROM debit_slips WHERE debit_slips.date &lt;= @date) as ende
+SELECT 1 as r, SUM(debit_slips.sum) as endexpense FROM debit_slips WHERE debit_slips.date &lt;= @date AND debit_slips.cash_id = @cash) as ende
 USING (r)</CommandText>
         <QueryParameters>
           <QueryParameter Name="date">
             <Value>=Parameters!date</Value>
           </QueryParameter>
+          <QueryParameter Name="cash">
+            <Value>=Parameters!cash</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="r">
           <DataField>r</DataField>
           <TypeName>System.Int32</TypeName>
@@ -714,6 +720,13 @@ USING (r)</CommandText>
       <MultiValue>false</MultiValue>
       <Prompt>
       </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="cash">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
     </ReportParameter>
   </ReportParameters>
 </Report>
