@@ -53,7 +53,7 @@ namespace bazar
 					sqlgroup += ", org_id";
 				if(DisplayCash)
 					sqlgroup += ", cash_id";
-				sql = "SELECT employee_id, employees.name as employee, organizations.name as organization, cash.name as cash, debt " +
+				sql = "SELECT employee_id" + sqlgroup + ", employees.name as employee, organizations.name as organization, cash.name as cash, debt " +
 					"FROM( SELECT employee_id, org_id, cash_id, SUM(count) as debt FROM ( " +
 						"SELECT employee_id, org_id, cash_id, SUM(debit_slips.sum) as count FROM debit_slips WHERE operation = 'advance' GROUP BY employee_id" + sqlgroup +
 						" UNION ALL SELECT employee_id, org_id, cash_id, -SUM(credit_slips.sum) as count FROM credit_slips WHERE operation = 'advance' GROUP BY employee_id" + sqlgroup +
@@ -74,11 +74,28 @@ namespace bazar
 				OrgIter = TreeIter.Zero;
 				EmployeeIter = TreeIter.Zero;
 				CurrentIter = TreeIter.Zero;
+				int LastEmployee = -1, LastOrg = -1;
 				string FirstColumn;
 				while (rdr.Read())
 				{
 					bool FirstLevel = false;
 					bool CashLevel = false;
+
+					//Обход проблемы: если общий долг по сотруднику нулевой, но внутри он разбит на несколько организаций или касс, итоговая втрока в запросе будет удалена.
+					if(LastEmployee != rdr.GetInt32 ("employee_id") && (DisplayOrg && rdr["org_id"] != DBNull.Value || (DisplayCash && rdr["cash_id"] != DBNull.Value)))
+					{
+						EmployeeIter = DebtsTreeStore.AppendValues(rdr.GetInt32 ("employee_id"),
+						                                           rdr["employee"].ToString(),
+						                                           string.Format("{0:C}", 0m));
+					}
+					if (DisplayOrg && LastOrg != DBWorks.GetInt (rdr, "org_id", 0) && DisplayCash && rdr["cash_id"] != DBNull.Value)
+					{
+						OrgIter = DebtsTreeStore.AppendValues(EmployeeIter,
+															rdr.GetInt32 ("employee_id"),
+						                                      rdr["organization"].ToString(),
+						                                      string.Format("{0:C}", 0m));
+					}
+		
 					if(DisplayCash && rdr["cash"] != DBNull.Value)
 					{
 						FirstColumn = rdr["cash"].ToString ();
@@ -112,6 +129,10 @@ namespace bazar
 						if(DisplayOrg && !CashLevel)
 							OrgIter = TempIter;
 					}
+
+					LastEmployee = rdr.GetInt32 ("employee_id");
+					if(DisplayOrg && rdr["org_id"] != DBNull.Value)
+						LastOrg = rdr.GetInt32 ("org_id");
 				}
 				rdr.Close();
 			}
