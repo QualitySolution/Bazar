@@ -66,8 +66,10 @@ namespace bazar
 						"ORDER BY employee" + sqlgroup;
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
+				decimal TotalDebt = 0m;
 				if(rdr.Read () && rdr["debt"] != DBNull.Value && rdr["employee_id"] == DBNull.Value)
-					labelTotal.LabelProp = String.Format("Общая задолжность всех подотчетных лиц: {0:C}", rdr.GetDecimal("debt"));
+					TotalDebt = rdr.GetDecimal("debt");
+				labelTotal.LabelProp = String.Format("Общая задолжность всех подотчетных лиц: {0:C}", TotalDebt);
 				TreeIter EmployeeIter, OrgIter, CurrentIter, TempIter;
 				OrgIter = TreeIter.Zero;
 				EmployeeIter = TreeIter.Zero;
