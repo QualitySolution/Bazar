@@ -48,7 +48,7 @@ namespace bazar
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о услуге!");
+				MainClass.StatusMessage("Ошибка получения информации о кассе!");
 				QSMain.ErrorMessage(this,ex);
 			}
 			TestCanSave();
