@@ -87,7 +87,7 @@ namespace bazar
 				if(checkColor.Active)
 				{
 					Gdk.Color c = colorbuttonMarker.Color;
-					string ColorStr = String.Format("#{0:X}{1:X}{2:X}", c.Red, c.Green, c.Blue);
+					string ColorStr = String.Format("#{0:x4}{1:x4}{2:x4}", c.Red, c.Green, c.Blue);
 					Console.WriteLine(ColorStr);
 					cmd.Parameters.AddWithValue("@color", ColorStr);
 				}
