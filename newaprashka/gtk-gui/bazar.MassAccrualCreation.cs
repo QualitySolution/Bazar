@@ -224,8 +224,8 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 591;
-			this.DefaultHeight = 380;
+			this.DefaultWidth = 656;
+			this.DefaultHeight = 451;
 			this.Show ();
 			this.checkAll.Clicked += new global::System.EventHandler (this.OnCheckAllClicked);
 			this.entrySearch.Changed += new global::System.EventHandler (this.OnEntrySearchChanged);

@@ -15,8 +15,8 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboUnits, "units", 0);
-			ComboWorks.ComboFillReference(comboIncomeItem, "income_items", 2);
+			ComboWorks.ComboFillReference(comboUnits, "units", ComboWorks.ListMode.OnlyItems);
+			ComboWorks.ComboFillReference(comboIncomeItem, "income_items", ComboWorks.ListMode.WithNo);
 		}
 
 		public void ServiceFill(int id)

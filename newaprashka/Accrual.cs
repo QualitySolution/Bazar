@@ -29,13 +29,13 @@ namespace bazar
 			MainClass.ComboAccrualYearsFill (comboAccuralYear);
 
 			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services",0);
+			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems);
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 			
 			ComboBox CashCombo = new ComboBox();
 			string sqlSelect = "SELECT name, id, color FROM cash";
-			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, 0, true);
+			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, ComboWorks.ListMode.OnlyItems, true);
 			CashNameList = CashCombo.Model;
 			CashCombo.Destroy ();
 			

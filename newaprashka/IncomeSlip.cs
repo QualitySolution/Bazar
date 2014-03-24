@@ -20,9 +20,9 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboCash,"cash",2);
-			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
-			ComboWorks.ComboFillReference(comboIncomeItem,"income_items",2);
+			ComboWorks.ComboFillReference(comboCash,"cash", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboIncomeItem,"income_items", ComboWorks.ListMode.WithNo);
 
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;
@@ -499,7 +499,7 @@ namespace bazar
 			comboContract.GetActiveIter (out iter);
 			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.Model.GetValue (iter, 1)) };
 			string Display = "№{0} - {1:MMMM} {2}";
-			ComboWorks.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, 2);
+			ComboWorks.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, ComboWorks.ListMode.WithNo);
 		}
 
 		protected void OnComboAccrualChanged (object sender, EventArgs e)

@@ -20,7 +20,7 @@ namespace bazar
 			this.Build ();
 
 			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services", 2);
+			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.WithNo);
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 

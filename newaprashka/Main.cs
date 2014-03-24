@@ -463,7 +463,7 @@ namespace bazar
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) ";
 			MySqlParameter[] Param = { new MySqlParameter("@lessee_id", Lessee_id) };
 			string Display = "{1} от {2:d}";
-			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, 0);
+			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, ComboWorks.ListMode.OnlyItems);
 		}
 
 		public static void ComboContractFill(ComboBox combo, int Month, int Year)
@@ -475,7 +475,7 @@ namespace bazar
 			MySqlParameter[] Param = { new MySqlParameter("@start", BeginOfMonth),
 										new MySqlParameter("@end", EndOfMonth) };
 			string Display = "{1} от {2:d}";
-			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, 0);
+			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, ComboWorks.ListMode.OnlyItems);
 		}
 
 		public static void ComboAccrualYearsFill(ComboBox combo, string FirstItem = "")

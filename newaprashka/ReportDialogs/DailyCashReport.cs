@@ -10,7 +10,7 @@ namespace bazar
 			this.Build ();
 			datepickerCash.Date = DateTime.Now.Date;
 
-			ComboWorks.ComboFillReference(comboCash, "cash", 0);
+			ComboWorks.ComboFillReference(comboCash, "cash", ComboWorks.ListMode.OnlyItems);
 		}
 
 		protected	void TestCanSave ()

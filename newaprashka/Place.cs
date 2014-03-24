@@ -22,8 +22,8 @@ namespace bazar
 		public Place (bool New)
 		{
 			this.Build ();
-			ComboWorks.ComboFillReference(comboPType,"place_types",2);
-			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
+			ComboWorks.ComboFillReference(comboPType,"place_types", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
 			contactNull = true;
 			NewPlace = New;
 

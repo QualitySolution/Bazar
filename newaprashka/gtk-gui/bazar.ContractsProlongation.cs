@@ -110,6 +110,7 @@ namespace bazar
 			this.radiobuttonActiveOnly = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Только активные"));
 			this.radiobuttonActiveOnly.CanFocus = true;
 			this.radiobuttonActiveOnly.Name = "radiobuttonActiveOnly";
+			this.radiobuttonActiveOnly.Active = true;
 			this.radiobuttonActiveOnly.DrawIndicator = true;
 			this.radiobuttonActiveOnly.UseUnderline = true;
 			this.radiobuttonActiveOnly.Group = new global::GLib.SList (global::System.IntPtr.Zero);
@@ -221,6 +222,7 @@ namespace bazar
 			this.radioCopyMode = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Копирование"));
 			this.radioCopyMode.CanFocus = true;
 			this.radioCopyMode.Name = "radioCopyMode";
+			this.radioCopyMode.Active = true;
 			this.radioCopyMode.DrawIndicator = true;
 			this.radioCopyMode.UseUnderline = true;
 			this.radioCopyMode.Group = new global::GLib.SList (global::System.IntPtr.Zero);

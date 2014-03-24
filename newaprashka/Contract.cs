@@ -24,17 +24,17 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboOrg, "organizations", 2);
-			ComboWorks.ComboFillReference(comboPlaceT,"place_types",2);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboPlaceT,"place_types", ComboWorks.ListMode.WithNo);
 
 			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services",0);
+			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems);
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 
 			ComboBox CashCombo = new ComboBox();
 			string sqlSelect = "SELECT name, id, color FROM cash";
-			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, 0, true);
+			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, ComboWorks.ListMode.OnlyItems, true);
 			CashNameList = CashCombo.Model;
 			CashCombo.Destroy ();
 

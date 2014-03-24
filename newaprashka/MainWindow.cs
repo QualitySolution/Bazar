@@ -670,29 +670,29 @@ public partial class MainWindow : Gtk.Window
 	{
 		switch (e.ReferenceTable) {
 		case "place_types":
-			ComboWorks.ComboFillReference(comboPlaceType,"place_types",1);
-			ComboWorks.ComboFillReference(comboContractPlaceT,"place_types",1);
-			ComboWorks.ComboFillReference(comboEventPlaceT,"place_types",1);
+			ComboWorks.ComboFillReference(comboPlaceType,"place_types", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboContractPlaceT,"place_types", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboEventPlaceT,"place_types", ComboWorks.ListMode.WithAll);
 			break;
 		case "organizations":
-			ComboWorks.ComboFillReference(comboPlaceOrg,"organizations",1);
-			ComboWorks.ComboFillReference(comboContractOrg, "organizations", 1);
-			ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", 1);
-			ComboWorks.ComboFillReference(comboCashOrg, "organizations", 1);
+			ComboWorks.ComboFillReference(comboPlaceOrg,"organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboContractOrg, "organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboCashOrg, "organizations", ComboWorks.ListMode.WithAll);
 			break;
 		case "cash":
-			ComboWorks.ComboFillReference(comboCashCash,"cash",1);
+			ComboWorks.ComboFillReference(comboCashCash,"cash", ComboWorks.ListMode.WithAll);
 			break;
 		case "income_items":
 			if(notebookCash.CurrentPage == 0)
-				ComboWorks.ComboFillReference(comboCashItem,"income_items",1);
+				ComboWorks.ComboFillReference(comboCashItem,"income_items", ComboWorks.ListMode.WithAll);
 			break;
 		case "expense_items": 
 			if(notebookCash.CurrentPage >= 1)
-				ComboWorks.ComboFillReference(comboCashItem,"expense_items",1);
+				ComboWorks.ComboFillReference(comboCashItem,"expense_items", ComboWorks.ListMode.WithAll);
 			break;
 		case "classes":
-			ComboWorks.ComboFillReference(comboEventType, "classes", 1);
+			ComboWorks.ComboFillReference(comboEventType, "classes", ComboWorks.ListMode.WithAll);
 			break;
 		} 
 	}

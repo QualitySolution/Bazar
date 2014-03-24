@@ -16,8 +16,8 @@ public partial class MainWindow : Gtk.Window
 	void PrepareCash()
 	{
 		//Заполняем комбобокс
-		ComboWorks.ComboFillReference(comboCashOrg, "organizations", 1);
-		ComboWorks.ComboFillReference(comboCashCash,"cash",1);
+		ComboWorks.ComboFillReference(comboCashOrg, "organizations", ComboWorks.ListMode.WithAll);
+		ComboWorks.ComboFillReference(comboCashCash,"cash", ComboWorks.ListMode.WithAll);
 		
 		//Создаем таблицу "Приходных ордеров"
 		CashIncomeListStore = new Gtk.ListStore (typeof (int), // 0-id
@@ -212,13 +212,13 @@ public partial class MainWindow : Gtk.Window
 		comboCashItem.Clear ();
 		switch (notebookCash.CurrentPage) {
 		case 0:
-			ComboWorks.ComboFillReference(comboCashItem,"income_items",1);
+			ComboWorks.ComboFillReference(comboCashItem,"income_items", ComboWorks.ListMode.WithAll);
 			break;
 		case 1:
-			ComboWorks.ComboFillReference(comboCashItem,"expense_items",1);
+			ComboWorks.ComboFillReference(comboCashItem,"expense_items", ComboWorks.ListMode.WithAll);
 			break;
 		case 2:
-			ComboWorks.ComboFillReference(comboCashItem,"expense_items",1);
+			ComboWorks.ComboFillReference(comboCashItem,"expense_items", ComboWorks.ListMode.WithAll);
 			break;
 		default:
 			break;
