@@ -15,6 +15,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		//Заполняем комбобокс
 		ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll);
+		ComboWorks.ComboFillReference(comboAccrualCash,"cash", ComboWorks.ListMode.WithAll);
 		MainClass.ComboAccrualYearsFill (comboAccuralYear, NameOfAllOption);
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
@@ -49,15 +50,19 @@ public partial class MainWindow : Gtk.Window
 		MainClass.StatusMessage("Получаем таблицу начислений...");
 		
 		TreeIter iter;
-
+		string WhereCash = "";
+		if(comboAccrualCash.GetActiveIter(out iter) && comboAccrualCash.Active > 0)
+		{
+			WhereCash = String.Format ("WHERE cash_id = '{0}'", ComboWorks.GetActiveId (comboAccrualCash));
+		}
 		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
 			"SELECT accrual.id as id, month, year, contracts.number as contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
 			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
 			"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
-				"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable " +
+			"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays " + WhereCash + " GROUP BY accrual_id) as sumtable " +
 				"ON sumtable.accrual_id = accrual.id " +
-				"LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id) as paidtable " +
+			"LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM credit_slips " + WhereCash + " GROUP BY accrual_id) as paidtable " +
 			"ON paidtable.accrual_id = accrual.id");
 		sql.StartNewList (" WHERE ", " AND ");
 
@@ -262,5 +267,10 @@ public partial class MainWindow : Gtk.Window
 			(cell as Gtk.CellRendererText).Foreground = "darkgreen";
 		}
 		(cell as Gtk.CellRendererText).Text = DebtText;
+	}
+
+	protected void OnComboAccrualCashChanged(object sender, EventArgs e)
+	{
+		UpdateAccrual ();
 	}
 }
