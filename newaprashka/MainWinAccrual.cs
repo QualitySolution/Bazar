@@ -56,7 +56,7 @@ public partial class MainWindow : Gtk.Window
 			WhereCash = String.Format ("WHERE cash_id = '{0}'", ComboWorks.GetActiveId (comboAccrualCash));
 		}
 		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
-			"SELECT accrual.id as id, month, year, contracts.number as contract_no, paid, no_complete, contracts.lessee_id as lessee_id, " +
+			"SELECT accrual.id as id, month, year, contracts.number as contract_no, no_complete, contracts.lessee_id as lessee_id, " +
 			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
 			"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
@@ -83,7 +83,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		if(checkOnlyNotPaid.Active)
 		{
-			sql.AddAsList("paid = FALSE");
+			sql.AddAsList("paidtable.sum < sumtable.sum");
 		}
 		MySqlCommand cmd = new MySqlCommand(sql.Text, QSMain.connectionDB);
 		MySqlDataReader rdr = cmd.ExecuteReader();
