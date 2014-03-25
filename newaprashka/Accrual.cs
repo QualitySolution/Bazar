@@ -696,7 +696,7 @@ namespace bazar
 		protected void CalculateServiceSum ()
 		{
 			Dictionary<int, decimal> CashSum = new Dictionary<int, decimal> ();
-			decimal TotalSum = 0;
+			AccrualTotal = 0;
 			NotComplete = false;
 			TreeIter iter;
 
@@ -706,7 +706,7 @@ namespace bazar
 					CashSum.Add ((int)row [2], 0);
 				decimal sum = Convert.ToDecimal(row [8]);
 				CashSum [(int)row [2]] += sum;
-				TotalSum += sum;
+				AccrualTotal += sum;
 				if(sum == 0)
 					NotComplete = true;
 			}
@@ -720,7 +720,7 @@ namespace bazar
 					Text += string.Format("{1}: {0:C} \n", pair.Value, (string) CashNameList.GetValue(iter, 0));
 				}
 			}
-			Text += string.Format("Всего: {0:C} ", TotalSum);
+			Text += string.Format("Всего: {0:C} ", AccrualTotal);
 			labelSum.LabelProp = Text; 
 
 			TestCanSave ();
