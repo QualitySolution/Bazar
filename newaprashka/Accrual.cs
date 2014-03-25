@@ -226,6 +226,7 @@ namespace bazar
 			}
 			while(CashNameList.IterNext (ref CashIter));
 			TestCanSave ();
+			CalculateServiceSum ();
 		}
 
 		void OnCountSpinEdited (object o, EditedArgs args)
@@ -694,25 +695,34 @@ namespace bazar
 
 		protected void CalculateServiceSum ()
 		{
-			TreeIter iter;
-			AccrualTotal = 0m;
+			Dictionary<int, decimal> CashSum = new Dictionary<int, decimal> ();
+			decimal TotalSum = 0;
 			NotComplete = false;
+			TreeIter iter;
 
-			if(ServiceListStore.GetIterFirst(out iter))
+			foreach(object[] row in ServiceListStore)
 			{
-				AccrualTotal = Convert.ToDecimal(ServiceListStore.GetValue(iter,8));
-				if(Convert.ToDecimal(ServiceListStore.GetValue(iter,8)) == 0)
+				if (!CashSum.ContainsKey ((int)row [2]))
+					CashSum.Add ((int)row [2], 0);
+				decimal sum = Convert.ToDecimal(row [8]);
+				CashSum [(int)row [2]] += sum;
+				TotalSum += sum;
+				if(sum == 0)
 					NotComplete = true;
-				while (ServiceListStore.IterNext(ref iter)) 
+			}
+
+			string Text = "";
+			if(CashSum.Count > 1)
+			{
+				foreach(KeyValuePair<int, decimal> pair in CashSum)
 				{
-					AccrualTotal += Convert.ToDecimal(ServiceListStore.GetValue(iter,8));
-					if(Convert.ToDecimal(ServiceListStore.GetValue(iter,8)) == 0)
-						NotComplete = true;
+					ListStoreWorks.SearchListStore ((ListStore)CashNameList, pair.Key, out iter);
+					Text += string.Format("{1}: {0:C} \n", pair.Value, (string) CashNameList.GetValue(iter, 0));
 				}
 			}
-			else
-				NotComplete = true;
-			labelSum.Text = string.Format("Сумма: {0:C} ", AccrualTotal);
+			Text += string.Format("Всего: {0:C} ", TotalSum);
+			labelSum.LabelProp = Text; 
+
 			TestCanSave ();
 			ShowStatus ();
 		}

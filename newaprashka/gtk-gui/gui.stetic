@@ -2118,6 +2118,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -6028,7 +6029,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Contract" design-size="756 450">
+  <widget class="Gtk.Dialog" id="bazar.Contract" design-size="746 521">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый договор</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -6732,6 +6733,7 @@
                     <property name="MemberName" />
                     <property name="Xalign">1</property>
                     <property name="LabelProp" translatable="yes">Сумма: 0 руб.</property>
+                    <property name="Justify">Right</property>
                   </widget>
                   <packing>
                     <property name="Position">2</property>
@@ -9771,7 +9773,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Accrual" design-size="755 475">
+  <widget class="Gtk.Dialog" id="bazar.Accrual" design-size="753 512">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новое начисление</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -10438,6 +10440,7 @@
                         <property name="MemberName" />
                         <property name="Xalign">1</property>
                         <property name="LabelProp" translatable="yes">Сумма: 0 руб.</property>
+                        <property name="Justify">Right</property>
                       </widget>
                       <packing>
                         <property name="Position">3</property>

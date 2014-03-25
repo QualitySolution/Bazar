@@ -478,6 +478,7 @@ namespace bazar
 			this.labelSum.Name = "labelSum";
 			this.labelSum.Xalign = 1F;
 			this.labelSum.LabelProp = global::Mono.Unix.Catalog.GetString ("Сумма: 0 руб.");
+			this.labelSum.Justify = ((global::Gtk.Justification)(1));
 			this.hbox4.Add (this.labelSum);
 			global::Gtk.Box.BoxChild w43 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.labelSum]));
 			w43.Position = 3;
@@ -583,8 +584,8 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 755;
-			this.DefaultHeight = 475;
+			this.DefaultWidth = 753;
+			this.DefaultHeight = 512;
 			this.Show ();
 			this.comboContract.Changed += new global::System.EventHandler (this.OnComboContractChanged);
 			this.buttonOpenContract.Clicked += new global::System.EventHandler (this.OnButtonOpenContractClicked);

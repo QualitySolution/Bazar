@@ -179,6 +179,7 @@ namespace bazar
 			}
 			while(CashNameList.IterNext (ref CashIter));
 			TestCanSave ();
+			CalculateServiceSum ();
 		}
 
 		void OnCountSpinEdited (object o, EditedArgs args)
@@ -805,18 +806,29 @@ namespace bazar
 
 		protected void CalculateServiceSum ()
 		{
-			double ServiceSum = 0;
+			Dictionary<int, double> CashSum = new Dictionary<int, double> ();
+			double TotalSum = 0;
 			TreeIter iter;
 			
-			if(ServiceListStore.GetIterFirst(out iter))
+			foreach(object[] row in ServiceListStore)
 			{
-				ServiceSum = (double)ServiceListStore.GetValue(iter,8);
-				while (ServiceListStore.IterNext(ref iter)) 
+				if (!CashSum.ContainsKey ((int)row [2]))
+					CashSum.Add ((int)row [2], 0);
+				CashSum [(int)row [2]] += (double)row [8];
+				TotalSum += (double)row [8];
+			}
+
+			string Text = "";
+			if(CashSum.Count > 1)
+			{
+				foreach(KeyValuePair<int, double> pair in CashSum)
 				{
-					ServiceSum += (double)ServiceListStore.GetValue(iter,8);
+					ListStoreWorks.SearchListStore ((ListStore)CashNameList, pair.Key, out iter);
+					Text += string.Format("{1}: {0:C} \n", pair.Value, (string) CashNameList.GetValue(iter, 0));
 				}
 			}
-			labelSum.Text = string.Format("Сумма: {0:C} ", ServiceSum);
+			Text += string.Format("Всего: {0:C} ", TotalSum);
+			labelSum.LabelProp = Text; 
 		}		
 
 		protected void OnButtonDelServiceClicked (object sender, EventArgs e)
