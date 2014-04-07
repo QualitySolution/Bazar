@@ -13,6 +13,8 @@ namespace bazar
 		{
 			this.Build ();
 
+			ComboWorks.ComboFillReference (comboCash, "cash", ComboWorks.ListMode.WithNo);
+
 			dateReport.Date = DateTime.Today;
 
 			ServicesList = new ListStore (typeof(int), typeof(bool), typeof(string));
@@ -69,7 +71,8 @@ namespace bazar
 				return;
 			string param = "Day=" + dateReport.Date.Day.ToString() +
 				"&Month=" + dateReport.Date.Month.ToString() +
-					"&Year=" + dateReport.Date.Year.ToString();
+				"&Year=" + dateReport.Date.Year.ToString() + 
+				"&Cash=" + ComboWorks.GetActiveId(comboCash);
 			if(checkDetail.Active)
 			{
 				param += "&Services=";

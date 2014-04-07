@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
  lessees.name as lessee, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
@@ -22,14 +22,13 @@ FROM accrual
 LEFT JOIN contracts ON contracts.id = contract_id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN (
-SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id) as sumtable 
+SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays WHERE cash_id = @cash GROUP BY accrual_id) as sumtable 
 ON sumtable.accrual_id = accrual.id 
 LEFT JOIN (
-SELECT accrual_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id) as paidtable 
+SELECT accrual_id, SUM(sum) as sum FROM credit_slips WHERE cash_id = @cash GROUP BY accrual_id) as paidtable 
 ON paidtable.accrual_id = accrual.id 
-WHERE accrual.paid = 'false' AND 
-(accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
-OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day))</CommandText>
+WHERE (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
+OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day)) AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!Month</Value>
@@ -40,9 +39,12 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
           <QueryParameter Name="day">
             <Value>=Parameters!Day</Value>
           </QueryParameter>
+          <QueryParameter Name="cash">
+            <Value>=Parameters!Cash</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
@@ -810,13 +812,14 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
       </ConnectionProperties>
     </DataSource>
   </DataSources>
-  <ReportParameters>
+  <ReportParameters >
     <ReportParameter Name="Day">
       <DataType>Integer</DataType>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>false</MultiValue>
-      <Prompt />
+      <Prompt>
+      </Prompt>
     </ReportParameter>
     <ReportParameter Name="Month">
       <DataType>Integer</DataType>
@@ -843,6 +846,18 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
       <MultiValue>false</MultiValue>
       <Prompt>
       </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Cash">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
     </ReportParameter>
   </ReportParameters>
 </Report>

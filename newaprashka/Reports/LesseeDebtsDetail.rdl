@@ -22,15 +22,16 @@ FROM accrual
 LEFT JOIN contracts ON contracts.id = contract_id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN (
-SELECT accrual_id, id as pay_id, service_id, (count * price) as sum FROM accrual_pays WHERE service_id IN (@services) ) as sumtable 
+SELECT accrual_id, id as pay_id, service_id, (count * price) as sum FROM accrual_pays WHERE service_id IN (@services) AND cash_id = @cash) as sumtable 
 ON sumtable.accrual_id = accrual.id 
 LEFT JOIN (
 SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paidtable 
 ON paidtable.accrual_pay_id =  sumtable.pay_id
 LEFT JOIN services ON services.id = sumtable.service_id 
-WHERE accrual.paid = 'false' AND sumtable.pay_id IS NOT NULL AND
+WHERE sumtable.pay_id IS NOT NULL AND
 (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
-OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day))</CommandText>
+OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day)) 
+AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!Month</Value>
@@ -40,6 +41,9 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
           </QueryParameter>
           <QueryParameter Name="day">
             <Value>=Parameters!Day</Value>
+          </QueryParameter>
+          <QueryParameter Name="cash">
+            <Value>=Parameters!Cash</Value>
           </QueryParameter>
           <QueryParameter Name="services">
             <Value>=Parameters!Services</Value>
@@ -441,9 +445,9 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
                             <PaddingRight>2pt</PaddingRight>
                             <TextAlign>Right</TextAlign>
                             <FontWeight>Bold</FontWeight>
-                            <BorderColor  />
-                            <BorderWidth  />
-                            <Format >0.00</Format>
+                            <BorderColor />
+                            <BorderWidth />
+                            <Format>0.00</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -568,8 +572,8 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
                             </BorderStyle>
                             <PaddingLeft>0pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
-                            <BorderColor  />
-                            <BorderWidth  />
+                            <BorderColor />
+                            <BorderWidth />
                           </Style>
                           <Value>=Sum(Fields!sum.Value)</Value>
                         </Textbox>
@@ -584,9 +588,9 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
                             </BorderStyle>
                             <PaddingLeft>0pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
-                            <BorderColor  />
-                            <BorderWidth  />
-                            <Format >0.00</Format>
+                            <BorderColor />
+                            <BorderWidth />
+                            <Format>0.00</Format>
                           </Style>
                           <Value>=Sum(Fields!paidsum.Value)</Value>
                         </Textbox>
@@ -699,9 +703,9 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
-                        <BorderColor  />
-                        <BorderWidth  />
-                        <Format >0.00</Format>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -858,7 +862,7 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
                         <FontWeight>Bold</FontWeight>
                         <BorderColor />
                         <BorderWidth />
-                        <Format >0.00</Format>
+                        <Format>0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -932,7 +936,7 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
       </ConnectionProperties>
     </DataSource>
   </DataSources>
-  <ReportParameters>
+  <ReportParameters >
     <ReportParameter Name="Day">
       <DataType>Integer</DataType>
       <Nullable>false</Nullable>
@@ -977,6 +981,19 @@ OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>true</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Cash">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
       <Prompt />
     </ReportParameter>
   </ReportParameters>
