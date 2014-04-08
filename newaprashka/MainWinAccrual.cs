@@ -83,7 +83,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		if(checkOnlyNotPaid.Active)
 		{
-			sql.AddAsList("paidtable.sum < sumtable.sum");
+			sql.AddAsList("IFNULL(paidtable.sum, 0) < IFNULL(sumtable.sum,0)");
 		}
 		MySqlCommand cmd = new MySqlCommand(sql.Text, QSMain.connectionDB);
 		MySqlDataReader rdr = cmd.ExecuteReader();
