@@ -230,7 +230,7 @@ namespace bazar
 			{
 				int Month = comboMonth.Active;
 				int Year = Convert.ToInt32(comboYear.ActiveText);
-				int Count = 0;
+				progressOperation.Adjustment.Upper = SelectedItems;
 
 				foreach (object[] row in ContractsListStore)
 				{
@@ -266,8 +266,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
 					cmd.ExecuteNonQuery ();
 
-					Count++;
-					progressOperation.Fraction = Count / SelectedItems;
+					progressOperation.Adjustment.Value++;
 					while (GLib.MainContext.Pending())
 					{
 		   				Gtk.Main.Iteration();
