@@ -12,7 +12,7 @@
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="875 590">
     <action-group name="Default">
-      <action id="Action">
+      <action id="ActionFileMenu">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">_Файл</property>
         <property name="ShortLabel" translatable="yes">Файл</property>
@@ -278,7 +278,7 @@
           <widget class="Gtk.MenuBar" id="menubar1">
             <property name="MemberName" />
             <node name="menubar1" type="Menubar">
-              <node type="Menu" action="Action">
+              <node type="Menu" action="ActionFileMenu">
                 <node type="Menuitem" action="dialogAuthenticationAction" />
                 <node type="Menuitem" action="UsersAction" />
                 <node type="Separator" />
