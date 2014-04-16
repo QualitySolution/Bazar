@@ -126,13 +126,14 @@ namespace bazar
 			if(ContractsFilter.GetIterFirst(out filteriter))
 			{
 				iter = ContractsFilter.ConvertIterToChildIter (filteriter);
-				ContractsListStore.SetValue (iter, 0, checkAll.Active);
+				ContractsListStore.SetValue (iter, 0, checkAll.Active && !(bool)ContractsListStore.GetValue(iter, 8));
 				while (ContractsFilter.IterNext(ref filteriter)) 
 				{
 					iter = ContractsFilter.ConvertIterToChildIter (filteriter);
-					ContractsListStore.SetValue (iter, 0, checkAll.Active);
+					ContractsListStore.SetValue (iter, 0, checkAll.Active && !(bool)ContractsListStore.GetValue(iter, 8));
 				}
-			}			CalculateSelected ();
+			}
+			CalculateSelected ();
 		}
 
 		void UpdateContracts()
@@ -204,8 +205,8 @@ namespace bazar
 			rdr.Close();
 
 			labelTotal.LabelProp = String.Format ("Всего {0} договоров на {1:C} ", Count, Total);
+			CalculateSelected ();
 			MainClass.StatusMessage("Ok");
-
 		}
 
 		protected void OnComboMonthChanged (object sender, EventArgs e)
