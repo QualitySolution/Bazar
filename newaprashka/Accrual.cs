@@ -22,6 +22,24 @@ namespace bazar
 
 		float area = 0;
 
+		private enum ServiceCol{
+			service_id,
+			service,
+			cash_id,
+			cash,
+			units_id,
+			units,
+			count,
+			price,
+			sum,
+			id,
+			paid_text,
+			paid,
+			by_aria,
+			counters,
+			row_color
+		}
+
 		public Accrual ()
 		{
 			this.Build ();
@@ -109,19 +127,17 @@ namespace bazar
 			SumColumn.PackStart (CellSum, true);
 			
 			treeviewServices.AppendColumn (ServiceColumn);
-			ServiceColumn.AddAttribute (CellService,"text", 1);
+			ServiceColumn.AddAttribute (CellService,"text", (int)ServiceCol.service);
 			treeviewServices.AppendColumn (CashColumn);
-			CashColumn.AddAttribute (CellCash,"text", 3);
+			CashColumn.AddAttribute (CellCash,"text", (int)ServiceCol.cash);
 			treeviewServices.AppendColumn (CountColumn);
-			CountColumn.AddAttribute (CellCount,"text", 6);
-			CountColumn.AddAttribute (CellUnits,"text", 5);
+			CountColumn.AddAttribute (CellCount,"text", (int)ServiceCol.count);
+			CountColumn.AddAttribute (CellUnits,"text", (int)ServiceCol.units);
 			treeviewServices.AppendColumn (PriceColumn);
-			PriceColumn.AddAttribute (CellPrice,"text", 7);
+			PriceColumn.AddAttribute (CellPrice,"text", (int)ServiceCol.price);
 			treeviewServices.AppendColumn (SumColumn);
-			SumColumn.AddAttribute (CellSum,"text", 8);
-			// ID long - 9
-			treeviewServices.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", 10);
-			//Оплачено цифровое - 11
+			SumColumn.AddAttribute (CellSum,"text", (int)ServiceCol.sum);
+			treeviewServices.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", (int)ServiceCol.paid_text);
 
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
@@ -130,7 +146,7 @@ namespace bazar
 			{
 				foreach(CellRenderer render in column.CellRenderers)
 				{
-					column.AddAttribute (render, "background", 14);
+					column.AddAttribute (render, "background", (int)ServiceCol.row_color);
 				}
 			}
 			
@@ -179,7 +195,7 @@ namespace bazar
 				Console.WriteLine("newtext is empty");
 				return;
 			}
-			ServiceListStore.SetValue(iter, 1, args.NewText);
+			ServiceListStore.SetValue(iter, (int)ServiceCol.service, args.NewText);
 			TreeIter ServiceIter;
 			if (!ServiceRefListStore.GetIterFirst (out ServiceIter))
 				return;
@@ -187,14 +203,14 @@ namespace bazar
 			{
 				if(args.NewText.Equals (ServiceRefListStore.GetValue (ServiceIter, 1).ToString ()))
 				{
-					ServiceListStore.SetValue (iter, 0, ServiceRefListStore.GetValue (ServiceIter,0));
-					ServiceListStore.SetValue (iter, 4, ServiceRefListStore.GetValue (ServiceIter,2));
-					ServiceListStore.SetValue (iter, 5, ServiceRefListStore.GetValue (ServiceIter,3));
+					ServiceListStore.SetValue (iter, (int)ServiceCol.service_id, ServiceRefListStore.GetValue (ServiceIter,0));
+					ServiceListStore.SetValue (iter, (int)ServiceCol.units_id, ServiceRefListStore.GetValue (ServiceIter,2));
+					ServiceListStore.SetValue (iter, (int)ServiceCol.units, ServiceRefListStore.GetValue (ServiceIter,3));
 
-					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter,4);
-					ServiceListStore.SetValue (iter, 12, choice);
+					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter, 4);
+					ServiceListStore.SetValue (iter, (int)ServiceCol.by_aria, choice);
 					if(choice)
-						ServiceListStore.SetValue (iter, 6, (int) area);
+						ServiceListStore.SetValue (iter, (int)ServiceCol.count, (int) area);
 					break;
 				}
 			}
@@ -212,7 +228,7 @@ namespace bazar
 				Console.WriteLine("newtext is empty");
 				return;
 			}
-			ServiceListStore.SetValue(iter, 3, args.NewText);
+			ServiceListStore.SetValue(iter, (int)ServiceCol.cash, args.NewText);
 			TreeIter CashIter;
 			if (!CashNameList.GetIterFirst (out CashIter))
 				return;
@@ -220,9 +236,9 @@ namespace bazar
 			{
 				if(CashNameList.GetValue (CashIter,0).ToString () == args.NewText)
 				{
-					ServiceListStore.SetValue (iter, 2, CashNameList.GetValue (CashIter, 1));
+					ServiceListStore.SetValue (iter, (int)ServiceCol.cash_id, CashNameList.GetValue (CashIter, 1));
 					object[] Values = (object[]) CashNameList.GetValue (CashIter, 2);
-					ServiceListStore.SetValue (iter, 14, Values[2] != DBNull.Value ? (string)Values[2] : null) ;
+					ServiceListStore.SetValue (iter, (int)ServiceCol.row_color, Values[2] != DBNull.Value ? (string)Values[2] : null) ;
 					break;
 				}
 			}
@@ -236,11 +252,11 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			double Price = (double)ServiceListStore.GetValue (iter, 7);
+			double Price = (double)ServiceListStore.GetValue (iter, (int)ServiceCol.price);
 			int count;
 			if (int.TryParse (args.NewText, out count)) {
-				ServiceListStore.SetValue (iter, 6, count);
-				ServiceListStore.SetValue (iter, 8, Price * count);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.count, count);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, Price * count);
 				CalculateServiceSum ();
 			}
 		}
@@ -250,27 +266,27 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			int count = (int)ServiceListStore.GetValue (iter, 6);
+			int count = (int)ServiceListStore.GetValue (iter, (int)ServiceCol.count);
 			double Price;
 			if (double.TryParse (args.NewText, out Price)) {
-				ServiceListStore.SetValue (iter, 7, Price);
-				ServiceListStore.SetValue (iter, 8, Price * count);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.price, Price);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, Price * count);
 				CalculateServiceSum ();
 			}
 		}
 
 		private void RenderPriceColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
-			double Price = (double) model.GetValue (iter, 7);
+			double Price = (double) model.GetValue (iter, (int)ServiceCol.price);
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:0.00}", Price);
 		}
 
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
-			double Sum = (double) model.GetValue (iter, 8);
+			double Sum = (double) model.GetValue (iter, (int)ServiceCol.sum);
 			decimal Paid ;
-			if(model.GetValue (iter, 11) != null)
-				Paid = (decimal) model.GetValue (iter, 11);
+			if(model.GetValue (iter, (int)ServiceCol.paid) != null)
+				Paid = (decimal) model.GetValue (iter, (int)ServiceCol.paid);
 			else
 				Paid = 0;
 			decimal Debt = Convert.ToDecimal (Sum) - Paid;
@@ -482,14 +498,14 @@ namespace bazar
 					{
 						do
 						{
-							bool b = (bool) ServiceListStore.GetValue(ServiceIter, 12);
-							int i = (int) ServiceListStore.GetValue(ServiceIter, 6);
+							bool b = (bool) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.by_aria);
+							int i = (int) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.count);
 							if( b && i == old_area)
 							{
 								int ar = (int) area;
-								ServiceListStore.SetValue(ServiceIter, 6, ar);
-								double Price = (double)ServiceListStore.GetValue (ServiceIter, 7);
-								ServiceListStore.SetValue(ServiceIter, 8, Price * ar);
+								ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.count, ar);
+								double Price = (double)ServiceListStore.GetValue (ServiceIter, (int)ServiceCol.price);
+								ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.sum, Price * ar);
 							}
 						}
 						while(ServiceListStore.IterNext (ref ServiceIter));
@@ -519,18 +535,13 @@ namespace bazar
 
 		protected bool TestServiceAndCash()
 		{
-			TreeIter iter;
-
 			if(ServiceListStore == null)
 				return true;
 
-			if(ServiceListStore.GetIterFirst(out iter))
+			foreach(object[] row in ServiceListStore)
 			{
-				if((int)ServiceListStore.GetValue(iter,0) <= 0 || (int)ServiceListStore.GetValue(iter, 2) <= 0)
+				if( (int) row[(int)ServiceCol.service_id] <= 0 || (int) row[(int)ServiceCol.cash_id] <= 0)
 					return false;
-				while(ServiceListStore.IterNext(ref iter))
-					if((int)ServiceListStore.GetValue(iter,0) <= 0 || (int)ServiceListStore.GetValue(iter, 2) <= 0)
-						return false;
 			}
 			return true;
 		}
@@ -615,9 +626,9 @@ namespace bazar
 				{
 					if(!ServiceListStore.IterIsValid (iter))
 						break;
-					if((int)ServiceListStore.GetValue(iter,0) < 1)
+					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.service_id) < 1)
 						break; // не указано название услуги
-					if((long)ServiceListStore.GetValue(iter,9) > 0)
+					if((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id) > 0)
 						sql = "UPDATE accrual_pays SET accrual_id = @accrual_id, service_id = @service_id, " +
 							"cash_id = @cash_id, count = @count, price = @price " +
 							"WHERE id = @id";
@@ -629,18 +640,18 @@ namespace bazar
 						cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
 					else
 						cmd.Parameters.AddWithValue("@accrual_id", entryNumber.Text);
-					cmd.Parameters.AddWithValue("@service_id", ServiceListStore.GetValue(iter,0));
-					if((int)ServiceListStore.GetValue(iter,2) > 0)
-						cmd.Parameters.AddWithValue("@cash_id", ServiceListStore.GetValue(iter,2));
+					cmd.Parameters.AddWithValue("@service_id", ServiceListStore.GetValue(iter, (int)ServiceCol.service_id));
+					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.cash_id) > 0)
+						cmd.Parameters.AddWithValue("@cash_id", ServiceListStore.GetValue(iter, (int)ServiceCol.cash_id));
 					else
 						cmd.Parameters.AddWithValue("@cash_id", DBNull.Value);
-					cmd.Parameters.AddWithValue("@count", ServiceListStore.GetValue(iter,6));
-					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter,7));
-					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter,9));
+					cmd.Parameters.AddWithValue("@count", ServiceListStore.GetValue(iter, (int)ServiceCol.count));
+					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter, (int)ServiceCol.price));
+					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter, (int)ServiceCol.id));
 					cmd.ExecuteNonQuery();
 
-					if((long)ServiceListStore.GetValue(iter,9) <= 0)
-						ServiceListStore.SetValue(iter, 9, (object) cmd.LastInsertedId);
+					if((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id) <= 0)
+						ServiceListStore.SetValue(iter, (int)ServiceCol.id, (object) cmd.LastInsertedId);
 				}
 				while(ServiceListStore.IterNext(ref iter));
 				
@@ -669,13 +680,13 @@ namespace bazar
 		{
 			TreeIter iter, CashIter;
 			iter = ServiceListStore.Append();
-			ServiceListStore.SetValue(iter, 6, 1);
-			ServiceListStore.SetValue(iter, 10, String.Format ("{0:0.00}", 0));
+			ServiceListStore.SetValue(iter, (int)ServiceCol.count, 1);
+			ServiceListStore.SetValue(iter, (int)ServiceCol.paid_text, String.Format ("{0:0.00}", 0));
 			if(CashNameList.IterNChildren() == 1)
 			{
 				CashNameList.GetIterFirst (out CashIter);
-				ServiceListStore.SetValue(iter, 3, CashNameList.GetValue (CashIter, 0));
-				ServiceListStore.SetValue (iter, 2, CashNameList.GetValue (CashIter, 1));
+				ServiceListStore.SetValue(iter, (int)ServiceCol.cash, CashNameList.GetValue (CashIter, 0));
+				ServiceListStore.SetValue (iter, (int)ServiceCol.cash_id, CashNameList.GetValue (CashIter, 1));
 			}
 			//FIXME Добавить вставку информации о счетчиках. Что бы кнопка зажигалась сразу после добавления услуги.
 			TestCanSave ();
@@ -691,10 +702,10 @@ namespace bazar
 
 			foreach(object[] row in ServiceListStore)
 			{
-				if (!CashSum.ContainsKey ((int)row [2]))
-					CashSum.Add ((int)row [2], 0);
-				decimal sum = Convert.ToDecimal(row [8]);
-				CashSum [(int)row [2]] += sum;
+				if (!CashSum.ContainsKey ((int)row [(int)ServiceCol.cash_id]))
+					CashSum.Add ((int)row [(int)ServiceCol.cash_id], 0);
+				decimal sum = Convert.ToDecimal(row [(int)ServiceCol.sum]);
+				CashSum [(int)row [(int)ServiceCol.cash_id]] += sum;
 				AccrualTotal += sum;
 				if(sum == 0)
 					NotComplete = true;
@@ -737,7 +748,7 @@ namespace bazar
 		{
 			TreeIter iter;
 			treeviewServices.Selection.GetSelected (out iter);
-			if (ServiceListStore.GetValue(iter, 11) != null && (decimal) ServiceListStore.GetValue(iter, 11) > 0)
+			if (ServiceListStore.GetValue(iter, (int)ServiceCol.paid) != null && (decimal) ServiceListStore.GetValue(iter, (int)ServiceCol.paid) > 0)
 			{
 				string mes = "Нельзя удалить уже оплаченную услугу.";
 				MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
@@ -747,8 +758,8 @@ namespace bazar
 				md.Destroy();
 				return;
 			}
-			if((long)ServiceListStore.GetValue(iter, 9) > 0)
-				DeletedRowId.Add ((long)ServiceListStore.GetValue(iter, 9));
+			if((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id) > 0)
+				DeletedRowId.Add ((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id));
 			ServiceListStore.Remove(ref iter);
 			CalculateServiceSum ();
 			OnTreeviewServicesCursorChanged (null, null);
@@ -760,7 +771,7 @@ namespace bazar
 			bool isSelect = treeviewServices.Selection.CountSelectedRows() == 1;
 			bool MeterOk = false;
 			if (isSelect && treeviewServices.Selection.GetSelected (out iter))
-				MeterOk = (int)ServiceListStore.GetValue (iter, 13) > 0;
+				MeterOk = (int)ServiceListStore.GetValue (iter, (int)ServiceCol.counters) > 0;
 			buttonDelService.Sensitive = isSelect;
 			buttonFromMeter.Sensitive = MeterOk;
 		}
@@ -940,17 +951,17 @@ namespace bazar
 			decimal paid;
 			foreach(object[] row in ServiceListStore)
 			{
-				row[10] = String.Format ("{0:0.00}", 0);
-				row[11] = 0;
+				row[(int)ServiceCol.paid_text] = String.Format ("{0:0.00}", 0);
+				row[(int)ServiceCol.paid] = 0;
 			}
 			
 			while (rdr.Read())
 			{
-				if( ListStoreWorks.SearchListStore (ServiceListStore, rdr.GetInt64("accrual_pay_id"), 9, out iter))
+				if( ListStoreWorks.SearchListStore (ServiceListStore, rdr.GetInt64("accrual_pay_id"), (int)ServiceCol.id, out iter))
 				{
 					paid = rdr.GetDecimal ("sum");
-					ServiceListStore.SetValue (iter, 10, String.Format ("{0:0.00}", paid));
-					ServiceListStore.SetValue (iter, 10, paid);
+					ServiceListStore.SetValue (iter, (int)ServiceCol.paid_text, String.Format ("{0:0.00}", paid));
+					ServiceListStore.SetValue (iter, (int)ServiceCol.paid, paid);
 				}
 			}
 			rdr.Close();
@@ -980,18 +991,18 @@ namespace bazar
 			treeviewServices.Selection.GetSelected (out iter);
 
 			PayFromMeter WinMeter = new PayFromMeter ();
-			WinMeter.Price = (double) ServiceListStore.GetValue (iter, 7);
-			WinMeter.Fill (Convert.ToInt32 (ServiceListStore.GetValue (iter, 9)),
-			               (int) ServiceListStore.GetValue (iter, 0),
+			WinMeter.Price = (double) ServiceListStore.GetValue (iter, (int)ServiceCol.price);
+			WinMeter.Fill (Convert.ToInt32 (ServiceListStore.GetValue (iter, (int)ServiceCol.id)),
+			               (int) ServiceListStore.GetValue (iter, (int)ServiceCol.service_id),
 			               Place_type_id,
 			               Place_no,
-			               ServiceListStore.GetValue (iter, 5).ToString ());
+			               ServiceListStore.GetValue (iter, (int)ServiceCol.units).ToString ());
 			int result = WinMeter.Run ();
 			if(result == (int) ResponseType.Ok)
 			{
-				ServiceListStore.SetValue (iter, 7, WinMeter.Price);
-				ServiceListStore.SetValue (iter, 6, WinMeter.TotalCount);
-				ServiceListStore.SetValue (iter, 8, WinMeter.Price * WinMeter.TotalCount);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.price, WinMeter.Price);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.count, WinMeter.TotalCount);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, WinMeter.Price * WinMeter.TotalCount);
 				CalculateServiceSum ();
 			}
 			WinMeter.Destroy ();
