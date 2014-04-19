@@ -89,6 +89,8 @@ namespace bazar
 			CellCount.Adjustment = adjCount;
 			CellCount.Edited += OnCountSpinEdited;
 			CountColumn.PackStart (CellCount, true);
+			Gtk.CellRendererText CellUnits = new CellRendererText ();
+			CountColumn.PackStart (CellUnits, false);
 
 			Gtk.TreeViewColumn PriceColumn = new Gtk.TreeViewColumn ();
 			PriceColumn.Title = "Цена";
@@ -110,9 +112,9 @@ namespace bazar
 			ServiceColumn.AddAttribute (CellService,"text", 1);
 			treeviewServices.AppendColumn (CashColumn);
 			CashColumn.AddAttribute (CellCash,"text", 3);
-			treeviewServices.AppendColumn ("Ед. изм.", new Gtk.CellRendererText (), "text", 5);
 			treeviewServices.AppendColumn (CountColumn);
 			CountColumn.AddAttribute (CellCount,"text", 6);
+			CountColumn.AddAttribute (CellUnits,"text", 5);
 			treeviewServices.AppendColumn (PriceColumn);
 			PriceColumn.AddAttribute (CellPrice,"text", 7);
 			treeviewServices.AppendColumn (SumColumn);
@@ -121,13 +123,15 @@ namespace bazar
 			treeviewServices.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", 10);
 			//Оплачено цифровое - 11
 
-			CountColumn.SetCellDataFunc(CellCount, RenderCountColumn);
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
 
 			foreach(TreeViewColumn column in treeviewServices.Columns)
 			{
-				column.AddAttribute (column.CellRenderers [0], "background", 14);
+				foreach(CellRenderer render in column.CellRenderers)
+				{
+					column.AddAttribute (render, "background", 14);
+				}
 			}
 			
 			treeviewServices.Model = ServiceListStore;
@@ -147,8 +151,6 @@ namespace bazar
 			
 			treeviewIncomes.Model = IncomeListStore;
 			treeviewIncomes.ShowAll();
-
-			treeviewServices.Columns[2].Visible=false;
 
 			OnTreeviewServicesCursorChanged(null, null);
 		}
@@ -263,19 +265,6 @@ namespace bazar
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:0.00}", Price);
 		}
 
-		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-		{
-			string Unit;
-			int Count = (int) model.GetValue (iter, 6);
-
-			if(model.GetValue(iter,5) != null)
-				Unit = (string) model.GetValue(iter,5);
-			else
-				Unit = "";
-
-			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
-		}
-		
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			double Sum = (double) model.GetValue (iter, 8);
