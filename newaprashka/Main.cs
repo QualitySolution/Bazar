@@ -3,11 +3,13 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using QSProjectsLib;
+using NLog;
 
 namespace bazar
 {
 	class MainClass
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public static Label StatusBarLabel;
 		public static MainWindow MainWin;
 
@@ -594,7 +596,7 @@ namespace bazar
 		public static void StatusMessage(string message)
 		{
 			StatusBarLabel.Text = message;
-			Console.WriteLine (message);
+			logger.Info (message);
 			while (GLib.MainContext.Pending())
 			{
    				Gtk.Main.Iteration();
