@@ -28,7 +28,6 @@ namespace bazar
 			service,
 			cash_id,
 			cash,
-			units_id,
 			units,
 			count,
 			price,
@@ -63,7 +62,6 @@ namespace bazar
 			                                      typeof(string),	// 1 - Наименование
 			                                      typeof(int),		// 2 - idКасса
 			                                      typeof(string),	// 3 - Касса
-			                                      typeof(int), 	// 4 - idЕдиница
 			                                      typeof(string), 	// 5 - Ед. изм.
 			                                      typeof(decimal), 	// 6 - Количество
 			                                      typeof(decimal),	// 7 - Цена
@@ -159,7 +157,6 @@ namespace bazar
 				if(args.NewText.Equals (ServiceRefListStore.GetValue (ServiceIter, 1).ToString ()))
 				{
 					ServiceListStore.SetValue (iter, (int)ServiceCol.service_id, ServiceRefListStore.GetValue (ServiceIter,0));
-					ServiceListStore.SetValue (iter, (int)ServiceCol.units_id, ServiceRefListStore.GetValue (ServiceIter,2));
 					ServiceListStore.SetValue (iter, (int)ServiceCol.units, ServiceRefListStore.GetValue (ServiceIter,3));
 
 					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter,4);
@@ -342,7 +339,7 @@ namespace bazar
 
 				//Получаем таблицу услуг
 				sql = "SELECT contract_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, services.by_area as by_area," +
-					"units.id as units_id, units.name as units FROM contract_pays " +
+					"units.name as units FROM contract_pays " +
 					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
 					"LEFT JOIN services ON contract_pays.service_id = services.id " +
 					"LEFT JOIN units ON services.units_id = units.id " +
@@ -352,32 +349,21 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@contract_id", ContractId);
 				rdr = cmd.ExecuteReader();
 
-				int cash_id, units_id;
-				decimal count, price, sum;
+				decimal count, price;
 
 				while (rdr.Read())
 				{
-					if(rdr["cash_id"] != DBNull.Value)
-						cash_id = int.Parse(rdr["cash_id"].ToString());
-					else
-						cash_id = -1;
-					if(rdr["units_id"] != DBNull.Value)
-						units_id = int.Parse(rdr["units_id"].ToString());
-					else
-						units_id = -1;
 					count = DBWorks.GetDecimal (rdr, "count", 0);
 					price = DBWorks.GetDecimal (rdr, "price", 0);
-					sum = count * price;
 
 					ServiceListStore.AppendValues(int.Parse(rdr["service_id"].ToString()),
 					                             rdr["service"].ToString(),
-					                             cash_id,
+					                             DBWorks.GetInt (rdr, "cash_id", -1),
 					                             rdr["cash"].ToString(),
-					                             units_id,
 					                             rdr["units"].ToString(),
 					                             count,
 					                             price,
-					                             sum,
+					                             count * price,
 					                             int.Parse(rdr["id"].ToString()),
 					                             rdr.GetBoolean("by_area"),
 					                              DBWorks.GetDecimal (rdr, "min_sum", 0),

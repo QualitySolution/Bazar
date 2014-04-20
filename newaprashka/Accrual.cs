@@ -27,7 +27,6 @@ namespace bazar
 			service,
 			cash_id,
 			cash,
-			units_id,
 			units,
 			count,
 			price,
@@ -64,7 +63,6 @@ namespace bazar
 			                                      typeof (string),	//1 - service name
 			                                      typeof (int),		//2 - cash id
 			                                      typeof (string),	//3 - cash name
-			                                      typeof (int),		//4 - units id
 			                                      typeof (string),	//5 - units name
 			                                      typeof (decimal),	//6 - quantity
 			                                      typeof (decimal),	//7 - price
@@ -197,7 +195,6 @@ namespace bazar
 				if(args.NewText.Equals (ServiceRefListStore.GetValue (ServiceIter, 1).ToString ()))
 				{
 					ServiceListStore.SetValue (iter, (int)ServiceCol.service_id, ServiceRefListStore.GetValue (ServiceIter,0));
-					ServiceListStore.SetValue (iter, (int)ServiceCol.units_id, ServiceRefListStore.GetValue (ServiceIter,2));
 					ServiceListStore.SetValue (iter, (int)ServiceCol.units, ServiceRefListStore.GetValue (ServiceIter,3));
 
 					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter, 4);
@@ -344,7 +341,7 @@ namespace bazar
 				
 				//Получаем таблицу услуг
 				sql = "SELECT accrual_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, " +
-					"units.id as units_id, units.name as units, paysum.sum as paid, metercount.number FROM accrual_pays " +
+					"units.name as units, paysum.sum as paid, metercount.number FROM accrual_pays " +
 						"LEFT JOIN cash ON cash.id = accrual_pays.cash_id " +
 						"LEFT JOIN services ON accrual_pays.service_id = services.id " +
 						"LEFT JOIN units ON services.units_id = units.id " +
@@ -377,7 +374,6 @@ namespace bazar
 					                              rdr["service"].ToString(),
 					                              DBWorks.GetInt (rdr, "cash_id", -1),
 					                              rdr["cash"].ToString(),
-					                              DBWorks.GetInt (rdr, "units_id", -1),
 					                              rdr["units"].ToString(),
 					                              count,
 					                              price,
