@@ -9,14 +9,14 @@ namespace bazar
 	{
 		ListStore ReadingListStore, ChildListStore;
 		int accrual_detail_id, ChildCount;
-		public int TotalCount;
+		public decimal TotalCount;
 		string Units;
 		bool LastValues;
 		private decimal MinSum = 0m;
 
-		public double Price {
-		get{return spinPrice.Value;}
-		set{spinPrice.Value = value;}
+		public decimal Price {
+			get{return (decimal) spinPrice.Value;}
+			set{spinPrice.Value = (double) value;}
 		}
 
 		public PayFromMeter ()
@@ -130,9 +130,9 @@ namespace bazar
 			TotalCount = MeterValues - ChildCount;
 			labelCount.LabelProp = string.Format("{0} {1}", MeterValues, Units);
 			labelTotal.LabelProp = string.Format("{0} {1}", TotalCount, Units);
-			labelSum.Text = string.Format("{0:C}", TotalCount * spinPrice.Value);
-			if (TotalCount * spinPrice.Value < (double) MinSum)
-				TotalCount = (spinPrice.Value == 0) ? 0 : Convert.ToInt32 ( MinSum / (decimal) spinPrice.Value);
+			labelSum.Text = string.Format("{0:C}", TotalCount * Price);
+			if (TotalCount * Price < MinSum)
+				TotalCount = (spinPrice.Value == 0) ? 0 : ( MinSum / Price);
 		}
 
 		public void Fill(int AccrualRow, int service_id, int place_type_id, string place_no, string units)
