@@ -65,6 +65,7 @@ namespace bazar
 				entryName.Text = rdr["name"].ToString();
 				entryAddress.Text = rdr["address"].ToString();
 				entryINN.Text = rdr["INN"].ToString();
+				entryKPP.Text = rdr["KPP"].ToString();
 				entryOGRN.Text = rdr["OGRN"].ToString();
 				entryFIO.Text = rdr["FIO_dir"].ToString();
 				entryPassSer.Text = rdr["passport_ser"].ToString();
@@ -107,14 +108,14 @@ namespace bazar
 			if(NewLessee)
 			{
 				sql = "INSERT INTO lessees (name, FIO_dir, passport_ser, passport_no, passport_exit, address, " +
-					"INN, OGRN, wholesaler, retail, goods_id, comments) " +
+					"INN, KPP, OGRN, wholesaler, retail, goods_id, comments) " +
 					"VALUES (@name, @FIO, @passport_ser, @passport_no, @exit, @address, " +
-					"@INN, @OGRN, @wholesaler, @retail, @goods_id, @comments)";
+					"@INN, @KPP, @OGRN, @wholesaler, @retail, @goods_id, @comments)";
 			}
 			else
 			{
 				sql = "UPDATE lessees SET name = @name, FIO_dir = @FIO, passport_ser = @passport_ser, " +
-					"passport_no = @passport_no, passport_exit = @exit, address = @address, INN = @INN, OGRN = @OGRN, " +
+					"passport_no = @passport_no, passport_exit = @exit, address = @address, INN = @INN, KPP = @KPP, OGRN = @OGRN, " +
 					"wholesaler = @wholesaler, retail = @retail, goods_id = @goods_id, comments = @comments " +
 					"WHERE id = @id";
 			}
@@ -125,44 +126,18 @@ namespace bazar
 				
 				cmd.Parameters.AddWithValue("@id", Lesseeid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
-				if(entryFIO.Text == "")
-					cmd.Parameters.AddWithValue("@FIO", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@FIO", entryFIO.Text);
-				if(entryPassSer.Text == "")
-					cmd.Parameters.AddWithValue("@passport_ser", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@passport_ser", entryPassSer.Text);
-				if(entryPassNo.Text == "")
-					cmd.Parameters.AddWithValue("@passport_no", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@passport_no", entryPassNo.Text);
-				if(entryExit.Text == "")
-					cmd.Parameters.AddWithValue("@exit", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@exit", entryExit.Text);
-				if(entryAddress.Text == "")
-					cmd.Parameters.AddWithValue("@address", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@address", entryAddress.Text);
-				if(entryINN.Text == "")
-					cmd.Parameters.AddWithValue("@INN", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@INN", entryINN.Text);
-				if(entryOGRN.Text == "")
-					cmd.Parameters.AddWithValue("@OGRN", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@OGRN", entryOGRN.Text);
+				cmd.Parameters.AddWithValue("@FIO", DBWorks.ValueOrNull (entryFIO.Text != "", entryFIO.Text));
+				cmd.Parameters.AddWithValue("@passport_ser", DBWorks.ValueOrNull (entryPassSer.Text != "", entryPassSer.Text));
+				cmd.Parameters.AddWithValue("@passport_no", DBWorks.ValueOrNull (entryPassNo.Text != "", entryPassNo.Text));
+				cmd.Parameters.AddWithValue("@exit", DBWorks.ValueOrNull (entryExit.Text != "", entryExit.Text));
+				cmd.Parameters.AddWithValue("@address", DBWorks.ValueOrNull (entryAddress.Text != "", entryAddress.Text));
+				cmd.Parameters.AddWithValue("@INN", DBWorks.ValueOrNull (entryINN.Text != "", entryINN.Text));
+				cmd.Parameters.AddWithValue("@KPP", DBWorks.ValueOrNull (entryKPP.Text != "", entryKPP.Text));
+				cmd.Parameters.AddWithValue("@OGRN", DBWorks.ValueOrNull (entryOGRN.Text != "", entryOGRN.Text));
 				cmd.Parameters.AddWithValue("@wholesaler", checkBwholesaler.Active);
 				cmd.Parameters.AddWithValue("@retail", checkBretail.Active);				
-				if(!GoodsNull)
-					cmd.Parameters.AddWithValue("@goods_id", Goods_id);
-				else
-					cmd.Parameters.AddWithValue("@goods_id", DBNull.Value);
-				if(textviewComments.Buffer.Text == "")
-					cmd.Parameters.AddWithValue("@comments", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@comments", textviewComments.Buffer.Text);
+				cmd.Parameters.AddWithValue("@goods_id", DBWorks.ValueOrNull (!GoodsNull, Goods_id));
+				cmd.Parameters.AddWithValue("@comments", DBWorks.ValueOrNull (textviewComments.Buffer.Text == "", textviewComments.Buffer.Text));
 				
 				cmd.ExecuteNonQuery();
 				MainClass.StatusMessage("Ok");
@@ -174,7 +149,6 @@ namespace bazar
 				MainClass.StatusMessage("Ошибка записи арендатора!");
 				QSMain.ErrorMessage(this,ex);
 			}
-
 		}
 
 		protected virtual void OnEntryNameChanged (object sender, System.EventArgs e)
