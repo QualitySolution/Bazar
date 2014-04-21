@@ -500,6 +500,8 @@ namespace bazar
 			MySqlParameter[] Param = { new MySqlParameter("@contract", comboContract.Model.GetValue (iter, 1)) };
 			string Display = "№{0} - {1:MMMM} {2}";
 			ComboWorks.ComboFillUniversal (comboAccrual, sql, Display, Param, 0, ComboWorks.ListMode.WithNo);
+			if (!comboAccrual.Visible)
+				comboAccrual.Active = 0;
 		}
 
 		protected void OnComboAccrualChanged (object sender, EventArgs e)
