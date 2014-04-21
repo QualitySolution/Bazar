@@ -190,38 +190,26 @@ namespace bazar
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@accrual_id", AccrualId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
-				
-				int cash_id, income_id;
+
 				double sum;
 				decimal paid, accrual;
 				PayableSum = 0m;
 				
 				while (rdr.Read())
 				{
-					if(rdr["paid"] != DBNull.Value)
-						paid = rdr.GetDecimal ("paid");
-					else
-						paid = 0;
-					accrual = rdr.GetInt32("count") * rdr.GetDecimal("price");
+					paid = DBWorks.GetDecimal (rdr, "paid", 0);
+					accrual = rdr.GetDecimal("count") * rdr.GetDecimal("price");
 					sum = Convert.ToDouble (accrual - paid);
 					if(sum <= 0)
 						continue;
 					PayableSum += Convert.ToDecimal(sum);
-					if(rdr["cash_id"] != DBNull.Value)
-						cash_id = rdr.GetInt32("cash_id");
-					else
-						cash_id = -1;
-					if(rdr["income_id"] != DBNull.Value)
-						income_id = rdr.GetInt32("income_id");
-					else
-						income_id = -1;
 
 					ServiceListStore.AppendValues(false,
 												  rdr.GetInt32("service_id"),
 					                              rdr["service"].ToString(),
-					                              cash_id,
+					                              DBWorks.GetInt (rdr, "cash_id", -1),
 					                              rdr["cash"].ToString(),
-					                              income_id,
+					                              DBWorks.GetInt (rdr, "income_id", -1),
 					                              rdr["income"].ToString(),
 					                              sum,
 					                              rdr.GetInt64 ("id"));

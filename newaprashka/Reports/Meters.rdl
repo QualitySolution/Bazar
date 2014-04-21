@@ -93,7 +93,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         </Field>
         <Field Name="count">
           <DataField>count</DataField>
-          <rd:TypeName>System.UInt32</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="price">
           <DataField>price</DataField>

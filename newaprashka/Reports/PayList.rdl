@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT services.name as service, cash.name as cash, units.name as units, count, price, (count * price) as sum, IFNULL(paysum.sum, 0) as paid FROM accrual_pays 
 LEFT JOIN services ON accrual_pays.service_id = services.id
@@ -29,7 +29,7 @@ WHERE accrual_pays.accrual_id = @id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="service">
           <DataField>service</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -40,7 +40,7 @@ WHERE accrual_pays.accrual_id = @id</CommandText>
         </Field>
         <Field Name="count">
           <DataField>count</DataField>
-          <rd:TypeName>System.UInt32</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="price">
           <DataField>price</DataField>
@@ -355,7 +355,7 @@ WHERE accrual.id = @id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox44" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                          <Value>Цена за ед.</Value>
+                          <Value>Сумма</Value>
                           <Style>
                             <TextAlign>Center</TextAlign>
                             <BorderStyle>

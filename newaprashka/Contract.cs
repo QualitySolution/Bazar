@@ -1,8 +1,6 @@
 using System;
-using System.Data;
 using System.Collections.Generic;
 using Gtk;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 using NLog;
