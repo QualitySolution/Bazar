@@ -1,20 +1,33 @@
 using System;
 using Gtk;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using QSProjectsLib;
+using NLog;
 
 namespace bazar
 {
 	public partial class PayAccrual : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		Gtk.ListStore ServiceListStore;
 		TreeModel IncomeNameList;
 
 		bool IncomeNotEmpty;
 		decimal PaySum, PayableSum;
 		int Accrual_Id;
+
+		private enum ServiceCol{
+			pay,
+			service_id,
+			service,
+			cash_id,
+			cash,
+			income_id, //5
+			income,
+			sum,
+			accrual_pay_id
+		}
 
 		public PayAccrual ()
 		{
@@ -26,8 +39,15 @@ namespace bazar
 			IncomeCombo.Destroy ();
 
 			//Создаем таблицу "Услуги"
-			ServiceListStore = new Gtk.ListStore (typeof (bool), typeof (int), typeof (string), typeof (int), typeof (string),
-			                                      typeof (int), typeof (string), typeof (double), typeof(long));
+			ServiceListStore = new Gtk.ListStore (typeof (bool),
+			                                      typeof (int),
+			                                      typeof (string),
+			                                      typeof (int),
+			                                      typeof (string),
+			                                      typeof (int),
+			                                      typeof (string),
+			                                      typeof (decimal),
+			                                      typeof(long));
 			
 			CellRendererToggle CellPay = new CellRendererToggle();
 			CellPay.Activatable = true;
@@ -47,26 +67,17 @@ namespace bazar
 			Gtk.TreeViewColumn SumColumn = new Gtk.TreeViewColumn ();
 			SumColumn.Title = "Сумма";
 			SumColumn.MinWidth = 90;
-			Gtk.CellRendererSpin CellSum = new CellRendererSpin();
+			Gtk.CellRendererText CellSum = new CellRendererText();
 			CellSum.Editable = true;
-			CellSum.Digits = 2;
-			Adjustment adjPrice = new Adjustment(0,0,1000000,10,1000,0);
-			CellSum.Adjustment = adjPrice;
-			CellSum.Edited += OnSumSpinEdited;
+			CellSum.Edited += OnSumTextEdited;
 			SumColumn.PackStart (CellSum, true);
 			
-			treeviewServices.AppendColumn("Оплатить", CellPay, "active", 0);
-			// ID Услуги - 1
-			treeviewServices.AppendColumn ("Услуга", new Gtk.CellRendererText (), "text", 2);
-			//ID Кассы - 3
-			treeviewServices.AppendColumn ("Касса", new Gtk.CellRendererText (), "text", 4);
-			// ID Статьи дохода - 5
+			treeviewServices.AppendColumn("Оплатить", CellPay, "active", (int)ServiceCol.pay);
+			treeviewServices.AppendColumn ("Услуга", new Gtk.CellRendererText (), "text", (int)ServiceCol.service);
+			treeviewServices.AppendColumn ("Касса", new Gtk.CellRendererText (), "text", (int)ServiceCol.cash);
 			treeviewServices.AppendColumn (IncomeItemsColumn);
-			IncomeItemsColumn.AddAttribute (CellIncomeItems,"text", 6);
+			IncomeItemsColumn.AddAttribute (CellIncomeItems, "text", (int)ServiceCol.income);
 			treeviewServices.AppendColumn (SumColumn);
-			SumColumn.AddAttribute (CellSum,"text", 7);
-			//ID строки начисления - 8
-
 			SumColumn.SetCellDataFunc (CellSum, RenderSumColumn);
 			
 			treeviewServices.Model = ServiceListStore;
@@ -79,8 +90,8 @@ namespace bazar
 			
 			if (ServiceListStore.GetIter (out iter, new TreePath(args.Path))) 
 			{
-				bool old = (bool) ServiceListStore.GetValue(iter,0);
-				ServiceListStore.SetValue(iter, 0, !old);
+				bool old = (bool) ServiceListStore.GetValue(iter, (int)ServiceCol.pay);
+				ServiceListStore.SetValue(iter, (int)ServiceCol.pay, !old);
 			}
 			CalculateServiceSum ();
 		}
@@ -92,10 +103,10 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				Console.WriteLine("newtext is empty");
+				logger.Warn("newtext is empty");
 				return;
 			}
-			ServiceListStore.SetValue(iter, 6, args.NewText);
+			ServiceListStore.SetValue(iter, (int)ServiceCol.income, args.NewText);
 			TreeIter IncomeIter;
 			if (!IncomeNameList.GetIterFirst (out IncomeIter))
 				return;
@@ -103,7 +114,7 @@ namespace bazar
 			{
 				if(IncomeNameList.GetValue (IncomeIter,0).ToString () == args.NewText)
 				{
-					ServiceListStore.SetValue (iter, 5, IncomeNameList.GetValue (IncomeIter, 1));
+					ServiceListStore.SetValue (iter, (int)ServiceCol.income_id, IncomeNameList.GetValue (IncomeIter, 1));
 					break;
 				}
 			}
@@ -111,23 +122,23 @@ namespace bazar
 			CalculateServiceSum ();
 		}
 
-		void OnSumSpinEdited (object o, EditedArgs args)
+		void OnSumTextEdited (object o, EditedArgs args)
 		{
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			double Sum;
-			if(double.TryParse(args.NewText, out Sum))
+			decimal Sum;
+			if(decimal.TryParse(args.NewText, out Sum))
 			{
-				ServiceListStore.SetValue(iter, 7, Sum);
+				ServiceListStore.SetValue(iter, (int)ServiceCol.sum, Sum);
 				CalculateServiceSum ();
 			}
 		}
 
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
-			double Sum = (double) model.GetValue (iter, 7);
-			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:0.00}", Sum);
+			decimal Sum = (decimal) model.GetValue (iter, (int)ServiceCol.sum);
+			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
 		}
 
 		protected void CalculateServiceSum ()
@@ -138,18 +149,18 @@ namespace bazar
 			
 			if(ServiceListStore.GetIterFirst(out iter))
 			{
-				if(Convert.ToBoolean(ServiceListStore.GetValue(iter,0)) == true)
+				if(Convert.ToBoolean(ServiceListStore.GetValue(iter, (int)ServiceCol.pay)) == true)
 				{
-					PaySum = Convert.ToDecimal(ServiceListStore.GetValue(iter,7));
-					if((int)ServiceListStore.GetValue(iter, 5) <= 0)
+					PaySum = (decimal)ServiceListStore.GetValue(iter, (int)ServiceCol.sum);
+					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.income_id) <= 0)
 						IncomeNotEmpty = false;
 				}
 				while (ServiceListStore.IterNext(ref iter)) 
 				{
-					if(Convert.ToBoolean(ServiceListStore.GetValue(iter,0)) == true)
+					if(Convert.ToBoolean(ServiceListStore.GetValue(iter, (int)ServiceCol.pay)) == true)
 					{
-						PaySum += Convert.ToDecimal(ServiceListStore.GetValue(iter,7));
-						if((int)ServiceListStore.GetValue(iter, 5) <= 0)
+						PaySum += (decimal) ServiceListStore.GetValue(iter, (int)ServiceCol.sum);
+						if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.income_id) <= 0)
 							IncomeNotEmpty = false;
 					}
 				}
@@ -191,18 +202,17 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@accrual_id", AccrualId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 
-				double sum;
-				decimal paid, accrual;
+				decimal sum, paid, accrual;
 				PayableSum = 0m;
 				
 				while (rdr.Read())
 				{
 					paid = DBWorks.GetDecimal (rdr, "paid", 0);
 					accrual = rdr.GetDecimal("count") * rdr.GetDecimal("price");
-					sum = Convert.ToDouble (accrual - paid);
+					sum = accrual - paid;
 					if(sum <= 0)
 						continue;
-					PayableSum += Convert.ToDecimal(sum);
+					PayableSum += sum;
 
 					ServiceListStore.AppendValues(false,
 												  rdr.GetInt32("service_id"),
@@ -223,7 +233,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
+				logger.Error(ex.ToString());
 				MainClass.StatusMessage("Ошибка получения информации о начисление!");
 				QSMain.ErrorMessage(this,ex);
 			}
@@ -236,10 +246,10 @@ namespace bazar
 			TreeIter iter;
 			if(ServiceListStore.GetIterFirst(out iter))
 			{
-				ServiceListStore.SetValue (iter, 0, checkAll.Active);
+				ServiceListStore.SetValue (iter, (int)ServiceCol.pay, checkAll.Active);
 				while (ServiceListStore.IterNext(ref iter)) 
 				{
-					ServiceListStore.SetValue (iter, 0, checkAll.Active);
+					ServiceListStore.SetValue (iter, (int)ServiceCol.pay, checkAll.Active);
 				}
 			}
 			CalculateServiceSum ();
@@ -252,16 +262,16 @@ namespace bazar
 			//Составляем список касс
 			if(ServiceListStore.GetIterFirst(out iter))
 			{
-				if((bool)ServiceListStore.GetValue(iter, 0))
+				if((bool)ServiceListStore.GetValue(iter, (int)ServiceCol.pay))
 				{
-					PayList.Add (new CashDoc((int) ServiceListStore.GetValue (iter, 3)));
+					PayList.Add (new CashDoc((int) ServiceListStore.GetValue (iter, (int)ServiceCol.cash_id)));
 				}
 				while (ServiceListStore.IterNext(ref iter)) 
 				{
-					if( !(bool)ServiceListStore.GetValue(iter, 0))
+					if( !(bool)ServiceListStore.GetValue(iter, (int)ServiceCol.pay))
 						continue;
 					bool exist = false;
-					int Cashid = (int) ServiceListStore.GetValue (iter, 3);
+					int Cashid = (int) ServiceListStore.GetValue (iter, (int)ServiceCol.cash_id);
 					foreach (CashDoc item in PayList)
 					{
 						if( item.CashId == Cashid)
@@ -312,12 +322,12 @@ namespace bazar
 					string details = String.Format ("Оплата по начислению № {0} ({1:MMMM yyyy}) за услуги: ", Accrual_Id, Month);
 					foreach(object[] row in ServiceListStore)
 					{
-						if((bool)row[0] && (int)row[3] == item.CashId)
+						if((bool)row[(int)ServiceCol.pay] && (int)row[(int)ServiceCol.cash_id] == item.CashId)
 						{
 							if(sum != 0)
 								details += ", ";
-							sum += Convert.ToDecimal (row[7]);
-							details += (string) row[2];
+							sum += (decimal) row[(int)ServiceCol.sum];
+							details += (string) row[(int)ServiceCol.service];
 						}
 					}
 					// Записываем приходный ордер
@@ -351,14 +361,14 @@ namespace bazar
 					"VALUES (@payment_id, @accrual_pay_id, @sum, @income_id)";
 				foreach(object[] row in ServiceListStore)
 				{
-					if((bool)row[0])
+					if((bool)row[(int)ServiceCol.pay])
 					{
-						CashDoc CurrentDoc = PayList.Find( p => p.CashId == (int)row[3]);
+						CashDoc CurrentDoc = PayList.Find( p => p.CashId == (int)row[(int)ServiceCol.cash_id]);
 						cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 						cmd.Parameters.AddWithValue("@payment_id", CurrentDoc.PaymentId);
-						cmd.Parameters.AddWithValue("@accrual_pay_id", row[8]);
-						cmd.Parameters.AddWithValue("@sum", row[7]);
-						cmd.Parameters.AddWithValue("@income_id", row[5]);
+						cmd.Parameters.AddWithValue("@accrual_pay_id", row[(int)ServiceCol.accrual_pay_id]);
+						cmd.Parameters.AddWithValue("@sum", row[(int)ServiceCol.sum]);
+						cmd.Parameters.AddWithValue("@income_id", row[(int)ServiceCol.income_id]);
 						
 						cmd.ExecuteNonQuery ();
 					}
@@ -369,7 +379,7 @@ namespace bazar
 			catch (Exception ex) 
 			{
 				trans.Rollback ();
-				Console.WriteLine(ex.ToString());
+				logger.Error(ex.ToString());
 				MainClass.StatusMessage("Ошибка записи оплаты!");
 				QSMain.ErrorMessage(this,ex);
 			}

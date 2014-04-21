@@ -57,7 +57,7 @@ namespace bazar
 			                                      typeof (int),//3 income id
 			                                      typeof (string), //4 income name
 			                                      typeof (decimal),// 5 accrual sum
-			                                      typeof (double), // 6 paid sum
+			                                      typeof (decimal), // 6 paid sum
 			                                      typeof (decimal) // 7 other paid
 			                                      );
 			
@@ -80,12 +80,9 @@ namespace bazar
 			Gtk.TreeViewColumn PaidColumn = new Gtk.TreeViewColumn ();
 			PaidColumn.Title = "Оплата";
 			PaidColumn.MinWidth = 90;
-			Gtk.CellRendererSpin CellPaid = new CellRendererSpin();
+			Gtk.CellRendererText CellPaid = new CellRendererText();
 			CellPaid.Editable = true;
-			CellPaid.Digits = 2;
-			Adjustment adjPaid = new Adjustment(0,0,100000000,10,1000,0);
-			CellPaid.Adjustment = adjPaid;
-			CellPaid.Edited += OnPaidSpinEdited;
+			CellPaid.Edited += OnPaidTextEdited;
 			PaidColumn.PackStart (CellPaid, true);
 			
 			Gtk.TreeViewColumn OtherPaidColumn = new Gtk.TreeViewColumn ();
@@ -99,16 +96,12 @@ namespace bazar
 			treeviewServices.AppendColumn (IncomeItemsColumn);
 			IncomeItemsColumn.AddAttribute (CellIncomeItems,"text", 4);
 			treeviewServices.AppendColumn (AccrualColumn);
-			OtherPaidColumn.AddAttribute (CellAccrual,"text", 9);
-			treeviewServices.AppendColumn (PaidColumn);
-			PaidColumn.AddAttribute (CellPaid,"text", 8);
-			treeviewServices.AppendColumn (OtherPaidColumn);
-			OtherPaidColumn.AddAttribute (CellOtherPaid,"text", 9);
-			
 			AccrualColumn.SetCellDataFunc (CellAccrual, RenderAccrualColumn);
+			treeviewServices.AppendColumn (PaidColumn);
 			PaidColumn.SetCellDataFunc (CellPaid, RenderPaidColumn);
+			treeviewServices.AppendColumn (OtherPaidColumn);
 			OtherPaidColumn.SetCellDataFunc (CellOtherPaid, RenderOtherPaidColumn);
-			
+
 			treeviewServices.Model = ServiceListStore;
 			treeviewServices.ShowAll();
 
@@ -149,14 +142,9 @@ namespace bazar
 				
 				while (rdr.Read())
 				{
-					if(rdr["paid"] != DBNull.Value)
-						paidsum = rdr.GetDecimal ("paid");
-					else
-						paidsum = 0;
-					if(rdr["income_id"] != DBNull.Value)
-						income_id = rdr.GetInt32 ("income_id");
-					else
-						income_id = -1;
+					paidsum = DBWorks.GetDecimal (rdr, "paid", 0);
+					income_id = DBWorks.GetInt (rdr, "income_id", -1);
+
 					AccrualRowsListStore.AppendValues(rdr.GetInt64("rowid"),
 					                  				  rdr["service"].ToString(),
 					                  				  rdr.GetDecimal ("sum"),
@@ -200,21 +188,14 @@ namespace bazar
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
 				int income_id;
-				double sum;
-				decimal otherpaid, accrual;
+				decimal sum, otherpaid, accrual;
 				
 				while (rdr.Read())
 				{
-					if(rdr["otherpaid"] != DBNull.Value)
-						otherpaid = rdr.GetDecimal ("otherpaid");
-					else
-						otherpaid = 0;
+					otherpaid = DBWorks.GetDecimal (rdr, "otherpaid", 0);
 					accrual = rdr.GetDecimal("accrualsum");
-					sum = rdr.GetDouble ("sum");
-					if(rdr["income_id"] != DBNull.Value)
-						income_id = rdr.GetInt32("income_id");
-					else
-						income_id = -1;
+					sum = rdr.GetDecimal ("sum");
+					income_id = DBWorks.GetInt (rdr, "income_id", -1);
 					
 					ServiceListStore.AppendValues(rdr.GetInt64("id"),
 					                              rdr.GetInt64 ("accrual_pay_id"),
@@ -297,13 +278,13 @@ namespace bazar
 			while(IncomeNameList.IterNext (ref IncomeIter));
 		}
 
-		void OnPaidSpinEdited (object o, EditedArgs args)
+		void OnPaidTextEdited (object o, EditedArgs args)
 		{
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			double Paid;
-			if (double.TryParse (args.NewText, out Paid)) 
+			decimal Paid;
+			if (decimal.TryParse (args.NewText, out Paid)) 
 			{
 				ServiceListStore.SetValue (iter, 6, Paid);
 				CalculateTotal ();
@@ -318,8 +299,8 @@ namespace bazar
 
 		private void RenderPaidColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
-			double Paid = (double) model.GetValue (iter, 6);
-			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:C}", Paid);
+			decimal Paid = (decimal) model.GetValue (iter, 6);
+			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Paid);
 		}
 
 		private void RenderOtherPaidColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
@@ -350,7 +331,7 @@ namespace bazar
 			decimal paid = 0;
 			foreach (object[] row in ServiceListStore)
 			{
-				paid += Convert.ToDecimal (row[6]);
+				paid += (decimal)row [6];
 			}
 			labelNotSeparated.Text = String.Format ("Не разнесено: {0:C}", _PaymentSum - paid);
 			bool OldCanSave = _CanSave;
@@ -405,4 +386,3 @@ namespace bazar
 		}
 	}
 }
-
