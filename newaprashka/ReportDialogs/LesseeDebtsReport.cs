@@ -54,6 +54,22 @@ namespace bazar
 			}
 		}
 
+		protected	void TestCanSave ()
+		{
+			bool Cashok = comboCash.Active > 0;
+			bool Servicesok = !checkDetail.Active;
+			foreach(object[] row in ServicesList)
+			{
+				if ((bool) row [1])
+				{
+					Servicesok = true;
+					break;
+				}
+			}
+
+			buttonOk.Sensitive = Cashok && Servicesok;
+		}
+
 		void onCellSelectToggled(object o, ToggledArgs args) 
 		{
 			TreeIter iter;
@@ -62,6 +78,7 @@ namespace bazar
 			{
 				bool old = (bool) ServicesList.GetValue(iter,1);
 				ServicesList.SetValue(iter, 1, !old);
+				TestCanSave ();
 			}
 		}
 
@@ -90,6 +107,12 @@ namespace bazar
 		protected void OnCheckDetailClicked(object sender, EventArgs e)
 		{
 			treeviewServices.Sensitive = checkDetail.Active;
+			TestCanSave ();
+		}
+
+		protected void OnComboCashChanged(object sender, EventArgs e)
+		{
+			TestCanSave ();
 		}
 	}
 }
