@@ -412,7 +412,7 @@ public partial class MainWindow : Gtk.Window
 		dialog.ProgramName = "QS: База Арендаторов";
 
 		Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-		dialog.Version = version.ToString (version.Build == 0 ? 3 : 4);
+		dialog.Version = version.ToString (version.Revision == 0 ? 3 : 4);
 		
 		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
 		
