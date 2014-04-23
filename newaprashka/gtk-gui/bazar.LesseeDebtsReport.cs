@@ -134,6 +134,7 @@ namespace bazar
 			w12.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
+			this.buttonOk.Sensitive = false;
 			this.buttonOk.CanDefault = true;
 			this.buttonOk.CanFocus = true;
 			this.buttonOk.Name = "buttonOk";
@@ -151,6 +152,7 @@ namespace bazar
 			this.DefaultWidth = 337;
 			this.DefaultHeight = 382;
 			this.Show ();
+			this.comboCash.Changed += new global::System.EventHandler (this.OnComboCashChanged);
 			this.checkDetail.Clicked += new global::System.EventHandler (this.OnCheckDetailClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
