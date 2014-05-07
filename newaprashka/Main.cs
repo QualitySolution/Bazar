@@ -196,7 +196,19 @@ namespace bazar
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
 			PrepareTable.ClearItems.Add ("meter_reading", 
 			                             new TableInfo.ClearDependenceItem ("WHERE accrual_pay_id = @id", "", "@id", "accrual_pay_id"));
+			PrepareTable.DeleteItems.Add ("payment_details", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE accrual_pay_id = @id ", "", "@id"));
 			Tables.Add ("accrual_pays", PrepareTable);
+
+			PrepareTable = new TableInfo();
+			PrepareTable.ObjectsName = "Строки оплаты";
+			PrepareTable.ObjectName = "строку оплаты"; 
+			PrepareTable.SqlSelect = "SELECT payment_id, services.name as service, sum, payment_details.id as id FROM payment_details " +
+				"LEFT JOIN accrual_pays ON accrual_pays.id = payment_details.accrual_pay_id " +
+				"LEFT JOIN services ON accrual_pays.service_id = services.id "; 
+			PrepareTable.DisplayString = "Строка оплаты услуги {1} на сумму {2:C} в платеже {0}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys("id");
+			Tables.Add ("payment_details", PrepareTable);
 
 			PrepareTable = new TableInfo();
 			PrepareTable.ObjectsName = "Строки услуг в договоре";

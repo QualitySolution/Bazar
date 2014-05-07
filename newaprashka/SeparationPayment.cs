@@ -3,12 +3,14 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using QSProjectsLib;
+using NLog;
 
 namespace bazar
 {
 	[System.ComponentModel.ToolboxItem(true)]
 	public partial class SeparationPayment : Gtk.Bin
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		private decimal _PaymentSum;
 		private int _AccrualId, _PaymentId;
 		private bool _CanSave = false;
@@ -160,8 +162,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения начисления!");
+				logger.ErrorException ("Ошибка получения начисления!", ex);
 				return false;
 			}
 		}
@@ -185,36 +186,35 @@ namespace bazar
 				
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@current_payment", _PaymentId);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				
-				int income_id;
-				decimal sum, otherpaid, accrual;
-				
-				while (rdr.Read())
+				using (MySqlDataReader rdr = cmd.ExecuteReader())
 				{
-					otherpaid = DBWorks.GetDecimal (rdr, "otherpaid", 0);
-					accrual = rdr.GetDecimal("accrualsum");
-					sum = rdr.GetDecimal ("sum");
-					income_id = DBWorks.GetInt (rdr, "income_id", -1);
+					int income_id;
+					decimal sum, otherpaid, accrual;
 					
-					ServiceListStore.AppendValues(rdr.GetInt64("id"),
-					                              rdr.GetInt64 ("accrual_pay_id"),
-					                              rdr["service"].ToString(),
-					                              income_id,
-					                              rdr["income"].ToString(),
-					                              accrual,
-					                              sum,
-					                              otherpaid);
+					while (rdr.Read())
+					{
+						otherpaid = DBWorks.GetDecimal (rdr, "otherpaid", 0);
+						accrual = rdr.GetDecimal("accrualsum");
+						sum = rdr.GetDecimal ("sum");
+						income_id = DBWorks.GetInt (rdr, "income_id", -1);
+						
+						ServiceListStore.AppendValues(rdr.GetInt64("id"),
+						                              rdr.GetInt64 ("accrual_pay_id"),
+						                              rdr["service"].ToString(),
+						                              income_id,
+						                              rdr["income"].ToString(),
+						                              accrual,
+						                              sum,
+						                              otherpaid);
+					}
 				}
-				rdr.Close();
 				
 				MainClass.StatusMessage("Ok");
 				CalculateTotal();
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения оплат!");
+				logger.ErrorException ("Ошибка получения оплат!", ex);
 			}
 		}
 
@@ -260,7 +260,7 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				Console.WriteLine("newtext is empty");
+				logger.Warn("newtext is empty");
 				return;
 			}
 			ServiceListStore.SetValue(iter, 4, args.NewText);
@@ -342,13 +342,22 @@ namespace bazar
 
 		public bool SavePaymentDetails(int Payment_id, MySqlTransaction trans)
 		{
-			// Записываем строки оплаты
+			logger.Info ("Записываем строки оплаты...");
 			string sql;
 			MySqlCommand cmd;
 			try
 			{
 				foreach(object[] row in ServiceListStore)
 				{
+					//Не записываем строки оплаты с нулевыми суммами это дает возможность удалить строку начисления без удаления строки оплаты.
+					if((decimal)row[6] <= 0)
+					{
+						if((long)row[0] > 0)
+							DeletedRowId.Add((long)row[0]);
+						else
+							continue;
+					}
+
 					if((long)row[0] > 0)
 						sql = "UPDATE payment_details SET payment_id = @payment_id, accrual_pay_id = @accrual_pay_id, " +
 							"sum = @sum, income_id = @income_id WHERE id = @id";
@@ -379,8 +388,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения оплат!");
+				logger.ErrorException("Ошибка записи строк оплаты!", ex);
 				return false;
 			}
 		}
