@@ -35,6 +35,7 @@ namespace bazar
 			min_pay,
 			row_color
 		}
+
 		public Contract ()
 		{
 			this.Build ();
@@ -468,7 +469,7 @@ namespace bazar
 		protected void OnComboPlaceNoChanged (object sender, EventArgs e)
 		{
 			TreeIter iter;
-			if(comboPlaceNo.ActiveText != null)
+			if(NewContract && comboPlaceNo.ActiveText != null)
 			{
 				MainClass.StatusMessage("Запрос информации о месте...");
 				string sql = "SELECT org_id, area FROM places " +
