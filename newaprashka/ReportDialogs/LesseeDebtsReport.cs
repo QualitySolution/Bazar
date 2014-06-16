@@ -13,7 +13,8 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference (comboCash, "cash", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference (comboCash, "cash", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference (comboOrg, "organizations", ComboWorks.ListMode.WithAll);
 
 			dateReport.Date = DateTime.Today;
 
@@ -52,6 +53,9 @@ namespace bazar
 				MainClass.StatusMessage("Ошибка получения информации о услугах!");
 				QSMain.ErrorMessage(this, ex);
 			}
+
+			comboCash.Active = 0;
+			comboOrg.Active = 0;
 		}
 
 		protected	void TestCanSave ()
@@ -89,7 +93,8 @@ namespace bazar
 			string param = "Day=" + dateReport.Date.Day.ToString() +
 				"&Month=" + dateReport.Date.Month.ToString() +
 				"&Year=" + dateReport.Date.Year.ToString() + 
-				"&Cash=" + ComboWorks.GetActiveId(comboCash);
+				"&Cash=" + ComboWorks.GetActiveId(comboCash) +
+				"&Org=" + ComboWorks.GetActiveId(comboOrg);
 			if(checkDetail.Active)
 			{
 				param += "&Services=";

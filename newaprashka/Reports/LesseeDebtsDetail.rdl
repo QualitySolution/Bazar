@@ -22,7 +22,7 @@ FROM accrual
 LEFT JOIN contracts ON contracts.id = contract_id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN (
-SELECT accrual_id, id as pay_id, service_id, (count * price) as sum FROM accrual_pays WHERE service_id IN (@services) AND cash_id = @cash) as sumtable 
+SELECT accrual_id, id as pay_id, service_id, (count * price) as sum FROM accrual_pays WHERE service_id IN (@services) AND (@cash = 0 OR cash_id = @cash)) as sumtable 
 ON sumtable.accrual_id = accrual.id 
 LEFT JOIN (
 SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paidtable 
@@ -38,7 +38,8 @@ ON accrual_debt.id = accrual.id
 WHERE sumtable.pay_id IS NOT NULL AND
 (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
 OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day)) 
-AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0 AND accrual_debt.debt &gt; 0</CommandText>
+AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0 AND accrual_debt.debt &gt; 0
+AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!Month</Value>
@@ -54,6 +55,9 @@ AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0 AND accrual_debt
           </QueryParameter>
           <QueryParameter Name="services">
             <Value>=Parameters!Services</Value>
+          </QueryParameter>
+          <QueryParameter Name="org">
+            <Value>=Parameters!Org</Value>
           </QueryParameter>
         </QueryParameters>
       </Query>
@@ -1011,7 +1015,19 @@ AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0 AND accrual_debt
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>1</Value>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="Org">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
