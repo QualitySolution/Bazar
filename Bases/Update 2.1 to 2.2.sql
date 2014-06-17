@@ -54,6 +54,8 @@ ADD CONSTRAINT `fk_pay_details_income`
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
+-- Обновляем версию базы
+UPDATE `bazar`.`base_parameters` SET `str_value` = '2.2' WHERE 'name' = 'version'
 
 -- -----------------------------------------------------
 -- Placeholder table for view `bazar`.`active_contracts`
