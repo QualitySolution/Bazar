@@ -2,6 +2,8 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
+USE `bazar`;
+
 #Всвязи с некорректной работой модуля разнесения оплат в базе можно было сохранять оплаты с нулевыми суммами или без ссылок на строку начисления что приводило к проблемам
 #Удаляем из базы все некорректные строки.
 DELETE FROM payment_details WHERE sum = 0 OR accrual_pay_id IS NULL;
@@ -13,7 +15,7 @@ DROP FOREIGN KEY `fk_pay_details_income`;
 ALTER TABLE `bazar`.`lessees` 
 ADD COLUMN `KPP` VARCHAR(10) NULL DEFAULT NULL AFTER `INN`;
 
-ALTER TABLE `bazar`.`payment_details` 
+ALTER TABLE `bazar`.`payment_details`
 CHANGE COLUMN `accrual_pay_id` `accrual_pay_id` INT(10) UNSIGNED NOT NULL ,
 CHANGE COLUMN `sum` `sum` DECIMAL(10,2) NOT NULL DEFAULT '0' ;
 
@@ -55,15 +57,12 @@ ADD CONSTRAINT `fk_pay_details_income`
   ON UPDATE CASCADE;
 
 -- Обновляем версию базы
-UPDATE `bazar`.`base_parameters` SET `str_value` = '2.2' WHERE 'name' = 'version'
+UPDATE `bazar`.`base_parameters` SET `str_value` = '2.2' WHERE `name` = 'version';
 
 -- -----------------------------------------------------
 -- Placeholder table for view `bazar`.`active_contracts`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bazar`.`active_contracts` (`id` INT, `number` INT, `lessee_id` INT, `org_id` INT, `place_type_id` INT, `place_no` INT, `sign_date` INT, `start_date` INT, `end_date` INT, `pay_day` INT, `cancel_date` INT, `comments` INT);
-
-
-USE `bazar`;
 
 -- -----------------------------------------------------
 -- View `bazar`.`active_contracts`
