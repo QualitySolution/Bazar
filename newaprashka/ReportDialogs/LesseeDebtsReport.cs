@@ -60,7 +60,6 @@ namespace bazar
 
 		protected	void TestCanSave ()
 		{
-			bool Cashok = comboCash.Active > 0;
 			bool Servicesok = !checkDetail.Active;
 			foreach(object[] row in ServicesList)
 			{
@@ -71,7 +70,7 @@ namespace bazar
 				}
 			}
 
-			buttonOk.Sensitive = Cashok && Servicesok;
+			buttonOk.Sensitive = Servicesok;
 		}
 
 		void onCellSelectToggled(object o, ToggledArgs args) 
