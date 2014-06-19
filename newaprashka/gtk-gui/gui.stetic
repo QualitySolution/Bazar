@@ -17,11 +17,6 @@
         <property name="Label" translatable="yes">_Файл</property>
         <property name="ShortLabel" translatable="yes">Файл</property>
       </action>
-      <action id="saveAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes" />
-        <property name="StockId">gtk-save</property>
-      </action>
       <action id="Action9">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">_Справочники</property>
@@ -38,11 +33,6 @@
         <property name="Label" translatable="yes">Контактные лица</property>
         <property name="ShortLabel" translatable="yes">Контактные лица</property>
         <signal name="Activated" handler="OnAction3Activated" />
-      </action>
-      <action id="Action4">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">-</property>
-        <property name="ShortLabel" translatable="yes">-</property>
       </action>
       <action id="Action7">
         <property name="Type">Action</property>
@@ -61,29 +51,6 @@
         <property name="Label" translatable="yes">Тип события</property>
         <property name="ShortLabel" translatable="yes">Тип события</property>
         <signal name="Activated" handler="OnAction5Activated" />
-      </action>
-      <action id="Action13">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Пр_авка</property>
-        <property name="ShortLabel" translatable="yes">Пр_авка</property>
-      </action>
-      <action id="cutAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">_Вырезать</property>
-        <property name="ShortLabel" translatable="yes">_Вырезать</property>
-        <property name="StockId">gtk-cut</property>
-      </action>
-      <action id="copyAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">_Копировать</property>
-        <property name="ShortLabel" translatable="yes">_Копировать</property>
-        <property name="StockId">gtk-copy</property>
-      </action>
-      <action id="pasteAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Вст_авить</property>
-        <property name="ShortLabel" translatable="yes">Вст_авить</property>
-        <property name="StockId">gtk-paste</property>
       </action>
       <action id="quitAction">
         <property name="Type">Action</property>
@@ -116,11 +83,6 @@
         <property name="Label" translatable="yes">Организации</property>
         <property name="ShortLabel" translatable="yes">Организации</property>
         <signal name="Activated" handler="OnAction15Activated" />
-      </action>
-      <action id="Action16">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">----</property>
-        <property name="ShortLabel" translatable="yes">----</property>
       </action>
       <action id="Action17">
         <property name="Type">Action</property>
@@ -217,10 +179,6 @@
         <property name="Label" translatable="yes">Долги арендаторов</property>
         <property name="ShortLabel" translatable="yes">Долги арендаторов</property>
         <signal name="Activated" handler="OnAction33Activated" />
-      </action>
-      <action id="Action35">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes" />
       </action>
       <action id="Action36">
         <property name="Type">Action</property>
@@ -2162,6 +2120,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2836,6 +2795,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>

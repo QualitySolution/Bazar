@@ -5,24 +5,17 @@ public partial class MainWindow
 {
 	private global::Gtk.UIManager UIManager;
 	private global::Gtk.Action ActionFileMenu;
-	private global::Gtk.Action saveAction;
 	private global::Gtk.Action Action9;
 	private global::Gtk.Action Action10;
 	private global::Gtk.Action Action3;
-	private global::Gtk.Action Action4;
 	private global::Gtk.Action Action7;
 	private global::Gtk.Action Action6;
 	private global::Gtk.Action Action5;
-	private global::Gtk.Action Action13;
-	private global::Gtk.Action cutAction;
-	private global::Gtk.Action copyAction;
-	private global::Gtk.Action pasteAction;
 	private global::Gtk.Action quitAction;
 	private global::Gtk.Action Action34;
 	private global::Gtk.Action aboutAction;
 	private global::Gtk.Action dialogAuthenticationAction;
 	private global::Gtk.Action Action15;
-	private global::Gtk.Action Action16;
 	private global::Gtk.Action Action17;
 	private global::Gtk.Action Action18;
 	private global::Gtk.Action Action19;
@@ -39,7 +32,6 @@ public partial class MainWindow
 	private global::Gtk.Action Action32;
 	private global::Gtk.Action helpAction;
 	private global::Gtk.Action Action33;
-	private global::Gtk.Action Action35;
 	private global::Gtk.Action Action36;
 	private global::Gtk.Action Action37;
 	private global::Gtk.Action Action38;
@@ -250,8 +242,6 @@ public partial class MainWindow
 		this.ActionFileMenu = new global::Gtk.Action ("ActionFileMenu", global::Mono.Unix.Catalog.GetString ("_Файл"), null, null);
 		this.ActionFileMenu.ShortLabel = global::Mono.Unix.Catalog.GetString ("Файл");
 		w1.Add (this.ActionFileMenu, null);
-		this.saveAction = new global::Gtk.Action ("saveAction", null, null, "gtk-save");
-		w1.Add (this.saveAction, null);
 		this.Action9 = new global::Gtk.Action ("Action9", global::Mono.Unix.Catalog.GetString ("_Справочники"), null, null);
 		this.Action9.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Справочники");
 		w1.Add (this.Action9, null);
@@ -261,9 +251,6 @@ public partial class MainWindow
 		this.Action3 = new global::Gtk.Action ("Action3", global::Mono.Unix.Catalog.GetString ("Контактные лица"), null, null);
 		this.Action3.ShortLabel = global::Mono.Unix.Catalog.GetString ("Контактные лица");
 		w1.Add (this.Action3, null);
-		this.Action4 = new global::Gtk.Action ("Action4", global::Mono.Unix.Catalog.GetString ("-"), null, null);
-		this.Action4.ShortLabel = global::Mono.Unix.Catalog.GetString ("-");
-		w1.Add (this.Action4, null);
 		this.Action7 = new global::Gtk.Action ("Action7", global::Mono.Unix.Catalog.GetString ("Типы мест"), null, null);
 		this.Action7.ShortLabel = global::Mono.Unix.Catalog.GetString ("Типы мест");
 		w1.Add (this.Action7, null);
@@ -273,18 +260,6 @@ public partial class MainWindow
 		this.Action5 = new global::Gtk.Action ("Action5", global::Mono.Unix.Catalog.GetString ("Тип события"), null, null);
 		this.Action5.ShortLabel = global::Mono.Unix.Catalog.GetString ("Тип события");
 		w1.Add (this.Action5, null);
-		this.Action13 = new global::Gtk.Action ("Action13", global::Mono.Unix.Catalog.GetString ("Пр_авка"), null, null);
-		this.Action13.ShortLabel = global::Mono.Unix.Catalog.GetString ("Пр_авка");
-		w1.Add (this.Action13, null);
-		this.cutAction = new global::Gtk.Action ("cutAction", global::Mono.Unix.Catalog.GetString ("_Вырезать"), null, "gtk-cut");
-		this.cutAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Вырезать");
-		w1.Add (this.cutAction, null);
-		this.copyAction = new global::Gtk.Action ("copyAction", global::Mono.Unix.Catalog.GetString ("_Копировать"), null, "gtk-copy");
-		this.copyAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Копировать");
-		w1.Add (this.copyAction, null);
-		this.pasteAction = new global::Gtk.Action ("pasteAction", global::Mono.Unix.Catalog.GetString ("Вст_авить"), null, "gtk-paste");
-		this.pasteAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Вст_авить");
-		w1.Add (this.pasteAction, null);
 		this.quitAction = new global::Gtk.Action ("quitAction", global::Mono.Unix.Catalog.GetString ("В_ыход"), null, "gtk-quit");
 		this.quitAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("В_ыход");
 		w1.Add (this.quitAction, null);
@@ -300,9 +275,6 @@ public partial class MainWindow
 		this.Action15 = new global::Gtk.Action ("Action15", global::Mono.Unix.Catalog.GetString ("Организации"), null, null);
 		this.Action15.ShortLabel = global::Mono.Unix.Catalog.GetString ("Организации");
 		w1.Add (this.Action15, null);
-		this.Action16 = new global::Gtk.Action ("Action16", global::Mono.Unix.Catalog.GetString ("----"), null, null);
-		this.Action16.ShortLabel = global::Mono.Unix.Catalog.GetString ("----");
-		w1.Add (this.Action16, null);
 		this.Action17 = new global::Gtk.Action ("Action17", global::Mono.Unix.Catalog.GetString ("Услуги по договору"), null, null);
 		this.Action17.ShortLabel = global::Mono.Unix.Catalog.GetString ("Услуги по договору");
 		w1.Add (this.Action17, null);
@@ -351,8 +323,6 @@ public partial class MainWindow
 		this.Action33 = new global::Gtk.Action ("Action33", global::Mono.Unix.Catalog.GetString ("Долги арендаторов"), null, null);
 		this.Action33.ShortLabel = global::Mono.Unix.Catalog.GetString ("Долги арендаторов");
 		w1.Add (this.Action33, null);
-		this.Action35 = new global::Gtk.Action ("Action35", null, null, null);
-		w1.Add (this.Action35, null);
 		this.Action36 = new global::Gtk.Action ("Action36", global::Mono.Unix.Catalog.GetString ("Сайт программы"), null, null);
 		this.Action36.ShortLabel = global::Mono.Unix.Catalog.GetString ("Сайт программы");
 		w1.Add (this.Action36, null);
@@ -1535,6 +1505,7 @@ public partial class MainWindow
 		this.radioCashToday = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Сегодня"));
 		this.radioCashToday.CanFocus = true;
 		this.radioCashToday.Name = "radioCashToday";
+		this.radioCashToday.Active = true;
 		this.radioCashToday.DrawIndicator = true;
 		this.radioCashToday.UseUnderline = true;
 		this.radioCashToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
@@ -1984,6 +1955,7 @@ public partial class MainWindow
 		this.radiobuttonToday = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Сегодня"));
 		this.radiobuttonToday.CanFocus = true;
 		this.radiobuttonToday.Name = "radiobuttonToday";
+		this.radiobuttonToday.Active = true;
 		this.radiobuttonToday.DrawIndicator = true;
 		this.radiobuttonToday.UseUnderline = true;
 		this.radiobuttonToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
