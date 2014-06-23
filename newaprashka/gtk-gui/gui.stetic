@@ -5792,7 +5792,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Service" design-size="398 228">
+  <widget class="Gtk.Dialog" id="bazar.Service" design-size="476 248">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новая услуга</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -5805,7 +5805,7 @@
         <child>
           <widget class="Gtk.Table" id="table1">
             <property name="MemberName" />
-            <property name="NRows">5</property>
+            <property name="NRows">6</property>
             <property name="NColumns">2</property>
             <property name="RowSpacing">6</property>
             <property name="ColumnSpacing">6</property>
@@ -5821,6 +5821,31 @@
               <packing>
                 <property name="TopAttach">4</property>
                 <property name="BottomAttach">5</property>
+                <property name="LeftAttach">1</property>
+                <property name="RightAttach">2</property>
+                <property name="AutoSize">False</property>
+                <property name="XOptions">Expand</property>
+                <property name="YOptions">Fill</property>
+                <property name="XExpand">True</property>
+                <property name="XFill">False</property>
+                <property name="XShrink">False</property>
+                <property name="YExpand">False</property>
+                <property name="YFill">True</property>
+                <property name="YShrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.CheckButton" id="checkIncomplete">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="Label" translatable="yes" />
+                <property name="DrawIndicator">True</property>
+                <property name="HasLabel">True</property>
+                <property name="UseUnderline">True</property>
+              </widget>
+              <packing>
+                <property name="TopAttach">5</property>
+                <property name="BottomAttach">6</property>
                 <property name="LeftAttach">1</property>
                 <property name="RightAttach">2</property>
                 <property name="AutoSize">False</property>
@@ -5965,6 +5990,7 @@
             <child>
               <widget class="Gtk.Label" id="label4">
                 <property name="MemberName" />
+                <property name="Xalign">1</property>
                 <property name="LabelProp" translatable="yes">Статья дохода по умолчанию:</property>
               </widget>
               <packing>
@@ -5984,11 +6010,31 @@
             <child>
               <widget class="Gtk.Label" id="label5">
                 <property name="MemberName" />
+                <property name="Xalign">1</property>
                 <property name="LabelProp" translatable="yes">Расчет количества по метражу:</property>
               </widget>
               <packing>
                 <property name="TopAttach">4</property>
                 <property name="BottomAttach">5</property>
+                <property name="AutoSize">True</property>
+                <property name="XOptions">Fill</property>
+                <property name="YOptions">Fill</property>
+                <property name="XExpand">False</property>
+                <property name="XFill">True</property>
+                <property name="XShrink">False</property>
+                <property name="YExpand">False</property>
+                <property name="YFill">True</property>
+                <property name="YShrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Label" id="label6">
+                <property name="MemberName" />
+                <property name="LabelProp" translatable="yes">Частичное начисление при неполном месяце:</property>
+              </widget>
+              <packing>
+                <property name="TopAttach">5</property>
+                <property name="BottomAttach">6</property>
                 <property name="AutoSize">True</property>
                 <property name="XOptions">Fill</property>
                 <property name="YOptions">Fill</property>

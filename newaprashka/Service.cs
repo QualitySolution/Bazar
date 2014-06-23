@@ -2,11 +2,13 @@ using System;
 using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
+using NLog;
 
 namespace bazar
 {
 	public partial class Service : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewService;
 		int Serviceid;
 		TreeIter iter;
@@ -32,31 +34,31 @@ namespace bazar
 				
 				cmd.Parameters.AddWithValue("@id", id);
 				
-				MySqlDataReader rdr = cmd.ExecuteReader();
-				
-				rdr.Read();
-				
-				labelID.Text = rdr["id"].ToString();
-				entryName.Text = rdr["name"].ToString();
-				if(rdr["units_id"] != DBNull.Value)
+				using(MySqlDataReader rdr = cmd.ExecuteReader())
 				{
-					ListStoreWorks.SearchListStore((ListStore)comboUnits.Model, rdr.GetInt32("units_id"), out iter);
-					comboUnits.SetActiveIter(iter);
+					rdr.Read();
+					
+					labelID.Text = rdr["id"].ToString();
+					entryName.Text = rdr["name"].ToString();
+					if(rdr["units_id"] != DBNull.Value)
+					{
+						ListStoreWorks.SearchListStore((ListStore)comboUnits.Model, rdr.GetInt32("units_id"), out iter);
+						comboUnits.SetActiveIter(iter);
+					}
+					if(rdr["income_id"] != DBNull.Value)
+					{
+						ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
+						comboIncomeItem.SetActiveIter(iter);
+					}
+					checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
+					checkIncomplete.Active= Boolean.Parse(rdr["incomplete_month"].ToString());
 				}
-				if(rdr["income_id"] != DBNull.Value)
-				{
-					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
-					comboIncomeItem.SetActiveIter(iter);
-				}
-				checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
-				rdr.Close();
 				MainClass.StatusMessage("Ok");
 				this.Title = entryName.Text;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о услуге!");
+				logger.ErrorException ("Ошибка получения информации о услуге!", ex);
 				QSMain.ErrorMessage(this,ex);
 			}
 			TestCanSave();
@@ -74,13 +76,13 @@ namespace bazar
 			string sql;
 			if(NewService)
 			{
-				sql = "INSERT INTO services (name, units_id, income_id, by_area) " +
-					"VALUES (@name, @units_id, @income_id, @by_area)";
+				sql = "INSERT INTO services (name, units_id, income_id, by_area, incomplete_month) " +
+					"VALUES (@name, @units_id, @income_id, @by_area, @incomplete_month)";
 			}
 			else
 			{
 				sql = "UPDATE services SET name = @name, units_id = @units_id, income_id = @income_id, " +
-						"by_area = @by_area WHERE id = @id";
+					"by_area = @by_area, incomplete_month = @incomplete_month WHERE id = @id";
 			}
 			MainClass.StatusMessage("Запись услуги...");
 			try 
@@ -96,14 +98,14 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@income_id", DBNull.Value);
 				cmd.Parameters.AddWithValue("by_area", checkArea.Active);
+				cmd.Parameters.AddWithValue("incomplete_month", checkIncomplete.Active);
 				cmd.ExecuteNonQuery();
 				MainClass.StatusMessage("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи услуги!");
+				logger.ErrorException ("Ошибка записи услуги!", ex);
 				QSMain.ErrorMessage(this,ex);
 			}
 		}
