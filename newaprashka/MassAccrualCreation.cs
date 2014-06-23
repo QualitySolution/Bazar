@@ -2,16 +2,30 @@ using System;
 using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
+using NLog;
 
 namespace bazar
 {
 	public partial class MassAccrualCreation : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		Gtk.ListStore ContractsListStore;
 		Gtk.TreeModelFilter ContractsFilter;
 
 		bool ItemsSelected;
 		int SelectedItems;
+
+		private enum ContractsCol{
+			selected,
+			id,
+			number,
+			place,
+			lessee,
+			end_date,
+			sum_text,
+			sum,
+			accrual_exist
+		};
 
 		public MassAccrualCreation ()
 		{
@@ -26,17 +40,15 @@ namespace bazar
 			CellRendererToggle CellSelect = new CellRendererToggle();
 			CellSelect.Activatable = true;
 			CellSelect.Toggled += onCellSelectToggled;
-			TreeViewColumn SelectColumn = new TreeViewColumn("Выбор", CellSelect, "active", 0);
+			TreeViewColumn SelectColumn = new TreeViewColumn("Выбор", CellSelect, "active", (int)ContractsCol.selected);
 			SelectColumn.SetCellDataFunc (CellSelect, new Gtk.TreeCellDataFunc (RenderSelectColumn));
 
 			treeviewContracts.AppendColumn(SelectColumn);
-			treeviewContracts.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 2);
-			treeviewContracts.AppendColumn("Место", new Gtk.CellRendererText (), "text", 3);
-			treeviewContracts.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 4);
-			treeviewContracts.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", 5);
-			treeviewContracts.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 6);
-			// Сумма цифровое -7
-			// Существует ли уже начисление -8
+			treeviewContracts.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)ContractsCol.number);
+			treeviewContracts.AppendColumn("Место", new Gtk.CellRendererText (), "text", (int)ContractsCol.place);
+			treeviewContracts.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", (int)ContractsCol.lessee);
+			treeviewContracts.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", (int)ContractsCol.end_date);
+			treeviewContracts.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", (int)ContractsCol.sum_text);
 			
 			ContractsFilter = new Gtk.TreeModelFilter (ContractsListStore, null);
 			ContractsFilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeContracts);
@@ -49,11 +61,11 @@ namespace bazar
 
 		private void RenderSelectColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
-			if((bool) model.GetValue (iter, 8))
+			if((bool) model.GetValue (iter, (int)ContractsCol.accrual_exist))
 				(cell as Gtk.CellRendererToggle).Visible = false;
 			else
 				(cell as Gtk.CellRendererToggle).Visible = true;
-			(cell as Gtk.CellRendererToggle).Active = (bool) model.GetValue (iter, 0);
+			(cell as Gtk.CellRendererToggle).Active = (bool) model.GetValue (iter, (int)ContractsCol.selected);
 		}
 
 		void onCellSelectToggled(object o, ToggledArgs args) 
@@ -63,8 +75,8 @@ namespace bazar
 			if (ContractsFilter.GetIter (out filteriter, new TreePath(args.Path))) 
 			{
 				iter = ContractsFilter.ConvertIterToChildIter (filteriter);
-				bool old = (bool) ContractsListStore.GetValue(iter,0);
-				ContractsListStore.SetValue(iter, 0, !old);
+				bool old = (bool) ContractsListStore.GetValue(iter, (int)ContractsCol.selected);
+				ContractsListStore.SetValue(iter, (int)ContractsCol.selected, !old);
 			}
 			CalculateSelected ();
 		}
@@ -78,22 +90,22 @@ namespace bazar
 			bool filterPlaceN = false;
 			string cellvalue;
 
-			if(model.GetValue (iter, 1) == null)
+			if(model.GetValue (iter, (int)ContractsCol.id) == null)
 				return false;
 
-			if (model.GetValue (iter, 4) != null)
+			if (model.GetValue (iter, (int)ContractsCol.lessee) != null)
 			{
-				cellvalue  = model.GetValue (iter, 4).ToString();
+				cellvalue  = model.GetValue (iter, (int)ContractsCol.lessee).ToString();
 				filterLessee = cellvalue.IndexOf (entrySearch.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 			}
-			if (model.GetValue (iter, 2) != null)
+			if (model.GetValue (iter, (int)ContractsCol.number) != null)
 			{
-				cellvalue  = model.GetValue (iter, 2).ToString();
+				cellvalue  = model.GetValue (iter, (int)ContractsCol.number).ToString();
 				filterNumber = cellvalue.IndexOf (entrySearch.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 			}
-			if (model.GetValue (iter, 3) != null)
+			if (model.GetValue (iter, (int)ContractsCol.place) != null)
 			{
-				cellvalue  = model.GetValue (iter, 3).ToString();
+				cellvalue  = model.GetValue (iter, (int)ContractsCol.place).ToString();
 				filterPlaceN = cellvalue.IndexOf (entrySearch.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 			}
 			return (filterLessee || filterNumber || filterPlaceN);
@@ -107,10 +119,10 @@ namespace bazar
 
 			foreach(object[] row in ContractsListStore)
 			{
-				if((bool) row[0] == true)
+				if((bool) row[(int)ContractsCol.selected] == true)
 				{
 					Count++;
-					Sum += Convert.ToDecimal(row[7]);
+					Sum += Convert.ToDecimal(row[(int)ContractsCol.sum]);
 					ItemsSelected = true;
 				}
 			}
@@ -126,11 +138,11 @@ namespace bazar
 			if(ContractsFilter.GetIterFirst(out filteriter))
 			{
 				iter = ContractsFilter.ConvertIterToChildIter (filteriter);
-				ContractsListStore.SetValue (iter, 0, checkAll.Active && !(bool)ContractsListStore.GetValue(iter, 8));
+				ContractsListStore.SetValue (iter, (int)ContractsCol.selected, checkAll.Active && !(bool)ContractsListStore.GetValue(iter, (int)ContractsCol.accrual_exist));
 				while (ContractsFilter.IterNext(ref filteriter)) 
 				{
 					iter = ContractsFilter.ConvertIterToChildIter (filteriter);
-					ContractsListStore.SetValue (iter, 0, checkAll.Active && !(bool)ContractsListStore.GetValue(iter, 8));
+					ContractsListStore.SetValue (iter, (int)ContractsCol.selected, checkAll.Active && !(bool)ContractsListStore.GetValue(iter, (int)ContractsCol.accrual_exist));
 				}
 			}
 			CalculateSelected ();
@@ -235,11 +247,11 @@ namespace bazar
 
 				foreach (object[] row in ContractsListStore)
 				{
-					if( !(bool) row[0])
+					if( !(bool) row[(int)ContractsCol.selected])
 						continue;
 					string sql = "SELECT MIN(count * price) FROM contract_pays WHERE contract_id = @id";
 					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@id", row[1]);
+					cmd.Parameters.AddWithValue("@id", row[(int)ContractsCol.id]);
 					object Result = cmd.ExecuteScalar();
 					bool NotComplete = true;
 					if (Result != DBNull.Value)
@@ -250,7 +262,7 @@ namespace bazar
 
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				
-					cmd.Parameters.AddWithValue("@contract_id", row[1]);
+					cmd.Parameters.AddWithValue("@contract_id", row[(int)ContractsCol.id]);
 					cmd.Parameters.AddWithValue("@month", Month);
 					cmd.Parameters.AddWithValue("@year", Year);
 					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
@@ -263,7 +275,7 @@ namespace bazar
 						"SELECT @accrual_id, service_id, cash_id, count, price FROM contract_pays WHERE contract_id = @contract";
 
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@contract", row[1]);
+					cmd.Parameters.AddWithValue("@contract", row[(int)ContractsCol.id]);
 					cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
 					cmd.ExecuteNonQuery ();
 
@@ -277,8 +289,7 @@ namespace bazar
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи начисления!");
+				logger.ErrorException ("Ошибка записи начисления!", ex);
 				QSMain.ErrorMessage(this,ex);
 			}
 		}
