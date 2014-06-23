@@ -345,14 +345,28 @@ Section "MS .NET Framework ${MIN_NET_MAJOR}.${MIN_NET_MINOR}" SecFramework
  
 SectionEnd
 
-Section "GTK# 2.12.25" SecGTK
-	SectionIn RO
-; Install 2.12.25
-  File "gtk-sharp-2.12.25.msi"
-  ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.25.msi"  /passive'
+Section "GTK# 2.12.21" SecGTK
+  SectionIn RO
+  
+  ; Test 2.12.25
+  System::Call "msi::MsiQueryProductStateA(t '{889E7D77-2A98-4020-83B1-0296FA1BDE8A}') i.r0"
+  StrCmp $0 "5" GTKDone
+  DetailPrint "GTK# 2.12.25 не установлен"
+
+  ; Test 2.12.21
+  System::Call "msi::MsiQueryProductStateA(t '{71109D19-D8C1-437D-A6DA-03B94F5187FB}') i.r0"
+  StrCmp $0 "5" GTKDone
+  DetailPrint "GTK# 2.12.21 не установлен"
+
+; Install 2.12.21
+  DetailPrint "Запуск установщика GTK# 2.12.21"
+  File "gtk-sharp-2.12.21.msi"
+  ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.21.msi"  /passive'
 
 ; Setup Gtk style
   ${ConfigWrite} "$PROGRAMFILES\GtkSharp\2.12\share\themes\MS-Windows\gtk-2.0\gtkrc" "gtk-button-images =" "1" $R0
+
+  GTKDone:
 SectionEnd
 
 Section "Ярлык на рабочий стол" SecDesktop
@@ -403,6 +417,6 @@ Section "Uninstall"
 
   ; Remove GTK#
   MessageBox MB_YESNO "Удалить библиотеки GTK#? Они были установлены для ${PRODUCT_NAME}, но могут использоваться другими приложениями." /SD IDYES IDNO endGTK
-    ExecWait '"msiexec" /X{06AF6533-F201-47C0-8675-AAAE5CB81B41} /passive'
+    ExecWait '"msiexec" /X{71109D19-D8C1-437D-A6DA-03B94F5187FB} /passive'
   endGTK:
 SectionEnd
