@@ -24,7 +24,8 @@ namespace bazar
 			end_date,
 			sum_text,
 			sum,
-			accrual_exist
+			accrual_exist,
+			active_days
 		};
 
 		public MassAccrualCreation ()
@@ -35,7 +36,7 @@ namespace bazar
 
 			//Создаем таблицу "Договора"
 			ContractsListStore = new Gtk.ListStore (typeof (bool), typeof(int), typeof (string), typeof (string), typeof (string), typeof (string),
-			                                       typeof (string), typeof (decimal), typeof (bool));
+			                                        typeof (string), typeof (decimal), typeof (bool), typeof(int));
 
 			CellRendererToggle CellSelect = new CellRendererToggle();
 			CellSelect.Activatable = true;
@@ -113,7 +114,7 @@ namespace bazar
 
 		void CalculateSelected()
 		{
-			int Count = 0;
+			int Count = 0, incomplete = 0;
 			decimal Sum = 0;
 			ItemsSelected = false;
 
@@ -124,10 +125,14 @@ namespace bazar
 					Count++;
 					Sum += Convert.ToDecimal(row[(int)ContractsCol.sum]);
 					ItemsSelected = true;
+					if ((int)row [(int)ContractsCol.active_days] != -1)
+						incomplete++;
 				}
 			}
-
-			labelSelected.LabelProp = String.Format ( "Выбрано {0} договоров на сумму {1:C} ", Count, Sum);
+			if(incomplete > 0)
+				labelSelected.LabelProp = String.Format ( "Выбрано {0} договоров, {2} с частичным начислением", Count, Sum, incomplete);
+			else
+				labelSelected.LabelProp = String.Format ( "Выбрано {0} договоров на сумму {1:C} ", Count, Sum);
 			SelectedItems = Count;
 			TestCanSave ();
 		}
@@ -176,45 +181,40 @@ namespace bazar
 			cmd.Parameters.AddWithValue("@end", EndOfMonth);
 			cmd.Parameters.AddWithValue("@month", Month);
 			cmd.Parameters.AddWithValue("@year", Year);
-			MySqlDataReader rdr = cmd.ExecuteReader();
 
-			bool cancaled;
-			String End_date;
-			decimal sum;
 			decimal Total = 0m;
 			int Count = 0;
-			bool AccrualExist;
-
-			ContractsListStore.Clear();
-			while (rdr.Read())
+			using (MySqlDataReader rdr = cmd.ExecuteReader ()) 
 			{
-				cancaled = (rdr["cancel_date"] != DBNull.Value);
-				if(cancaled)
+				DateTime endDate;
+				decimal sum;
+				bool AccrualExist;
+
+				ContractsListStore.Clear ();
+				while (rdr.Read ()) 
 				{
-					End_date = DateTime.Parse(rdr["cancel_date"].ToString()).ToShortDateString();
+					endDate = DBWorks.GetDateTime (rdr, "cancel_date", rdr.GetDateTime ("end_date"));
+					int activeDays = (EndOfMonth > endDate ? endDate : EndOfMonth).Subtract 
+						(BeginOfMonth > rdr.GetDateTime ("start_date") ? BeginOfMonth : rdr.GetDateTime ("start_date")).Days + 1;
+					if (DateTime.DaysInMonth (Year, Month) == activeDays)
+						activeDays = -1;
+					sum = DBWorks.GetDecimal (rdr, "sum", 0m);
+					Total += sum;
+					Count++;
+					AccrualExist = (rdr ["exist_accrual"] != DBNull.Value);
+					ContractsListStore.AppendValues (false,
+					                               rdr.GetInt32 ("id"),
+					                               rdr ["number"].ToString (),
+					                               rdr ["type"].ToString () + " - " + rdr ["place_no"].ToString (),
+					                               rdr ["lessee"].ToString (),
+					                                 endDate.ToShortDateString (),
+					                               String.Format ("{0:C}", sum),
+					                               sum,
+					                                 AccrualExist,
+					                                 activeDays
+					                                );
 				}
-				else
-				{
-					End_date = DateTime.Parse( rdr["end_date"].ToString ()).ToShortDateString();
-				}
-				if(rdr["sum"] != DBNull.Value)
-					sum = rdr.GetDecimal ("sum");
-				else
-					sum = 0m;
-				Total += sum;
-				Count++;
-				AccrualExist = (rdr["exist_accrual"] != DBNull.Value);
-				ContractsListStore.AppendValues(false,
-				                                rdr.GetInt32 ("id"),
-				                               rdr["number"].ToString(),
-				                               rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),
-				                               rdr["lessee"].ToString(),
-				                               End_date,
-				                               String.Format ("{0:C}", sum),
-				                                sum,
-				                                AccrualExist);
 			}
-			rdr.Close();
 
 			labelTotal.LabelProp = String.Format ("Всего {0} договоров на {1:C} ", Count, Total);
 			CalculateSelected ();
@@ -271,13 +271,30 @@ namespace bazar
 
 					long NewAccrual_id = cmd.LastInsertedId;
 
-					sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
+					if((int)row[(int)ContractsCol.active_days] > 0)
+						sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
+							"SELECT @accrual_id, service_id, cash_id, count, price FROM contract_pays " +
+							"LEFT JOIN services ON services.id = service_id WHERE contract_id = @contract AND services.incomplete_month = '0'";
+					else
+						sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
 						"SELECT @accrual_id, service_id, cash_id, count, price FROM contract_pays WHERE contract_id = @contract";
 
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					cmd.Parameters.AddWithValue("@contract", row[(int)ContractsCol.id]);
 					cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
 					cmd.ExecuteNonQuery ();
+
+					if((int)row[(int)ContractsCol.active_days] > 0)
+					{
+						sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
+							"SELECT @accrual_id, service_id, cash_id, (count * @day_factor), price FROM contract_pays " +
+							"LEFT JOIN services ON services.id = service_id WHERE contract_id = @contract AND services.incomplete_month = '1'";
+						cmd = new MySqlCommand(sql, QSMain.connectionDB);
+						cmd.Parameters.AddWithValue("@contract", row[(int)ContractsCol.id]);
+						cmd.Parameters.AddWithValue("@day_factor", Convert.ToDouble (row[(int)ContractsCol.active_days]) / DateTime.DaysInMonth (Year, Month));
+						cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
+						cmd.ExecuteNonQuery ();
+					}
 
 					progressOperation.Adjustment.Value++;
 					while (GLib.MainContext.Pending())
