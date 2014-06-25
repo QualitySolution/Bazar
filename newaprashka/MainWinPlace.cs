@@ -8,6 +8,22 @@ public partial class MainWindow : Gtk.Window
 {
 	Gtk.ListStore PlacesListStore;
 	Gtk.TreeModelFilter Placefilter;
+	Gtk.TreeModelSort PlaceSort;
+
+	private enum PlaceCol {
+		type_place_id,
+		type_place,
+		place_no,
+		area_text,
+		lessee,
+		lessee_id,
+		contact,
+		contact_id,
+		contact_phones,
+		org,
+		org_id,
+		area
+	}
 
 	void PreparePlaces()
 	{
@@ -19,22 +35,27 @@ public partial class MainWindow : Gtk.Window
 		PlacesListStore = new Gtk.ListStore (typeof (int), typeof (string),typeof (string), typeof (string),
 		                                     typeof (string), typeof (int),typeof (string), typeof (int),
 		                                     typeof (string), typeof (string), typeof (int), typeof (double));
-		
-		//ID тип места - 0
-		treeviewPlaces.AppendColumn ("Тип", new Gtk.CellRendererText (), "text", 1);
-		treeviewPlaces.AppendColumn ("Номер", new Gtk.CellRendererText (), "text", 2);
-		treeviewPlaces.AppendColumn ("Площадь", new Gtk.CellRendererText (), "text", 3);
-		treeviewPlaces.AppendColumn ("Арендатор", new Gtk.CellRendererText (), "text", 4);
-		//ID Арендатора - 5
-		treeviewPlaces.AppendColumn ("Контактное лицо", new Gtk.CellRendererText (), "text", 6);
-		//ID Контактного лица - 7
-		treeviewPlaces.AppendColumn ("Телефоны К.Л.", new Gtk.CellRendererText (), "text", 8);
-		treeviewPlaces.AppendColumn ("Организация", new Gtk.CellRendererText (), "text", 9);
-		//ID организации - 10
+
+		treeviewPlaces.AppendColumn ("Тип", new Gtk.CellRendererText (), "text", (int)PlaceCol.type_place);
+		treeviewPlaces.AppendColumn ("Номер", new Gtk.CellRendererText (), "text", (int)PlaceCol.place_no);
+		treeviewPlaces.AppendColumn ("Площадь", new Gtk.CellRendererText (), "text", (int)PlaceCol.area_text);
+		treeviewPlaces.AppendColumn ("Арендатор", new Gtk.CellRendererText (), "text", (int)PlaceCol.lessee);
+		treeviewPlaces.AppendColumn ("Контактное лицо", new Gtk.CellRendererText (), "text", (int)PlaceCol.contact);
+		treeviewPlaces.AppendColumn ("Телефоны К.Л.", new Gtk.CellRendererText (), "text", (int)PlaceCol.contact_phones);
+		treeviewPlaces.AppendColumn ("Организация", new Gtk.CellRendererText (), "text", (int)PlaceCol.org);
 		
 		Placefilter = new Gtk.TreeModelFilter (PlacesListStore, null);
 		Placefilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreePlace);
-		treeviewPlaces.Model = Placefilter;
+		PlaceSort = new TreeModelSort (Placefilter);
+		PlaceSort.SetSortFunc ((int)PlaceCol.place_no, PlaceNumberSortFunction);
+		treeviewPlaces.Model = PlaceSort;
+		treeviewPlaces.Columns [0].SortColumnId = (int)PlaceCol.type_place;
+		treeviewPlaces.Columns [1].SortColumnId = (int)PlaceCol.place_no;
+		treeviewPlaces.Columns [2].SortColumnId = (int)PlaceCol.area;
+		treeviewPlaces.Columns [3].SortColumnId = (int)PlaceCol.lessee;
+		treeviewPlaces.Columns [4].SortColumnId = (int)PlaceCol.contact;
+		treeviewPlaces.Columns [5].SortColumnId = (int)PlaceCol.contact_phones;
+		treeviewPlaces.Columns [6].SortColumnId = (int)PlaceCol.org;
 		treeviewPlaces.ShowAll();
 	}
 
@@ -69,46 +90,26 @@ public partial class MainWindow : Gtk.Window
 		}
 		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
-		MySqlDataReader rdr = cmd.ExecuteReader();
-		int lessee_id;
-		int contact_person_id;
-		int org_id;
-		double area;
-		
-		PlacesListStore.Clear();
-		while (rdr.Read())
+		using( MySqlDataReader rdr = cmd.ExecuteReader()) 
 		{
-			if(rdr["lessee_id"] != DBNull.Value)
-				lessee_id =  rdr.GetInt32("lessee_id");
-			else
-				lessee_id = -1;
-			if(rdr["contact_person_id"] != DBNull.Value)
-				contact_person_id = rdr.GetInt32 ("contact_person_id");
-			else
-				contact_person_id = -1;
-			if(rdr["org_id"] != DBNull.Value)
-				org_id = rdr.GetInt32("org_id");
-			else
-				org_id = -1;
-			if(rdr["area"] != DBNull.Value)
-				area = Convert.ToDouble(rdr["area"].ToString());
-			else
-				area = 0;
-			PlacesListStore.AppendValues(int.Parse(rdr["type_id"].ToString()),
-			                             rdr["type"].ToString(),
-			                             rdr["place_no"].ToString(),
-			                             rdr["area"].ToString(),
-			                             rdr["lessee"].ToString(),
-			                             lessee_id,
-			                             rdr["contact"].ToString(),
-			                             contact_person_id,
-			                             rdr["telephones"].ToString(),
-			                             rdr["organization"].ToString(),
-			                             org_id,
-			                             area);
+			PlacesListStore.Clear ();
+			while (rdr.Read ()) 
+			{
+				PlacesListStore.AppendValues (rdr.GetInt32 ("type_id"),
+				                            rdr ["type"].ToString (),
+				                            rdr ["place_no"].ToString (),
+				                            rdr ["area"].ToString (),
+				                            rdr ["lessee"].ToString (),
+				                              DBWorks.GetInt (rdr, "lessee_id", -1),
+				                            rdr ["contact"].ToString (),
+				                              DBWorks.GetInt (rdr, "contact_person_id", -1),
+				                            rdr ["telephones"].ToString (),
+				                            rdr ["organization"].ToString (),
+				                              DBWorks.GetInt (rdr, "org_id", -1),
+				                              DBWorks.GetDouble (rdr, "area", 0)
+				                             );
+			}
 		}
-		rdr.Close();
-		
 		MainClass.StatusMessage("Ok");
 		
 		bool isSelect = treeviewPlaces.Selection.CountSelectedRows() == 1;
@@ -134,23 +135,31 @@ public partial class MainWindow : Gtk.Window
 		if(model.GetValue (iter, 1) == null)
 			return false;
 		
-		if (entryPlaceNum.Text != "" && model.GetValue (iter, 2) != null)
+		if (entryPlaceNum.Text != "" && model.GetValue (iter, (int)PlaceCol.place_no) != null)
 		{
-			cellvalue  = model.GetValue (iter, 2).ToString();
+			cellvalue  = model.GetValue (iter, (int)PlaceCol.place_no).ToString();
 			filterNum = cellvalue.IndexOf (entryPlaceNum.Text) > -1;
 		}
-		if (entryPlaceLess.Text != "" && model.GetValue (iter, 4) != null)
+		if (entryPlaceLess.Text != "" && model.GetValue (iter, (int)PlaceCol.lessee) != null)
 		{
-			cellvalue  = model.GetValue (iter, 4).ToString();
+			cellvalue  = model.GetValue (iter, (int)PlaceCol.lessee).ToString();
 			filterLes = cellvalue.IndexOf (entryPlaceLess.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryPlaceContact.Text != "" && model.GetValue (iter, 6) != null)
+		if (entryPlaceContact.Text != "" && model.GetValue (iter, (int)PlaceCol.contact) != null)
 		{
-			cellvalue  = model.GetValue (iter, 6).ToString();
+			cellvalue  = model.GetValue (iter, (int)PlaceCol.contact).ToString();
 			filterCont = cellvalue.IndexOf (entryPlaceContact.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 		
 		return (filterNum && filterLes && filterCont);
+	}
+
+	private int PlaceNumberSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		string oa = (string) model.GetValue(a, (int)PlaceCol.place_no);
+		string ob = (string) model.GetValue(b, (int)PlaceCol.place_no);
+
+		return StringWorks.NaturalStringComparer.Compare (oa, ob);
 	}
 
 	protected virtual void OnEntryPlaceNumChanged (object sender, System.EventArgs e)
@@ -209,8 +218,8 @@ public partial class MainWindow : Gtk.Window
 		if(ItemSelected)
 		{
 			treeviewPlaces.Selection.GetSelected(out iter);
-			setLessee = Convert.ToInt32(Placefilter.GetValue(iter,5)) > 0;
-			setContact = Convert.ToInt32(Placefilter.GetValue(iter,7)) > 0;
+			setLessee = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.lessee_id)) > 0;
+			setContact = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.contact_id)) > 0;
 		}
 		Gtk.Menu popupBox = new Gtk.Menu();
 		Gtk.MenuItem MenuItemOpenPlace = new MenuItem("Открыть торговое место");
@@ -245,10 +254,10 @@ public partial class MainWindow : Gtk.Window
 		TreeIter iter;
 		
 		treeviewPlaces.Selection.GetSelected(out iter);
-		place = Placefilter.GetValue(iter,2).ToString ();
-		type = Convert.ToInt32(Placefilter.GetValue(iter,0));
+		place = PlaceSort.GetValue(iter, (int)PlaceCol.place_no).ToString ();
+		type = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.type_place_id));
 		Place winPlace = new Place(false);
-		winPlace.PlaceFill(type,place);
+		winPlace.PlaceFill(type, place);
 		winPlace.Show();
 		result = winPlace.Run();
 		winPlace.Destroy();
@@ -264,7 +273,7 @@ public partial class MainWindow : Gtk.Window
 		TreeIter iter;
 		
 		treeviewPlaces.Selection.GetSelected(out iter);
-		itemid = Convert.ToInt32(Placefilter.GetValue(iter,5));
+		itemid = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.lessee_id));
 		lessee winLessee = new lessee();
 		winLessee.LesseeFill(itemid);
 		winLessee.Show();
@@ -282,7 +291,7 @@ public partial class MainWindow : Gtk.Window
 		TreeIter iter;
 		
 		treeviewPlaces.Selection.GetSelected(out iter);
-		itemid = Convert.ToInt32(Placefilter.GetValue(iter,7));
+		itemid = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.contact_id));
 		Contact winContact = new Contact();
 		winContact.ContactFill(itemid);
 		winContact.Show();
@@ -306,10 +315,10 @@ public partial class MainWindow : Gtk.Window
 		
 		if(Placefilter.GetIterFirst(out iter))
 		{
-			AreaSum = (double)Placefilter.GetValue(iter,11);
+			AreaSum = (double)Placefilter.GetValue(iter, (int)PlaceCol.area);
 			while (Placefilter.IterNext(ref iter)) 
 			{
-				AreaSum += (double)Placefilter.GetValue(iter,11);
+				AreaSum += (double)Placefilter.GetValue(iter, (int)PlaceCol.area);
 			}
 		}
 		labelSum.LabelProp = "Суммарная площадь: " + AreaSum.ToString() + " м<sup>2</sup>";

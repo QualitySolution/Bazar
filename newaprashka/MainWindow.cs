@@ -110,8 +110,8 @@ public partial class MainWindow : Gtk.Window
 		switch (notebookMain.CurrentPage) {
 		case 0:
 			treeviewPlaces.Selection.GetSelected(out iter);
-			place = Placefilter.GetValue(iter,2).ToString ();
-			type = Convert.ToInt32(Placefilter.GetValue(iter,0));
+			place = PlaceSort.GetValue(iter, (int)PlaceCol.place_no).ToString ();
+			type = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.type_place_id));
 			Place winPlace = new Place(false);
 			winPlace.PlaceFill(type,place);
 			winPlace.Show();
@@ -122,7 +122,7 @@ public partial class MainWindow : Gtk.Window
 		break;
 		case 1:
 			treeviewLessees.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(Lesseesfilter.GetValue(iter,0));
+			itemid = Convert.ToInt32(LesseesSort.GetValue(iter, (int)LesseesCol.id));
 			lessee winLessee = new lessee();
 			winLessee.LesseeFill(itemid);
 			winLessee.Show();
@@ -133,7 +133,7 @@ public partial class MainWindow : Gtk.Window
 		break;
 		case 2:
 			treeviewContract.Selection.GetSelected(out iter);
-			itemid = (int) Contractfilter.GetValue(iter, 0);
+			itemid = (int) ContractSort.GetValue(iter, (int)ContractCol.id);
 			Contract winContract = new Contract();
 			winContract.ContractFill(itemid);
 			winContract.Show();
@@ -144,7 +144,7 @@ public partial class MainWindow : Gtk.Window
 			break;
 		case 3:
 			treeviewAccrual.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(Accrualfilter.GetValue(iter,0));
+			itemid = Convert.ToInt32(AccrualSort.GetValue(iter, (int)AccrualCol.id));
 			Accrual winAccrual = new Accrual();
 			winAccrual.AccrualFill(itemid);
 			winAccrual.Show();
@@ -158,7 +158,7 @@ public partial class MainWindow : Gtk.Window
 			{
 			case 0:
 				treeviewIncome.Selection.GetSelected(out iter);
-				itemid = Convert.ToInt32(CashIncomeFilter.GetValue(iter,0));
+				itemid = Convert.ToInt32(CashIncomeSort.GetValue(iter, (int)CashIncomeCol.id));
 				IncomeSlip winIncome = new IncomeSlip();
 				winIncome.SlipFill(itemid, false);
 				winIncome.Show();
@@ -172,7 +172,7 @@ public partial class MainWindow : Gtk.Window
 				break;
 			case 1:
 				treeviewExpense.Selection.GetSelected(out iter);
-				itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
+				itemid = Convert.ToInt32(CashExpenseSort.GetValue(iter, (int)CashExpenseCol.id));
 				ExpenseSlip winExpense = new  ExpenseSlip();
 				winExpense.SlipFill(itemid, false);
 				winExpense.Show();
@@ -186,7 +186,7 @@ public partial class MainWindow : Gtk.Window
 				break;
 			case 2:
 				treeviewAdvance.Selection.GetSelected(out iter);
-				itemid = Convert.ToInt32(CashAdvanceFilter.GetValue(iter,0));
+				itemid = Convert.ToInt32(CashAdvanceSort.GetValue(iter, (int)CashAdvanceCol.id));
 				AdvanceStatement winAdvance = new AdvanceStatement();
 				winAdvance.StatementFill(itemid, false);
 				winAdvance.Show();
@@ -451,26 +451,26 @@ public partial class MainWindow : Gtk.Window
 		switch (notebookMain.CurrentPage) {
 		case 0:
 			treeviewPlaces.Selection.GetSelected(out iter);
-			place = Placefilter.GetValue(iter,2).ToString ();
-			type = Convert.ToInt32(Placefilter.GetValue(iter,0));
+			place = PlaceSort.GetValue(iter, (int)PlaceCol.place_no).ToString ();
+			type = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.type_place_id));
 			winDelete.RunDeletion("places", type, place);
 			UpdatePlaces();
 		break;
 		case 1:
 			treeviewLessees.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(Lesseesfilter.GetValue(iter,0));
+			itemid = Convert.ToInt32(LesseesSort.GetValue(iter, (int)LesseesCol.id));
 			winDelete.RunDeletion("lessees", itemid);
 			UpdateLessees();
 		break;
 		case 2:
 			treeviewContract.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(Contractfilter.GetValue(iter, 0));
+			itemid = Convert.ToInt32(ContractSort.GetValue(iter, (int)ContractCol.id));
 			winDelete.RunDeletion("contracts", itemid);
 			UpdateContract();
 		break;
 		case 3:
 			treeviewAccrual.Selection.GetSelected(out iter);
-			itemid = Convert.ToInt32(Accrualfilter.GetValue(iter,0));
+			itemid = Convert.ToInt32(AccrualSort.GetValue(iter, (int)AccrualCol.id));
 			winDelete.RunDeletion("accrual", itemid);
 			UpdateAccrual();
 			break;
@@ -479,19 +479,19 @@ public partial class MainWindow : Gtk.Window
 			{
 			case 0:
 				treeviewIncome.Selection.GetSelected(out iter);
-				itemid = Convert.ToInt32(CashIncomeFilter.GetValue(iter,0));
+				itemid = Convert.ToInt32(CashIncomeSort.GetValue(iter, (int)CashIncomeCol.id));
 				winDelete.RunDeletion("credit_slips", itemid);
 				CalculateTotalCash();
 				break;
 			case 1:
 				treeviewExpense.Selection.GetSelected(out iter);
-				itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
+				itemid = Convert.ToInt32(CashExpenseSort.GetValue(iter, (int)CashExpenseCol.id));
 				winDelete.RunDeletion("debit_slips", itemid);
 				CalculateTotalCash();
 				break;
 			case 2:
 				treeviewAdvance.Selection.GetSelected(out iter);
-				itemid = Convert.ToInt32(CashAdvanceFilter.GetValue(iter,0));
+				itemid = Convert.ToInt32(CashAdvanceSort.GetValue(iter, (int)CashAdvanceCol.id));
 				winDelete.RunDeletion("advance", itemid);
 				break;
 			}

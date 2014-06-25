@@ -8,6 +8,21 @@ public partial class MainWindow : Gtk.Window
 {
 	Gtk.ListStore ContractListStore;
 	Gtk.TreeModelFilter Contractfilter;
+	Gtk.TreeModelSort ContractSort;
+
+	private enum ContractCol{
+		id,
+		active,
+		number,
+		org_id,
+		org,
+		place_type_id,
+		place_no,
+		place_text,
+		lessee_id,
+		lessee,
+		end_date
+	}
 
 	void PrepareContract()
 	{
@@ -26,19 +41,28 @@ public partial class MainWindow : Gtk.Window
 		                                       typeof (string), //7 - place
 		                                       typeof (int), 	//8 - id leesse
 		                                       typeof (string),	//9 - lesse
-		                                       typeof (string)	//10 - end date
+		                                       typeof (DateTime)	//10 - end date
 		                                       );
 		
-		treeviewContract.AppendColumn("Актив.", new Gtk.CellRendererToggle (), "active", 1);
-		treeviewContract.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 2);
-		treeviewContract.AppendColumn("Организация", new Gtk.CellRendererText (), "text", 4);
-		treeviewContract.AppendColumn("Место", new Gtk.CellRendererText (), "text", 7);
-		treeviewContract.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 9);
-		treeviewContract.AppendColumn("Дата окончания", new Gtk.CellRendererText (), "text", 10);
+		treeviewContract.AppendColumn("Актив.", new Gtk.CellRendererToggle (), "active", (int)ContractCol.active);
+		treeviewContract.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)ContractCol.number);
+		treeviewContract.AppendColumn("Организация", new Gtk.CellRendererText (), "text", (int)ContractCol.org);
+		treeviewContract.AppendColumn("Место", new Gtk.CellRendererText (), "text", (int)ContractCol.place_no);
+		treeviewContract.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", (int)ContractCol.lessee);
+		treeviewContract.AppendColumn("Дата окончания", new Gtk.CellRendererText (), RenderContractEndDateColumn);
 
 		Contractfilter = new Gtk.TreeModelFilter (ContractListStore, null);
 		Contractfilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeContract);
-		treeviewContract.Model = Contractfilter;
+		ContractSort = new TreeModelSort (Contractfilter);
+		ContractSort.SetSortFunc ((int)ContractCol.number, ContractNumberSortFunction);
+		ContractSort.SetSortFunc ((int)ContractCol.place_no, ContractPlaceSortFunction);
+		ContractSort.SetSortFunc ((int)ContractCol.end_date, ContractEndDateSortFunction);
+		treeviewContract.Model = ContractSort;
+		treeviewContract.Columns [1].SortColumnId = (int)ContractCol.number;
+		treeviewContract.Columns [2].SortColumnId = (int)ContractCol.org;
+		treeviewContract.Columns [3].SortColumnId = (int)ContractCol.place_no;
+		treeviewContract.Columns [4].SortColumnId = (int)ContractCol.lessee;
+		treeviewContract.Columns [5].SortColumnId = (int)ContractCol.end_date;
 		treeviewContract.ShowAll();
 	}
 
@@ -85,7 +109,7 @@ public partial class MainWindow : Gtk.Window
 		int lessee_id;
 		int org_id;
 		bool active, cancaled;
-		String End_date;
+		DateTime endDate;
 		
 		ContractListStore.Clear();
 		while (rdr.Read())
@@ -102,12 +126,12 @@ public partial class MainWindow : Gtk.Window
 			if(cancaled)
 			{
 				active = ((DateTime)rdr["start_date"] <= DateTime.Now.Date && (DateTime)rdr["cancel_date"] >= DateTime.Now.Date);
-				End_date = DateTime.Parse(rdr["cancel_date"].ToString()).ToShortDateString();
+				endDate = rdr.GetDateTime ("cancel_date");
 			}
 			else
 			{
 				active = ((DateTime)rdr["start_date"] <= DateTime.Now.Date && (DateTime)rdr["end_date"] >= DateTime.Now.Date);
-				End_date = DateTime.Parse( rdr["end_date"].ToString ()).ToShortDateString();
+				endDate = rdr.GetDateTime ("end_date");
 			}
 			ContractListStore.AppendValues(rdr.GetInt32 ("id"),
 											active,
@@ -119,7 +143,7 @@ public partial class MainWindow : Gtk.Window
 			                             rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),
 			                             lessee_id,
 			                             rdr["lessee"].ToString(),
-			                             End_date);
+			                             endDate);
 		}
 		rdr.Close();
 		
@@ -139,25 +163,55 @@ public partial class MainWindow : Gtk.Window
 		bool filterPlaceN = true;
 		string cellvalue;
 		
-		if(model.GetValue (iter, 1) == null)
+		if(model.GetValue (iter, (int)ContractCol.id) == null)
 			return false;
 		
-		if (entryContractLessee.Text != "" && model.GetValue (iter, 9) != null)
+		if (entryContractLessee.Text != "" && model.GetValue (iter, (int)ContractCol.lessee) != null)
 		{
-			cellvalue  = model.GetValue (iter, 9).ToString();
+			cellvalue  = model.GetValue (iter, (int)ContractCol.lessee).ToString();
 			filterLessee = cellvalue.IndexOf (entryContractLessee.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryContractNumber.Text != "" && model.GetValue (iter, 2) != null)
+		if (entryContractNumber.Text != "" && model.GetValue (iter, (int)ContractCol.number) != null)
 		{
-			cellvalue  = model.GetValue (iter, 2).ToString();
+			cellvalue  = model.GetValue (iter, (int)ContractCol.number).ToString();
 			filterNumber = cellvalue.IndexOf (entryContractNumber.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryContractPlaceN.Text != "" && model.GetValue (iter, 6) != null)
+		if (entryContractPlaceN.Text != "" && model.GetValue (iter, (int)ContractCol.place_no) != null)
 		{
-			cellvalue  = model.GetValue (iter, 6).ToString();
+			cellvalue  = model.GetValue (iter, (int)ContractCol.place_no).ToString();
 			filterPlaceN = cellvalue.IndexOf (entryContractPlaceN.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 		return (filterLessee && filterNumber && filterPlaceN);
+	}
+
+	private int ContractPlaceSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		string oa = (string) model.GetValue(a, (int)ContractCol.place_no);
+		string ob = (string) model.GetValue(b, (int)ContractCol.place_no);
+
+		return StringWorks.NaturalStringComparer.Compare (oa, ob);
+	}
+
+	private int ContractNumberSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		string oa = (string) model.GetValue(a, (int)ContractCol.number);
+		string ob = (string) model.GetValue(b, (int)ContractCol.number);
+
+		return StringWorks.NaturalStringComparer.Compare (oa, ob);
+	}
+
+	private int ContractEndDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		DateTime oa = (DateTime) model.GetValue(a, (int)ContractCol.end_date);
+		DateTime ob = (DateTime) model.GetValue(b, (int)ContractCol.end_date);
+
+		return oa.CompareTo(ob);
+	}
+
+	private void RenderContractEndDateColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+	{
+		DateTime date = (DateTime) model.GetValue (iter, (int)ContractCol.end_date);
+		(cell as Gtk.CellRendererText).Text = date.ToShortDateString ();
 	}
 
 	protected void OnComboContractOrgChanged (object sender, EventArgs e)

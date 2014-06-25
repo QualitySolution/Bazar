@@ -8,10 +8,64 @@ public partial class MainWindow : Gtk.Window
 {
 	Gtk.ListStore CashIncomeListStore;
 	Gtk.TreeModelFilter CashIncomeFilter;
+	Gtk.TreeModelSort CashIncomeSort;
 	Gtk.ListStore CashExpenseListStore;
 	Gtk.TreeModelFilter CashExpenseFilter;
+	Gtk.TreeModelSort CashExpenseSort;
 	Gtk.ListStore CashAdvanceListStore;
 	Gtk.TreeModelFilter CashAdvanceFilter;
+	Gtk.TreeModelSort CashAdvanceSort;
+
+	private enum CashIncomeCol{
+		id,
+		date,
+		cash_id,
+		cash,
+		org_id,
+		org,
+		lessee_id,
+		lessee,
+		employer_id,
+		employer,
+		income_id,
+		income,
+		sum_text,
+		sum,
+		income_sum,
+		operation
+	}
+	private enum CashExpenseCol{
+		id,
+		date,
+		cash_id,
+		cash,
+		org_id,
+		org,
+		contractor_id,
+		contractor,
+		employer_id,
+		employer,
+		expense_id,
+		expense,
+		sum_text,
+		sum
+	}
+	private enum CashAdvanceCol{
+		id,
+		date,
+		cash_id,
+		cash,
+		org_id,
+		org,
+		contractor_id,
+		contractor,
+		employer_id,
+		employer,
+		expense_id,
+		expense,
+		sum_text,
+		sum
+	}
 
 	void PrepareCash()
 	{
@@ -21,7 +75,7 @@ public partial class MainWindow : Gtk.Window
 		
 		//Создаем таблицу "Приходных ордеров"
 		CashIncomeListStore = new Gtk.ListStore (typeof (int), // 0-id
-		                                         typeof (string), // 1-date
+		                                         typeof (DateTime), // 1-date
 		                                         typeof (int), // 2 - id cash
 		                                         typeof (string), // 3 - cash
 		                                         typeof (int), // 4 - id org
@@ -36,71 +90,89 @@ public partial class MainWindow : Gtk.Window
 		                                         typeof (decimal), // 13 - sum
 		                                         typeof (decimal),  // 14 - income sum
 		                                         typeof (string)   //15 - operation
-		                                         );
+		                                        );
 		
-		treeviewIncome.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
-		treeviewIncome.AppendColumn("Дата", new Gtk.CellRendererText (), "text", 1);
-		//ID кассы - 2
-		treeviewIncome.AppendColumn("Касса", new Gtk.CellRendererText (), "text", 3);
-		//ID Организации - 4
-		treeviewIncome.AppendColumn("Организация", new Gtk.CellRendererText (), "text", 5);
-		//ID Арендатора - 6
-		treeviewIncome.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 7);
-		//ID Сотрудника - 8
-		treeviewIncome.AppendColumn("Сотрудник", new Gtk.CellRendererText (), "text", 9);
-		//ID Статьи дохода - 10
-		treeviewIncome.AppendColumn("Статья дохода", new Gtk.CellRendererText (), "text", 11);
-		treeviewIncome.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 12);
+		treeviewIncome.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.id);
+		treeviewIncome.AppendColumn("Дата", new Gtk.CellRendererText (), RenderDateColumn);
+		treeviewIncome.AppendColumn("Касса", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.cash);
+		treeviewIncome.AppendColumn("Организация", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.org);
+		treeviewIncome.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.lessee);
+		treeviewIncome.AppendColumn("Сотрудник", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.employer);
+		treeviewIncome.AppendColumn("Статья дохода", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.income);
+		treeviewIncome.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", (int)CashIncomeCol.sum_text);
 
 		CashIncomeFilter = new Gtk.TreeModelFilter (CashIncomeListStore, null);
 		CashIncomeFilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeIncome);
-		treeviewIncome.Model = CashIncomeFilter;
+		CashIncomeSort = new TreeModelSort (CashIncomeFilter);
+		CashIncomeSort.SetSortFunc ((int)CashIncomeCol.sum, CashIncomeSumSortFunction);
+		CashIncomeSort.SetSortFunc ((int)CashIncomeCol.date, CashIncomeDateSortFunction);
+		treeviewIncome.Model = CashIncomeSort;
+		treeviewIncome.Columns [0].SortColumnId = (int)CashIncomeCol.id;
+		treeviewIncome.Columns [1].SortColumnId = (int)CashIncomeCol.date;
+		treeviewIncome.Columns [2].SortColumnId = (int)CashIncomeCol.cash;
+		treeviewIncome.Columns [3].SortColumnId = (int)CashIncomeCol.org;
+		treeviewIncome.Columns [4].SortColumnId = (int)CashIncomeCol.lessee;
+		treeviewIncome.Columns [5].SortColumnId = (int)CashIncomeCol.employer;
+		treeviewIncome.Columns [6].SortColumnId = (int)CashIncomeCol.income;
+		treeviewIncome.Columns [7].SortColumnId = (int)CashIncomeCol.sum;
 		treeviewIncome.ShowAll();
 
 		//Создаем таблицу "Расходных ордеров"
-		CashExpenseListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string),
+		CashExpenseListStore = new Gtk.ListStore (typeof (int), typeof (DateTime), typeof (int), typeof (string), typeof (int), typeof (string),
 		                                          typeof (int), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string), typeof (string), typeof (decimal));
 		
-		treeviewExpense.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
-		treeviewExpense.AppendColumn("Дата", new Gtk.CellRendererText (), "text", 1);
-		//ID кассы - 2
-		treeviewExpense.AppendColumn("Касса", new Gtk.CellRendererText (), "text", 3);
-		//ID Организации - 4
-		treeviewExpense.AppendColumn("Организация", new Gtk.CellRendererText (), "text", 5);
-		//ID Контрагента - 6
-		treeviewExpense.AppendColumn("Контрагент", new Gtk.CellRendererText (), "text", 7);
-		//ID Сотрудника - 8
-		treeviewExpense.AppendColumn("Сотрудник", new Gtk.CellRendererText (), "text", 9);
-		//ID Статьи расхода -10
-		treeviewExpense.AppendColumn("Статья расхода", new Gtk.CellRendererText (), "text", 11);
-		treeviewExpense.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 12);
+		treeviewExpense.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.id);
+		treeviewExpense.AppendColumn("Дата", new Gtk.CellRendererText (), RenderDateColumn);
+		treeviewExpense.AppendColumn("Касса", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.cash);
+		treeviewExpense.AppendColumn("Организация", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.org);
+		treeviewExpense.AppendColumn("Контрагент", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.contractor);
+		treeviewExpense.AppendColumn("Сотрудник", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.employer);
+		treeviewExpense.AppendColumn("Статья расхода", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.expense);
+		treeviewExpense.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", (int)CashExpenseCol.sum_text);
 		
 		CashExpenseFilter = new Gtk.TreeModelFilter (CashExpenseListStore, null);
 		CashExpenseFilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeExpense);
-		treeviewExpense.Model = CashExpenseFilter;
+		CashExpenseSort = new TreeModelSort (CashExpenseFilter);
+		CashExpenseSort.SetSortFunc ((int)CashExpenseCol.sum, CashExpenseSumSortFunction);
+		CashExpenseSort.SetSortFunc ((int)CashExpenseCol.date, CashExpenseDateSortFunction);
+		treeviewExpense.Model = CashExpenseSort;
+		treeviewExpense.Columns [0].SortColumnId = (int)CashExpenseCol.id;
+		treeviewExpense.Columns [1].SortColumnId = (int)CashExpenseCol.date;
+		treeviewExpense.Columns [2].SortColumnId = (int)CashExpenseCol.cash;
+		treeviewExpense.Columns [3].SortColumnId = (int)CashExpenseCol.org;
+		treeviewExpense.Columns [4].SortColumnId = (int)CashExpenseCol.contractor;
+		treeviewExpense.Columns [5].SortColumnId = (int)CashExpenseCol.employer;
+		treeviewExpense.Columns [6].SortColumnId = (int)CashExpenseCol.expense;
+		treeviewExpense.Columns [7].SortColumnId = (int)CashExpenseCol.sum;
 		treeviewExpense.ShowAll();
 
 		//Создаем таблицу "Авансовых отчетов"
-		CashAdvanceListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string),
+		CashAdvanceListStore = new Gtk.ListStore (typeof (int), typeof (DateTime), typeof (int), typeof (string), typeof (int), typeof (string),
 		                                          typeof (int), typeof (string), typeof (int), typeof (string), typeof (int), typeof (string), typeof (string), typeof (decimal));
 		
-		treeviewAdvance.AppendColumn("Номер", new Gtk.CellRendererText (), "text", 0);
-		treeviewAdvance.AppendColumn("Дата", new Gtk.CellRendererText (), "text", 1);
-		//ID Кассы - 2
-		treeviewAdvance.AppendColumn("Касса", new Gtk.CellRendererText (), "text", 3);
-		//ID Организации - 4
-		treeviewAdvance.AppendColumn("Организация", new Gtk.CellRendererText (), "text", 5);
-		//ID Контрагента - 6
-		treeviewAdvance.AppendColumn("Контрагент", new Gtk.CellRendererText (), "text", 7);
-		//ID Сотрудника - 8
-		treeviewAdvance.AppendColumn("Сотрудник", new Gtk.CellRendererText (), "text", 9);
-		//ID Статьи расхода - 10
-		treeviewAdvance.AppendColumn("Статья расхода", new Gtk.CellRendererText (), "text", 11);
-		treeviewAdvance.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 12);
+		treeviewAdvance.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.id);
+		treeviewAdvance.AppendColumn("Дата", new Gtk.CellRendererText (), RenderDateColumn);
+		treeviewAdvance.AppendColumn("Касса", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.cash);
+		treeviewAdvance.AppendColumn("Организация", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.org);
+		treeviewAdvance.AppendColumn("Контрагент", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.contractor);
+		treeviewAdvance.AppendColumn("Сотрудник", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.employer);
+		treeviewAdvance.AppendColumn("Статья расхода", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.expense);
+		treeviewAdvance.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", (int)CashAdvanceCol.sum_text);
 		
 		CashAdvanceFilter = new Gtk.TreeModelFilter (CashAdvanceListStore, null);
 		CashAdvanceFilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeAdvance);
-		treeviewAdvance.Model = CashAdvanceFilter;
+		CashAdvanceSort = new TreeModelSort (CashAdvanceFilter);
+		CashAdvanceSort.SetSortFunc ((int)CashAdvanceCol.sum, CashAdvanceSumSortFunction);
+		CashAdvanceSort.SetSortFunc ((int)CashAdvanceCol.date, CashAdvanceDateSortFunction);
+		treeviewAdvance.Model = CashAdvanceSort;
+		treeviewAdvance.Columns [0].SortColumnId = (int)CashAdvanceCol.id;
+		treeviewAdvance.Columns [1].SortColumnId = (int)CashAdvanceCol.date;
+		treeviewAdvance.Columns [2].SortColumnId = (int)CashAdvanceCol.cash;
+		treeviewAdvance.Columns [3].SortColumnId = (int)CashAdvanceCol.org;
+		treeviewAdvance.Columns [4].SortColumnId = (int)CashAdvanceCol.contractor;
+		treeviewAdvance.Columns [5].SortColumnId = (int)CashAdvanceCol.employer;
+		treeviewAdvance.Columns [6].SortColumnId = (int)CashAdvanceCol.expense;
+		treeviewAdvance.Columns [7].SortColumnId = (int)CashAdvanceCol.sum;
 		treeviewAdvance.ShowAll();
 
 		radioCashWeek.Click();
@@ -139,22 +211,21 @@ public partial class MainWindow : Gtk.Window
 		bool filterEmployee = true;		
 		string cellvalue;
 		
-		if(model.GetValue (iter, 7) == null)
+		if(model.GetValue (iter, (int)CashIncomeCol.lessee) == null)
 			return false;
 		
-		if (entryCashContractor.Text != "" && model.GetValue (iter, 7) != null)
+		if (entryCashContractor.Text != "" && model.GetValue (iter, (int)CashIncomeCol.lessee) != null)
 		{
-			cellvalue  = model.GetValue (iter, 7).ToString();
+			cellvalue  = model.GetValue (iter, (int)CashIncomeCol.lessee).ToString();
 			filterContractor = cellvalue.IndexOf (entryCashContractor.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryCashEmployee.Text != "" && model.GetValue (iter, 9) != null)
+		if (entryCashEmployee.Text != "" && model.GetValue (iter, (int)CashIncomeCol.employer) != null)
 		{
-			cellvalue  = model.GetValue (iter, 9).ToString();
+			cellvalue  = model.GetValue (iter, (int)CashIncomeCol.employer).ToString();
 			filterEmployee = cellvalue.IndexOf (entryCashEmployee.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 		
 		return (filterContractor && filterEmployee);
-
 	}
 
 	private bool FilterTreeExpense (Gtk.TreeModel model, Gtk.TreeIter iter)
@@ -165,17 +236,17 @@ public partial class MainWindow : Gtk.Window
 		bool filterEmployee = true;		
 		string cellvalue;
 		
-		if(model.GetValue (iter, 7) == null)
+		if(model.GetValue (iter, (int)CashExpenseCol.contractor) == null)
 			return false;
 		
-		if (entryCashContractor.Text != "" && model.GetValue (iter, 7) != null)
+		if (entryCashContractor.Text != "" && model.GetValue (iter, (int)CashExpenseCol.contractor) != null)
 		{
-			cellvalue  = model.GetValue (iter, 7).ToString();
+			cellvalue  = model.GetValue (iter, (int)CashExpenseCol.contractor).ToString();
 			filterContractor = cellvalue.IndexOf (entryCashContractor.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryCashEmployee.Text != "" && model.GetValue (iter, 9) != null)
+		if (entryCashEmployee.Text != "" && model.GetValue (iter, (int)CashExpenseCol.employer) != null)
 		{
-			cellvalue  = model.GetValue (iter, 9).ToString();
+			cellvalue  = model.GetValue (iter, (int)CashExpenseCol.employer).ToString();
 			filterEmployee = cellvalue.IndexOf (entryCashEmployee.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 		
@@ -190,21 +261,85 @@ public partial class MainWindow : Gtk.Window
 		bool filterEmployee = true;		
 		string cellvalue;
 		
-		if(model.GetValue (iter, 7) == null)
+		if(model.GetValue (iter, (int)CashAdvanceCol.contractor) == null)
 			return false;
 
-		if (entryCashContractor.Text != "" && model.GetValue (iter, 7) != null)
+		if (entryCashContractor.Text != "" && model.GetValue (iter, (int)CashAdvanceCol.contractor) != null)
 		{
-			cellvalue  = model.GetValue (iter, 7).ToString();
+			cellvalue  = model.GetValue (iter, (int)CashAdvanceCol.contractor).ToString();
 			filterContractor = cellvalue.IndexOf (entryCashContractor.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryCashEmployee.Text != "" && model.GetValue (iter, 9) != null)
+		if (entryCashEmployee.Text != "" && model.GetValue (iter, (int)CashAdvanceCol.employer) != null)
 		{
-			cellvalue  = model.GetValue (iter, 9).ToString();
+			cellvalue  = model.GetValue (iter, (int)CashAdvanceCol.employer).ToString();
 			filterEmployee = cellvalue.IndexOf (entryCashEmployee.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 
 		return (filterContractor && filterEmployee);
+	}
+
+	private int CashIncomeSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		decimal oa = (decimal) model.GetValue(a, (int)CashIncomeCol.sum);
+		decimal ob = (decimal) model.GetValue(b, (int)CashIncomeCol.sum);
+
+		return oa.CompareTo(ob);
+	}
+
+	private int CashIncomeDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		DateTime oa = (DateTime) model.GetValue(a, (int)CashIncomeCol.date);
+		DateTime ob = (DateTime) model.GetValue(b, (int)CashIncomeCol.date);
+
+		return oa.CompareTo(ob);
+	}
+
+	private int CashExpenseSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		decimal oa = (decimal) model.GetValue(a, (int)CashExpenseCol.sum);
+		decimal ob = (decimal) model.GetValue(b, (int)CashExpenseCol.sum);
+
+		return oa.CompareTo(ob);
+	}
+
+	private int CashExpenseDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		DateTime oa = (DateTime) model.GetValue(a, (int)CashExpenseCol.date);
+		DateTime ob = (DateTime) model.GetValue(b, (int)CashExpenseCol.date);
+
+		return oa.CompareTo(ob);
+	}
+
+	private int CashAdvanceSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		decimal oa = (decimal) model.GetValue(a, (int)CashAdvanceCol.sum);
+		decimal ob = (decimal) model.GetValue(b, (int)CashAdvanceCol.sum);
+
+		return oa.CompareTo(ob);
+	}
+
+	private int CashAdvanceDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		DateTime oa = (DateTime) model.GetValue(a, (int)CashAdvanceCol.date);
+		DateTime ob = (DateTime) model.GetValue(b, (int)CashAdvanceCol.date);
+
+		return oa.CompareTo(ob);
+	}
+
+	private void RenderDateColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+	{
+		int dateColumn;
+		if(model == CashIncomeSort)
+			dateColumn = (int)CashIncomeCol.date;
+		else if(model == CashExpenseSort)
+			dateColumn = (int)CashExpenseCol.date;
+		else if(model == CashAdvanceSort)
+			dateColumn = (int)CashAdvanceCol.date;
+		else
+			return;
+
+		DateTime date = (DateTime) model.GetValue (iter, dateColumn);
+		(cell as Gtk.CellRendererText).Text = date.ToShortDateString ();
 	}
 
 	protected void OnNotebook1SwitchPage (object o, SwitchPageArgs args)
@@ -290,11 +425,11 @@ public partial class MainWindow : Gtk.Window
 				item_sum = rdr.GetDecimal("item_sum");
 				SumFormat = "{0:C} ({1:C})";
 			}
-			CashIncomeListStore.AppendValues(int.Parse (rdr["id"].ToString()),
-			                               DateTime.Parse(rdr["date"].ToString()).ToShortDateString(),
-			                               int.Parse(rdr["cash_id"].ToString ()),
+			CashIncomeListStore.AppendValues(rdr.GetInt32 ("id"),
+			                                 rdr.GetDateTime ("date"),
+			                                 rdr.GetInt32 ("cash_id"),
 			                               rdr["cash"].ToString (),
-			                               int.Parse (rdr["org_id"].ToString ()),
+			                                 rdr.GetInt32 ("org_id"),
 			                               rdr["organization"].ToString(),
 			                               lessee_id,
 			                               rdr["lessee"].ToString(),
@@ -305,7 +440,8 @@ public partial class MainWindow : Gtk.Window
 			                               String.Format (SumFormat, rdr.GetDecimal ("sum"), item_sum),
 			                               rdr.GetDecimal ("sum"),
 			                                 item_sum,
-			                                 rdr["operation"].ToString());
+			                                 rdr["operation"].ToString()
+			                                );
 		}
 		rdr.Close();
 		
@@ -363,11 +499,11 @@ public partial class MainWindow : Gtk.Window
 				contractor_id = int.Parse (rdr["contractor_id"].ToString ());
 			if(rdr["employee_id"] != DBNull.Value)
 				employee_id = rdr.GetInt32("employee_id");
-			CashExpenseListStore.AppendValues(int.Parse (rdr["id"].ToString()),
-			                                 DateTime.Parse(rdr["date"].ToString()).ToShortDateString(),
-			                                 int.Parse(rdr["cash_id"].ToString ()),
+			CashExpenseListStore.AppendValues(rdr.GetInt32 ("id"),
+			                                  rdr.GetDateTime ("date"),
+			                                  rdr.GetInt32 ("cash_id"),
 			                                 rdr["cash"].ToString (),
-			                                 int.Parse (rdr["org_id"].ToString ()),
+			                                  rdr.GetInt32 ("org_id"),
 			                                 rdr["organization"].ToString(),
 			                                 contractor_id,
 			                                 rdr["contractor"].ToString(),
@@ -434,11 +570,11 @@ public partial class MainWindow : Gtk.Window
 				contractor_id = int.Parse (rdr["contractor_id"].ToString ());
 			if(rdr["employee_id"] != DBNull.Value)
 				employee_id = rdr.GetInt32("employee_id");
-			CashAdvanceListStore.AppendValues(int.Parse (rdr["id"].ToString()),
-			                                  DateTime.Parse(rdr["date"].ToString()).ToShortDateString(),
-			                                  int.Parse(rdr["cash_id"].ToString ()),
+			CashAdvanceListStore.AppendValues(rdr.GetInt32 ("id"),
+			                                  rdr.GetDateTime ("date"),
+			                                  rdr.GetInt32 ("cash_id"),
 			                                  rdr["cash"].ToString (),
-			                                  int.Parse (rdr["org_id"].ToString ()),
+			                                  rdr.GetInt32 ("org_id"),
 			                                  rdr["organization"].ToString(),
 			                                  contractor_id,
 			                                  rdr["contractor"].ToString(),
@@ -577,27 +713,31 @@ public partial class MainWindow : Gtk.Window
 		decimal Sum = 0;
 		TreeIter iter;
 		TreeModelFilter Model;
+		int sumColumn;
 
 		switch (notebookCash.CurrentPage)
 		{
 		case 0:
 			Model = CashIncomeFilter;
+			sumColumn = (int)CashIncomeCol.sum;
 			break;
 		case 1:
 			Model = CashExpenseFilter;
+			sumColumn = (int)CashExpenseCol.sum;
 			break;
 		case 2:
 			Model = CashAdvanceFilter;
+			sumColumn = (int)CashAdvanceCol.sum;
 			break;
 		default:
 			return;
 		}
 		if(Model.GetIterFirst(out iter))
 		{
-			Sum = (decimal)Model.GetValue(iter,13);
+			Sum = (decimal)Model.GetValue(iter, sumColumn);
 			while (Model.IterNext(ref iter)) 
 			{
-				Sum += (decimal)Model.GetValue(iter,13);
+				Sum += (decimal)Model.GetValue(iter, sumColumn);
 			}
 		}
 		labelSum.LabelProp = String.Format("Сумма документов: {0:C} ", Sum);
@@ -703,7 +843,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		TreeIter iter;
 		treeviewExpense.Selection.GetSelected(out iter);
-		int itemid = Convert.ToInt32(CashExpenseFilter.GetValue(iter,0));
+		int itemid = Convert.ToInt32(CashExpenseSort.GetValue(iter, (int)CashExpenseCol.id));
 
 		ExpenseSlip winExpenseSlip = new ExpenseSlip();
 		winExpenseSlip.SlipFill(itemid, true);
@@ -737,7 +877,7 @@ public partial class MainWindow : Gtk.Window
 		bool ItemSelected = treeviewIncome.Selection.CountSelectedRows() == 1;
 
 		TreeIter iter;
-		if(treeviewIncome.Selection.GetSelected(out iter) && CashIncomeFilter.GetValue(iter,15).ToString() == "payment")
+		if(treeviewIncome.Selection.GetSelected(out iter) && CashIncomeSort.GetValue(iter, (int)CashIncomeCol.operation).ToString() == "payment")
 			ItemSelected=false;
 
 		if((int)args.Event.Button == 3)
@@ -756,7 +896,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		TreeIter iter;
 		treeviewIncome.Selection.GetSelected(out iter);
-		int itemid = Convert.ToInt32(CashIncomeFilter.GetValue(iter,0));
+		int itemid = Convert.ToInt32(CashIncomeSort.GetValue(iter, (int)CashIncomeCol.id));
 		IncomeSlip winIncomeSlip = new IncomeSlip();
 		winIncomeSlip.SlipFill(itemid, true);
 		winIncomeSlip.Show();
@@ -787,7 +927,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		TreeIter iter;
 		treeviewAdvance.Selection.GetSelected(out iter);
-		int itemid = Convert.ToInt32(CashAdvanceFilter.GetValue(iter,0));
+		int itemid = Convert.ToInt32(CashAdvanceSort.GetValue(iter, (int)CashAdvanceCol.id));
 
 		AdvanceStatement winAdvance = new AdvanceStatement();
 		winAdvance.StatementFill(itemid, true);

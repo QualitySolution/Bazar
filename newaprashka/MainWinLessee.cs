@@ -8,6 +8,17 @@ public partial class MainWindow : Gtk.Window
 {
 	Gtk.ListStore LesseesListStore;
 	Gtk.TreeModelFilter Lesseesfilter;
+	Gtk.TreeModelSort LesseesSort;
+
+	private enum LesseesCol{
+		id,
+		name,
+		boss,
+		inn,
+		goods_text,
+		wholesaler,
+		retail
+	}
 
 	void PrepareLessee()
 	{
@@ -15,17 +26,21 @@ public partial class MainWindow : Gtk.Window
 		LesseesListStore = new Gtk.ListStore (typeof (int),typeof (string), typeof (string),
 		                                      typeof (string), typeof (string), typeof (bool), typeof (bool));
 		
-		treeviewLessees.AppendColumn("Код", new Gtk.CellRendererText (), "text", 0);
-		treeviewLessees.AppendColumn("Название", new Gtk.CellRendererText (), "text", 1);
-		treeviewLessees.AppendColumn("Директор", new Gtk.CellRendererText (), "text", 2);
-		//ID ИНН - 3
-		treeviewLessees.AppendColumn("Товары", new Gtk.CellRendererText (), "text", 4);
-		treeviewLessees.AppendColumn("Опт", new Gtk.CellRendererToggle (), "active", 5);
-		treeviewLessees.AppendColumn("Розница", new Gtk.CellRendererToggle (), "active", 6);
+		treeviewLessees.AppendColumn("Код", new Gtk.CellRendererText (), "text", (int)LesseesCol.id);
+		treeviewLessees.AppendColumn("Название", new Gtk.CellRendererText (), "text", (int)LesseesCol.name);
+		treeviewLessees.AppendColumn("Директор", new Gtk.CellRendererText (), "text", (int)LesseesCol.boss);
+		treeviewLessees.AppendColumn("Товары", new Gtk.CellRendererText (), "text", (int)LesseesCol.goods_text);
+		treeviewLessees.AppendColumn("Опт", new Gtk.CellRendererToggle (), "active", (int)LesseesCol.wholesaler);
+		treeviewLessees.AppendColumn("Розница", new Gtk.CellRendererToggle (), "active", (int)LesseesCol.retail);
 		
 		Lesseesfilter = new Gtk.TreeModelFilter (LesseesListStore, null);
 		Lesseesfilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeLessees);
-		treeviewLessees.Model = Lesseesfilter;
+		LesseesSort = new TreeModelSort (Lesseesfilter);
+		treeviewLessees.Model = LesseesSort;
+		treeviewLessees.Columns [0].SortColumnId = (int)LesseesCol.id;
+		treeviewLessees.Columns [1].SortColumnId = (int)LesseesCol.name;
+		treeviewLessees.Columns [2].SortColumnId = (int)LesseesCol.boss;
+		treeviewLessees.Columns [3].SortColumnId = (int)LesseesCol.goods_text;
 		treeviewLessees.ShowAll();
 	}
 
@@ -37,20 +52,20 @@ public partial class MainWindow : Gtk.Window
 		sql += " LEFT JOIN goods ON lessees.goods_id = goods.id ";
 		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
-		MySqlDataReader rdr = cmd.ExecuteReader();
-		
-		LesseesListStore.Clear();
-		while (rdr.Read())
+		using(MySqlDataReader rdr = cmd.ExecuteReader()) 
 		{
-			LesseesListStore.AppendValues(int.Parse(rdr["id"].ToString()),
-			                              rdr["name"].ToString(),
-			                              rdr["FIO_dir"].ToString(),
-			                              rdr["INN"].ToString(),
-			                              rdr["goods"].ToString(),
-			                              (bool)rdr["wholesaler"],
-			                              (bool)rdr["retail"]);
+			LesseesListStore.Clear ();
+			while (rdr.Read ()) 
+			{
+				LesseesListStore.AppendValues (rdr.GetInt32 ("id"),
+				                             rdr ["name"].ToString (),
+				                             rdr ["FIO_dir"].ToString (),
+				                             rdr ["INN"].ToString (),
+				                             rdr ["goods"].ToString (),
+				                             (bool)rdr ["wholesaler"],
+				                             (bool)rdr ["retail"]);
+			}
 		}
-		rdr.Close();
 		MainClass.StatusMessage("Ok");
 		bool isSelect = treeviewLessees.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
@@ -69,19 +84,19 @@ public partial class MainWindow : Gtk.Window
 		if(model.GetValue (iter, 1) == null)
 			return false;
 		
-		if (entryFilterName.Text != "" && model.GetValue (iter, 1) != null)
+		if (entryFilterName.Text != "" && model.GetValue (iter, (int)LesseesCol.name) != null)
 		{
-			cellvalue  = model.GetValue (iter, 1).ToString();
+			cellvalue  = model.GetValue (iter, (int)LesseesCol.name).ToString();
 			filterName = cellvalue.IndexOf (entryFilterName.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryFilterFIO.Text != "" && model.GetValue (iter, 2) != null)
+		if (entryFilterFIO.Text != "" && model.GetValue (iter, (int)LesseesCol.boss) != null)
 		{
-			cellvalue  = model.GetValue (iter, 2).ToString();
+			cellvalue  = model.GetValue (iter, (int)LesseesCol.boss).ToString();
 			filterFIO = cellvalue.IndexOf (entryFilterFIO.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
-		if (entryFilterINN.Text != "" && model.GetValue (iter, 3) != null)
+		if (entryFilterINN.Text != "" && model.GetValue (iter, (int)LesseesCol.inn) != null)
 		{
-			cellvalue  = model.GetValue (iter, 3).ToString();
+			cellvalue  = model.GetValue (iter, (int)LesseesCol.inn).ToString();
 			filterINN = cellvalue.IndexOf (entryFilterINN.Text, StringComparison.CurrentCultureIgnoreCase) > -1;
 		}
 		return (filterName && filterINN && filterFIO);
@@ -122,7 +137,6 @@ public partial class MainWindow : Gtk.Window
 		bool isSelect = treeviewLessees.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
 		buttonDel.Sensitive = isSelect;
-		
 	}
 
 	protected virtual void OnTreeviewLesseesRowActivated (object o, Gtk.RowActivatedArgs args)
