@@ -137,7 +137,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@wholesaler", checkBwholesaler.Active);
 				cmd.Parameters.AddWithValue("@retail", checkBretail.Active);				
 				cmd.Parameters.AddWithValue("@goods_id", DBWorks.ValueOrNull (!GoodsNull, Goods_id));
-				cmd.Parameters.AddWithValue("@comments", DBWorks.ValueOrNull (textviewComments.Buffer.Text == "", textviewComments.Buffer.Text));
+				cmd.Parameters.AddWithValue("@comments", DBWorks.ValueOrNull (textviewComments.Buffer.Text != "", textviewComments.Buffer.Text));
 				
 				cmd.ExecuteNonQuery();
 				MainClass.StatusMessage("Ok");
