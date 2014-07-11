@@ -188,6 +188,10 @@ public partial class MainWindow : Gtk.Window
 	{
 		string oa = (string) model.GetValue(a, (int)ContractCol.place_no);
 		string ob = (string) model.GetValue(b, (int)ContractCol.place_no);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
 		return StringWorks.NaturalStringComparer.Compare (oa, ob);
 	}
@@ -196,16 +200,24 @@ public partial class MainWindow : Gtk.Window
 	{
 		string oa = (string) model.GetValue(a, (int)ContractCol.number);
 		string ob = (string) model.GetValue(b, (int)ContractCol.number);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
 		return StringWorks.NaturalStringComparer.Compare (oa, ob);
 	}
 
 	private int ContractEndDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		DateTime oa = (DateTime) model.GetValue(a, (int)ContractCol.end_date);
-		DateTime ob = (DateTime) model.GetValue(b, (int)ContractCol.end_date);
+		object oa = model.GetValue(a, (int)ContractCol.end_date);
+		object ob = model.GetValue(b, (int)ContractCol.end_date);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((DateTime)oa).CompareTo((DateTime)ob);
 	}
 
 	private void RenderContractEndDateColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)

@@ -167,26 +167,38 @@ public partial class MainWindow : Gtk.Window
 
 	private int SumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		decimal oa = (decimal) model.GetValue(a, (int)AccrualCol.sum);
-		decimal ob = (decimal) model.GetValue(b, (int)AccrualCol.sum);
+		object oa = model.GetValue(a, (int)AccrualCol.sum);
+		object ob = model.GetValue(b, (int)AccrualCol.sum);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	private int PaidSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		decimal oa = (decimal) model.GetValue(a, (int)AccrualCol.paidsum);
-		decimal ob = (decimal) model.GetValue(b, (int)AccrualCol.paidsum);
+		object oa = model.GetValue(a, (int)AccrualCol.paidsum);
+		object ob = model.GetValue(b, (int)AccrualCol.paidsum);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	private int DebtSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		decimal oa = (decimal) model.GetValue(a, (int)AccrualCol.debt);
-		decimal ob = (decimal) model.GetValue(b, (int)AccrualCol.debt);
+		object oa = model.GetValue(a, (int)AccrualCol.debt);
+		object ob = model.GetValue(b, (int)AccrualCol.debt);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	protected void OnComboAccrualOrgChanged (object sender, EventArgs e)

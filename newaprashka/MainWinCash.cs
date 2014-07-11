@@ -280,50 +280,74 @@ public partial class MainWindow : Gtk.Window
 
 	private int CashIncomeSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		decimal oa = (decimal) model.GetValue(a, (int)CashIncomeCol.sum);
-		decimal ob = (decimal) model.GetValue(b, (int)CashIncomeCol.sum);
+		object oa = model.GetValue(a, (int)CashIncomeCol.sum);
+		object ob = model.GetValue(b, (int)CashIncomeCol.sum);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	private int CashIncomeDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		DateTime oa = (DateTime) model.GetValue(a, (int)CashIncomeCol.date);
-		DateTime ob = (DateTime) model.GetValue(b, (int)CashIncomeCol.date);
+		object oa = model.GetValue(a, (int)CashIncomeCol.date);
+		object ob = model.GetValue(b, (int)CashIncomeCol.date);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((DateTime)oa).CompareTo((DateTime)ob);
 	}
 
 	private int CashExpenseSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		decimal oa = (decimal) model.GetValue(a, (int)CashExpenseCol.sum);
-		decimal ob = (decimal) model.GetValue(b, (int)CashExpenseCol.sum);
+		object oa = model.GetValue(a, (int)CashExpenseCol.sum);
+		object ob = model.GetValue(b, (int)CashExpenseCol.sum);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	private int CashExpenseDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		DateTime oa = (DateTime) model.GetValue(a, (int)CashExpenseCol.date);
-		DateTime ob = (DateTime) model.GetValue(b, (int)CashExpenseCol.date);
+		object oa = model.GetValue(a, (int)CashExpenseCol.date);
+		object ob = model.GetValue(b, (int)CashExpenseCol.date);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((DateTime)oa).CompareTo((DateTime)ob);
 	}
 
 	private int CashAdvanceSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		decimal oa = (decimal) model.GetValue(a, (int)CashAdvanceCol.sum);
-		decimal ob = (decimal) model.GetValue(b, (int)CashAdvanceCol.sum);
+		object oa = model.GetValue(a, (int)CashAdvanceCol.sum);
+		object ob = model.GetValue(b, (int)CashAdvanceCol.sum);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	private int CashAdvanceDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
-		DateTime oa = (DateTime) model.GetValue(a, (int)CashAdvanceCol.date);
-		DateTime ob = (DateTime) model.GetValue(b, (int)CashAdvanceCol.date);
+		object oa = model.GetValue(a, (int)CashAdvanceCol.date);
+		object ob = model.GetValue(b, (int)CashAdvanceCol.date);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
-		return oa.CompareTo(ob);
+		return ((DateTime)oa).CompareTo((DateTime)ob);
 	}
 
 	private void RenderDateColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)

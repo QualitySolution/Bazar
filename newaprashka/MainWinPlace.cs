@@ -158,6 +158,10 @@ public partial class MainWindow : Gtk.Window
 	{
 		string oa = (string) model.GetValue(a, (int)PlaceCol.place_no);
 		string ob = (string) model.GetValue(b, (int)PlaceCol.place_no);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
 
 		return StringWorks.NaturalStringComparer.Compare (oa, ob);
 	}
