@@ -14,7 +14,6 @@ public partial class MainWindow : Gtk.Window
 		type_place_id,
 		type_place,
 		place_no,
-		area_text,
 		lessee,
 		lessee_id,
 		contact,
@@ -32,13 +31,13 @@ public partial class MainWindow : Gtk.Window
 		ComboWorks.ComboFillReference(comboPlaceOrg,"organizations", ComboWorks.ListMode.WithAll);
 
 		//Создаем таблицу "Места"
-		PlacesListStore = new Gtk.ListStore (typeof (int), typeof (string),typeof (string), typeof (string),
+		PlacesListStore = new Gtk.ListStore (typeof (int), typeof (string),typeof (string),
 		                                     typeof (string), typeof (int),typeof (string), typeof (int),
-		                                     typeof (string), typeof (string), typeof (int), typeof (double));
+		                                     typeof (string), typeof (string), typeof (int), typeof (decimal));
 
 		treeviewPlaces.AppendColumn ("Тип", new Gtk.CellRendererText (), "text", (int)PlaceCol.type_place);
 		treeviewPlaces.AppendColumn ("Номер", new Gtk.CellRendererText (), "text", (int)PlaceCol.place_no);
-		treeviewPlaces.AppendColumn ("Площадь", new Gtk.CellRendererText (), "text", (int)PlaceCol.area_text);
+		treeviewPlaces.AppendColumn ("Площадь", new Gtk.CellRendererText (), RenderAreaCellLayout);
 		treeviewPlaces.AppendColumn ("Арендатор", new Gtk.CellRendererText (), "text", (int)PlaceCol.lessee);
 		treeviewPlaces.AppendColumn ("Контактное лицо", new Gtk.CellRendererText (), "text", (int)PlaceCol.contact);
 		treeviewPlaces.AppendColumn ("Телефоны К.Л.", new Gtk.CellRendererText (), "text", (int)PlaceCol.contact_phones);
@@ -48,6 +47,7 @@ public partial class MainWindow : Gtk.Window
 		Placefilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreePlace);
 		PlaceSort = new TreeModelSort (Placefilter);
 		PlaceSort.SetSortFunc ((int)PlaceCol.place_no, PlaceNumberSortFunction);
+		PlaceSort.SetSortFunc ((int)PlaceCol.area, AreaSortFunction);
 		treeviewPlaces.Model = PlaceSort;
 		treeviewPlaces.Columns [0].SortColumnId = (int)PlaceCol.type_place;
 		treeviewPlaces.Columns [1].SortColumnId = (int)PlaceCol.place_no;
@@ -57,6 +57,24 @@ public partial class MainWindow : Gtk.Window
 		treeviewPlaces.Columns [5].SortColumnId = (int)PlaceCol.contact_phones;
 		treeviewPlaces.Columns [6].SortColumnId = (int)PlaceCol.org;
 		treeviewPlaces.ShowAll();
+	}
+
+	void RenderAreaCellLayout (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+	{
+		decimal area = (decimal) model.GetValue (iter, (int)PlaceCol.area);
+		(cell as Gtk.CellRendererText).Markup = area > 0 ? String.Format("{0} м<sup>2</sup>", area) : "";
+	}
+
+	private int AreaSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+	{
+		object oa = model.GetValue(a, (int)PlaceCol.area);
+		object ob = model.GetValue(b, (int)PlaceCol.area);
+		if (ob == null)
+			return 1;
+		if (oa == null)
+			return -1;
+
+		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
 
 	void UpdatePlaces()
@@ -98,7 +116,6 @@ public partial class MainWindow : Gtk.Window
 				PlacesListStore.AppendValues (rdr.GetInt32 ("type_id"),
 				                            rdr ["type"].ToString (),
 				                            rdr ["place_no"].ToString (),
-				                            rdr ["area"].ToString (),
 				                            rdr ["lessee"].ToString (),
 				                              DBWorks.GetInt (rdr, "lessee_id", -1),
 				                            rdr ["contact"].ToString (),
@@ -106,7 +123,7 @@ public partial class MainWindow : Gtk.Window
 				                            rdr ["telephones"].ToString (),
 				                            rdr ["organization"].ToString (),
 				                              DBWorks.GetInt (rdr, "org_id", -1),
-				                              DBWorks.GetDouble (rdr, "area", 0)
+				                              DBWorks.GetDecimal (rdr, "area", 0)
 				                             );
 			}
 		}
@@ -314,15 +331,15 @@ public partial class MainWindow : Gtk.Window
 	
 	protected void CalculateAreaSum ()
 	{
-		double AreaSum = 0;
+		decimal AreaSum = 0;
 		TreeIter iter;
 		
 		if(Placefilter.GetIterFirst(out iter))
 		{
-			AreaSum = (double)Placefilter.GetValue(iter, (int)PlaceCol.area);
+			AreaSum = (decimal)Placefilter.GetValue(iter, (int)PlaceCol.area);
 			while (Placefilter.IterNext(ref iter)) 
 			{
-				AreaSum += (double)Placefilter.GetValue(iter, (int)PlaceCol.area);
+				AreaSum += (decimal)Placefilter.GetValue(iter, (int)PlaceCol.area);
 			}
 		}
 		labelSum.LabelProp = "Суммарная площадь: " + AreaSum.ToString() + " м<sup>2</sup>";
