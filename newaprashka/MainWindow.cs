@@ -810,4 +810,12 @@ public partial class MainWindow : Gtk.Window
 		WinMeters.Destroy ();
 	}
 	
+	protected void OnActionLesseeRentReportActivated (object sender, EventArgs e)
+	{
+		LesseeRentReport RentReport = new LesseeRentReport ();
+		RentReport.Show ();
+		RentReport.Run ();
+		RentReport.Destroy ();
+	}
+
 }

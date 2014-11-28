@@ -131,6 +131,8 @@
     <Compile Include="gtk-gui\bazar.ContractsProlongation.cs" />
     <Compile Include="Cash.cs" />
     <Compile Include="gtk-gui\bazar.Cash.cs" />
+    <Compile Include="gtk-gui\bazar.LesseeRentReport.cs" />
+    <Compile Include="ReportDialogs\LesseeRentReport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -211,6 +213,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Reports\MetersFill.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Reports\LesseeReport.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

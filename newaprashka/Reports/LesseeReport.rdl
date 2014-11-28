@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Description>
+  </Description>
+  <Author>
+  </Author>
+  <PageHeight>11in</PageHeight>
+  <PageWidth>8.5in</PageWidth>
+  <Width>7.5in</Width>
+  <TopMargin>.25in</TopMargin>
+  <LeftMargin>.25in</LeftMargin>
+  <RightMargin>.25in</RightMargin>
+  <BottomMargin>.25in</BottomMargin>
+  <DataSets>
+    <DataSet Name="Data">
+      <Query >
+        <DataSourceName>DS1</DataSourceName>
+        <CommandText>SELECT accrual.id as id, month, year, cash.name as cash, contracts.number as contract_no, contracts.lessee_id as lessee_id, lessees.name as lessee, sumtable.sum as sum, IFNULL(paidtable.sum, 0) as paidsum, (sumtable.sum -  IFNULL(paidtable.sum, 0)) as debt, contracts.place_no as place FROM accrual
+LEFT JOIN contracts ON contracts.id = accrual.contract_id 
+LEFT JOIN lessees ON contracts.lessee_id = lessees.id
+LEFT JOIN (SELECT accrual_id, cash_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id, cash_id) as sumtable ON sumtable.accrual_id = accrual.id
+LEFT JOIN (SELECT accrual_id, cash_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id, cash_id) as paidtable ON paidtable.accrual_id = accrual.id
+ and sumtable.cash_id = paidtable.cash_id LEFT JOIN cash ON cash.id = sumtable.cash_id and cash.id = paidtable.cash_id 
+WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_start) and ((month &lt;= @month_end and year = @year_end) or year &lt; @year_end) and lessee_id = @lessee_id and contracts.place_no = @place;</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="month_start">
+            <Value>=Parameters!MonthStart</Value>
+          </QueryParameter>
+          <QueryParameter Name="year_start">
+            <Value>=Parameters!YearStart</Value>
+          </QueryParameter>
+          <QueryParameter Name="lessee_id">
+            <Value>=Parameters!LesseeId</Value>
+          </QueryParameter>
+          <QueryParameter Name="month_end">
+            <Value>=Parameters!MonthEnd</Value>
+          </QueryParameter>
+          <QueryParameter Name="year_end">
+            <Value>=Parameters!YearEnd</Value>
+          </QueryParameter>
+          <QueryParameter Name="place">
+            <Value>=Parameters!Place</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+      <Fields >
+        <Field Name="id">
+          <DataField>id</DataField>
+          <rd:TypeName>System.UInt32</rd:TypeName>
+        </Field>
+        <Field Name="month">
+          <DataField>month</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="year">
+          <DataField>year</DataField>
+          <rd:TypeName>System.UInt32</rd:TypeName>
+        </Field>
+        <Field Name="cash">
+          <DataField>cash</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="contract_no">
+          <DataField>contract_no</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="lessee_id">
+          <DataField>lessee_id</DataField>
+          <rd:TypeName>System.UInt32</rd:TypeName>
+        </Field>
+        <Field Name="sum">
+          <DataField>sum</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="paidsum">
+          <DataField>paidsum</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="lessee">
+          <DataField>lessee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="place">
+          <DataField>place</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="debt">
+          <DataField>debt</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <PageHeader>
+    <Height>24.9pt</Height>
+    <PrintOnFirstPage>true</PrintOnFirstPage>
+    <PrintOnLastPage>true</PrintOnLastPage>
+    <ReportItems>
+      <Textbox Name="Textbox16">
+        <Height>17.27pt</Height>
+        <Width>147.60pt</Width>
+        <Value>Отчет по арендатору</Value>
+        <ZIndex>1</ZIndex>
+        <Left>218.0pt</Left>
+        <Top>4.0pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <Format>None</Format>
+          <TextAlign>Center</TextAlign>
+          <FontSize>14pt</FontSize>
+        </Style>
+        <Значение>""</Значение>
+      </Textbox>
+    </ReportItems>
+  </PageHeader>
+  <Body>
+    <ReportItems>
+      <Table Name="Table1">
+        <DataSetName>Data</DataSetName>
+        <NoRows>Данные отсутствуют!</NoRows>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+        <TableColumns>
+          <TableColumn>
+            <Width>67.0pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>70.7pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>113.5pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>93.5pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>89.2pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>87.7pt</Width>
+          </TableColumn>
+        </TableColumns>
+        <Header>
+          <TableRows>
+            <TableRow>
+              <Height>12pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox2">
+                      <Value>№ начис.</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox5">
+                      <Value>Ном. дог.</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Значение>Номер дог.</Значение>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox11">
+                      <Value>Дата / Касса</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                      <Значение>Дата/Касса</Значение>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox7">
+                      <Value>Начислено</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox8">
+                      <Value>Оплачено</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox9">
+                      <Value>Долг</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+          <RepeatOnNewPage>true</RepeatOnNewPage>
+        </Header>
+        <Details>
+          <TableRows>
+            <TableRow>
+              <Height>13.6pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="id">
+                      <Value>
+                      </Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>None</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox10">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>None</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox12">
+                      <Value>=Fields!cash.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="sum">
+                      <Value>=Fields!sum.Value</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>#,##0</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="paidsum">
+                      <Value>=Fields!paidsum.Value</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>#,##0</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="debt">
+                      <Value>=Fields!debt.Value</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>#,##0</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+        </Details>
+        <Footer>
+          <TableRows>
+            <TableRow>
+              <Height>13.0pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox19">
+                      <Value>
+                      </Value>
+                      <Style>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>None</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox15">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>None</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox13">
+                      <Value>Итоги:</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>None</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>Right</TextAlign>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="tf_sum">
+                      <Value>=Sum(Fields!sum.Value)</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>#,##0</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="tf_paidsum">
+                      <Value>=Sum(Fields!paidsum.Value)</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>#,##0</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox26">
+                      <Value>=Sum(Fields!debt.Value)</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>#,##0</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+        </Footer>
+        <Left>0.0pt</Left>
+        <Top>37.2pt</Top>
+        <TableGroups>
+          <TableGroup>
+            <Grouping Name="Month">
+              <PageBreakAtStart>false</PageBreakAtStart>
+              <PageBreakAtEnd>false</PageBreakAtEnd>
+              <GroupExpressions>
+                <GroupExpression>=Fields!id.Value</GroupExpression>
+              </GroupExpressions>
+            </Grouping>
+            <Header>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
+              <TableRows>
+                <TableRow>
+                  <Height>.2in</Height>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox30">
+                          <Style>
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Right>None</Right>
+                            </BorderStyle>
+                            <FontWeight>Bold</FontWeight>
+                            <BorderColor />
+                            <BorderWidth>
+                              <Bottom>2pt</Bottom>
+                              <Left>2pt</Left>
+                              <Right>2pt</Right>
+                              <Top>2pt</Top>
+                            </BorderWidth>
+                          </Style>
+                          <Value>=Fields!id.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox17">
+                          <Value>=Fields!contract_no.Value</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Right>None</Right>
+                            </BorderStyle>
+                            <FontWeight>Bold</FontWeight>
+                            <BorderColor />
+                            <BorderWidth>
+                              <Bottom>2pt</Bottom>
+                              <Left>2pt</Left>
+                              <Right>2pt</Right>
+                              <Top>2pt</Top>
+                            </BorderWidth>
+                          </Style>
+                          <Значение>=Fields!contract_no.Value</Значение>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox34">
+                          <Style>
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth>
+                              <Bottom>2pt</Bottom>
+                              <Left>2pt</Left>
+                              <Right>2pt</Right>
+                              <Top>2pt</Top>
+                            </BorderWidth>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                          <Value>=MonthName(Fields!month.Value) + " " +  Fields!year.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox35">
+                          <Style>
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth>
+                              <Bottom>2pt</Bottom>
+                              <Left>2pt</Left>
+                              <Right>2pt</Right>
+                              <Top>2pt</Top>
+                            </BorderWidth>
+                            <Format>#,##0</Format>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                          <Value>=Sum(Fields!sum.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox36">
+                          <Style>
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth>
+                              <Bottom>2pt</Bottom>
+                              <Left>2pt</Left>
+                              <Right>2pt</Right>
+                              <Top>2pt</Top>
+                            </BorderWidth>
+                            <Format>#,##0</Format>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                          <Value>=Sum(Fields!paidsum.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox37">
+                          <Style>
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth>
+                              <Bottom>2pt</Bottom>
+                              <Left>2pt</Left>
+                              <Right>2pt</Right>
+                              <Top>2pt</Top>
+                            </BorderWidth>
+                            <Format>#,##0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                          <Value>=Sum(Fields!debt.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                </TableRow>
+              </TableRows>
+            </Header>
+          </TableGroup>
+        </TableGroups>
+      </Table>
+      <Textbox Name="Textbox23">
+        <Height>12.75pt</Height>
+        <Width>211.53pt</Width>
+        <Value>="Арендатор: " + Parameters!Lessee.Value</Value>
+        <ZIndex>1</ZIndex>
+        <Left>26.89pt</Left>
+        <Top>19.18pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <FontWeight>Bold</FontWeight>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox1">
+        <Height>12.00pt</Height>
+        <Width>149.83pt</Width>
+        <Value>="Место: " + Parameters!Place.Value</Value>
+        <ZIndex>1</ZIndex>
+        <Left>251.50pt</Left>
+        <Top>19.40pt</Top>
+        <Style>
+          <FontWeight>Bold</FontWeight>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox3">
+        <Height>12.75pt</Height>
+        <Width>155.84pt</Width>
+        <Value>=MonthName(Parameters!MonthStart.Value) + " " + Parameters!YearStart.Value + " - " + MonthName(Parameters!MonthEnd.Value) + " " + Parameters!YearEnd.Value</Value>
+        <ZIndex>1</ZIndex>
+        <Left>395.0pt</Left>
+        <Top>19.0pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <FontWeight>Bold</FontWeight>
+        </Style>
+        <Значение>=Parameters!YearStart.Value</Значение>
+      </Textbox>
+    </ReportItems>
+    <Height>100.4pt</Height>
+    <Columns>1</Columns>
+  </Body>
+  <PageFooter>
+    <Height>15.1pt</Height>
+    <ReportItems>
+      <Textbox Name="Textbox24">
+        <Top>1pt</Top>
+        <Left>10pt</Left>
+        <Height>12pt</Height>
+        <Width>3in</Width>
+        <Value>=Globals!PageNumber + ' из ' + Globals!TotalPages</Value>
+        <Style>
+          <FontSize>10pt</FontSize>
+          <FontWeight>Normal</FontWeight>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox6">
+        <Height>11.35pt</Height>
+        <Width>182.74pt</Width>
+        <Value>= "Напечатано: " + Globals!ExecutionTime</Value>
+        <ZIndex>1</ZIndex>
+        <Left>399.60pt</Left>
+        <Top>2.25pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+      </Textbox>
+    </ReportItems>
+    <PrintOnFirstPage>true</PrintOnFirstPage>
+    <PrintOnLastPage>true</PrintOnLastPage>
+  </PageFooter>
+  <DataElementName>Report</DataElementName>
+  <DataElementStyle>AttributeNormal</DataElementStyle>
+  <DataSources>
+    <DataSource Name="DS1">
+      <ConnectionProperties>
+        <DataProvider>MySQL.NET</DataProvider>
+        <ConnectString>server=demo.qsolution.ru;user=demo;password=demo;port=3306;database=bazar</ConnectString>
+        <IntegratedSecurity>false</IntegratedSecurity>
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <ReportParameters>
+    <ReportParameter Name="MonthStart">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>6</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="MonthEnd">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>12</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="YearStart">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2013</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="YearEnd">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2015</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="LesseeId">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>6</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Place">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>450</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Lessee">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Data</DataSetName>
+          <ValueField>lessee</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+  </ReportParameters>
+</Report>
