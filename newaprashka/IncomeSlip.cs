@@ -11,9 +11,11 @@ namespace bazar
 		public bool NewSlip;
 		int Lessee_id;
 		int Accountable_id;
+		int Income_id;
 		int OriginalAccrual = 0;
 		int Payment = 0;
 		bool LesseeNull = true;
+		bool IncomeNull = true;
 		bool AccountableNull = true;
 
 		public IncomeSlip ()
@@ -22,7 +24,6 @@ namespace bazar
 
 			ComboWorks.ComboFillReference(comboCash,"cash", ComboWorks.ListMode.WithNo);
 			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
-			ComboWorks.ComboFillReference(comboIncomeItem,"income_items", ComboWorks.ListMode.WithNo);
 
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;
@@ -56,7 +57,6 @@ namespace bazar
 		{
 			bool Orgok = comboOrg.Active > 0;
 			bool Cashok = comboCash.Active > 0;
-			bool Itemok = comboIncomeItem.Active > 0;
 			bool Lesseeok = !LesseeNull;
 			bool Paymentok = separationpayment.CanSave;
 			bool Rightok = QSMain.User.Permissions["edit_slips"] || NewSlip;
@@ -70,7 +70,7 @@ namespace bazar
 			switch (comboOperation.Active) 
 			{
 			case 0:
-				buttonOk.Sensitive = Orgok && Cashok && Rightok && Lesseeok && Itemok && Sumok;
+				buttonOk.Sensitive = Orgok && Cashok && Rightok && Lesseeok && !IncomeNull && Sumok;
 				break;
 			case 1:
 				buttonOk.Sensitive = Orgok && Cashok && Rightok && Accountableok && Sumok;
@@ -93,12 +93,7 @@ namespace bazar
 		{
 			TestCanSave ();
 		}
-
-		protected void OnComboIncomeItemChanged (object sender, EventArgs e)
-		{
-			TestCanSave ();
-		}
-
+			
 		protected void OnSpinSumValueChanged (object sender, EventArgs e)
 		{
 			TestCanSave ();
@@ -184,8 +179,8 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@accrual_id", DBNull.Value);
 					CurrentAccrualId = -1;
 				}
-				if(comboIncomeItem.GetActiveIter(out iter) && comboIncomeItem.Active > 0)
-					cmd.Parameters.AddWithValue("@income_id", comboIncomeItem.Model.GetValue(iter,1));
+				if(!IncomeNull)
+					cmd.Parameters.AddWithValue("@income_id", Income_id);
 				else
 					cmd.Parameters.AddWithValue("@income_id", DBNull.Value);
 				if(textviewDetails.Buffer.Text == "")
@@ -259,12 +254,14 @@ namespace bazar
 			
 			MainClass.StatusMessage(String.Format ("Запрос приходного ордера №{0}...", SlipId));
 			string sql = "SELECT credit_slips.*, lessees.name as lessee, users.name as user, " +
-				"employees.name as employee, payments.id as payment, contracts.number as contract, contracts.sign_date FROM credit_slips " +
+				"employees.name as employee, payments.id as payment, contracts.number as contract, " +
+				"contracts.sign_date, income_items.name as income FROM credit_slips " +
 				"LEFT JOIN lessees ON credit_slips.lessee_id = lessees.id " +
 				"LEFT JOIN users ON credit_slips.user_id = users.id " +
 				"LEFT JOIN employees ON credit_slips.employee_id = employees.id " +
 				"LEFT JOIN payments ON payments.credit_slip_id = credit_slips.id " +
 				"LEFT JOIN contracts ON contracts.id = credit_slips.contract_id " +
+				"LEFT JOIN income_items ON income_items.id = credit_slips.income_id " +
 				"WHERE credit_slips.id = @id";
 			try
 			{
@@ -319,10 +316,12 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, -1, out iter);
 				comboCash.SetActiveIter (iter);
 				if(rdr["income_id"] != DBNull.Value)
-					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, int.Parse(rdr["income_id"].ToString()), out iter);
-				else
-					ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, -1, out iter);
-				comboIncomeItem.SetActiveIter (iter);
+				{
+					Income_id = Convert.ToInt32(rdr["income_id"].ToString());
+					entryIncome.Text = rdr["income"].ToString();
+					entryIncome.TooltipText = rdr["income"].ToString();
+					IncomeNull = false;
+				}
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
 				if(rdr["user"] != DBNull.Value && !Copy)
 					entryUser.Text = rdr["user"].ToString ();
@@ -387,7 +386,6 @@ namespace bazar
 					buttonAccountableEdit.Sensitive = false;
 					comboContract.Sensitive = false;
 					comboAccrual.Sensitive = false;
-					comboIncomeItem.Sensitive = false;
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 					separationpayment.Sensitive = false;
@@ -465,7 +463,8 @@ namespace bazar
 		private void VisibleIncomeItems( bool visible)
 		{
 			labelIncomeItem.Visible = visible;
-			comboIncomeItem.Visible = visible;
+			entryIncome.Visible = visible;
+			buttonIncome.Visible = visible;
 		}
 
 		protected void OnButtonAccountableEditClicked (object sender, EventArgs e)
@@ -532,6 +531,24 @@ namespace bazar
 
 		protected void OnSeparationpaymentCanSaveStateChanged (object sender, EventArgs e)
 		{
+			TestCanSave ();
+		}
+
+		protected void OnButtonIncomeClicked (object sender, EventArgs e)
+		{
+			Reference IncomeSelect = new Reference();
+			IncomeSelect.SetMode(true,true,true,true,false);
+			IncomeSelect.FillList("income_items","Статья доходов", "Статьи доходов");
+			IncomeSelect.Show();
+			int result = IncomeSelect.Run();
+			if((ResponseType)result == ResponseType.Ok)
+			{
+				Income_id = IncomeSelect.SelectedID;
+				IncomeNull = false;
+				entryIncome.Text = IncomeSelect.SelectedName;
+				entryIncome.TooltipText = IncomeSelect.SelectedName;
+			}
+			IncomeSelect.Destroy();
 			TestCanSave ();
 		}
 	}

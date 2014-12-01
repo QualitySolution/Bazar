@@ -10,9 +10,11 @@ namespace bazar
 	{
 		public bool NewSlip;
 		int Contractor_id;
+		int Expense_id;
 		int Accountable_id;
 		bool ContractorNull = true;
 		bool AccountableNull = true;
+		bool ExpenseNull = true;
 
 		public ExpenseSlip ()
 		{
@@ -20,8 +22,7 @@ namespace bazar
 
 			ComboWorks.ComboFillReference(comboCash,"cash", ComboWorks.ListMode.WithNo);
 			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
-			ComboWorks.ComboFillReference(comboExpenseItem,"expense_items", ComboWorks.ListMode.WithNo);
-			
+
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;
 			entryUser.Text = QSMain.User.Name;
@@ -33,7 +34,6 @@ namespace bazar
 		{
 			bool Orgok = comboOrg.Active > 0;
 			bool Cashok = comboCash.Active > 0;
-			bool Itemok = comboExpenseItem.Active > 0;
 			bool Sumok;
 			if(spinSum.Text != "")
 				Sumok = Convert.ToDecimal (spinSum.Text) != 0; 
@@ -44,7 +44,7 @@ namespace bazar
 			switch (comboOperation.Active) 
 			{
 			case 0:
-				buttonOk.Sensitive = Orgok && Cashok && Itemok && Sumok;
+				buttonOk.Sensitive = Orgok && Cashok && Sumok && !ExpenseNull;
 				break;
 			case 1:
 				buttonOk.Sensitive = Orgok && Cashok && Accountableok && Sumok;
@@ -60,11 +60,6 @@ namespace bazar
 		}
 		
 		protected void OnComboCashChanged (object sender, EventArgs e)
-		{
-			TestCanSave ();
-		}
-		
-		protected void OnComboIncomeItemChanged (object sender, EventArgs e)
 		{
 			TestCanSave ();
 		}
@@ -126,8 +121,8 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@date", dateSlip.Date);
 				cmd.Parameters.AddWithValue("@sum", spinSum.Value);
-				if(comboExpenseItem.GetActiveIter(out iter) && comboExpenseItem.Active > 0)
-					cmd.Parameters.AddWithValue("@expense_id", comboExpenseItem.Model.GetValue(iter,1));
+				if(!ExpenseNull)
+					cmd.Parameters.AddWithValue("@expense_id", Expense_id);
 				else
 					cmd.Parameters.AddWithValue("@expense_id", DBNull.Value);
 				if(textviewDetails.Buffer.Text == "")
@@ -156,10 +151,11 @@ namespace bazar
 			
 			MainClass.StatusMessage(String.Format("Запрос расходного ордера №{0}...", SlipId));
 			string sql = "SELECT debit_slips.*, contractors.name as contractor, users.name as user, " +
-					"employees.name as employee FROM debit_slips " +
+					"employees.name as employee, expense_items.name as expense FROM debit_slips " +
 					"LEFT JOIN contractors ON debit_slips.contractor_id = contractors.id " +
 					"LEFT JOIN users ON debit_slips.user_id = users.id " +
 					"LEFT JOIN employees ON debit_slips.employee_id = employees.id " +
+					"LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id " +
 					"WHERE debit_slips.id = @id";
 			try
 			{
@@ -209,10 +205,12 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboCash.Model, -1, out iter);
 				comboCash.SetActiveIter (iter);
 				if(rdr["expense_id"] != DBNull.Value)
-					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, int.Parse(rdr["expense_id"].ToString()), out iter);
-				else
-					ListStoreWorks.SearchListStore((ListStore)comboExpenseItem.Model, -1, out iter);
-				comboExpenseItem.SetActiveIter (iter);
+				{
+					Expense_id = Convert.ToInt32(rdr["expense_id"].ToString());
+					entryExpense.Text = rdr["expense"].ToString();
+					entryExpense.TooltipText = rdr["expense"].ToString();
+					ExpenseNull = false;
+				}
 				spinSum.Value = double.Parse (rdr["sum"].ToString());
 				if(rdr["user"] != DBNull.Value && !Copy)
 					entryUser.Text = rdr["user"].ToString ();
@@ -232,7 +230,6 @@ namespace bazar
 					comboCash.Sensitive = false;
 					buttonContractorEdit.Sensitive = false;
 					buttonAccountableEdit.Sensitive = false;
-					comboExpenseItem.Sensitive = false;
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 				}
@@ -313,6 +310,24 @@ namespace bazar
 		{
 			string param = "id=" + entryNumber.Text;
 			ViewReportExt.Run ("Expense", param);
+		}
+
+		protected void OnButtonExpenseClicked (object sender, EventArgs e)
+		{
+			Reference ExpenseSelect = new Reference();
+			ExpenseSelect.SetMode(true,true,true,true,false);
+			ExpenseSelect.FillList("expense_items","Статья расходов", "Статьи расходов");
+			ExpenseSelect.Show();
+			int result = ExpenseSelect.Run();
+			if((ResponseType)result == ResponseType.Ok)
+			{
+				Expense_id = ExpenseSelect.SelectedID;
+				ExpenseNull = false;
+				entryExpense.Text = ExpenseSelect.SelectedName;
+				entryExpense.TooltipText = ExpenseSelect.SelectedName;
+			}
+			ExpenseSelect.Destroy();
+			TestCanSave ();
 		}
 	}
 }
