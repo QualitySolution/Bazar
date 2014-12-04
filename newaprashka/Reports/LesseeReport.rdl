@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT accrual.id as id, month, year, cash.name as cash, contracts.number as contract_no, contracts.lessee_id as lessee_id, lessees.name as lessee, sumtable.sum as sum, IFNULL(paidtable.sum, 0) as paidsum, (sumtable.sum -  IFNULL(paidtable.sum, 0)) as debt, contracts.place_no as place FROM accrual
 LEFT JOIN contracts ON contracts.id = accrual.contract_id 
@@ -39,11 +39,11 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
             <Value>=Parameters!YearEnd</Value>
           </QueryParameter>
           <QueryParameter Name="place">
-            <Value>=Parameters!Place</Value>
+            <Value>=Parameters!Place</Value>f
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
@@ -96,22 +96,20 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
     <ReportItems>
-      <Textbox Name="Textbox16">
-        <Height>17.27pt</Height>
-        <Width>147.60pt</Width>
+      <Textbox Name="Textbox4">
+        <Height>16.48pt</Height>
+        <Width>195.75pt</Width>
         <Value>Отчет по арендатору</Value>
         <ZIndex>1</ZIndex>
-        <Left>218.0pt</Left>
-        <Top>4.0pt</Top>
+        <Left>215.84pt</Left>
+        <Top>4.89pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
-          <Format>None</Format>
-          <TextAlign>Center</TextAlign>
+          <FontWeight>Bold</FontWeight>
           <FontSize>14pt</FontSize>
         </Style>
-        <Value>""</Value>
       </Textbox>
     </ReportItems>
   </PageHeader>
@@ -661,8 +659,8 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
         <Width>211.53pt</Width>
         <Value>="Арендатор: " + Parameters!Lessee.Value</Value>
         <ZIndex>1</ZIndex>
-        <Left>26.89pt</Left>
-        <Top>19.18pt</Top>
+        <Left>11.3pt</Left>
+        <Top>19.2pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -675,26 +673,28 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
         <Width>149.83pt</Width>
         <Value>="Место: " + Parameters!Place.Value</Value>
         <ZIndex>1</ZIndex>
-        <Left>251.50pt</Left>
-        <Top>19.40pt</Top>
+        <Left>243.1pt</Left>
+        <Top>19.4pt</Top>
         <Style>
           <FontWeight>Bold</FontWeight>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
         </Style>
       </Textbox>
       <Textbox Name="Textbox3">
-        <Height>12.75pt</Height>
-        <Width>155.84pt</Width>
+        <Height>13.51pt</Height>
+        <Width>274.77pt</Width>
         <Value>=MonthName(Parameters!MonthStart.Value) + " " + Parameters!YearStart.Value + " - " + MonthName(Parameters!MonthEnd.Value) + " " + Parameters!YearEnd.Value</Value>
         <ZIndex>1</ZIndex>
-        <Left>395.0pt</Left>
-        <Top>19.0pt</Top>
+        <Left>352.2pt</Left>
+        <Top>19.1pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
           <FontWeight>Bold</FontWeight>
         </Style>
-        <Value>=Parameters!YearStart.Value</Value>
       </Textbox>
     </ReportItems>
     <Height>100.4pt</Height>
@@ -740,7 +740,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
     <DataSource Name="DS1">
       <ConnectionProperties>
         <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>server=demo.qsolution.ru;user=demo;password=demo;port=3306;database=bazar</ConnectString>
+        <ConnectString>server=192.168.1.38;user=admin;password=123;port=3306;database=bazar</ConnectString>
         <IntegratedSecurity>false</IntegratedSecurity>
       </ConnectionProperties>
     </DataSource>
@@ -750,7 +750,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>6</Value>
+          <Value>2</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
@@ -789,7 +789,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>2015</Value>
+          <Value>2013</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
@@ -802,7 +802,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>6</Value>
+          <Value>46</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
@@ -815,10 +815,10 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>450</Value>
+          <Value>16\\14</Value>
         </Values>
       </DefaultValue>
-      <Nullable>false</Nullable>
+      <Nullable>true</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>false</MultiValue>
       <Prompt>
