@@ -60,7 +60,9 @@ namespace bazar
 
 		protected void OnComboLesseeChanged (object sender, EventArgs e)
 		{
-			if (ComboWorks.GetActiveIdOrNull (comboLessee) != null) {
+			if (ComboWorks.GetActiveIdOrNull (comboLessee) != null && 
+			    ComboWorks.GetActiveId(comboPlaceType) != null &&
+			    !String.IsNullOrEmpty(comboPlace.ActiveText)) {
 				buttonOk.Sensitive = true;
 				string SQL = "SELECT MIN(start_date) AS start, MAX(end_date) AS end FROM contracts " +
 					"WHERE lessee_id = @lessee_id AND place_type_id = @place_type_id AND place_no = @place_no";
@@ -69,7 +71,8 @@ namespace bazar
 				cmd.Parameters.AddWithValue ("@place_type_id", ComboWorks.GetActiveId(comboPlaceType));
 				cmd.Parameters.AddWithValue ("@place_no", comboPlace.ActiveText);
 				MySqlDataReader rdr = cmd.ExecuteReader();
-				rdr.Read ();
+				if (!rdr.Read ())
+					return;
 				TreeIter iter;
 				DateTime date = rdr.GetDateTime ("start");
 				comboStartMonth.Active = date.Month - 1;
