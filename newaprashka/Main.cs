@@ -433,10 +433,10 @@ namespace bazar
 				int count = 0;
 				string sql = "SELECT place_no FROM places " +
 					"WHERE type_id = @type_id";
+				((ListStore)combo.Model).Clear();
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@type_id", Type_id);
 				MySqlDataReader rdr = cmd.ExecuteReader();
-				((ListStore)combo.Model).Clear();
 
 				while (rdr.Read())
 				{
@@ -446,7 +446,6 @@ namespace bazar
 				rdr.Close();
 				if(count == 1)
 					combo.Active = 0;
-
 				MainClass.StatusMessage("Ok");
 	       	}
 	       	catch (Exception ex)

@@ -111,7 +111,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
           <TextAlign>Center</TextAlign>
           <FontSize>14pt</FontSize>
         </Style>
-        <Значение>""</Значение>
+        <Value>""</Value>
       </Textbox>
     </ReportItems>
   </PageHeader>
@@ -181,7 +181,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <Значение>Номер дог.</Значение>
+                      <Value>Номер дог.</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -198,7 +198,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <Значение>Дата/Касса</Значение>
+                      <Value>Дата/Касса</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -553,7 +553,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Top>2pt</Top>
                             </BorderWidth>
                           </Style>
-                          <Значение>=Fields!contract_no.Value</Значение>
+                          <Value>=Fields!contract_no.Value</Value>
                         </Textbox>
                       </ReportItems>
                     </TableCell>
@@ -694,7 +694,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
           <BorderWidth />
           <FontWeight>Bold</FontWeight>
         </Style>
-        <Значение>=Parameters!YearStart.Value</Значение>
+        <Value>=Parameters!YearStart.Value</Value>
       </Textbox>
     </ReportItems>
     <Height>100.4pt</Height>
