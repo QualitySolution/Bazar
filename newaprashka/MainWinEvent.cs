@@ -200,7 +200,6 @@ public partial class MainWindow : Gtk.Window
 	{
 		TreeIter iter;
 		int id;
-		((ListStore)comboboxEventPlaceNo.Model).Clear();
 		if(comboEventPlaceT.GetActiveIter(out iter) && comboEventPlaceT.Active > 0)
 		{
 			id = (int)comboEventPlaceT.Model.GetValue(iter,1);

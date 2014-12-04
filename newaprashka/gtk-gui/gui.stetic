@@ -139,7 +139,7 @@
         <property name="ShortLabel" translatable="yes">Сотрудники</property>
         <signal name="Activated" handler="OnAction27Activated" />
       </action>
-      <action id="Action28">
+      <action id="Action">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Отчеты</property>
         <property name="ShortLabel" translatable="yes">Отчеты</property>
@@ -268,7 +268,7 @@
                 <node type="Menuitem" action="Action24" />
                 <node type="Menuitem" action="Action25" />
               </node>
-              <node type="Menu" action="Action28">
+              <node type="Menu" action="Action">
                 <node type="Menu" action="Action29">
                   <node type="Menuitem" action="Action30" />
                   <node type="Menuitem" action="Action31" />
@@ -2127,7 +2127,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2802,7 +2801,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -14286,7 +14284,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.LesseeRentReport" design-size="379 210">
+  <widget class="Gtk.Dialog" id="bazar.LesseeRentReport" design-size="435 160">
     <property name="MemberName" />
     <property name="WindowPosition">CenterOnParent</property>
     <property name="Buttons">2</property>
@@ -14306,9 +14304,11 @@
                 <property name="NColumns">2</property>
                 <property name="RowSpacing">6</property>
                 <property name="ColumnSpacing">6</property>
+                <property name="BorderWidth">9</property>
                 <child>
                   <widget class="Gtk.ComboBox" id="comboLessee">
                     <property name="MemberName" />
+                    <property name="Sensitive">False</property>
                     <property name="IsTextCombo">False</property>
                     <property name="Items" translatable="yes" />
                     <signal name="Changed" handler="OnComboLesseeChanged" />
@@ -14318,31 +14318,10 @@
                     <property name="BottomAttach">2</property>
                     <property name="LeftAttach">1</property>
                     <property name="RightAttach">2</property>
-                    <property name="AutoSize">False</property>
+                    <property name="AutoSize">True</property>
+                    <property name="XOptions">Fill</property>
                     <property name="YOptions">Fill</property>
-                    <property name="XExpand">True</property>
-                    <property name="XFill">True</property>
-                    <property name="XShrink">False</property>
-                    <property name="YExpand">False</property>
-                    <property name="YFill">True</property>
-                    <property name="YShrink">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="Gtk.ComboBox" id="comboPlace">
-                    <property name="MemberName" />
-                    <property name="Sensitive">False</property>
-                    <property name="IsTextCombo">False</property>
-                    <property name="Items" translatable="yes" />
-                  </widget>
-                  <packing>
-                    <property name="TopAttach">2</property>
-                    <property name="BottomAttach">3</property>
-                    <property name="LeftAttach">1</property>
-                    <property name="RightAttach">2</property>
-                    <property name="AutoSize">False</property>
-                    <property name="YOptions">Fill</property>
-                    <property name="XExpand">True</property>
+                    <property name="XExpand">False</property>
                     <property name="XFill">True</property>
                     <property name="XShrink">False</property>
                     <property name="YExpand">False</property>
@@ -14355,46 +14334,86 @@
                     <property name="MemberName" />
                     <property name="Spacing">6</property>
                     <child>
-                      <widget class="QSWidgetLib.DatePicker" id="dateStart">
+                      <widget class="Gtk.ComboBox" id="comboStartMonth">
                         <property name="MemberName" />
-                        <property name="Events">ButtonPressMask</property>
-                        <property name="Date">0</property>
-                        <property name="IsEditable">True</property>
-                        <property name="AutoSeparation">False</property>
+                        <property name="IsTextCombo">True</property>
+                        <property name="Items" translatable="yes">Январь
+Февраль
+Март
+Апрель
+Май
+Июнь
+Июль
+Август
+Сентябрь
+Октябрь
+Ноябрь
+Декабрь</property>
                       </widget>
                       <packing>
                         <property name="Position">0</property>
-                        <property name="AutoSize">True</property>
+                        <property name="AutoSize">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="Gtk.ComboBox" id="comboStartYear">
+                        <property name="MemberName" />
+                        <property name="IsTextCombo">True</property>
+                        <property name="Items" translatable="yes" />
+                      </widget>
+                      <packing>
+                        <property name="Position">1</property>
+                        <property name="AutoSize">False</property>
                       </packing>
                     </child>
                     <child>
                       <widget class="Gtk.Label" id="label2">
                         <property name="MemberName" />
-                        <property name="Xalign">1</property>
                         <property name="LabelProp" translatable="yes"> - </property>
                       </widget>
                       <packing>
-                        <property name="Position">1</property>
-                        <property name="AutoSize">True</property>
+                        <property name="Position">2</property>
+                        <property name="AutoSize">False</property>
                         <property name="Expand">False</property>
-                        <property name="Fill">False</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="QSWidgetLib.DatePicker" id="dateEnd">
+                      <widget class="Gtk.ComboBox" id="comboEndMonth">
                         <property name="MemberName" />
-                        <property name="Events">ButtonPressMask</property>
-                        <property name="Date">0</property>
-                        <property name="IsEditable">True</property>
-                        <property name="AutoSeparation">False</property>
+                        <property name="IsTextCombo">True</property>
+                        <property name="Items" translatable="yes">Январь
+Февраль
+Март
+Апрель
+Май
+Июнь
+Июль
+Август
+Сентябрь
+Октябрь
+Ноябрь
+Декабрь</property>
                       </widget>
                       <packing>
-                        <property name="Position">2</property>
-                        <property name="AutoSize">True</property>
+                        <property name="Position">3</property>
+                        <property name="AutoSize">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="Gtk.ComboBox" id="comboEndYear">
+                        <property name="MemberName" />
+                        <property name="IsTextCombo">True</property>
+                        <property name="Items" translatable="yes" />
+                      </widget>
+                      <packing>
+                        <property name="Position">4</property>
+                        <property name="AutoSize">False</property>
                       </packing>
                     </child>
                   </widget>
                   <packing>
+                    <property name="TopAttach">2</property>
+                    <property name="BottomAttach">3</property>
                     <property name="LeftAttach">1</property>
                     <property name="RightAttach">2</property>
                     <property name="AutoSize">True</property>
@@ -14409,16 +14428,54 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Label" id="label1">
+                  <widget class="Gtk.HBox" id="hbox2">
                     <property name="MemberName" />
-                    <property name="Xalign">1</property>
-                    <property name="LabelProp" translatable="yes">Период:</property>
+                    <property name="Spacing">6</property>
+                    <child>
+                      <widget class="Gtk.ComboBox" id="comboPlaceType">
+                        <property name="MemberName" />
+                        <property name="IsTextCombo">False</property>
+                        <property name="Items" translatable="yes" />
+                        <signal name="Changed" handler="OnComboPlaceTypeChanged" />
+                      </widget>
+                      <packing>
+                        <property name="Position">0</property>
+                        <property name="AutoSize">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="Gtk.Label" id="label3">
+                        <property name="MemberName" />
+                        <property name="Xalign">1</property>
+                        <property name="LabelProp" translatable="yes">Место:</property>
+                      </widget>
+                      <packing>
+                        <property name="Position">1</property>
+                        <property name="AutoSize">True</property>
+                        <property name="Expand">False</property>
+                        <property name="Fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="Gtk.ComboBox" id="comboPlace">
+                        <property name="MemberName" />
+                        <property name="Sensitive">False</property>
+                        <property name="IsTextCombo">True</property>
+                        <property name="Items" translatable="yes" />
+                        <signal name="Changed" handler="OnComboPlaceChanged" />
+                      </widget>
+                      <packing>
+                        <property name="Position">2</property>
+                        <property name="AutoSize">False</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
-                    <property name="AutoSize">True</property>
-                    <property name="XOptions">Fill</property>
+                    <property name="LeftAttach">1</property>
+                    <property name="RightAttach">2</property>
+                    <property name="AutoSize">False</property>
                     <property name="YOptions">Fill</property>
-                    <property name="XExpand">False</property>
+                    <property name="XExpand">True</property>
                     <property name="XFill">True</property>
                     <property name="XShrink">False</property>
                     <property name="YExpand">False</property>
@@ -14427,10 +14484,10 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Label" id="label3">
+                  <widget class="Gtk.Label" id="label1">
                     <property name="MemberName" />
                     <property name="Xalign">1</property>
-                    <property name="LabelProp" translatable="yes">Место:</property>
+                    <property name="LabelProp" translatable="yes">Период:</property>
                   </widget>
                   <packing>
                     <property name="TopAttach">2</property>
@@ -14466,26 +14523,27 @@
                     <property name="YShrink">False</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="Gtk.Label" id="label6">
+                    <property name="MemberName" />
+                    <property name="Xalign">1</property>
+                    <property name="LabelProp" translatable="yes">Тип места:</property>
+                  </widget>
+                  <packing>
+                    <property name="AutoSize">True</property>
+                    <property name="XOptions">Fill</property>
+                    <property name="YOptions">Fill</property>
+                    <property name="XExpand">False</property>
+                    <property name="XFill">True</property>
+                    <property name="XShrink">False</property>
+                    <property name="YExpand">False</property>
+                    <property name="YFill">True</property>
+                    <property name="YShrink">False</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="Position">0</property>
-                <property name="AutoSize">True</property>
-                <property name="Expand">False</property>
-                <property name="Fill">False</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="Gtk.Label" id="label5">
-                <property name="MemberName" />
-                <property name="LabelProp" translatable="yes">* При выборе дат формирования отчета 
-  учитываются только месяц и год.
-* Для формирования отчета необходимо 
-  выбрать как арендатора, так и торговое место.
-</property>
-                <property name="Wrap">True</property>
-              </widget>
-              <packing>
-                <property name="Position">1</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
@@ -14527,6 +14585,7 @@
         <child>
           <widget class="Gtk.Button" id="buttonOk">
             <property name="MemberName" />
+            <property name="Sensitive">False</property>
             <property name="CanDefault">True</property>
             <property name="CanFocus">True</property>
             <property name="UseStock">True</property>

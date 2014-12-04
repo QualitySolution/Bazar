@@ -172,7 +172,6 @@ namespace bazar
 		protected virtual void OnComboEventPlaceTChanged (object sender, System.EventArgs e)
 		{
 			TreeIter iter;
-			((ListStore)comboboxPlaceNo.Model).Clear();
 			if(comboEventPlaceT.GetActiveIter(out iter) && comboEventPlaceT.Active > 0)
 			{
 				PlaceTypeId = (int)comboEventPlaceT.Model.GetValue(iter,1);

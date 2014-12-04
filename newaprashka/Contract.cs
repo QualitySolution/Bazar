@@ -389,7 +389,6 @@ namespace bazar
 		{
 			TreeIter iter;
 			int id;
-			((ListStore)comboPlaceNo.Model).Clear();
 			if(comboPlaceT.GetActiveIter(out iter) && comboPlaceT.Active > 0)
 			{
 				id = (int)comboPlaceT.Model.GetValue(iter,1);

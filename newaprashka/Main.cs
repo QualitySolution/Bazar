@@ -436,7 +436,8 @@ namespace bazar
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue("@type_id", Type_id);
 				MySqlDataReader rdr = cmd.ExecuteReader();
-				
+				((ListStore)combo.Model).Clear();
+
 				while (rdr.Read())
 				{
 					combo.AppendText(rdr["place_no"].ToString());
@@ -484,30 +485,24 @@ namespace bazar
 			try
 			{
 				MainClass.StatusMessage("Запрос лет для начислений...");
-				bool CurrentYear = false;
-				bool NextYear = false;
 				TreeIter iter;
-				string sql = "SELECT DISTINCT year FROM accrual";
+				string sql = "SELECT DISTINCT year FROM accrual ORDER BY year DESC";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				
 				((ListStore)combo.Model).Clear();
 				if(FirstItem != "")
 					combo.AppendText(FirstItem);
+				combo.AppendText(Convert.ToString(DateTime.Now.AddYears (1).Year));
+				combo.AppendText(Convert.ToString(DateTime.Now.Year));
 				while (rdr.Read())
 				{
-					if(rdr.GetUInt32 ("year") == DateTime.Now.Year)
-						CurrentYear = true;
-					if(rdr.GetUInt32 ("year") == DateTime.Now.AddYears (1).Year)
-						NextYear = true;
+					if(rdr.GetUInt32 ("year") == DateTime.Now.Year || rdr.GetUInt32 ("year") == DateTime.Now.AddYears (1).Year)
+						continue;
 					combo.AppendText(rdr["year"].ToString());
 				}
 				rdr.Close();
-				if(!CurrentYear)
-					combo.AppendText(Convert.ToString (DateTime.Today.Year));
-				if(!NextYear)
-					combo.AppendText(Convert.ToString (DateTime.Today.AddYears(1).Year));
-				((ListStore)combo.Model).SetSortColumnId ( 0, SortType.Ascending);
+				((ListStore)combo.Model).SetSortColumnId ( 0, SortType.Descending);
 				ListStoreWorks.SearchListStore ((ListStore)combo.Model, Convert.ToString (DateTime.Now.Year), out iter);
 				combo.SetActiveIter(iter);
 				MainClass.StatusMessage("Ok");

@@ -4,233 +4,463 @@
 public partial class MainWindow
 {
 	private global::Gtk.UIManager UIManager;
+	
 	private global::Gtk.Action ActionFileMenu;
+	
 	private global::Gtk.Action Action9;
+	
 	private global::Gtk.Action Action10;
+	
 	private global::Gtk.Action Action3;
+	
 	private global::Gtk.Action Action7;
+	
 	private global::Gtk.Action Action6;
+	
 	private global::Gtk.Action Action5;
+	
 	private global::Gtk.Action quitAction;
+	
 	private global::Gtk.Action Action34;
+	
 	private global::Gtk.Action aboutAction;
+	
 	private global::Gtk.Action dialogAuthenticationAction;
+	
 	private global::Gtk.Action Action15;
+	
 	private global::Gtk.Action Action17;
+	
 	private global::Gtk.Action Action18;
+	
 	private global::Gtk.Action Action19;
+	
 	private global::Gtk.Action Action26;
+	
 	private global::Gtk.Action Action21;
+	
 	private global::Gtk.Action Action24;
+	
 	private global::Gtk.Action Action25;
+	
 	private global::Gtk.Action UsersAction;
+	
 	private global::Gtk.Action Action27;
-	private global::Gtk.Action Action28;
+	
+	private global::Gtk.Action Action;
+	
 	private global::Gtk.Action Action29;
+	
 	private global::Gtk.Action Action30;
+	
 	private global::Gtk.Action Action31;
+	
 	private global::Gtk.Action Action32;
+	
 	private global::Gtk.Action helpAction;
+	
 	private global::Gtk.Action Action33;
+	
 	private global::Gtk.Action Action36;
+	
 	private global::Gtk.Action Action37;
+	
 	private global::Gtk.Action Action38;
+	
 	private global::Gtk.Action Action39;
+	
 	private global::Gtk.Action Action40;
+	
 	private global::Gtk.Action Action41;
+	
 	private global::Gtk.Action Action42;
+	
+	private global::Gtk.Action ActionLesseeRentReport;
+	
 	private global::Gtk.VBox vbox1;
+	
 	private global::Gtk.MenuBar menubar1;
+	
 	private global::Gtk.Notebook notebookMain;
+	
 	private global::Gtk.VBox vbox2;
+	
 	private global::Gtk.HBox hbox8;
+	
 	private global::Gtk.Table table3;
+	
 	private global::Gtk.ComboBox comboPlaceOrg;
+	
 	private global::Gtk.HBox hbox1;
+	
 	private global::Gtk.ComboBox comboPlaceType;
+	
 	private global::Gtk.Label label19;
+	
 	private global::Gtk.Entry entryPlaceNum;
+	
 	private global::Gtk.Button buttonCleanTabPPlaceNo;
+	
 	private global::Gtk.Label label22;
+	
 	private global::Gtk.Label label3;
+	
 	private global::Gtk.Table table6;
+	
 	private global::Gtk.HBox hbox19;
+	
 	private global::Gtk.Entry entryPlaceLess;
+	
 	private global::Gtk.Button buttonCleanTabPLessee;
+	
 	private global::Gtk.HBox hbox20;
+	
 	private global::Gtk.Entry entryPlaceContact;
+	
 	private global::Gtk.Button buttonCleanTabPContact;
+	
 	private global::Gtk.Label label20;
+	
 	private global::Gtk.Label label21;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow;
+	
 	private global::Gtk.TreeView treeviewPlaces;
+	
 	private global::Gtk.Label label1;
+	
 	private global::Gtk.VBox vbox3;
+	
 	private global::Gtk.HBox hbox3;
+	
 	private global::Gtk.Table table1;
+	
 	private global::Gtk.Button button233;
+	
 	private global::Gtk.Button button234;
+	
 	private global::Gtk.Button button235;
+	
 	private global::Gtk.Entry entryFilterFIO;
+	
 	private global::Gtk.Entry entryFilterINN;
+	
 	private global::Gtk.Entry entryFilterName;
+	
 	private global::Gtk.Label label4;
+	
 	private global::Gtk.Label label5;
+	
 	private global::Gtk.Label label6;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow1;
+	
 	private global::Gtk.TreeView treeviewLessees;
+	
 	private global::Gtk.Label label2;
+	
 	private global::Gtk.VBox vbox8;
+	
 	private global::Gtk.HBox hbox9;
+	
 	private global::Gtk.Table table4;
+	
 	private global::Gtk.ComboBox comboContractOrg;
+	
 	private global::Gtk.HBox hbox10;
+	
 	private global::Gtk.ComboBox comboContractPlaceT;
+	
 	private global::Gtk.Label label30;
+	
 	private global::Gtk.Entry entryContractPlaceN;
+	
 	private global::Gtk.Button buttonContractClearPlace;
+	
 	private global::Gtk.HBox hbox11;
+	
 	private global::Gtk.Entry entryContractLessee;
+	
 	private global::Gtk.Button buttonContractClearLessee;
+	
 	private global::Gtk.HBox hbox12;
+	
 	private global::Gtk.Entry entryContractNumber;
+	
 	private global::Gtk.Button buttonContractClearNumber;
+	
 	private global::Gtk.Label label26;
+	
 	private global::Gtk.Label label27;
+	
 	private global::Gtk.Label label28;
+	
 	private global::Gtk.Label label29;
+	
 	private global::Gtk.VBox vbox9;
+	
 	private global::Gtk.CheckButton checkActiveContracts;
+	
 	private global::Gtk.CheckButton check30daysContracts;
+	
 	private global::Gtk.HBox hbox28;
+	
 	private global::Gtk.Button buttonProlongation;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow3;
+	
 	private global::Gtk.TreeView treeviewContract;
+	
 	private global::Gtk.Label label15;
+	
 	private global::Gtk.VBox vbox13;
+	
 	private global::Gtk.HBox hbox21;
+	
 	private global::Gtk.Table table7;
+	
 	private global::Gtk.ComboBox comboAccrualCash;
+	
 	private global::Gtk.ComboBox comboAccrualOrg;
+	
 	private global::Gtk.HBox hbox22;
+	
 	private global::Gtk.Entry entryAccrualLessee;
+	
 	private global::Gtk.Button buttonAccrualLesseeClear;
+	
 	private global::Gtk.HBox hbox23;
+	
 	private global::Gtk.ComboBox comboAccrualMonth;
+	
 	private global::Gtk.ComboBox comboAccuralYear;
+	
 	private global::Gtk.HBox hbox25;
+	
 	private global::Gtk.Entry entryAccrualContract;
+	
 	private global::Gtk.Button buttonAccrualContractClear;
+	
 	private global::Gtk.Label label42;
+	
 	private global::Gtk.Label label43;
+	
 	private global::Gtk.Label label44;
+	
 	private global::Gtk.Label label45;
+	
 	private global::Gtk.Label label46;
+	
 	private global::Gtk.VBox vbox14;
+	
 	private global::Gtk.CheckButton checkOnlyNotPaid;
+	
 	private global::Gtk.CheckButton checkNotComplete;
+	
 	private global::Gtk.HBox hbox24;
+	
 	private global::Gtk.Button buttonMakePayment;
+	
 	private global::Gtk.Button buttonAccrualMass;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow7;
+	
 	private global::Gtk.TreeView treeviewAccrual;
+	
 	private global::Gtk.Label label17;
+	
 	private global::Gtk.VBox vbox10;
+	
 	private global::Gtk.HBox hbox18;
+	
 	private global::Gtk.Table table5;
+	
 	private global::Gtk.ComboBox comboCashCash;
+	
 	private global::Gtk.ComboBox comboCashItem;
+	
 	private global::Gtk.ComboBox comboCashOrg;
+	
 	private global::Gtk.HBox hbox26;
+	
 	private global::Gtk.Entry entryCashContractor;
+	
 	private global::Gtk.Button buttonCashContractorClear;
+	
 	private global::Gtk.HBox hbox27;
+	
 	private global::Gtk.Entry entryCashEmployee;
+	
 	private global::Gtk.Button buttonCashEmployeeClear;
+	
 	private global::Gtk.Label label33;
+	
 	private global::Gtk.Label label34;
+	
 	private global::Gtk.Label label35;
+	
 	private global::Gtk.Label label36;
+	
 	private global::Gtk.Label label41;
+	
 	private global::Gtk.VBox vbox11;
+	
 	private global::Gtk.Label label31;
+	
 	private global::Gtk.RadioButton radioCashToday;
+	
 	private global::Gtk.RadioButton radioCashWeek;
+	
 	private global::Gtk.RadioButton radioMonth;
+	
 	private global::Gtk.RadioButton radioCash6Month;
+	
 	private global::Gtk.HBox hbox15;
+	
 	private global::QSWidgetLib.DatePicker dateCashStart;
+	
 	private global::Gtk.Label label32;
+	
 	private global::QSWidgetLib.DatePicker dateCashEnd;
+	
 	private global::Gtk.VBox vbox12;
+	
 	private global::Gtk.Label label39;
+	
 	private global::Gtk.Label labelCashSum;
+	
 	private global::Gtk.Label labelCashSumOrg;
+	
 	private global::Gtk.Label labelCashSumCash;
+	
 	private global::Gtk.Button buttonCashBalance;
+	
 	private global::Gtk.Button buttonCashDebts;
+	
 	private global::Gtk.Notebook notebookCash;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow4;
+	
 	private global::Gtk.TreeView treeviewIncome;
+	
 	private global::Gtk.Label label37;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow5;
+	
 	private global::Gtk.TreeView treeviewExpense;
+	
 	private global::Gtk.Label label9;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow6;
+	
 	private global::Gtk.TreeView treeviewAdvance;
+	
 	private global::Gtk.Label label7;
+	
 	private global::Gtk.Label label16;
+	
 	private global::Gtk.VBox vbox4;
+	
 	private global::Gtk.HBox hbox5;
+	
 	private global::Gtk.VBox vbox5;
+	
 	private global::Gtk.Label label8;
+	
 	private global::Gtk.Table table2;
+	
 	private global::Gtk.ComboBox comboEventType;
+	
 	private global::Gtk.ComboBox comboEventUser;
+	
 	private global::Gtk.HBox hbox6;
+	
 	private global::Gtk.ComboBox comboEventPlaceT;
+	
 	private global::Gtk.Label label18;
+	
 	private global::Gtk.ComboBox comboboxEventPlaceNo;
+	
 	private global::Gtk.HBox hbox7;
+	
 	private global::Gtk.Entry entryEventLessee;
+	
 	private global::Gtk.Button buttonEventLesseeClean;
+	
 	private global::Gtk.Button buttonEventLesseeEdit;
+	
 	private global::Gtk.Label label10;
+	
 	private global::Gtk.Label label11;
+	
 	private global::Gtk.Label label12;
+	
 	private global::Gtk.Label label13;
+	
 	private global::Gtk.VSeparator vseparator1;
+	
 	private global::Gtk.VBox vbox6;
+	
 	private global::Gtk.Label label14;
+	
 	private global::Gtk.RadioButton radiobuttonToday;
+	
 	private global::Gtk.RadioButton radiobuttonWeek;
+	
 	private global::Gtk.RadioButton radiobuttonMonth;
+	
 	private global::Gtk.RadioButton radiobutton6Month;
+	
 	private global::Gtk.HBox hbox13;
+	
 	private global::QSWidgetLib.DatePicker datepickerEventBegin;
+	
 	private global::Gtk.Label label23;
+	
 	private global::QSWidgetLib.DatePicker datepickerEventEnd;
+	
 	private global::Gtk.VSeparator vseparator3;
+	
 	private global::Gtk.VBox vbox7;
+	
 	private global::Gtk.Label label24;
+	
 	private global::Gtk.Label label25;
+	
 	private global::Gtk.Entry entryEventCause;
+	
 	private global::Gtk.Label label38;
+	
 	private global::Gtk.Entry entryEventActivity;
+	
 	private global::Gtk.VSeparator vseparator4;
+	
 	private global::Gtk.Button buttonEventRefresh;
+	
 	private global::Gtk.ScrolledWindow GtkScrolledWindow2;
+	
 	private global::Gtk.TreeView treeviewEvents;
+	
 	private global::Gtk.Label label40;
+	
 	private global::Gtk.HBox hbox17;
+	
 	private global::Gtk.Button buttonOpen;
+	
 	private global::Gtk.Button buttonAdd;
+	
 	private global::Gtk.Button buttonDel;
+	
 	private global::Gtk.VSeparator vseparator2;
+	
 	private global::Gtk.Button buttonRefreshTable;
+	
 	private global::Gtk.Statusbar statusbar1;
+	
 	private global::Gtk.Label labelUser;
+	
 	private global::Gtk.Label labelStatus;
+	
 	private global::Gtk.Label labelSum;
 
 	protected virtual void Build ()
@@ -302,9 +532,9 @@ public partial class MainWindow
 		this.Action27 = new global::Gtk.Action ("Action27", global::Mono.Unix.Catalog.GetString ("Сотрудники"), null, null);
 		this.Action27.ShortLabel = global::Mono.Unix.Catalog.GetString ("Сотрудники");
 		w1.Add (this.Action27, null);
-		this.Action28 = new global::Gtk.Action ("Action28", global::Mono.Unix.Catalog.GetString ("Отчеты"), null, null);
-		this.Action28.ShortLabel = global::Mono.Unix.Catalog.GetString ("Отчеты");
-		w1.Add (this.Action28, null);
+		this.Action = new global::Gtk.Action ("Action", global::Mono.Unix.Catalog.GetString ("Отчеты"), null, null);
+		this.Action.ShortLabel = global::Mono.Unix.Catalog.GetString ("Отчеты");
+		w1.Add (this.Action, null);
 		this.Action29 = new global::Gtk.Action ("Action29", global::Mono.Unix.Catalog.GetString ("Касса"), null, null);
 		this.Action29.ShortLabel = global::Mono.Unix.Catalog.GetString ("Касса");
 		w1.Add (this.Action29, null);
@@ -344,6 +574,9 @@ public partial class MainWindow
 		this.Action42 = new global::Gtk.Action ("Action42", global::Mono.Unix.Catalog.GetString ("Счётчики"), null, null);
 		this.Action42.ShortLabel = global::Mono.Unix.Catalog.GetString ("Счётчики");
 		w1.Add (this.Action42, null);
+		this.ActionLesseeRentReport = new global::Gtk.Action ("ActionLesseeRentReport", global::Mono.Unix.Catalog.GetString ("Оплата торгового места"), null, null);
+		this.ActionLesseeRentReport.ShortLabel = global::Mono.Unix.Catalog.GetString ("Оплата торгового места");
+		w1.Add (this.ActionLesseeRentReport, null);
 		this.UIManager.InsertActionGroup (w1, 0);
 		this.AddAccelGroup (this.UIManager.AccelGroup);
 		this.Name = "MainWindow";
@@ -355,7 +588,7 @@ public partial class MainWindow
 		this.vbox1.Name = "vbox1";
 		this.vbox1.Spacing = 6;
 		// Container child vbox1.Gtk.Box+BoxChild
-		this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='ActionFileMenu' action='ActionFileMenu'><menuitem name='dialogAuthenticationAction' action='dialogAuthenticationAction'/><menuitem name='UsersAction' action='UsersAction'/><separator/><menuitem name='quitAction' action='quitAction'/></menu><menu name='Action9' action='Action9'><menuitem name='Action15' action='Action15'/><menuitem name='Action27' action='Action27'/><separator/><menuitem name='Action10' action='Action10'/><menuitem name='Action21' action='Action21'/><menuitem name='Action3' action='Action3'/><separator/><menuitem name='Action7' action='Action7'/><menuitem name='Action6' action='Action6'/><menuitem name='Action5' action='Action5'/><separator/><menuitem name='Action17' action='Action17'/><menuitem name='Action18' action='Action18'/><menuitem name='Action41' action='Action41'/><separator/><menuitem name='Action19' action='Action19'/><menuitem name='Action24' action='Action24'/><menuitem name='Action25' action='Action25'/></menu><menu name='Action28' action='Action28'><menu name='Action29' action='Action29'><menuitem name='Action30' action='Action30'/><menuitem name='Action31' action='Action31'/><menuitem name='Action32' action='Action32'/><menuitem name='Action40' action='Action40'/></menu><menuitem name='Action33' action='Action33'/><menuitem name='Action38' action='Action38'/><menuitem name='Action39' action='Action39'/><menuitem name='Action42' action='Action42'/></menu><menu name='Action34' action='Action34'><menuitem name='helpAction' action='helpAction'/><menuitem name='Action36' action='Action36'/><menuitem name='Action37' action='Action37'/><menuitem name='Action26' action='Action26'/><separator/><menuitem name='aboutAction' action='aboutAction'/></menu></menubar></ui>");
+		this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='ActionFileMenu' action='ActionFileMenu'><menuitem name='dialogAuthenticationAction' action='dialogAuthenticationAction'/><menuitem name='UsersAction' action='UsersAction'/><separator/><menuitem name='quitAction' action='quitAction'/></menu><menu name='Action9' action='Action9'><menuitem name='Action15' action='Action15'/><menuitem name='Action27' action='Action27'/><separator/><menuitem name='Action10' action='Action10'/><menuitem name='Action21' action='Action21'/><menuitem name='Action3' action='Action3'/><separator/><menuitem name='Action7' action='Action7'/><menuitem name='Action6' action='Action6'/><menuitem name='Action5' action='Action5'/><separator/><menuitem name='Action17' action='Action17'/><menuitem name='Action18' action='Action18'/><menuitem name='Action41' action='Action41'/><separator/><menuitem name='Action19' action='Action19'/><menuitem name='Action24' action='Action24'/><menuitem name='Action25' action='Action25'/></menu><menu name='Action' action='Action'><menu name='Action29' action='Action29'><menuitem name='Action30' action='Action30'/><menuitem name='Action31' action='Action31'/><menuitem name='Action32' action='Action32'/><menuitem name='Action40' action='Action40'/></menu><menuitem name='Action33' action='Action33'/><menuitem name='Action38' action='Action38'/><menuitem name='Action39' action='Action39'/><menuitem name='Action42' action='Action42'/><menuitem name='ActionLesseeRentReport' action='ActionLesseeRentReport'/></menu><menu name='Action34' action='Action34'><menuitem name='helpAction' action='helpAction'/><menuitem name='Action36' action='Action36'/><menuitem name='Action37' action='Action37'/><menuitem name='Action26' action='Action26'/><separator/><menuitem name='aboutAction' action='aboutAction'/></menu></menubar></ui>");
 		this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar1")));
 		this.menubar1.Name = "menubar1";
 		this.vbox1.Add (this.menubar1);
@@ -2315,6 +2548,7 @@ public partial class MainWindow
 		this.Action40.Activated += new global::System.EventHandler (this.OnAction40Activated);
 		this.Action41.Activated += new global::System.EventHandler (this.OnAction41Activated);
 		this.Action42.Activated += new global::System.EventHandler (this.OnAction42Activated);
+		this.ActionLesseeRentReport.Activated += new global::System.EventHandler (this.OnActionLesseeRentReportActivated);
 		this.notebookMain.SwitchPage += new global::Gtk.SwitchPageHandler (this.OnNotebookMainSwitchPage);
 		this.comboPlaceType.Changed += new global::System.EventHandler (this.OnComboPlaceTypeChanged);
 		this.entryPlaceNum.Changed += new global::System.EventHandler (this.OnEntryPlaceNumChanged);
