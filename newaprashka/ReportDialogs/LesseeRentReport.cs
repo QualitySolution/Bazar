@@ -61,7 +61,7 @@ namespace bazar
 		protected void OnComboLesseeChanged (object sender, EventArgs e)
 		{
 			if (ComboWorks.GetActiveIdOrNull (comboLessee) != null && 
-			    ComboWorks.GetActiveId(comboPlaceType) != null &&
+			    ComboWorks.GetActiveIdOrNull (comboPlaceType) != null &&
 			    !String.IsNullOrEmpty(comboPlace.ActiveText)) {
 				buttonOk.Sensitive = true;
 				string SQL = "SELECT MIN(start_date) AS start, MAX(end_date) AS end FROM contracts " +
