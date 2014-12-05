@@ -671,7 +671,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <Textbox Name="Textbox1">
         <Height>12.00pt</Height>
         <Width>149.83pt</Width>
-        <Value>="Место: " + Parameters!Place.Value</Value>
+        <Value>="Место: " + Replace(Parameters!Place.Value, "\\\\", "\\")</Value>
         <ZIndex>1</ZIndex>
         <Left>243.1pt</Left>
         <Top>19.4pt</Top>
