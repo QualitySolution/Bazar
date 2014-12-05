@@ -13,14 +13,17 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT accrual.id as id, month, year, cash.name as cash, contracts.number as contract_no, contracts.lessee_id as lessee_id, lessees.name as lessee, sumtable.sum as sum, IFNULL(paidtable.sum, 0) as paidsum, (sumtable.sum -  IFNULL(paidtable.sum, 0)) as debt, contracts.place_no as place FROM accrual
 LEFT JOIN contracts ON contracts.id = accrual.contract_id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id
-LEFT JOIN (SELECT accrual_id, cash_id, SUM(count * price) as sum FROM accrual_pays GROUP BY accrual_id, cash_id) as sumtable ON sumtable.accrual_id = accrual.id
-LEFT JOIN (SELECT accrual_id, cash_id, SUM(sum) as sum FROM credit_slips GROUP BY accrual_id, cash_id) as paidtable ON paidtable.accrual_id = accrual.id
- and sumtable.cash_id = paidtable.cash_id LEFT JOIN cash ON cash.id = sumtable.cash_id and cash.id = paidtable.cash_id 
+LEFT JOIN (SELECT accrual_id, cash_id, SUM(count * price) as sum 
+FROM accrual_pays GROUP BY accrual_id, cash_id) as sumtable ON sumtable.accrual_id = accrual.id
+LEFT JOIN (SELECT accrual_id, cash_id, SUM(sum) as sum 
+FROM credit_slips GROUP BY accrual_id, cash_id) as paidtable ON paidtable.accrual_id = accrual.id
+and sumtable.cash_id = paidtable.cash_id 
+LEFT JOIN cash ON cash.id = sumtable.cash_id
 WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_start) and ((month &lt;= @month_end and year = @year_end) or year &lt; @year_end) and lessee_id = @lessee_id and contracts.place_no = @place;</CommandText>
         <QueryParameters>
           <QueryParameter Name="month_start">
@@ -39,11 +42,11 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
             <Value>=Parameters!YearEnd</Value>
           </QueryParameter>
           <QueryParameter Name="place">
-            <Value>=Parameters!Place</Value>f
+            <Value>=Parameters!Place</Value>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
@@ -323,11 +326,11 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingRight>0pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
                         <BorderWidth />
-                        <Format>#,##0</Format>
+                        <Format>#,##0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -341,11 +344,11 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingRight>0pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
                         <BorderWidth />
-                        <Format>#,##0</Format>
+                        <Format>#,##0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -359,11 +362,11 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingRight>0pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
                         <BorderWidth />
-                        <Format>#,##0</Format>
+                        <Format>#,##0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -444,12 +447,13 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingRight>0pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <FontWeight>Bold</FontWeight>
                         <BorderColor />
                         <BorderWidth />
-                        <Format>#,##0</Format>
+                        <Format>#,##0.00</Format>
+                        <BackgroundColor >Pink</BackgroundColor>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -463,12 +467,13 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingRight>0pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <FontWeight>Bold</FontWeight>
                         <BorderColor />
                         <BorderWidth />
-                        <Format>#,##0</Format>
+                        <Format>#,##0.00</Format>
+                        <BackgroundColor >Pink</BackgroundColor>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -481,12 +486,13 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingRight>0pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <FontWeight>Bold</FontWeight>
                         <BorderColor />
                         <BorderWidth />
-                        <Format>#,##0</Format>
+                        <Format>#,##0.00</Format>
+                        <BackgroundColor >Pink</BackgroundColor>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -528,6 +534,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Right>2pt</Right>
                               <Top>2pt</Top>
                             </BorderWidth>
+                            <BackgroundColor >Yellow</BackgroundColor>
                           </Style>
                           <Value>=Fields!id.Value</Value>
                         </Textbox>
@@ -550,6 +557,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Right>2pt</Right>
                               <Top>2pt</Top>
                             </BorderWidth>
+                            <BackgroundColor >Yellow</BackgroundColor>
                           </Style>
                           <Value>=Fields!contract_no.Value</Value>
                         </Textbox>
@@ -572,6 +580,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Top>2pt</Top>
                             </BorderWidth>
                             <FontWeight>Bold</FontWeight>
+                            <BackgroundColor >Yellow</BackgroundColor>
                           </Style>
                           <Value>=MonthName(Fields!month.Value) + " " +  Fields!year.Value</Value>
                         </Textbox>
@@ -593,8 +602,9 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Right>2pt</Right>
                               <Top>2pt</Top>
                             </BorderWidth>
-                            <Format>#,##0</Format>
+                            <Format>#,##0.00</Format>
                             <FontWeight>Bold</FontWeight>
+                            <BackgroundColor >Yellow</BackgroundColor>
                           </Style>
                           <Value>=Sum(Fields!sum.Value)</Value>
                         </Textbox>
@@ -616,8 +626,9 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Right>2pt</Right>
                               <Top>2pt</Top>
                             </BorderWidth>
-                            <Format>#,##0</Format>
+                            <Format>#,##0.00</Format>
                             <FontWeight>Bold</FontWeight>
+                            <BackgroundColor >Yellow</BackgroundColor>
                           </Style>
                           <Value>=Sum(Fields!paidsum.Value)</Value>
                         </Textbox>
@@ -639,9 +650,10 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
                               <Right>2pt</Right>
                               <Top>2pt</Top>
                             </BorderWidth>
-                            <Format>#,##0</Format>
+                            <Format>#,##0.00</Format>
                             <TextAlign>Right</TextAlign>
                             <FontWeight>Bold</FontWeight>
+                            <BackgroundColor >Yellow</BackgroundColor>
                           </Style>
                           <Value>=Sum(Fields!debt.Value)</Value>
                         </Textbox>
@@ -745,7 +757,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       </ConnectionProperties>
     </DataSource>
   </DataSources>
-  <ReportParameters>
+  <ReportParameters >
     <ReportParameter Name="MonthStart">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -776,7 +788,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>2013</Value>
+          <Value>2012</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
@@ -789,7 +801,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>2013</Value>
+          <Value>2014</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
@@ -802,7 +814,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>46</Value>
+          <Value>279</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>
@@ -815,7 +827,7 @@ WHERE ((month &gt;= @month_start and year = @year_start) or year &gt; @year_star
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>16\\14</Value>
+          <Value>546</Value>
         </Values>
       </DefaultValue>
       <Nullable>true</Nullable>
