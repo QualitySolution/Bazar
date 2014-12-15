@@ -15,6 +15,7 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
+        <Timeout>300</Timeout>
         <CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
  lessees.name as lessee, services.name as service, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
  (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt 
@@ -440,7 +441,7 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                             <FontWeight>Bold</FontWeight>
                             <BorderColor />
                             <BorderWidth />
-                            <Format >0.00</Format>
+                            <Format>0.00</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -476,9 +477,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                             <PaddingRight>2pt</PaddingRight>
                             <TextAlign>Right</TextAlign>
                             <FontWeight>Bold</FontWeight>
-                            <BorderColor  />
-                            <BorderWidth  />
-                            <Format >0.00</Format>
+                            <BorderColor />
+                            <BorderWidth />
+                            <Format>0.00</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -589,7 +590,7 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                             <PaddingRight>2pt</PaddingRight>
                             <BorderColor />
                             <BorderWidth />
-                            <Format >0.00</Format>
+                            <Format>0.00</Format>
                           </Style>
                           <Value>=Sum(Fields!sum.Value)</Value>
                         </Textbox>
@@ -621,9 +622,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                             </BorderStyle>
                             <PaddingLeft>0pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
-                            <BorderColor  />
-                            <BorderWidth  />
-                            <Format >0.00</Format>
+                            <BorderColor />
+                            <BorderWidth />
+                            <Format>0.00</Format>
                           </Style>
                           <Value>=Sum(Fields!debt.Value)</Value>
                         </Textbox>
@@ -707,7 +708,7 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                         <TextAlign>Right</TextAlign>
                         <BorderColor />
                         <BorderWidth />
-                        <Format >0.00</Format>
+                        <Format>0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -741,9 +742,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
-                        <BorderColor  />
-                        <BorderWidth  />
-                        <Format >0.00</Format>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -867,7 +868,7 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                         <FontWeight>Bold</FontWeight>
                         <BorderColor />
                         <BorderWidth />
-                        <Format >0.00</Format>
+                        <Format>0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -903,9 +904,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
                         <FontWeight>Bold</FontWeight>
-                        <BorderColor  />
-                        <BorderWidth  />
-                        <Format >0.00</Format>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>0.00</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
