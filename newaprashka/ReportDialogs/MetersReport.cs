@@ -70,9 +70,16 @@ namespace bazar
 					param += String.Format ("{0},", row [0]);
 			}
 			if (checkHandmade.Active)
-				ViewReportExt.Run ("MetersFill", param.TrimEnd (','));
+				if (radioLetter.Active)
+					ViewReportExt.Run ("MetersFill_vertical", param.TrimEnd (','));
+				else
+					ViewReportExt.Run ("MetersFill_horizontal", param.TrimEnd (','));
 			else
-				ViewReportExt.Run ("Meters", param.TrimEnd (','));
+				if (radioLetter.Active)
+					ViewReportExt.Run ("Meters_vertical", param.TrimEnd (','));
+				else	
+					ViewReportExt.Run ("Meters_horizontal", param.TrimEnd (','));
+
 		}
 	}
 }
