@@ -863,8 +863,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bazar`;
-INSERT INTO `bazar`.`services` (`id`, `name`, `units_id`, `income_id`, `by_area`, `incomplete_month`) VALUES (NULL, 'Аренда', 3, 1, TRUE, NULL);
-INSERT INTO `bazar`.`services` (`id`, `name`, `units_id`, `income_id`, `by_area`, `incomplete_month`) VALUES (NULL, 'Электричество', 4, 2, FALSE, NULL);
+INSERT INTO `bazar`.`services` (`id`, `name`, `units_id`, `income_id`, `by_area`, `incomplete_month`) VALUES (NULL, 'Аренда', 3, 1, TRUE, FALSE);
+INSERT INTO `bazar`.`services` (`id`, `name`, `units_id`, `income_id`, `by_area`, `incomplete_month`) VALUES (NULL, 'Электричество', 4, 2, FALSE, FALSE);
 
 COMMIT;
 
