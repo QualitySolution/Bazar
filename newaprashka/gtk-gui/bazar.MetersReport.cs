@@ -10,7 +10,19 @@ namespace bazar
 		
 		private global::Gtk.TreeView treeviewMeters;
 		
+		private global::Gtk.VBox vbox2;
+		
 		private global::Gtk.CheckButton checkHandmade;
+		
+		private global::Gtk.HBox hbox1;
+		
+		private global::Gtk.Label label2;
+		
+		private global::Gtk.VBox vbox3;
+		
+		private global::Gtk.RadioButton radioLetter;
+		
+		private global::Gtk.RadioButton radioAlbum;
 		
 		private global::Gtk.Button buttonCancel;
 		
@@ -49,24 +61,83 @@ namespace bazar
 			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(w1 [this.GtkScrolledWindow]));
 			w4.Position = 1;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
+			this.vbox2 = new global::Gtk.VBox ();
+			this.vbox2.Name = "vbox2";
+			this.vbox2.Spacing = 6;
+			// Container child vbox2.Gtk.Box+BoxChild
 			this.checkHandmade = new global::Gtk.CheckButton ();
 			this.checkHandmade.CanFocus = true;
 			this.checkHandmade.Name = "checkHandmade";
 			this.checkHandmade.Label = global::Mono.Unix.Catalog.GetString ("Форма для ручного заполнения");
 			this.checkHandmade.DrawIndicator = true;
 			this.checkHandmade.UseUnderline = true;
-			w1.Add (this.checkHandmade);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(w1 [this.checkHandmade]));
-			w5.PackType = ((global::Gtk.PackType)(1));
-			w5.Position = 3;
+			this.vbox2.Add (this.checkHandmade);
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.checkHandmade]));
+			w5.Position = 0;
 			w5.Expand = false;
 			w5.Fill = false;
+			// Container child vbox2.Gtk.Box+BoxChild
+			this.hbox1 = new global::Gtk.HBox ();
+			this.hbox1.Name = "hbox1";
+			this.hbox1.Spacing = 6;
+			// Container child hbox1.Gtk.Box+BoxChild
+			this.label2 = new global::Gtk.Label ();
+			this.label2.Name = "label2";
+			this.label2.Xalign = 1F;
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Ориентация страницы:");
+			this.hbox1.Add (this.label2);
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label2]));
+			w6.Position = 0;
+			w6.Expand = false;
+			w6.Fill = false;
+			// Container child hbox1.Gtk.Box+BoxChild
+			this.vbox3 = new global::Gtk.VBox ();
+			this.vbox3.Name = "vbox3";
+			this.vbox3.Spacing = 6;
+			// Container child vbox3.Gtk.Box+BoxChild
+			this.radioLetter = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Книжная"));
+			this.radioLetter.CanFocus = true;
+			this.radioLetter.Name = "radioLetter";
+			this.radioLetter.DrawIndicator = true;
+			this.radioLetter.UseUnderline = true;
+			this.radioLetter.Group = new global::GLib.SList (global::System.IntPtr.Zero);
+			this.vbox3.Add (this.radioLetter);
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.radioLetter]));
+			w7.Position = 0;
+			w7.Expand = false;
+			w7.Fill = false;
+			// Container child vbox3.Gtk.Box+BoxChild
+			this.radioAlbum = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Альбомная"));
+			this.radioAlbum.CanFocus = true;
+			this.radioAlbum.Name = "radioAlbum";
+			this.radioAlbum.DrawIndicator = true;
+			this.radioAlbum.UseUnderline = true;
+			this.radioAlbum.Group = this.radioLetter.Group;
+			this.vbox3.Add (this.radioAlbum);
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.radioAlbum]));
+			w8.Position = 1;
+			w8.Expand = false;
+			w8.Fill = false;
+			this.hbox1.Add (this.vbox3);
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.vbox3]));
+			w9.Position = 1;
+			this.vbox2.Add (this.hbox1);
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox1]));
+			w10.Position = 1;
+			w10.Expand = false;
+			w10.Fill = false;
+			w1.Add (this.vbox2);
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(w1 [this.vbox2]));
+			w11.PackType = ((global::Gtk.PackType)(1));
+			w11.Position = 3;
+			w11.Expand = false;
+			w11.Fill = false;
 			// Internal child bazar.MetersReport.ActionArea
-			global::Gtk.HButtonBox w6 = this.ActionArea;
-			w6.Name = "dialog1_ActionArea";
-			w6.Spacing = 10;
-			w6.BorderWidth = ((uint)(5));
-			w6.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w12 = this.ActionArea;
+			w12.Name = "dialog1_ActionArea";
+			w12.Spacing = 10;
+			w12.BorderWidth = ((uint)(5));
+			w12.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -76,9 +147,9 @@ namespace bazar
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w7 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w6 [this.buttonCancel]));
-			w7.Expand = false;
-			w7.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w13 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w12 [this.buttonCancel]));
+			w13.Expand = false;
+			w13.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -88,10 +159,10 @@ namespace bazar
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w8 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w6 [this.buttonOk]));
-			w8.Position = 1;
-			w8.Expand = false;
-			w8.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w14 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w12 [this.buttonOk]));
+			w14.Position = 1;
+			w14.Expand = false;
+			w14.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
