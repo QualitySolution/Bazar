@@ -408,26 +408,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction12Activated (object sender, System.EventArgs e)
 	{
-		AboutDialog dialog = new AboutDialog ();
-		dialog.ProgramName = "QS: База Арендаторов";
-
-		Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-		dialog.Version = version.ToString (version.Revision == 0 ? 3 : 4);
-		
-		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
-		
-		dialog.Comments = "Программа позволяет вести учет арендаторов, кассы и т.п. " +
-			"\nРазработана на MonoDevelop с использованием открытых технологий Mono, GTK#, MySQL." +
-			"\nТелефон тех. поддержки +7(812)575-79-44";
-		
-		dialog.Copyright = "Quality Solution 2014";
-		
-		dialog.Authors = new string [] {"Ганьков Андрей <gav@qsolution.ru>"};
-		
-		dialog.Website = "http://www.qsolution.ru/";
-		
-		dialog.Run ();
-		dialog.Destroy();
+		QSMain.RunAboutDialog ();
 	}
 	
 	protected virtual void OnDialogAuthenticationActionActivated (object sender, System.EventArgs e)
