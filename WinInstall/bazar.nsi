@@ -1,5 +1,5 @@
 ;--------------------------------
-!define PRODUCT_VERSION "2.2.3"
+!define PRODUCT_VERSION "2.2.4"
 !define MIN_NET_MAJOR "4"
 !define MIN_NET_MINOR "0"
 !define MIN_NET_BUILD "*"
@@ -302,6 +302,9 @@ Section "${PRODUCT_NAME}" SecProgram
   Delete "$SMPROGRAMS\Базар\*.*"
   Delete "$DESKTOP\Базар.lnk"
   RMDir "$SMPROGRAMS\Базар"
+  ; Delete files used before 2.2.4 version.
+  Delete "$INSTDIR\Reports\Meters.rdl"
+  Delete "$INSTDIR\Reports\MetersFill.rdl"
 
   ; Put file there
   File /r "Files\*.*"

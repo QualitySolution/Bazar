@@ -408,26 +408,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction12Activated (object sender, System.EventArgs e)
 	{
-		AboutDialog dialog = new AboutDialog ();
-		dialog.ProgramName = "QS: База Арендаторов";
-
-		Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-		dialog.Version = version.ToString (version.Revision == 0 ? 3 : 4);
-		
-		dialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
-		
-		dialog.Comments = "Программа позволяет вести учет арендаторов, кассы и т.п. " +
-			"\nРазработана на MonoDevelop с использованием открытых технологий Mono, GTK#, MySQL." +
-			"\nТелефон тех. поддержки +7(812)575-79-44";
-		
-		dialog.Copyright = "Quality Solution 2014";
-		
-		dialog.Authors = new string [] {"Ганьков Андрей <gav@qsolution.ru>"};
-		
-		dialog.Website = "http://www.qsolution.ru/";
-		
-		dialog.Run ();
-		dialog.Destroy();
+		QSMain.RunAboutDialog ();
 	}
 	
 	protected virtual void OnDialogAuthenticationActionActivated (object sender, System.EventArgs e)
@@ -541,24 +522,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction20Activated (object sender, EventArgs e)
 	{
-		Dialog HistoryDialog = new Dialog("История версий программы", this, Gtk.DialogFlags.DestroyWithParent);
-    	HistoryDialog.Modal = true;
-		HistoryDialog.AddButton ("Закрыть", ResponseType.Close);
-
-		System.IO.StreamReader HistoryFile = new System.IO.StreamReader( "changes.txt");
-		TextView HistoryTextView = new TextView();
-		HistoryTextView.WidthRequest = 700;
-		HistoryTextView.WrapMode = WrapMode.Word;
-		HistoryTextView.Sensitive = false;
-		HistoryTextView.Buffer.Text = HistoryFile.ReadToEnd();
-		Gtk.ScrolledWindow ScrollW = new ScrolledWindow();
-		ScrollW.HeightRequest = 500;
-		ScrollW.Add (HistoryTextView);
-		HistoryDialog.VBox.Add (ScrollW);
-
-		HistoryDialog.ShowAll ();
-		HistoryDialog.Run ();
-		HistoryDialog.Destroy ();
+		QSMain.RunChangeLogDlg (this);
 	}	
 
 	protected void OnAction24Activated (object sender, EventArgs e)

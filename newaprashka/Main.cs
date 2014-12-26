@@ -18,14 +18,10 @@ namespace bazar
 			Application.Init ();
 			AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs e) 
 			{
+				logger.FatalException("Поймано не обработаное исключение.", (Exception) e.ExceptionObject);
 				QSMain.ErrorMessage(MainWin, (Exception) e.ExceptionObject);
 			};
 			CreateProjectParam();
-			//Настраиваем общую билиотеку
-			QSMain.NewStatusText += delegate(object sender, QSProjectsLib.QSMain.NewStatusTextEventArgs e) 
-			{
-				StatusMessage (e.NewText);
-			};
 			// Создаем окно входа
 			Login LoginDialog = new QSProjectsLib.Login ();
 			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");

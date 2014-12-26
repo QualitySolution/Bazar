@@ -600,7 +600,7 @@ public partial class MainWindow
 		this.notebookMain = new global::Gtk.Notebook ();
 		this.notebookMain.CanFocus = true;
 		this.notebookMain.Name = "notebookMain";
-		this.notebookMain.CurrentPage = 3;
+		this.notebookMain.CurrentPage = 4;
 		// Container child notebookMain.Gtk.Notebook+NotebookChild
 		this.vbox2 = new global::Gtk.VBox ();
 		this.vbox2.Name = "vbox2";
@@ -1738,7 +1738,6 @@ public partial class MainWindow
 		this.radioCashToday = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Сегодня"));
 		this.radioCashToday.CanFocus = true;
 		this.radioCashToday.Name = "radioCashToday";
-		this.radioCashToday.Active = true;
 		this.radioCashToday.DrawIndicator = true;
 		this.radioCashToday.UseUnderline = true;
 		this.radioCashToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
@@ -1906,7 +1905,7 @@ public partial class MainWindow
 		this.notebookCash = new global::Gtk.Notebook ();
 		this.notebookCash.CanFocus = true;
 		this.notebookCash.Name = "notebookCash";
-		this.notebookCash.CurrentPage = 2;
+		this.notebookCash.CurrentPage = 0;
 		// Container child notebookCash.Gtk.Notebook+NotebookChild
 		this.GtkScrolledWindow4 = new global::Gtk.ScrolledWindow ();
 		this.GtkScrolledWindow4.Name = "GtkScrolledWindow4";
@@ -2188,7 +2187,6 @@ public partial class MainWindow
 		this.radiobuttonToday = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Сегодня"));
 		this.radiobuttonToday.CanFocus = true;
 		this.radiobuttonToday.Name = "radiobuttonToday";
-		this.radiobuttonToday.Active = true;
 		this.radiobuttonToday.DrawIndicator = true;
 		this.radiobuttonToday.UseUnderline = true;
 		this.radiobuttonToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
