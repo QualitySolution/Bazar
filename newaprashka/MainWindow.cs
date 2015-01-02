@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Gtk;
 using MySql.Data.MySqlClient;
 using bazar;
@@ -83,6 +84,15 @@ public partial class MainWindow : Gtk.Window
 			QSMain.User.UpdateUserInfoByLogin ();
 		UsersAction.Sensitive = QSMain.User.admin;
 		labelUser.LabelProp = QSMain.User.Name;
+
+		//Настраиваем новости
+		MainNewsFeed.NewsFeeds = new List<NewsFeed>(){
+			new NewsFeed("bazarnews", "Новости программы", "http://news.qsolution.ru/bazar.atom")
+		};
+		MainNewsFeed.LoadReadFeed ();
+		var newsmenu = new NewsMenuItem ();
+		menubar1.Add (newsmenu);
+		newsmenu.LoadFeed ();
 
 		PreparePlaces();
 		PrepareLessee();
