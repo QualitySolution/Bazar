@@ -5,19 +5,33 @@ namespace bazar
 	public partial class DocRegister
 	{
 		private global::Gtk.Table table1;
+		
 		private global::Gtk.ComboBox comboDoc;
+		
 		private global::Gtk.Label label1;
+		
 		private global::Gtk.VBox vbox11;
+		
 		private global::Gtk.Label label31;
+		
 		private global::Gtk.RadioButton radioCashToday;
+		
 		private global::Gtk.RadioButton radioCashWeek;
+		
 		private global::Gtk.RadioButton radioMonth;
+		
 		private global::Gtk.RadioButton radioCash6Month;
+		
 		private global::Gtk.HBox hbox15;
+		
 		private global::QSWidgetLib.DatePicker dateCashStart;
+		
 		private global::Gtk.Label label32;
+		
 		private global::QSWidgetLib.DatePicker dateCashEnd;
+		
 		private global::Gtk.Button buttonCancel;
+		
 		private global::Gtk.Button buttonOk;
 
 		protected virtual void Build ()
@@ -32,7 +46,7 @@ namespace bazar
 			w1.Name = "dialog1_VBox";
 			w1.BorderWidth = ((uint)(2));
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
-			this.table1 = new global::Gtk.Table (((uint)(3)), ((uint)(2)), false);
+			this.table1 = new global::Gtk.Table (((uint)(1)), ((uint)(2)), false);
 			this.table1.Name = "table1";
 			this.table1.RowSpacing = ((uint)(6));
 			this.table1.ColumnSpacing = ((uint)(6));
@@ -46,7 +60,6 @@ namespace bazar
 			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.table1 [this.comboDoc]));
 			w2.LeftAttach = ((uint)(1));
 			w2.RightAttach = ((uint)(2));
-			w2.XOptions = ((global::Gtk.AttachOptions)(4));
 			w2.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table1.Gtk.Table+TableChild
 			this.label1 = new global::Gtk.Label ();
@@ -200,8 +213,8 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 381;
-			this.DefaultHeight = 321;
+			this.DefaultWidth = 274;
+			this.DefaultHeight = 281;
 			this.Show ();
 			this.radioCashToday.Clicked += new global::System.EventHandler (this.OnRadioCashTodayClicked);
 			this.radioCashWeek.Clicked += new global::System.EventHandler (this.OnRadioCashWeekClicked);

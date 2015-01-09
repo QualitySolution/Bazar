@@ -224,8 +224,8 @@
       </action>
       <action id="Action43">
         <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Оплата торгового места</property>
-        <property name="ShortLabel" translatable="yes">Оплата торгового места</property>
+        <property name="Label" translatable="yes">Оплата за место</property>
+        <property name="ShortLabel" translatable="yes">Оплата за место</property>
         <signal name="Activated" handler="OnActionLesseeRentReportActivated" />
       </action>
     </action-group>
@@ -294,16 +294,15 @@
           </widget>
           <packing>
             <property name="Position">0</property>
-            <property name="AutoSize">True</property>
+            <property name="AutoSize">False</property>
             <property name="Expand">False</property>
-            <property name="Fill">False</property>
           </packing>
         </child>
         <child>
           <widget class="Gtk.Notebook" id="notebookMain">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">3</property>
+            <property name="CurrentPage">0</property>
             <signal name="SwitchPage" handler="OnNotebookMainSwitchPage" />
             <child>
               <widget class="Gtk.VBox" id="vbox2">
@@ -11215,7 +11214,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.DocRegister" design-size="381 321">
+  <widget class="Gtk.Dialog" id="bazar.DocRegister" design-size="274 281">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Реестр документов</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -11228,23 +11227,10 @@
         <child>
           <widget class="Gtk.Table" id="table1">
             <property name="MemberName" />
-            <property name="NRows">3</property>
             <property name="NColumns">2</property>
             <property name="RowSpacing">6</property>
             <property name="ColumnSpacing">6</property>
             <property name="BorderWidth">6</property>
-            <child>
-              <placeholder />
-            </child>
-            <child>
-              <placeholder />
-            </child>
-            <child>
-              <placeholder />
-            </child>
-            <child>
-              <placeholder />
-            </child>
             <child>
               <widget class="Gtk.ComboBox" id="comboDoc">
                 <property name="MemberName" />
@@ -11255,10 +11241,9 @@
               <packing>
                 <property name="LeftAttach">1</property>
                 <property name="RightAttach">2</property>
-                <property name="AutoSize">True</property>
-                <property name="XOptions">Fill</property>
+                <property name="AutoSize">False</property>
                 <property name="YOptions">Fill</property>
-                <property name="XExpand">False</property>
+                <property name="XExpand">True</property>
                 <property name="XFill">True</property>
                 <property name="XShrink">False</property>
                 <property name="YExpand">False</property>
@@ -11313,6 +11298,7 @@
                 <property name="MemberName" />
                 <property name="CanFocus">True</property>
                 <property name="Label" translatable="yes">Сегодня</property>
+                <property name="Active">True</property>
                 <property name="DrawIndicator">True</property>
                 <property name="HasLabel">True</property>
                 <property name="UseUnderline">True</property>
@@ -13390,6 +13376,7 @@
   </widget>
   <widget class="Gtk.Dialog" id="bazar.MetersReport" design-size="341 300">
     <property name="MemberName" />
+    <property name="Title" translatable="yes">Отчет по счётчикам</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="Buttons">2</property>
     <property name="HelpButton">False</property>
@@ -14369,8 +14356,9 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.LesseeRentReport" design-size="435 160">
+  <widget class="Gtk.Dialog" id="bazar.LesseeRentReport" design-size="435 173">
     <property name="MemberName" />
+    <property name="Title" translatable="yes">Отчет по оплате за место</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="Buttons">2</property>
     <property name="HelpButton">False</property>

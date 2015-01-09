@@ -33,6 +33,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.MetersReport
 			this.Name = "bazar.MetersReport";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Отчет по счётчикам");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.MetersReport.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -98,6 +99,7 @@ namespace bazar
 			this.radioLetter = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Книжная"));
 			this.radioLetter.CanFocus = true;
 			this.radioLetter.Name = "radioLetter";
+			this.radioLetter.Active = true;
 			this.radioLetter.DrawIndicator = true;
 			this.radioLetter.UseUnderline = true;
 			this.radioLetter.Group = new global::GLib.SList (global::System.IntPtr.Zero);

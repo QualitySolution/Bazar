@@ -45,6 +45,7 @@ namespace bazar
 			global::Stetic.Gui.Initialize (this);
 			// Widget bazar.LesseeRentReport
 			this.Name = "bazar.LesseeRentReport";
+			this.Title = global::Mono.Unix.Catalog.GetString ("Отчет по оплате за место");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child bazar.LesseeRentReport.VBox
 			global::Gtk.VBox w1 = this.VBox;
@@ -249,7 +250,7 @@ namespace bazar
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 435;
-			this.DefaultHeight = 160;
+			this.DefaultHeight = 173;
 			this.Show ();
 			this.comboPlaceType.Changed += new global::System.EventHandler (this.OnComboPlaceTypeChanged);
 			this.comboPlace.Changed += new global::System.EventHandler (this.OnComboPlaceChanged);

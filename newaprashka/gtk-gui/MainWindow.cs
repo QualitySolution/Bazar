@@ -574,8 +574,8 @@ public partial class MainWindow
 		this.Action42 = new global::Gtk.Action ("Action42", global::Mono.Unix.Catalog.GetString ("Счётчики"), null, null);
 		this.Action42.ShortLabel = global::Mono.Unix.Catalog.GetString ("Счётчики");
 		w1.Add (this.Action42, null);
-		this.Action43 = new global::Gtk.Action ("Action43", global::Mono.Unix.Catalog.GetString ("Оплата торгового места"), null, null);
-		this.Action43.ShortLabel = global::Mono.Unix.Catalog.GetString ("Оплата торгового места");
+		this.Action43 = new global::Gtk.Action ("Action43", global::Mono.Unix.Catalog.GetString ("Оплата за место"), null, null);
+		this.Action43.ShortLabel = global::Mono.Unix.Catalog.GetString ("Оплата за место");
 		w1.Add (this.Action43, null);
 		this.UIManager.InsertActionGroup (w1, 0);
 		this.AddAccelGroup (this.UIManager.AccelGroup);
@@ -595,12 +595,11 @@ public partial class MainWindow
 		global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox1 [this.menubar1]));
 		w2.Position = 0;
 		w2.Expand = false;
-		w2.Fill = false;
 		// Container child vbox1.Gtk.Box+BoxChild
 		this.notebookMain = new global::Gtk.Notebook ();
 		this.notebookMain.CanFocus = true;
 		this.notebookMain.Name = "notebookMain";
-		this.notebookMain.CurrentPage = 3;
+		this.notebookMain.CurrentPage = 0;
 		// Container child notebookMain.Gtk.Notebook+NotebookChild
 		this.vbox2 = new global::Gtk.VBox ();
 		this.vbox2.Name = "vbox2";
@@ -1738,7 +1737,6 @@ public partial class MainWindow
 		this.radioCashToday = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Сегодня"));
 		this.radioCashToday.CanFocus = true;
 		this.radioCashToday.Name = "radioCashToday";
-		this.radioCashToday.Active = true;
 		this.radioCashToday.DrawIndicator = true;
 		this.radioCashToday.UseUnderline = true;
 		this.radioCashToday.Group = new global::GLib.SList (global::System.IntPtr.Zero);
