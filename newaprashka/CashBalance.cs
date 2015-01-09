@@ -2,12 +2,14 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class CashBalance : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		TreeStore BalanceTreeStore;
 
 		public CashBalance ()
@@ -114,9 +116,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Не удалось сформировать отчет!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Не удалось сформировать отчет!", logger, ex);
 			}
 		}
 

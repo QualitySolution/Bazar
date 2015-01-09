@@ -68,7 +68,7 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateContract()
 	{
-		MainClass.StatusMessage("Получаем таблицу договоров...");
+		logger.Info("Получаем таблицу договоров...");
 
 		TreeIter iter;
 		
@@ -147,7 +147,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		rdr.Close();
 		
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		
 		bool isSelect = treeviewContract.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;

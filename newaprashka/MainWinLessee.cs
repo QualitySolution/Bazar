@@ -46,7 +46,7 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateLessees()
 	{
-		MainClass.StatusMessage("Получаем таблицу арендаторов...");
+		logger.Info("Получаем таблицу арендаторов...");
 
 		string sql = "SELECT lessees.*, goods.name as goods FROM lessees";
 		sql += " LEFT JOIN goods ON lessees.goods_id = goods.id ";
@@ -66,7 +66,7 @@ public partial class MainWindow : Gtk.Window
 				                             (bool)rdr ["retail"]);
 			}
 		}
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		bool isSelect = treeviewLessees.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
 		buttonDel.Sensitive = isSelect;

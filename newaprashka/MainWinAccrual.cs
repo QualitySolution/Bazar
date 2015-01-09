@@ -71,7 +71,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		if(AccrualListStore == null)
 			return;
-		MainClass.StatusMessage("Получаем таблицу начислений...");
+		logger.Info("Получаем таблицу начислений...");
 		
 		TreeIter iter;
 		string WhereCash = "";
@@ -134,7 +134,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		rdr.Close();
 		
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		CalculateAccrualSum();		
 		OnTreeviewAccrualCursorChanged (null, EventArgs.Empty);
 	}

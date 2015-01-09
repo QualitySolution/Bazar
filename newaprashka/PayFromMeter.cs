@@ -7,6 +7,7 @@ namespace bazar
 {
 	public partial class PayFromMeter : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore ReadingListStore, ChildListStore;
 		int accrual_detail_id, ChildCount;
 		public decimal TotalCount;
@@ -138,7 +139,7 @@ namespace bazar
 		public void Fill(int AccrualRow, int service_id, int place_type_id, string place_no, string units)
 		{
 			TreeIter iter;
-			MainClass.StatusMessage(String.Format("Запрос показаний счетчиков..."));
+			logger.Info("Запрос показаний счетчиков...");
 			accrual_detail_id = AccrualRow;
 			Units = units;
 			string sql = "SELECT meters.id as meterid, meter_tariffs.id as tariffid, meter_tariffs.name as tariff, meter_types.name as meter_type " +
@@ -281,13 +282,11 @@ namespace bazar
 				}
 
 				CalculateSum ();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о типе счетчика!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о типе счетчика!", logger, ex);
 				this.Respond(Gtk.ResponseType.Reject);
 			}
 		}
@@ -295,7 +294,7 @@ namespace bazar
 		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
 			string sql;
-			MainClass.StatusMessage("Запись показаний счётчиков...");
+			logger.Info("Запись показаний счётчиков...");
 			MySqlCommand cmd;
 			try 
 			{
@@ -327,14 +326,12 @@ namespace bazar
 				}
 				while(ReadingListStore.IterNext(ref iter));
 
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (Gtk.ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи показаний счётчиков!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи показаний счётчиков!", logger, ex);
 			}
 		}
 

@@ -26,7 +26,7 @@ namespace bazar
 			Serviceid = id;
 			NewService = false;
 			
-			MainClass.StatusMessage(String.Format ("Запрос услуги №{0}...", id));
+			logger.Info("Запрос услуги №{0}...", id);
 			string sql = "SELECT services.*, units.name as unit FROM services LEFT JOIN units ON services.units_id = units.id WHERE services.id = @id";
 			try
 			{
@@ -53,13 +53,12 @@ namespace bazar
 					checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
 					checkIncomplete.Active= Boolean.Parse(rdr["incomplete_month"].ToString());
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				this.Title = entryName.Text;
 			}
 			catch (Exception ex)
 			{
-				logger.ErrorException ("Ошибка получения информации о услуге!", ex);
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о услуге!", logger, ex);
 			}
 			TestCanSave();
 		}
@@ -84,7 +83,7 @@ namespace bazar
 				sql = "UPDATE services SET name = @name, units_id = @units_id, income_id = @income_id, " +
 					"by_area = @by_area, incomplete_month = @incomplete_month WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись услуги...");
+			logger.Info("Запись услуги...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -100,7 +99,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("by_area", checkArea.Active);
 				cmd.Parameters.AddWithValue("incomplete_month", checkIncomplete.Active);
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 

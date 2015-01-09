@@ -2,12 +2,14 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class ExpenseSlip : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewSlip;
 		int Contractor_id;
 		int Expense_id;
@@ -88,7 +90,7 @@ namespace bazar
 						"details = @details " +
 						"WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись расходного ордера...");
+			logger.Info("Запись расходного ордера...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -131,14 +133,12 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@details", textviewDetails.Buffer.Text);
 				
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи расходного ордера!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи расходного ордера!", logger, ex);
 			}
 			
 		}
@@ -149,7 +149,7 @@ namespace bazar
 
 			TreeIter iter;
 			
-			MainClass.StatusMessage(String.Format("Запрос расходного ордера №{0}...", SlipId));
+			logger.Info("Запрос расходного ордера №{0}...", SlipId);
 			string sql = "SELECT debit_slips.*, contractors.name as contractor, users.name as user, " +
 					"employees.name as employee, expense_items.name as expense FROM debit_slips " +
 					"LEFT JOIN contractors ON debit_slips.contractor_id = contractors.id " +
@@ -233,13 +233,11 @@ namespace bazar
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о расходном ордере!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о расходном ордере!", logger, ex);
 			}
 			TestCanSave();
 		}

@@ -79,7 +79,7 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdatePlaces()
 	{
-		MainClass.StatusMessage("Получаем таблицу c местами...");
+		logger.Info("Получаем таблицу c местами...");
 		TreeIter iter;
 		
 		string sql = "SELECT places.*, place_types.name as type, contracts.lessee_id as lessee_id, lessees.name as lessee, contact_persons.name as contact," +
@@ -127,7 +127,7 @@ public partial class MainWindow : Gtk.Window
 				                             );
 			}
 		}
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		
 		bool isSelect = treeviewPlaces.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;

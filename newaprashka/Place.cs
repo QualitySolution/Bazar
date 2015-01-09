@@ -9,6 +9,7 @@ namespace bazar
 {
 	public partial class Place : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		private bool NewPlace;
 		string PlaceNumber;
 		int lessee_id, contact_id, type_id, ContractId;
@@ -67,7 +68,7 @@ namespace bazar
 			buttonNewContract.Sensitive = true;
 			TreeIter iter;
 			
-			MainClass.StatusMessage("Запрос сдаваемого места...");
+			logger.Info("Запрос сдаваемого места...");
 			string sql = "SELECT places.*, place_types.name as type, contact_persons.name as contact, " +
 				"contact_persons.telephones as telephones, contact_persons.comments as cp_comments," +
 			 	"organizations.name as organization FROM places " +
@@ -104,7 +105,7 @@ namespace bazar
 			rdr.Close ();
 			FillCurrentContract ();
 
-			MainClass.StatusMessage("Ok");
+			logger.Info("Ok");
 			this.Title = "Место " + comboPType.ActiveText + " - " + place;
 			TestCanSave();
 			UpdateHistory();
@@ -182,7 +183,7 @@ namespace bazar
 		{
 			string sql;
 			TreeIter iter;
-			MainClass.StatusMessage("Запись места...");
+			logger.Info("Запись места...");
 			if(NewPlace)
 			{
 				sql = "INSERT INTO places (type_id, place_no, area, contact_person_id, org_id, comments) " +
@@ -222,7 +223,7 @@ namespace bazar
 				
 				cmd.ExecuteNonQuery();
 				
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 				
 			} 
@@ -241,8 +242,7 @@ namespace bazar
 				}
 				else
 				{
-					MainClass.StatusMessage("Ошибка записи места!");
-					QSMain.ErrorMessage(this,ex);
+					QSMain.ErrorMessageWithLog(this, "Ошибка записи места!", logger, ex);
 				}
 			}
 		}
@@ -275,7 +275,7 @@ namespace bazar
 
 		void UpdateHistory()
 		{
-	        MainClass.StatusMessage("Получаем историю места...");
+	        logger.Info("Получаем историю места...");
 			TreeIter iter;
 			
 			string sql = "SELECT contracts.*, lessees.name as lessee FROM contracts " +
@@ -311,7 +311,7 @@ namespace bazar
 				                             rdr["comments"].ToString());
 	   		}
 			rdr.Close();
-			MainClass.StatusMessage("Ok");
+			logger.Info("Ok");
 		}
 		
 		[GLib.ConnectBefore]
@@ -422,7 +422,7 @@ namespace bazar
 
 		private void UpdateMeters()
 		{
-			MainClass.StatusMessage("Получаем счетчики места...");
+			logger.Info("Получаем счетчики места...");
 			try
 			{
 				string sql = "SELECT meters.id, meters.name, meter_types.name as type, meters.disabled FROM meters " +
@@ -505,19 +505,17 @@ namespace bazar
 					}
 					Meters = NewMeters;
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о счётчиках!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о счётчиках!", logger, ex);
 			}
 		}
 		
 		private void UpdateReadings()
 		{
-			MainClass.StatusMessage("Получаем показания счетчика...");
+			logger.Info("Получаем показания счетчика...");
 			try
 			{
 				string sql = "SELECT meter_reading.id, meter_reading.meter_tariff_id, meter_reading.date, meter_reading.value, meter_tariffs.name as tariff, units.name as unit FROM meter_reading " +
@@ -555,13 +553,11 @@ namespace bazar
 					}
 				}
 				meter.Filled = true;
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения показаний счётчика!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения показаний счётчика!", logger, ex);
 			}
 		}		
 

@@ -7,6 +7,7 @@ namespace bazar
 {
 	public partial class LesseeDebtsReport : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore ServicesList;
 
 		public LesseeDebtsReport ()
@@ -29,7 +30,7 @@ namespace bazar
 
 			treeviewServices.Model = ServicesList;
 
-			MainClass.StatusMessage("Запрос типов услуг...");
+			logger.Info("Запрос типов услуг...");
 			string sql = "SELECT id, name FROM services";
 			try
 			{
@@ -45,13 +46,11 @@ namespace bazar
 						                       );
 					}
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о услугах!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о услугах!", logger, ex);
 			}
 
 			comboCash.Active = 0;

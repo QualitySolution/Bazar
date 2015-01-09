@@ -7,6 +7,7 @@ namespace bazar
 {
 	public partial class MeterReading : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		int MeterId;
 
 		public MeterReading (int MeterID)
@@ -47,9 +48,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения тарифов счётчика!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения тарифов счётчика!", logger, ex);
 			}
 
 		}
@@ -66,7 +65,7 @@ namespace bazar
 			string sql;
 			sql = "INSERT INTO meter_reading (meter_id, meter_tariff_id, date, value) " +
 				"VALUES (@meter_id, @meter_tariff_id, @date, @value)";
-			MainClass.StatusMessage("Запись показаний счётчика...");
+			logger.Info("Запись показаний счётчика...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -77,14 +76,12 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@value", spinValue.ValueAsInt);
 
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (Gtk.ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи показаний счётчика!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи показаний счётчика!", logger, ex);
 			}
 		}
 	}

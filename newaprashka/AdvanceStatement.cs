@@ -2,12 +2,14 @@ using System;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class AdvanceStatement : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewStatement;
 		int Contractor_id;
 		int Accountable_id;
@@ -123,7 +125,7 @@ namespace bazar
 						"details = @details " +
 						"WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись авансового отчета...");
+			logger.Info("Запись авансового отчета...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -218,14 +220,12 @@ namespace bazar
 					md.Destroy();
 				}
 
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи авансового отчета!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи авансового отчета!", logger, ex);
 			}
 		}
 
@@ -233,7 +233,7 @@ namespace bazar
 		{
 			NewStatement = Copy;
 
-			MainClass.StatusMessage("Запрос авансового отчета №" + StatementId +"...");
+			logger.Info("Запрос авансового отчета №" + StatementId +"...");
 			string sql = "SELECT advance.*, contractors.name as contractor, users.name as user, " +
 				"employees.name as employee, expense_items.name as expense FROM advance " +
 					"LEFT JOIN contractors ON advance.contractor_id = contractors.id " +
@@ -301,13 +301,11 @@ namespace bazar
 					spinSum.Sensitive = false;
 					textviewDetails.Sensitive = false;
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о авансовом отчете!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о авансовом отчете!", logger, ex);
 			}
 			TestCanSave();
 		}
@@ -373,7 +371,7 @@ namespace bazar
 				return;
 			TreeIter iter;
 			
-			MainClass.StatusMessage("Получаем долг " + entryAccountable.Text +"...");
+			logger.Info("Получаем долг " + entryAccountable.Text +"...");
 			string sqlwhere = "";
 			if(comboOrg.Active > 0 && comboOrg.GetActiveIter(out iter))
 				sqlwhere += " AND org_id = '" + comboOrg.Model.GetValue(iter,1) + "' ";
@@ -406,7 +404,7 @@ namespace bazar
 				if(Debt <= 0)
 				{
 					CalculateBalance ();
-					MainClass.StatusMessage("Ok");
+					logger.Info("Ok");
 					return;
 				}
 
@@ -438,13 +436,11 @@ namespace bazar
 				}
 				rdr.Close();
 				CalculateBalance ();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Не удалось получить долг!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Не удалось получить долг!", logger, ex);
 			}
 		}
 

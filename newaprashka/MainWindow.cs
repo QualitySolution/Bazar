@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Gtk;
 using MySql.Data.MySqlClient;
-using bazar;
 using QSProjectsLib;
 using QSSupportLib;
+using bazar;
 
 public partial class MainWindow : Gtk.Window
 {
-	
+	private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 	AccelGroup grup;
 	
 	public MainWindow () : base(Gtk.WindowType.Toplevel)
@@ -19,6 +19,9 @@ public partial class MainWindow : Gtk.Window
 
 		//Передаем лебл
 		MainClass.StatusBarLabel = labelStatus;
+		this.Title = QSSupportLib.MainSupport.GetTitle();
+		QSMain.MakeNewStatusTargetForNlog("StatusMessage", "bazar.MainClass, bazar");
+
 		Reference.RunReferenceItemDlg += OnRunReferenceItemDialog;
 		QSMain.ReferenceUpdated += OnReferenceUpdate;
 

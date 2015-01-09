@@ -1,14 +1,15 @@
 using System;
 using System.Data;
 using Gtk;
-using MySql.Data;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class Contact : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewContact;
 		int Contactid;
 		
@@ -22,7 +23,7 @@ namespace bazar
 			Contactid = id;
 			NewContact = false;
 			
-			MainClass.StatusMessage(String.Format("Запрос контактного лица №{0}...", id));
+			logger.Info(String.Format("Запрос контактного лица №{0}...", id));
 			string sql = "SELECT * FROM contact_persons WHERE id = @id";
 			try
 			{
@@ -41,13 +42,11 @@ namespace bazar
 				
 				rdr.Close();
 				this.Title = entryFIO.Text;
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения контактного лица!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения контактного лица!", logger, ex);
 			}
 			TestCanSave();
 		}
@@ -76,7 +75,7 @@ namespace bazar
 				sql = "UPDATE contact_persons SET name = @name, telephones = @tel, comments = @comments " +
 					"WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись контактного лица...");
+			logger.Info("Запись контактного лица...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -90,14 +89,12 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@comments", textviewcomments.Buffer.Text);
 				
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи контактного лица!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи контактного лица!", logger, ex);
 			}
 
 		}

@@ -1,11 +1,13 @@
 using System;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class Cash : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewItem;
 		int Cashid;
 
@@ -19,7 +21,7 @@ namespace bazar
 			Cashid = id;
 			NewItem = false;
 
-			MainClass.StatusMessage(String.Format ("Запрос кассы №{0}...", id));
+			logger.Info(String.Format ("Запрос кассы №{0}...", id));
 			string sql = "SELECT cash.* FROM cash WHERE cash.id = @id";
 			try
 			{
@@ -42,14 +44,12 @@ namespace bazar
 						colorbuttonMarker.Color = TempColor;
 					}
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				this.Title = entryName.Text;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о кассе!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о кассе!", logger, ex);
 			}
 			TestCanSave();
 		}
@@ -77,7 +77,7 @@ namespace bazar
 			{
 				sql = "UPDATE cash SET name = @name, color = @color WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись кассы...");
+			logger.Info("Запись кассы...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -95,14 +95,12 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@color", DBNull.Value);
 			
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (Gtk.ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи кассы!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи кассы!", logger, ex);
 			}
 		}
 	}

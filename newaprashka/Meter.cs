@@ -1,12 +1,13 @@
 using System;
-using MySql.Data.MySqlClient;
 using Gtk;
+using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class Meter : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		bool NewItem;
 		int Itemid, ParentId;
 
@@ -24,7 +25,7 @@ namespace bazar
 			Itemid = id;
 			NewItem = false;
 
-			MainClass.StatusMessage(String.Format("Запрос счетчика №{0}...", id));
+			logger.Info("Запрос счетчика №{0}...", id);
 			string sql = "SELECT * FROM meters WHERE id = @id";
 			try
 			{
@@ -66,14 +67,12 @@ namespace bazar
 					ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, DBPlaceNo.ToString(), out iter);
 					comboPlaceNo.SetActiveIter(iter);
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				this.Title = entryName.Text;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о счётчике!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о счётчике!", logger, ex);
 				this.Respond(Gtk.ResponseType.Reject);
 			}
 			TestCanSave();
@@ -109,7 +108,7 @@ namespace bazar
 				sql = "UPDATE meters SET name = @name, meter_type_id = @meter_type_id, place_type_id = @place_type_id, " +
 					"place_no = @place_no, parent_meter_id = @parent_meter_id, disabled = @disabled WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись счётчика...");
+			logger.Info("Запись счётчика...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -123,14 +122,12 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@disabled", checkDisabled.Active );
 
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (Gtk.ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи счётчика!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи счётчика!", logger, ex);
 			}
 		}
 

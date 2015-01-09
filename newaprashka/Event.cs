@@ -3,12 +3,14 @@ using System.Data;
 using Gtk;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class Event : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewEvent;
 		int Eventid, lessee_id, PlaceTypeId;
 		DateTime EventDate;
@@ -29,7 +31,7 @@ namespace bazar
 			NewEvent = false;
 			TreeIter iter;
 			
-			MainClass.StatusMessage(String.Format("Запрос события №{0}...",id));
+			logger.Info(String.Format("Запрос события №{0}...",id));
 			string sql = "SELECT *, lessees.name as lessee FROM events " +
 				"LEFT JOIN lessees ON events.lessee_id = lessees.id " +
 				"WHERE events.id = @id";
@@ -65,7 +67,7 @@ namespace bazar
 				DBPlaceNo = rdr["place_no"];
 				
 				rdr.Close();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				
 				if(DBPlaceT != DBNull.Value)
 				{
@@ -89,8 +91,7 @@ namespace bazar
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о событии!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о событии!", logger, ex);
 			}
 			TestCanSave();
 		}
@@ -109,7 +110,7 @@ namespace bazar
 			string sql;
 			TreeIter iter;
 			
-			MainClass.StatusMessage("Запись события...");
+			logger.Info("Запись события...");
 			if(NewEvent)
 			{
 				sql = "INSERT INTO events (date, class_id, user, lessee_id, place_type_id, " +
@@ -158,14 +159,12 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@activity", textviewActivity.Buffer.Text);
 				
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошбика записи события!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошбика записи события!", logger, ex);
 			}
 		}
 		
@@ -183,7 +182,7 @@ namespace bazar
 		{
 			if(NewEvent && comboboxPlaceNo.ActiveText != null)
 			{
-				MainClass.StatusMessage("Запрос арендатора торгового места...");
+				logger.Info("Запрос арендатора торгового места...");
 				string sql = "SELECT lessee_id, lessees.name as lessee FROM contracts " +
 					"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 					"WHERE place_type_id = @type_id AND place_no = @place_no AND " +
@@ -205,13 +204,11 @@ namespace bazar
 						entryLessee.TooltipText = rdr.GetString(1);
 					}
 					rdr.Close();
-					MainClass.StatusMessage("Ok");
+					logger.Info("Ok");
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.ToString());
-					MainClass.StatusMessage("Ошибка получения арендатора торгового места!");
-					QSMain.ErrorMessage(this,ex);
+					QSMain.ErrorMessageWithLog(this, "Ошибка получения арендатора торгового места!", logger, ex);
 				}				
 			}
 			TestCanSave();

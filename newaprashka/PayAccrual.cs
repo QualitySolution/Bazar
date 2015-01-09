@@ -181,7 +181,7 @@ namespace bazar
 		{
 			Accrual_Id = AccrualId;
 			
-			MainClass.StatusMessage("Запрос начисления №" + AccrualId +"...");
+			logger.Info("Запрос начисления №" + AccrualId +"...");
 			try
 			{
 
@@ -228,14 +228,12 @@ namespace bazar
 
 				labelTotal.LabelProp = String.Format ("Всего к оплате: {0:C} ", PayableSum);
 		
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				CalculateServiceSum();
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о начисление!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о начисление!", logger, ex);
 			}
 			
 			TestCanSave();
@@ -296,7 +294,7 @@ namespace bazar
 			MySqlDataReader rdr = cmd.ExecuteReader();
 			if(!rdr.Read())
 			{
-				MainClass.StatusMessage("Не удалось получить информацию по начислению!");
+				logger.Info("Не удалось получить информацию по начислению!");
 				rdr.Close ();
 				return;
 			}
@@ -379,9 +377,7 @@ namespace bazar
 			catch (Exception ex) 
 			{
 				trans.Rollback ();
-				logger.Error(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи оплаты!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи оплаты!", logger, ex);
 			}
 			Accrual.GetAccrualPaidBalance (Accrual_Id);
 		}

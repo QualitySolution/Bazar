@@ -7,6 +7,7 @@ namespace bazar
 {
 	public partial class MetersReport : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore MetersList;
 
 		public MetersReport ()
@@ -24,7 +25,7 @@ namespace bazar
 
 			treeviewMeters.Model = MetersList;
 
-			MainClass.StatusMessage("Запрос типов счетчиков...");
+			logger.Info("Запрос типов счетчиков...");
 			string sql = "SELECT id, name FROM meter_types";
 			try
 			{
@@ -40,13 +41,11 @@ namespace bazar
 						                             );
 					}
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о типах счетчиков!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о типах счетчиков!", logger, ex);
 			}
 		}
 

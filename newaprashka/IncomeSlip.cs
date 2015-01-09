@@ -8,6 +8,7 @@ namespace bazar
 {
 	public partial class IncomeSlip : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public bool NewSlip;
 		int Lessee_id;
 		int Accountable_id;
@@ -121,7 +122,7 @@ namespace bazar
 						"employee_id = @employee_id, details = @details " +
 						"WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись Приходного ордера...");
+			logger.Info("Запись Приходного ордера...");
 			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			try 
 			{
@@ -233,15 +234,13 @@ namespace bazar
 						md.Destroy();
 					}
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
 				trans.Rollback ();
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи приходного ордера!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи приходного ордера!", logger, ex);
 			}
 
 		}
@@ -252,7 +251,7 @@ namespace bazar
 
 			TreeIter iter;
 			
-			MainClass.StatusMessage(String.Format ("Запрос приходного ордера №{0}...", SlipId));
+			logger.Info("Запрос приходного ордера №{0}...", SlipId);
 			string sql = "SELECT credit_slips.*, lessees.name as lessee, users.name as user, " +
 				"employees.name as employee, payments.id as payment, contracts.number as contract, " +
 				"contracts.sign_date, income_items.name as income FROM credit_slips " +
@@ -346,7 +345,7 @@ namespace bazar
 					}
 					else
 					{ //Возможно у договора поменялся арендатор.
-						MainClass.StatusMessage("Договор не найден у арендатора! Добавляем в список...");
+						logger.Info("Договор не найден у арендатора! Добавляем в список...");
 						string ContractText = String.Format("{0} от {1}", DBContract_number, DBContract_sign);
 						iter = ((ListStore) comboContract.Model).AppendValues(ContractText, Convert.ToInt32 (DBContract_id));
 						comboContract.SetActiveIter (iter);
@@ -392,13 +391,11 @@ namespace bazar
 				}
 				comboOperation.Sensitive = false;
 
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о приходном ордере!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о приходном ордере!", logger, ex);
 			}
 			TestCanSave();
 		}

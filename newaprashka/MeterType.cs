@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
+using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
-using Gtk;
-using System.Collections.Generic;
 
 namespace bazar
 {
 	public partial class MeterType : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public bool NewItem;
 		int Itemid;
 
@@ -64,7 +65,7 @@ namespace bazar
 			Itemid = id;
 			NewItem = false;
 
-			MainClass.StatusMessage(String.Format("Запрос типа счетчиков №{0}...", id));
+			logger.Info("Запрос типа счетчиков №{0}...", id);
 			string sql = "SELECT * FROM meter_types WHERE id = @id";
 			try
 			{
@@ -99,13 +100,11 @@ namespace bazar
 						                              );
 					}
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о типе счетчика!");
-				QSMain.ErrorMessage(this, ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о типе счетчика!", logger, ex);
 				this.Respond(Gtk.ResponseType.Reject);
 			}
 			TestCanSave();
@@ -133,7 +132,7 @@ namespace bazar
 			{
 				sql = "UPDATE meter_types SET name = @name WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись типа счетчика...");
+			logger.Info("Запись типа счетчика...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
@@ -171,16 +170,14 @@ namespace bazar
 				}
 				while(TariffListStore.IterNext(ref iter));
 
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				trans.Commit();
 				Respond (Gtk.ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
 				trans.Rollback ();
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи типа счетчика!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи типа счетчика!", logger, ex);
 			}
 		}
 
@@ -196,7 +193,7 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				Console.WriteLine("newtext is empty");
+				logger.Warn("newtext is empty");
 				return;
 			}
 
@@ -221,7 +218,7 @@ namespace bazar
 
 			if(args.NewText == null || args.NewText == "")
 			{
-				Console.WriteLine("newtext is empty");
+				logger.Warn("newtext is empty");
 				return;
 			}
 

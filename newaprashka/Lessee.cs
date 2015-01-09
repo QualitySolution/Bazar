@@ -9,6 +9,7 @@ namespace bazar
 {
 	public partial class lessee : Gtk.Dialog
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public bool NewLessee;
 		int Lesseeid, Goods_id;
 		bool GoodsNull;
@@ -49,7 +50,7 @@ namespace bazar
 			Lesseeid = id;
 			NewLessee = false;
 			
-			MainClass.StatusMessage(String.Format("Запрос арендатора №{0}...", id));
+			logger.Info("Запрос арендатора №{0}...", id);
 			string sql = "SELECT lessees.*, goods.name as goods FROM lessees LEFT JOIN goods ON lessees.goods_id = goods.id WHERE lessees.id = @id";
 			try
 			{
@@ -83,14 +84,12 @@ namespace bazar
 				textviewComments.Buffer.Text = rdr["comments"].ToString();
 				
 				rdr.Close();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				this.Title = entryName.Text;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о арендаторе!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о арендаторе!", logger, ex);
 			}
 			TestCanSave();
 			UpdateContracts();
@@ -119,7 +118,7 @@ namespace bazar
 					"wholesaler = @wholesaler, retail = @retail, goods_id = @goods_id, comments = @comments " +
 					"WHERE id = @id";
 			}
-			MainClass.StatusMessage("Запись арендатора...");
+			logger.Info("Запись арендатора...");
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -140,14 +139,12 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@comments", DBWorks.ValueOrNull (textviewComments.Buffer.Text != "", textviewComments.Buffer.Text));
 				
 				cmd.ExecuteNonQuery();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				Respond (ResponseType.Ok);
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи арендатора!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи арендатора!", logger, ex);
 			}
 		}
 
@@ -158,7 +155,7 @@ namespace bazar
 		
 		void UpdateContracts()
 		{
-	        MainClass.StatusMessage("Получаем таблицу договоров...");
+	        logger.Info("Получаем таблицу договоров...");
 			
 			string sql = "SELECT contracts.*, place_types.name as type, contact_persons.name as contact, " +
 				"places.contact_person_id as contact_id, places.area as area FROM contracts " +
@@ -211,7 +208,7 @@ namespace bazar
 	   		}
 			rdr.Close();
 			
-			MainClass.StatusMessage("Ok");
+			logger.Info("Ok");
 		}
 		
 		protected void OntreeviewContractsPopupMenu (object o, Gtk.PopupMenuArgs args)

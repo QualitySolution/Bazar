@@ -387,7 +387,7 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateCashIncome()
 	{
-		MainClass.StatusMessage("Получаем таблицу приходных ордеров...");
+		logger.Info("Получаем таблицу приходных ордеров...");
 
 		TreeIter iter;
 
@@ -469,7 +469,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		rdr.Close();
 		
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		
 		bool isSelect = treeviewIncome.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
@@ -482,7 +482,7 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateCashExpense()
 	{
-		MainClass.StatusMessage("Получаем таблицу расходных ордеров...");
+		logger.Info("Получаем таблицу расходных ордеров...");
 		
 		TreeIter iter;
 		
@@ -540,7 +540,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		rdr.Close();
 		
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		
 		bool isSelect = treeviewExpense.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;
@@ -553,7 +553,7 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateCashAdvance()
 	{
-		MainClass.StatusMessage("Получаем таблицу авансовых отчетов...");
+		logger.Info("Получаем таблицу авансовых отчетов...");
 		
 		TreeIter iter;
 		
@@ -611,7 +611,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		rdr.Close();
 		
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		
 		bool isSelect = treeviewAdvance.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;

@@ -163,7 +163,7 @@ namespace bazar
 				labelTotal.LabelProp = "";
 				return;
 			}
-			MainClass.StatusMessage("Получаем таблицу договоров...");
+			logger.Info("Получаем таблицу договоров...");
 			
 			string sql = "SELECT contracts.*, place_types.name as type, lessees.name as lessee, pays.sum as sum, accrual.id as exist_accrual FROM contracts " +
 				"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
@@ -218,7 +218,7 @@ namespace bazar
 
 			labelTotal.LabelProp = String.Format ("Всего {0} договоров на {1:C} ", Count, Total);
 			CalculateSelected ();
-			MainClass.StatusMessage("Ok");
+			logger.Info("Ok");
 		}
 
 		protected void OnComboMonthChanged (object sender, EventArgs e)
@@ -238,7 +238,7 @@ namespace bazar
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
-			MainClass.StatusMessage("Запись начислений...");
+			logger.Info("Запись начислений...");
 			try 
 			{
 				int Month = comboMonth.Active;
@@ -302,7 +302,7 @@ namespace bazar
 		   				Gtk.Main.Iteration();
 					}
 				}
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			} 
 			catch (Exception ex) 
 			{

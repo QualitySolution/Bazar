@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using Gtk;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class ContractsProlongation : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		Gtk.ListStore ContractsListStore;
 		Gtk.TreeModelFilter ContractsFilter;
 
@@ -357,7 +359,7 @@ namespace bazar
 		{
 			if(ContractsListStore == null)
 				return;
-			MainClass.StatusMessage("Получаем таблицу договоров...");
+			logger.Info("Получаем таблицу договоров...");
 
 			string sql = "SELECT contracts.*, place_types.name as type, lessees.name as lessee FROM contracts " +
 			             "LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
@@ -393,7 +395,7 @@ namespace bazar
 
 			CalculateSelected ();
 
-			MainClass.StatusMessage("Ok");
+			logger.Info("Ok");
 		}
 
 		protected void OnRadiobuttonActiveOnlyClicked(object sender, EventArgs e)
@@ -549,7 +551,7 @@ namespace bazar
 
 		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
-			MainClass.StatusMessage("Обработка договоров...");
+			logger.Info("Обработка договоров...");
 			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			try 
 			{
@@ -558,14 +560,12 @@ namespace bazar
 				if(radioChangeMode.Active)
 					ChangeContracts(trans);
 				trans.Commit ();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			} 
 			catch (Exception ex) 
 			{
 				trans.Rollback ();
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка в обработке договоров!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка в обработке договоров!", logger, ex);
 			}
 		}
 

@@ -125,7 +125,7 @@ namespace bazar
 			AccrualRowsFilter = new TreeModelFilter( AccrualRowsListStore, null);
 			AccrualRowsFilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeAccrualRows);
 
-			MainClass.StatusMessage("Запрос начисления...");
+			logger.Info("Запрос начисления...");
 			try
 			{
 				string sql = "SELECT accrual_pays.id as rowid, (accrual_pays.price * accrual_pays.count) as sum," +
@@ -156,7 +156,7 @@ namespace bazar
 					                  				  income_id);
 				}
 				rdr.Close();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				buttonAdd.Sensitive = true;
 				return true;
 			}
@@ -169,7 +169,7 @@ namespace bazar
 
 		private void FillPaymentDetails()
 		{
-			MainClass.StatusMessage("Запрос услуг по оплате №" + _PaymentId +"...");
+			logger.Info("Запрос услуг по оплате №" + _PaymentId +"...");
 			try
 			{
 				//Получаем таблицу оплаты
@@ -209,7 +209,7 @@ namespace bazar
 					}
 				}
 				
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				CalculateTotal();
 			}
 			catch (Exception ex)

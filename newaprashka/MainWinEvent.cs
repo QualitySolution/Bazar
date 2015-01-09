@@ -61,7 +61,7 @@ public partial class MainWindow : Gtk.Window
 		string user = "";
 		place_type_id = 0;
 		
-		MainClass.StatusMessage("Получаем таблицу событий...");
+		logger.Info("Получаем таблицу событий...");
 		string sql = "SELECT events.*, place_types.name as type, lessees.name as lessee, classes.name as class FROM events"+
 			" LEFT JOIN place_types ON events.place_type_id = place_types.id " +
 				"LEFT JOIN lessees ON events.lessee_id = lessees.id " +
@@ -148,7 +148,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		rdr.Close();
 		
-		MainClass.StatusMessage("Ok");
+		logger.Info("Ok");
 		
 		bool isSelect = treeviewEvents.Selection.CountSelectedRows() == 1;
 		buttonOpen.Sensitive = isSelect;

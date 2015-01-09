@@ -425,7 +425,7 @@ namespace bazar
 		{   //Заполняем комбобокс Номерами мест
 			try
 	        {
-				MainClass.StatusMessage("Запрос номеров мест...");
+				logger.Info("Запрос номеров мест...");
 				int count = 0;
 				string sql = "SELECT place_no FROM places " +
 					"WHERE type_id = @type_id";
@@ -442,12 +442,11 @@ namespace bazar
 				rdr.Close();
 				if(count == 1)
 					combo.Active = 0;
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 	       	}
 	       	catch (Exception ex)
 	       	{
-	           	Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения номеров мест!");
+				logger.WarnException("Ошибка получения номеров мест!", ex);
 	       	}
 		}
 
@@ -479,7 +478,7 @@ namespace bazar
 		{   
 			try
 			{
-				MainClass.StatusMessage("Запрос лет для начислений...");
+				logger.Info("Запрос лет для начислений...");
 				TreeIter iter;
 				string sql = "SELECT DISTINCT year FROM accrual ORDER BY year DESC";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -500,12 +499,11 @@ namespace bazar
 				((ListStore)combo.Model).SetSortColumnId ( 0, SortType.Descending);
 				ListStoreWorks.SearchListStore ((ListStore)combo.Model, Convert.ToString (DateTime.Now.Year), out iter);
 				combo.SetActiveIter(iter);
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения списка лет!");
+				logger.WarnException("Ошибка получения списка лет!", ex);
 			}
 			
 		}
@@ -513,7 +511,7 @@ namespace bazar
 		public static void FillServiceListStore(out ListStore list)
 		{   			
             list = new ListStore (typeof (int), typeof (string), typeof (int), typeof (string), typeof (bool));
-			MainClass.StatusMessage("Запрос справочника услуг...");
+			logger.Info("Запрос справочника услуг...");
 			try
 	        {
 				string sql = "SELECT services.*, units.name as units FROM services " +
@@ -542,12 +540,11 @@ namespace bazar
 					                   rdr.GetBoolean("by_area"));
 	   			}
 				rdr.Close();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 	       	}
 	       	catch (Exception ex)
 	       	{
-	           	Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения данных справочника!");
+				logger.WarnException("Ошибка получения данных справочника!", ex);
 	       	}
 
 		}
@@ -555,7 +552,7 @@ namespace bazar
 		public static void ComboFillUsers(ComboBox combo, string TableDB)
 		{   //Заполняем комбобокс пользователями
 			
-			MainClass.StatusMessage("Поиск пользователей в " + TableDB + "...");
+			logger.Info("Поиск пользователей в " + TableDB + "...");
 			try
 	        {
 				string sql = "SELECT user FROM " + TableDB + " GROUP BY user" ;
@@ -572,12 +569,11 @@ namespace bazar
 						combo.AppendText(tempstr);
 	   			}
 				rdr.Close();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 	       	}
 	       	catch (Exception ex)
 	       	{
-	           	Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка обработки " + TableDB + "!");
+				logger.WarnException("Ошибка обработки " + TableDB + "!", ex);
 	       	}
 
 		}
@@ -585,7 +581,6 @@ namespace bazar
 		public static void StatusMessage(string message)
 		{
 			StatusBarLabel.Text = message;
-			logger.Info (message);
 			while (GLib.MainContext.Pending())
 			{
    				Gtk.Main.Iteration();

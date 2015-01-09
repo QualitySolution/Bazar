@@ -1,14 +1,16 @@
 using System;
-using System.Data;
 using System.Collections.Generic;
+using System.Data;
 using Gtk;
 using MySql.Data.MySqlClient;
+using NLog;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class Accrual : Gtk.Dialog
 	{
+		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewAccrual;
 
 		Gtk.ListStore ServiceListStore, ServiceRefListStore, IncomeListStore;
@@ -302,7 +304,7 @@ namespace bazar
 			NewAccrual = false;
 			TreeIter iter;
 			
-			MainClass.StatusMessage("Запрос начисления №" + AccrualId +"...");
+			logger.Info("Запрос начисления №" + AccrualId +"...");
 			string sql = "SELECT accrual.*, users.name as user FROM accrual " +
 				"LEFT JOIN users ON users.id = accrual.user_id " +
 				"WHERE accrual.id = @id";
@@ -387,7 +389,7 @@ namespace bazar
 					                             );
 				}
 				rdr.Close();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 
 				CalculateServiceSum();
 				UpdateIncomes ();
@@ -395,9 +397,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о начисление!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о начисление!", logger, ex);
 			}
 			
 			TestCanSave();
@@ -409,7 +409,7 @@ namespace bazar
 			if(NewAccrual)
 				return;
 
-			MainClass.StatusMessage("Получаем таблицу приходных ордеров...");
+			logger.Info("Получаем таблицу приходных ордеров...");
 			
 			string sql = "SELECT credit_slips.*, cash.name as cash " +
 					"FROM credit_slips " +
@@ -434,7 +434,7 @@ namespace bazar
 			}
 			rdr.Close();
 			
-			MainClass.StatusMessage("Ok");
+			logger.Info("Ok");
 			CalculateIncomeSum ();
 		}
 
@@ -496,9 +496,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка получения информации о договоре!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о договоре!", logger, ex);
 			}
 		}
 
@@ -536,7 +534,7 @@ namespace bazar
 		{
 			TreeIter iter;
 			long NewAccrual_id = 0;
-			MainClass.StatusMessage("Запись начисления...");
+			logger.Info("Запись начисления...");
 			try 
 			{
 				// Проверка нет ли уже начисления по этому договору
@@ -550,7 +548,7 @@ namespace bazar
 				
 				if(rdr.Read() && rdr["id"].ToString () != entryNumber.Text)
 				{
-					MainClass.StatusMessage("Начисление уже существует!");
+					logger.Warn("Начисление уже существует!");
 					MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
 					                                     MessageType.Error, 
 					                                     ButtonsType.Ok,"ошибка");
@@ -644,14 +642,12 @@ namespace bazar
 					cmd.ExecuteNonQuery();
 				}
 				DeletedRowId.Clear ();
-				MainClass.StatusMessage("Ok");
+				logger.Info("Ok");
 				return true;
 			} 
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка записи начисления!");
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи начисления!", logger, ex);
 				return false;
 			}
 		}
@@ -815,8 +811,7 @@ namespace bazar
 			}
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка вычисления баланса!");
+				logger.WarnException("Ошибка вычисления баланса!", ex);
 			}
 			return 0m;
 		}
@@ -900,8 +895,7 @@ namespace bazar
 			}
 			catch (Exception ex) 
 			{
-				Console.WriteLine(ex.ToString());
-				MainClass.StatusMessage("Ошибка вычисления прошлого долга!");
+				logger.WarnException("Ошибка вычисления прошлого долга!", ex);
 			}
 		}
 
