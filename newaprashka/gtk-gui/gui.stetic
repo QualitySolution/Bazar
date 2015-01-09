@@ -222,7 +222,7 @@
         <property name="ShortLabel" translatable="yes">Счётчики</property>
         <signal name="Activated" handler="OnAction42Activated" />
       </action>
-      <action id="ActionLesseeRentReport">
+      <action id="Action43">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Оплата торгового места</property>
         <property name="ShortLabel" translatable="yes">Оплата торгового места</property>
@@ -275,11 +275,12 @@
                   <node type="Menuitem" action="Action32" />
                   <node type="Menuitem" action="Action40" />
                 </node>
+                <node type="Menuitem" action="Action43" />
                 <node type="Menuitem" action="Action33" />
+                <node type="Menuitem" action="Action42" />
+                <node type="Separator" />
                 <node type="Menuitem" action="Action38" />
                 <node type="Menuitem" action="Action39" />
-                <node type="Menuitem" action="Action42" />
-                <node type="Menuitem" action="ActionLesseeRentReport" />
               </node>
               <node type="Menu" action="Action34">
                 <node type="Menuitem" action="helpAction" />
