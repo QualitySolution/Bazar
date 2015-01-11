@@ -1,16 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using Gtk;
 using MySql.Data.MySqlClient;
-using System.Collections.Generic;
-using QSProjectsLib;
 using NLog;
+using QSProjectsLib;
 
 namespace bazar
 {
 	class MainClass
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
-		public static Label StatusBarLabel;
 		public static MainWindow MainWin;
 
 		public static void Main (string[] args)
@@ -21,6 +21,7 @@ namespace bazar
 				logger.FatalException("Поймано не обработаное исключение.", (Exception) e.ExceptionObject);
 				QSMain.ErrorMessage(MainWin, (Exception) e.ExceptionObject);
 			};
+			QSMain.GuiThread = Thread.CurrentThread;
 			CreateProjectParam();
 			// Создаем окно входа
 			Login LoginDialog = new QSProjectsLib.Login ();
@@ -576,15 +577,6 @@ namespace bazar
 				logger.WarnException("Ошибка обработки " + TableDB + "!", ex);
 	       	}
 
-		}
-
-		public static void StatusMessage(string message)
-		{
-			StatusBarLabel.Text = message;
-			while (GLib.MainContext.Pending())
-			{
-   				Gtk.Main.Iteration();
-			}
 		}
 	}
 }
