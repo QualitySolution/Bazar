@@ -1,5 +1,5 @@
 ;--------------------------------
-!define PRODUCT_VERSION "2.2.4"
+!define PRODUCT_VERSION "2.2.5"
 !define MIN_NET_MAJOR "4"
 !define MIN_NET_MINOR "0"
 !define MIN_NET_BUILD "*"
@@ -347,32 +347,25 @@ Section "MS .NET Framework ${MIN_NET_MAJOR}.${MIN_NET_MINOR}" SecFramework
  
 SectionEnd
 
-Section "GTK# 2.12.21" SecGTK
+Section "GTK# 2.12.26" SecGTK
   SectionIn RO
 
   ; Test 2.12.26
   System::Call "msi::MsiQueryProductStateA(t '{BC25B808-A11C-4C9F-9C0A-6682E47AAB83}') i.r0"
   StrCmp $0 "5" GTKDone
   DetailPrint "GTK# 2.12.26 не установлен"
-  
-  ; Test 2.12.25
-  System::Call "msi::MsiQueryProductStateA(t '{889E7D77-2A98-4020-83B1-0296FA1BDE8A}') i.r0"
-  StrCmp $0 "5" GTKDone
-  DetailPrint "GTK# 2.12.25 не установлен"
 
-  ; Test 2.12.21
-  System::Call "msi::MsiQueryProductStateA(t '{71109D19-D8C1-437D-A6DA-03B94F5187FB}') i.r0"
-  StrCmp $0 "5" GTKDone
-  DetailPrint "GTK# 2.12.21 не установлен"
-
-; Install 2.12.21
-  DetailPrint "Запуск установщика GTK# 2.12.21"
-  File "gtk-sharp-2.12.21.msi"
-  ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.21.msi"  /passive'
+; Install 2.12.26
+  DetailPrint "Запуск установщика GTK# 2.12.26"
+  File "gtk-sharp-2.12.26.msi"
+  ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.26.msi"  /passive'
 
 ; Setup Gtk style
   ${ConfigWrite} "$PROGRAMFILES\GtkSharp\2.12\share\themes\MS-Windows\gtk-2.0\gtkrc" "gtk-button-images =" "1" $R0
 
+; Fix Localication
+  SetOutPath "$PROGRAMFILES\GtkSharp\2.12\share\locale\ru\LC_MESSAGES"
+  File "LC_MESSAGES\*"
   GTKDone:
 SectionEnd
 
@@ -424,6 +417,6 @@ Section "Uninstall"
 
   ; Remove GTK#
   MessageBox MB_YESNO "Удалить библиотеки GTK#? Они были установлены для ${PRODUCT_NAME}, но могут использоваться другими приложениями." /SD IDYES IDNO endGTK
-    ExecWait '"msiexec" /X{71109D19-D8C1-437D-A6DA-03B94F5187FB} /passive'
+    ExecWait '"msiexec" /X{BC25B808-A11C-4C9F-9C0A-6682E47AAB83} /passive'
   endGTK:
 SectionEnd
