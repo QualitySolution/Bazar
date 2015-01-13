@@ -142,9 +142,7 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			if(args.NewText == null)
-			{
-				logger.Warn("newtext is empty");
+			if(args.NewText == null){
 				return;
 			}
 			ServiceListStore.SetValue(iter, (int)ServiceCol.service, args.NewText);
@@ -174,9 +172,7 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			if(args.NewText == null)
-			{
-				logger.Warn("newtext is empty");
+			if(args.NewText == null){
 				return;
 			}
 			ServiceListStore.SetValue(iter, (int)ServiceCol.cash, args.NewText);

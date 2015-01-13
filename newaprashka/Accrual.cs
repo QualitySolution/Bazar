@@ -185,7 +185,6 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				Console.WriteLine("newtext is empty");
 				return;
 			}
 			ServiceListStore.SetValue(iter, (int)ServiceCol.service, args.NewText);
@@ -217,7 +216,6 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				Console.WriteLine("newtext is empty");
 				return;
 			}
 			ServiceListStore.SetValue(iter, (int)ServiceCol.cash, args.NewText);

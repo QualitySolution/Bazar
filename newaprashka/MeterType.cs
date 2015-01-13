@@ -193,7 +193,6 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				logger.Warn("newtext is empty");
 				return;
 			}
 
@@ -218,7 +217,6 @@ namespace bazar
 
 			if(args.NewText == null || args.NewText == "")
 			{
-				logger.Warn("newtext is empty");
 				return;
 			}
 

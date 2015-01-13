@@ -260,7 +260,6 @@ namespace bazar
 				return;
 			if(args.NewText == null)
 			{
-				logger.Warn("newtext is empty");
 				return;
 			}
 			ServiceListStore.SetValue(iter, 4, args.NewText);
