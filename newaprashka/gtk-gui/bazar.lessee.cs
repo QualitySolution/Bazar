@@ -5,60 +5,115 @@ namespace bazar
 	public partial class lessee
 	{
 		private global::Gtk.VBox vbox2;
+		
 		private global::Gtk.HPaned hpaned1;
+		
 		private global::Gtk.VBox vbox3;
+		
 		private global::Gtk.Frame frame1;
+		
 		private global::Gtk.Alignment GtkAlignment2;
+		
 		private global::Gtk.Table table1;
+		
 		private global::Gtk.Entry entryAddress;
+		
 		private global::Gtk.Entry entryINN;
+		
 		private global::Gtk.Entry entryKPP;
+		
 		private global::Gtk.Entry entryName;
+		
 		private global::Gtk.Entry entryOGRN;
+		
 		private global::Gtk.Label label1;
+		
 		private global::Gtk.Label label11;
+		
 		private global::Gtk.Label label2;
+		
 		private global::Gtk.Label label3;
+		
 		private global::Gtk.Label label4;
+		
 		private global::Gtk.Label label5;
+		
 		private global::Gtk.Label labelID;
+		
 		private global::Gtk.Label GtkLabel2;
+		
 		private global::Gtk.Frame frame3;
+		
 		private global::Gtk.Alignment GtkAlignment4;
+		
 		private global::Gtk.VBox vbox5;
+		
 		private global::Gtk.HBox hbox1;
+		
 		private global::Gtk.CheckButton checkBwholesaler;
+		
 		private global::Gtk.CheckButton checkBretail;
+		
 		private global::Gtk.HBox hbox2;
+		
 		private global::Gtk.Label label10;
+		
 		private global::Gtk.Entry entryGoods;
+		
 		private global::Gtk.Button buttonGoodsClean;
+		
 		private global::Gtk.Button buttonGoodsEdit;
+		
 		private global::Gtk.Label GtkLabel5;
+		
 		private global::Gtk.VBox vbox4;
+		
 		private global::Gtk.Frame frame2;
+		
 		private global::Gtk.Alignment GtkAlignment3;
+		
 		private global::Gtk.Table table2;
+		
 		private global::Gtk.Entry entryExit;
+		
 		private global::Gtk.Entry entryFIO;
+		
 		private global::Gtk.HBox hbox3;
+		
 		private global::Gtk.Entry entryPassSer;
+		
 		private global::Gtk.Entry entryPassNo;
+		
 		private global::Gtk.Label label6;
+		
 		private global::Gtk.Label label7;
+		
 		private global::Gtk.Label label9;
+		
 		private global::Gtk.Label GtkLabel6;
+		
 		private global::Gtk.Frame frame4;
+		
 		private global::Gtk.Alignment GtkAlignment5;
+		
 		private global::Gtk.ScrolledWindow GtkScrolledWindow;
+		
 		private global::Gtk.TextView textviewComments;
+		
 		private global::Gtk.Label GtkLabel7;
+		
 		private global::Gtk.HBox hbox4;
+		
 		private global::Gtk.Label label8;
+		
 		private global::Gtk.CheckButton checkActiveContracts;
+		
 		private global::Gtk.ScrolledWindow GtkScrolledWindow1;
+		
 		private global::Gtk.TreeView treeviewContracts;
+		
 		private global::Gtk.Button buttonCancel;
+		
 		private global::Gtk.Button buttonOk;
 
 		protected virtual void Build ()
@@ -104,6 +159,7 @@ namespace bazar
 			this.entryAddress.CanFocus = true;
 			this.entryAddress.Name = "entryAddress";
 			this.entryAddress.IsEditable = true;
+			this.entryAddress.MaxLength = 100;
 			this.entryAddress.InvisibleChar = '●';
 			this.table1.Add (this.entryAddress);
 			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.table1 [this.entryAddress]));
@@ -133,6 +189,7 @@ namespace bazar
 			this.entryKPP.CanFocus = true;
 			this.entryKPP.Name = "entryKPP";
 			this.entryKPP.IsEditable = true;
+			this.entryKPP.MaxLength = 10;
 			this.entryKPP.InvisibleChar = '●';
 			this.table1.Add (this.entryKPP);
 			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table1 [this.entryKPP]));
@@ -147,6 +204,7 @@ namespace bazar
 			this.entryName.CanFocus = true;
 			this.entryName.Name = "entryName";
 			this.entryName.IsEditable = true;
+			this.entryName.MaxLength = 100;
 			this.entryName.InvisibleChar = '●';
 			this.table1.Add (this.entryName);
 			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table1 [this.entryName]));
@@ -395,6 +453,7 @@ namespace bazar
 			this.entryExit.CanFocus = true;
 			this.entryExit.Name = "entryExit";
 			this.entryExit.IsEditable = true;
+			this.entryExit.MaxLength = 100;
 			this.entryExit.InvisibleChar = '●';
 			this.table2.Add (this.entryExit);
 			global::Gtk.Table.TableChild w31 = ((global::Gtk.Table.TableChild)(this.table2 [this.entryExit]));
@@ -408,6 +467,7 @@ namespace bazar
 			this.entryFIO.CanFocus = true;
 			this.entryFIO.Name = "entryFIO";
 			this.entryFIO.IsEditable = true;
+			this.entryFIO.MaxLength = 45;
 			this.entryFIO.InvisibleChar = '●';
 			this.table2.Add (this.entryFIO);
 			global::Gtk.Table.TableChild w32 = ((global::Gtk.Table.TableChild)(this.table2 [this.entryFIO]));
