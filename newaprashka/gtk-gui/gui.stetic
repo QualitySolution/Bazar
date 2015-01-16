@@ -3242,7 +3242,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Place" design-size="810 519">
+  <widget class="Gtk.Dialog" id="bazar.Place" design-size="856 519">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новое место</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -3326,6 +3326,7 @@
                                 <property name="MemberName" />
                                 <property name="CanFocus">True</property>
                                 <property name="IsEditable">True</property>
+                                <property name="MaxLength">20</property>
                                 <property name="InvisibleChar">●</property>
                                 <signal name="Changed" handler="OnEntryNumberChanged" />
                               </widget>

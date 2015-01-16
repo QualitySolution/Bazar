@@ -5,62 +5,119 @@ namespace bazar
 	public partial class Place
 	{
 		private global::Gtk.VBox vbox2;
+		
 		private global::Gtk.HBox hbox2;
+		
 		private global::Gtk.Frame frame2;
+		
 		private global::Gtk.Alignment GtkAlignment2;
+		
 		private global::Gtk.Table table2;
+		
 		private global::Gtk.ComboBox comboOrg;
+		
 		private global::Gtk.ComboBox comboPType;
+		
 		private global::Gtk.Entry entryNumber;
+		
 		private global::Gtk.HBox hbox3;
+		
 		private global::Gtk.Entry entryContact;
+		
 		private global::Gtk.Button buttonContactOpen;
+		
 		private global::Gtk.Button buttonContactClean;
+		
 		private global::Gtk.Button buttonContact;
+		
 		private global::Gtk.Label label1;
+		
 		private global::Gtk.Label label10;
+		
 		private global::Gtk.Label label2;
+		
 		private global::Gtk.Label label3;
+		
 		private global::Gtk.Label label7;
+		
 		private global::Gtk.SpinButton spinArea;
+		
 		private global::Gtk.Label GtkLabel8;
+		
 		private global::Gtk.VBox vbox3;
+		
 		private global::Gtk.Frame frame3;
+		
 		private global::Gtk.Alignment GtkAlignment9;
+		
 		private global::Gtk.ScrolledWindow GtkScrolledWindow;
+		
 		private global::Gtk.TextView textviewComments;
+		
 		private global::Gtk.Label GtkLabel9;
+		
 		private global::Gtk.Frame frame1;
+		
 		private global::Gtk.Alignment GtkAlignment10;
+		
 		private global::Gtk.VBox vbox4;
+		
 		private global::Gtk.Table table1;
+		
 		private global::Gtk.Label label11;
+		
 		private global::Gtk.Label label4;
+		
 		private global::Gtk.Label label8;
+		
 		private global::Gtk.Label labelContractDates;
+		
 		private global::Gtk.Label labelContractNumber;
+		
 		private global::Gtk.Label labelLessee;
+		
 		private global::Gtk.HBox hbox1;
+		
 		private global::Gtk.Button buttonContract;
+		
 		private global::Gtk.Button buttonLessee;
+		
 		private global::Gtk.Button buttonNewContract;
+		
 		private global::Gtk.Label GtkLabel10;
+		
 		private global::Gtk.Notebook notebookMain;
+		
 		private global::Gtk.ScrolledWindow GtkScrolledWindow1;
+		
 		private global::Gtk.TreeView treeviewHistory;
+		
 		private global::Gtk.Label label5;
+		
 		private global::Gtk.HBox hbox4;
+		
 		private global::Gtk.Notebook notebookMeters;
+		
 		private global::Gtk.Label label9;
+		
 		private global::Gtk.VBox vbox5;
+		
 		private global::Gtk.Button buttonAddMeter;
+		
 		private global::Gtk.Button buttonEditMeter;
+		
 		private global::Gtk.Button buttonDeleteMeter;
+		
 		private global::Gtk.HSeparator hseparator1;
+		
 		private global::Gtk.Button buttonAddReading;
+		
 		private global::Gtk.Button buttonDeleteReading;
+		
 		private global::Gtk.Label label6;
+		
 		private global::Gtk.Button buttonCancel;
+		
 		private global::Gtk.Button buttonOk;
 
 		protected virtual void Build ()
@@ -121,6 +178,7 @@ namespace bazar
 			this.entryNumber.CanFocus = true;
 			this.entryNumber.Name = "entryNumber";
 			this.entryNumber.IsEditable = true;
+			this.entryNumber.MaxLength = 20;
 			this.entryNumber.InvisibleChar = '●';
 			this.table2.Add (this.entryNumber);
 			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table2 [this.entryNumber]));
@@ -663,7 +721,7 @@ namespace bazar
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 810;
+			this.DefaultWidth = 856;
 			this.DefaultHeight = 519;
 			this.Show ();
 			this.buttonContactOpen.Clicked += new global::System.EventHandler (this.OnButtonContactOpenClicked);
