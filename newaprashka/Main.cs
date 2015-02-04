@@ -46,7 +46,7 @@ namespace bazar
 
 			LoginDialog.Destroy ();
 			//Проверка на предмет использования SaaS и запуск обновления сессии.
-			QSSaaS.Session.CheckAndStartSessionRefresh ();
+			QSSaaS.Session.StartSessionRefresh ();
 
 			//Запускаем программу
 			MainWin = new MainWindow ();
@@ -55,7 +55,7 @@ namespace bazar
 			MainWin.Show ();
 			Application.Run ();
 			//Остановка таймера обновления сессии.
-			QSSaaS.Session.CheckAndStopSessionRefresh ();
+			QSSaaS.Session.StopSessionRefresh ();
 		}
 
 		static void CreateProjectParam()
