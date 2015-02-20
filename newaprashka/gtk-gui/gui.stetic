@@ -8,6 +8,7 @@
     <widget-library name="../../../QSProjects/QSProjectsLib/bin/Debug/QSProjectsLib.dll" />
     <widget-library name="../../../QSProjects/QSWidgetLib/bin/Debug/QSWidgetLib.dll" />
     <widget-library name="../../../QSProjects/QSSupportLib/bin/Debug/QSSupportLib.dll" />
+    <widget-library name="../../../QSProjects/QSUpdater/bin/Debug/QSUpdater.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="875 590">
@@ -228,6 +229,13 @@
         <property name="ShortLabel" translatable="yes">Оплата за место</property>
         <signal name="Activated" handler="OnActionLesseeRentReportActivated" />
       </action>
+      <action id="checkUpdateAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Проверить обновление</property>
+        <property name="ShortLabel" translatable="yes">Проверить обновление</property>
+        <property name="StockId">gtk-goto-bottom</property>
+        <signal name="Activated" handler="OnCheckUpdateActionActivated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">QS: База арендаторов</property>
@@ -287,6 +295,7 @@
                 <node type="Menuitem" action="Action36" />
                 <node type="Menuitem" action="Action37" />
                 <node type="Menuitem" action="Action26" />
+                <node type="Menuitem" action="checkUpdateAction" />
                 <node type="Separator" />
                 <node type="Menuitem" action="aboutAction" />
               </node>

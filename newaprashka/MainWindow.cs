@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using QSProjectsLib;
 using QSSupportLib;
 using bazar;
+using QSUpdater;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -106,6 +107,7 @@ public partial class MainWindow : Gtk.Window
 		PrepareCash ();
 		notebookMain.CurrentPage = 0;
 		UpdatePlaces ();
+		CheckUpdate.StartCheckUpdateThread ();
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -791,4 +793,8 @@ public partial class MainWindow : Gtk.Window
 		RentReport.Destroy ();
 	}
 
+	protected void OnCheckUpdateActionActivated (object sender, EventArgs e)
+	{
+		CheckUpdate.StartCheckUpdateThread (true);
+	}
 }

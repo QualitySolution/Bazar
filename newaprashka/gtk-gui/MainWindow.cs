@@ -77,6 +77,8 @@ public partial class MainWindow
 	
 	private global::Gtk.Action Action43;
 	
+	private global::Gtk.Action checkUpdateAction;
+	
 	private global::Gtk.VBox vbox1;
 	
 	private global::Gtk.MenuBar menubar1;
@@ -577,6 +579,9 @@ public partial class MainWindow
 		this.Action43 = new global::Gtk.Action ("Action43", global::Mono.Unix.Catalog.GetString ("Оплата за место"), null, null);
 		this.Action43.ShortLabel = global::Mono.Unix.Catalog.GetString ("Оплата за место");
 		w1.Add (this.Action43, null);
+		this.checkUpdateAction = new global::Gtk.Action ("checkUpdateAction", global::Mono.Unix.Catalog.GetString ("Проверить обновление"), null, "gtk-goto-bottom");
+		this.checkUpdateAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Проверить обновление");
+		w1.Add (this.checkUpdateAction, null);
 		this.UIManager.InsertActionGroup (w1, 0);
 		this.AddAccelGroup (this.UIManager.AccelGroup);
 		this.Name = "MainWindow";
@@ -588,7 +593,7 @@ public partial class MainWindow
 		this.vbox1.Name = "vbox1";
 		this.vbox1.Spacing = 6;
 		// Container child vbox1.Gtk.Box+BoxChild
-		this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='ActionFileMenu' action='ActionFileMenu'><menuitem name='dialogAuthenticationAction' action='dialogAuthenticationAction'/><menuitem name='UsersAction' action='UsersAction'/><separator/><menuitem name='quitAction' action='quitAction'/></menu><menu name='Action9' action='Action9'><menuitem name='Action15' action='Action15'/><menuitem name='Action27' action='Action27'/><separator/><menuitem name='Action10' action='Action10'/><menuitem name='Action21' action='Action21'/><menuitem name='Action3' action='Action3'/><separator/><menuitem name='Action7' action='Action7'/><menuitem name='Action6' action='Action6'/><menuitem name='Action5' action='Action5'/><separator/><menuitem name='Action17' action='Action17'/><menuitem name='Action18' action='Action18'/><menuitem name='Action41' action='Action41'/><separator/><menuitem name='Action19' action='Action19'/><menuitem name='Action24' action='Action24'/><menuitem name='Action25' action='Action25'/></menu><menu name='Action' action='Action'><menu name='Action29' action='Action29'><menuitem name='Action30' action='Action30'/><menuitem name='Action31' action='Action31'/><menuitem name='Action32' action='Action32'/><menuitem name='Action40' action='Action40'/></menu><menuitem name='Action43' action='Action43'/><menuitem name='Action33' action='Action33'/><menuitem name='Action42' action='Action42'/><separator/><menuitem name='Action38' action='Action38'/><menuitem name='Action39' action='Action39'/></menu><menu name='Action34' action='Action34'><menuitem name='helpAction' action='helpAction'/><menuitem name='Action36' action='Action36'/><menuitem name='Action37' action='Action37'/><menuitem name='Action26' action='Action26'/><separator/><menuitem name='aboutAction' action='aboutAction'/></menu></menubar></ui>");
+		this.UIManager.AddUiFromString ("<ui><menubar name='menubar1'><menu name='ActionFileMenu' action='ActionFileMenu'><menuitem name='dialogAuthenticationAction' action='dialogAuthenticationAction'/><menuitem name='UsersAction' action='UsersAction'/><separator/><menuitem name='quitAction' action='quitAction'/></menu><menu name='Action9' action='Action9'><menuitem name='Action15' action='Action15'/><menuitem name='Action27' action='Action27'/><separator/><menuitem name='Action10' action='Action10'/><menuitem name='Action21' action='Action21'/><menuitem name='Action3' action='Action3'/><separator/><menuitem name='Action7' action='Action7'/><menuitem name='Action6' action='Action6'/><menuitem name='Action5' action='Action5'/><separator/><menuitem name='Action17' action='Action17'/><menuitem name='Action18' action='Action18'/><menuitem name='Action41' action='Action41'/><separator/><menuitem name='Action19' action='Action19'/><menuitem name='Action24' action='Action24'/><menuitem name='Action25' action='Action25'/></menu><menu name='Action' action='Action'><menu name='Action29' action='Action29'><menuitem name='Action30' action='Action30'/><menuitem name='Action31' action='Action31'/><menuitem name='Action32' action='Action32'/><menuitem name='Action40' action='Action40'/></menu><menuitem name='Action43' action='Action43'/><menuitem name='Action33' action='Action33'/><menuitem name='Action42' action='Action42'/><separator/><menuitem name='Action38' action='Action38'/><menuitem name='Action39' action='Action39'/></menu><menu name='Action34' action='Action34'><menuitem name='helpAction' action='helpAction'/><menuitem name='Action36' action='Action36'/><menuitem name='Action37' action='Action37'/><menuitem name='Action26' action='Action26'/><menuitem name='checkUpdateAction' action='checkUpdateAction'/><separator/><menuitem name='aboutAction' action='aboutAction'/></menu></menubar></ui>");
 		this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar1")));
 		this.menubar1.Name = "menubar1";
 		this.vbox1.Add (this.menubar1);
@@ -2546,6 +2551,7 @@ public partial class MainWindow
 		this.Action41.Activated += new global::System.EventHandler (this.OnAction41Activated);
 		this.Action42.Activated += new global::System.EventHandler (this.OnAction42Activated);
 		this.Action43.Activated += new global::System.EventHandler (this.OnActionLesseeRentReportActivated);
+		this.checkUpdateAction.Activated += new global::System.EventHandler (this.OnCheckUpdateActionActivated);
 		this.notebookMain.SwitchPage += new global::Gtk.SwitchPageHandler (this.OnNotebookMainSwitchPage);
 		this.comboPlaceType.Changed += new global::System.EventHandler (this.OnComboPlaceTypeChanged);
 		this.entryPlaceNum.Changed += new global::System.EventHandler (this.OnEntryPlaceNumChanged);
