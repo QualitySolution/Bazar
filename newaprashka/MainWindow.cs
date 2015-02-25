@@ -43,7 +43,12 @@ public partial class MainWindow : Gtk.Window
 		MainSupport.ProjectVerion = new AppVersion (System.Reflection.Assembly.GetExecutingAssembly ().GetName ().Name.ToString (),
 		                                            "gpl",
 		                                            System.Reflection.Assembly.GetExecutingAssembly ().GetName ().Version);
-		MainSupport.TestVersion (this); //Проверяем версию базы
+		if (!MainSupport.CheckVersion (this)) {//Проверяем версию базы 
+			CheckUpdate.StartCheckUpdateThread (UpdaterFlags.ShowAnyway | UpdaterFlags.UpdateRequired);
+			this.Destroy ();
+			this.Dispose ();
+			return;
+		}
 		QSMain.CheckServer (this); // Проверяем настройки сервера
 		MainClass.MinorDBVersionChange (); // При необходимости корректируем базу.
 		MainNewsFeed.CheckNewsReads (); //Создаем при необходимости таблицу новостей.
@@ -107,7 +112,7 @@ public partial class MainWindow : Gtk.Window
 		PrepareCash ();
 		notebookMain.CurrentPage = 0;
 		UpdatePlaces ();
-		CheckUpdate.StartCheckUpdateThread ();
+		CheckUpdate.StartCheckUpdateThread (UpdaterFlags.StartInThread);
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -795,6 +800,6 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnCheckUpdateActionActivated (object sender, EventArgs e)
 	{
-		CheckUpdate.StartCheckUpdateThread (true);
+		CheckUpdate.StartCheckUpdateThread (UpdaterFlags.ShowAnyway | UpdaterFlags.StartInThread);
 	}
 }
