@@ -3,14 +3,22 @@
   <subtitle type="text">Новости программы QS: База арендаторов</subtitle>
   <id>bazarnews</id>
 
-  <rights type="text">Quality Solution 2014</rights>
-  <updated>2015-01-12T12:37:00+03:00</updated>
+  <rights type="text">Quality Solution 2015</rights>
+  <updated>2015-02-26T13:30:00+03:00</updated>
+  <entry>
+    <id>urn:uuid:78aeff5d-46e9-464b-9a22-5a9595bba253</id>
+    <title type="text">Новый сайт QS: База арендаторов</title>
+    <updated>2015-02-26T13:30:00+03:00</updated>
+	<published>2015-02-26T13:30:00+03:00</published>
+    <link rel="alternate" href="http://www.qsolution.ru/novosti/novosti-kompanii/sait-produkta-qs-baza-arendatorov.html" />
+    <summary>Запущен отдельный сайт для программы QS: База арендаторов</summary>
+  </entry>
   <entry>
     <id>urn:uuid:efdf9ba7-3a19-478a-a708-895c2bb2b02e</id>
     <title type="text">QS: База арендаторов 2.2.5</title>
     <updated>2015-01-12T13:00:00+03:00</updated>
 	<published>2015-01-12T13:00:00+03:00</published>
-    <link rel="alternate" href="http://www.qsolution.ru/novosti/nashi-produkty/reliz-qs-baza-arendatorov-2-2-5.html" />
+    <link rel="alternate" href="http://bazar.qsolution.ru/?p=132" />
     <summary>Минорный релиз QS: База арендаторов 2.2.5...</summary>
   </entry>
   <entry>
