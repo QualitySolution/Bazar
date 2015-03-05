@@ -70,8 +70,8 @@ public partial class MainWindow : Gtk.Window
 	void PrepareCash()
 	{
 		//Заполняем комбобокс
-		ComboWorks.ComboFillReference(comboCashOrg, "organizations", ComboWorks.ListMode.WithAll);
-		ComboWorks.ComboFillReference(comboCashCash,"cash", ComboWorks.ListMode.WithAll);
+		ComboWorks.ComboFillReference(comboCashOrg, "organizations", ComboWorks.ListMode.WithAll, false);
+		ComboWorks.ComboFillReference(comboCashCash,"cash", ComboWorks.ListMode.WithAll, false);
 		
 		//Создаем таблицу "Приходных ордеров"
 		CashIncomeListStore = new Gtk.ListStore (typeof (int), // 0-id

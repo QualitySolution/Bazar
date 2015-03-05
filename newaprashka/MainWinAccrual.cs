@@ -30,8 +30,8 @@ public partial class MainWindow : Gtk.Window
 	void PrepareAccrual()
 	{
 		//Заполняем комбобокс
-		ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll);
-		ComboWorks.ComboFillReference(comboAccrualCash,"cash", ComboWorks.ListMode.WithAll);
+		ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll, false);
+		ComboWorks.ComboFillReference(comboAccrualCash,"cash", ComboWorks.ListMode.WithAll, false);
 		MainClass.ComboAccrualYearsFill (comboAccuralYear, NameOfAllOption);
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		

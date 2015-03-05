@@ -12,8 +12,8 @@ public partial class MainWindow : Gtk.Window
 	void PrepareEvent()
 	{
 		MainClass.ComboFillUsers(comboEventUser,"events");
-		ComboWorks.ComboFillReference(comboEventType, "classes", ComboWorks.ListMode.WithAll);
-		ComboWorks.ComboFillReference(comboEventPlaceT,"place_types", ComboWorks.ListMode.WithAll);
+		ComboWorks.ComboFillReference(comboEventType, "classes", ComboWorks.ListMode.WithAll, false);
+		ComboWorks.ComboFillReference(comboEventPlaceT,"place_types", ComboWorks.ListMode.WithAll, false);
 		
 		//Создаем таблицу "События"
 		EventsListStore = new Gtk.ListStore (typeof (int),typeof (string), typeof (int), typeof (string), typeof (string),
