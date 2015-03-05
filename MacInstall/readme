@@ -1,0 +1,7 @@
+В Bundle нужно положить:
+1. В папку ./Contents/MacOS все скомпилированные файлы приложения
+2. В папку ./Contents/Resources файл BazAr.icns с иконкой
+3. В папку ./Contents/Mono установщик Mono MDK и назвать его mono.pkg
+
+Настройки приложения находятся в файле ./Contents/Info.plist
+Скрипт запуска приложения ./Contents/MacOS/launch
