@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BazAr", "newaprashka\BazAr.csproj", "{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QSLibs", "QSLibs", "{3E32171D-7CBA-42A7-BA47-986C7E9D90D8}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSProjectsLib", "..\QSProjects\QSProjectsLib\QSProjectsLib.csproj", "{A6C1914F-7732-49F5-BABA-8BBBA521FAAB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSWidgetLib", "..\QSProjects\QSWidgetLib\QSWidgetLib.csproj", "{5A2BB01E-E124-432E-8099-D1343D3897B9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSupportLib", "..\QSProjects\QSSupportLib\QSSupportLib.csproj", "{9DF71899-3CE4-48F4-B3C3-0B21B15037B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSaaS", "..\QSProjects\QSSaaS\QSSaaS.csproj", "{4B502FE5-D419-4B5C-9276-0A25EF2F508A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSupportLib", "..\QSProjects\QSSupportLib\QSSupportLib.csproj", "{9DF71899-3CE4-48F4-B3C3-0B21B15037B1}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSUpdater", "..\QSProjects\QSUpdater\QSUpdater.csproj", "{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSWidgetLib", "..\QSProjects\QSWidgetLib\QSWidgetLib.csproj", "{5A2BB01E-E124-432E-8099-D1343D3897B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,13 @@ Global
 		{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}.Debug|x86.Build.0 = Debug|x86
 		{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}.Release|x86.ActiveCfg = Release|x86
 		{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A6C1914F-7732-49F5-BABA-8BBBA521FAAB} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{4B502FE5-D419-4B5C-9276-0A25EF2F508A} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{9DF71899-3CE4-48F4-B3C3-0B21B15037B1} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{5A2BB01E-E124-432E-8099-D1343D3897B9} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
