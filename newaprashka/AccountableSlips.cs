@@ -60,6 +60,8 @@ namespace bazar
 		}
 		protected void UpdateSlips()
 		{
+			if (SlipsListStore == null)
+				return;
 			TreeIter iter;
 			SlipsListStore.Clear ();
 			try

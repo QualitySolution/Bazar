@@ -5,28 +5,51 @@ namespace bazar
 	public partial class AccountableSlips
 	{
 		private global::Gtk.HBox hbox1;
+		
 		private global::Gtk.Table table1;
+		
 		private global::Gtk.ComboBox comboCash;
+		
 		private global::Gtk.ComboBox comboOrg;
+		
 		private global::Gtk.HBox hbox2;
+		
 		private global::Gtk.Entry entryAccountable;
+		
 		private global::Gtk.Button buttonAccountableEdit;
+		
 		private global::Gtk.Label label1;
+		
 		private global::Gtk.Label label2;
+		
 		private global::Gtk.Label label3;
+		
 		private global::Gtk.VBox vbox11;
+		
 		private global::Gtk.Label label31;
+		
 		private global::Gtk.Table table4;
+		
 		private global::Gtk.RadioButton radio3month;
+		
 		private global::Gtk.RadioButton radioAll;
+		
 		private global::Gtk.RadioButton radioMonth;
+		
 		private global::Gtk.RadioButton radioYear;
+		
 		private global::Gtk.HBox hbox15;
+		
 		private global::QSWidgetLib.DatePicker dateCashStart;
+		
 		private global::Gtk.Label label32;
+		
 		private global::QSWidgetLib.DatePicker dateCashEnd;
+		
 		private global::Gtk.ScrolledWindow GtkScrolledWindow;
+		
 		private global::Gtk.TreeView treeviewSlips;
+		
 		private global::Gtk.Button buttonClose;
 
 		protected virtual void Build ()
