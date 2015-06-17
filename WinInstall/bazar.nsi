@@ -5,6 +5,7 @@
 !define MIN_NET_BUILD "*"
 !define NETInstaller "dotNetFx40_Full_setup.exe"
 !define PRODUCT_NAME "QS: База арендаторов"
+!define SHORTCUT_NAME "QS База арендаторов"
 !define MENU_DIR_NAME "База арендаторов"
 !define EXE_NAME "bazar"
 
@@ -347,7 +348,7 @@ Section "MS .NET Framework ${MIN_NET_MAJOR}.${MIN_NET_MINOR}" SecFramework
  
 SectionEnd
 
-Section "GTK# 2.12.26" SecGTK
+Section "GTK# 2.12.21" SecGTK
   SectionIn RO
 
   ; Test 2.12.26
@@ -355,10 +356,20 @@ Section "GTK# 2.12.26" SecGTK
   StrCmp $0 "5" GTKDone
   DetailPrint "GTK# 2.12.26 не установлен"
 
-; Install 2.12.26
-  DetailPrint "Запуск установщика GTK# 2.12.26"
-  File "gtk-sharp-2.12.26.msi"
-  ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.26.msi"  /passive'
+  ; Test 2.12.25
+  System::Call "msi::MsiQueryProductStateA(t '{889E7D77-2A98-4020-83B1-0296FA1BDE8A}') i.r0"
+  StrCmp $0 "5" GTKDone
+  DetailPrint "GTK# 2.12.25 не установлен"
+
+  ; Test 2.12.21
+  System::Call "msi::MsiQueryProductStateA(t '{71109D19-D8C1-437D-A6DA-03B94F5187FB}') i.r0"
+  StrCmp $0 "5" GTKDone
+  DetailPrint "GTK# 2.12.21 не установлен"
+
+; Install 2.12.21
+  DetailPrint "Запуск установщика GTK# 2.12.21"
+  File "gtk-sharp-2.12.21.msi"
+  ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.21.msi"  /passive'
 
 ; Setup Gtk style
   ${ConfigWrite} "$PROGRAMFILES\GtkSharp\2.12\share\themes\MS-Windows\gtk-2.0\gtkrc" "gtk-button-images =" "1" $R0
@@ -373,7 +384,7 @@ Section "Ярлык на рабочий стол" SecDesktop
 
   SetShellVarContext all
   SetOutPath $INSTDIR
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${EXE_NAME}.exe" "" "$INSTDIR\${EXE_NAME}.exe" 0
+  CreateShortCut "$DESKTOP\${SHORTCUT_NAME}.lnk" "$INSTDIR\${EXE_NAME}.exe" "" "$INSTDIR\${EXE_NAME}.exe" 0
  
 SectionEnd
 
@@ -407,9 +418,15 @@ Section "Uninstall"
   Delete $INSTDIR\*
   Delete $INSTDIR\uninstall.exe
 
+  Delete $INSTDIR\Reports\*
+  RMDir $INSTDIR\Reports
+
+  Delete $INSTDIR\ru-RU\*
+  RMDir $INSTDIR\ru-RU
+
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\${MENU_DIR_NAME}\*.*"
-  Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
+  Delete "$DESKTOP\${SHORTCUT_NAME}.lnk"
 
   ; Remove directories used
   RMDir "$SMPROGRAMS\${MENU_DIR_NAME}"
@@ -417,6 +434,6 @@ Section "Uninstall"
 
   ; Remove GTK#
   MessageBox MB_YESNO "Удалить библиотеки GTK#? Они были установлены для ${PRODUCT_NAME}, но могут использоваться другими приложениями." /SD IDYES IDNO endGTK
-    ExecWait '"msiexec" /X{BC25B808-A11C-4C9F-9C0A-6682E47AAB83} /passive'
+    ExecWait '"msiexec" /X{71109D19-D8C1-437D-A6DA-03B94F5187FB} /passive'
   endGTK:
 SectionEnd
