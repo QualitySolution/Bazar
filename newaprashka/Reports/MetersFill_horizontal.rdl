@@ -17,7 +17,11 @@
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT lessees.name, lessees.FIO_dir, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
 meter_types.name type, meter_tariffs.name as tariff, 
- reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0 FROM meters 
+ reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0,
+-- SUBSTRING(meters.place_no, GREATEST(LOCATE(meters.place_no, '/'), LOCATE(meters.place_no, '\\')))
+substring_index(SUBSTRING_INDEX(meters.place_no,'\\',1), '/', 1) as sort_col,
+substring_index(SUBSTRING_INDEX(meters.place_no,'\\',-1), '/', -1) as sort_col_2
+ FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
 (SELECT accrual_pay_id FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid, 
@@ -35,7 +39,7 @@ LEFT JOIN accrual_pays ON accrual_pays.id = reading.lastpayid
 LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
 ON paysum.accrual_pay_id = accrual_pays.id
 WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
- ORDER BY name, meter_id</CommandText>
+ ORDER BY place_type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_no</CommandText>
         <QueryParameters>
           <QueryParameter Name="types">
             <Value>=Parameters!types</Value>
@@ -111,6 +115,14 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
           <DataField>FIO_dir</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="sort_col">
+          <DataField>sort_col</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="sort_col_2">
+          <DataField>sort_col_2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
   </DataSets>
@@ -152,10 +164,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
             <Width>175.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>53.0pt</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>52.3pt</Width>
+            <Width>79.3pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>96.8pt</Width>
@@ -186,22 +195,6 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                     <Textbox Name="Textbox20">
                       <Value>Ф.И.О.</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                        <TextAlign>Center</TextAlign>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <FontWeight>Bold</FontWeight>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox3">
-                      <Value>Договор</Value>
-                      <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -333,7 +326,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         <Details>
           <TableRows>
             <TableRow>
-              <Height>12pt</Height>
+              <Height>6mm</Height>
               <TableCells>
                 <TableCell>
                   <ReportItems>
@@ -341,29 +334,17 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                       <Style>
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
                         </BorderStyle>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif(Previous(Fields!name.Value) = Fields!name.Value, "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <FontWeight>Normal</FontWeight>
                       </Style>
                       <Value>=Fields!name.Value</Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="contract">
-                      <Value>=Fields!contract.Value</Value>
-                      <CanGrow>true</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <TextAlign>Center</TextAlign>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -375,12 +356,16 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                       <Style>
                         <BorderStyle>
                           <Default>Solid</Default>
+                          <Bottom>None</Bottom>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
                         <BorderColor />
-                        <BorderWidth />
+                        <BorderWidth>
+                          <Top>=Iif(Previous(Fields!place_type.Value + Fields!place_no.Value) = Fields!place_type.Value + Fields!place_no.Value, "0pt", "1pt")</Top>
+                        </BorderWidth>
                         <TextAlign>Center</TextAlign>
                       </Style>
+                      <HideDuplicates>Data</HideDuplicates>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -490,12 +475,6 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
               </TableCells>
             </TableRow>
           </TableRows>
-          <Sorting >
-            <SortBy>
-              <SortExpression>=Fields!place_type.Value + "-" + Fields!place_no.Value</SortExpression>
-              <Direction>Ascending</Direction>
-            </SortBy>
-          </Sorting>
         </Details>
         <Left>0.8pt</Left>
         <Top>0.0pt</Top>
@@ -520,25 +499,6 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox22">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -682,7 +642,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         </Footer>
       </Table>
     </ReportItems>
-    <Height>28.3pt</Height>
+    <Height>68.2pt</Height>
   </Body>
   <PageFooter>
     <Height>14pt</Height>
