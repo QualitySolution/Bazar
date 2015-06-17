@@ -40,9 +40,6 @@ public partial class MainWindow : Gtk.Window
 			Environment.Exit (0);
 		}
 
-		MainSupport.ProjectVerion = new AppVersion (System.Reflection.Assembly.GetExecutingAssembly ().GetName ().Name.ToString (),
-		                                            "gpl",
-		                                            System.Reflection.Assembly.GetExecutingAssembly ().GetName ().Version);
 		if (!MainSupport.CheckVersion (this)) {//Проверяем версию базы 
 			CheckUpdate.StartCheckUpdateThread (UpdaterFlags.ShowAnyway | UpdaterFlags.UpdateRequired);
 			this.Destroy ();
