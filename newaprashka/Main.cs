@@ -64,9 +64,9 @@ namespace bazar
 			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission ("edit_slips", "Изменение кассы задним числом",
 			                                                                "Пользователь может изменять или добавлять кассовые документы задним числом."));
 			QSUpdater.DB.DBUpdater.AddMicroUpdate (
-				new Version (2, 1, 2),
-				new Version (2, 1, 2, 1),
-				"bazar.Updates.2.1.2.1.sql");
+				new Version (2, 2),
+				new Version (2, 2, 1),
+				"bazar.Updates.2.2.1.sql");
 			
 			QSMain.User = new UserInfo ();
 			
