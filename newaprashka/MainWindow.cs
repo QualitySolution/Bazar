@@ -48,6 +48,7 @@ public partial class MainWindow : Gtk.Window
 		}
 		QSMain.CheckServer (this); // Проверяем настройки сервера
 		MainClass.MinorDBVersionChange (); // При необходимости корректируем базу.
+		QSUpdater.DB.DBUpdater.CheckMicroUpdates ();
 		MainNewsFeed.CheckNewsReads (); //Создаем при необходимости таблицу новостей.
 
 		if (QSMain.User.Login == "root") {
