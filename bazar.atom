@@ -2,9 +2,16 @@
   <title type="text">QS: База арендаторов</title>
   <subtitle type="text">Новости программы QS: База арендаторов</subtitle>
   <id>bazarnews</id>
-
   <rights type="text">Quality Solution 2015</rights>
-  <updated>2015-02-26T13:30:00+03:00</updated>
+  <updated>2015-08-14T18:00:00+03:00</updated>
+  <entry>
+    <id>urn:uuid:3f7c19bf-c07d-40c9-9608-7f457d9c78ac</id>
+    <title type="text">QS: База арендаторов 2.2.6</title>
+    <updated>2015-08-14T18:00:00+03:00</updated>
+	<published>2015-08-14T18:00:00+03:00</published>
+    <link rel="alternate" href="http://bazar.qsolution.ru/?p=399" />
+    <summary>Новая версия программы с менеджером подключений, интеграцией с «QS: Облако» и автоматическим обновлением программы.</summary>
+  </entry>
   <entry>
     <id>urn:uuid:78aeff5d-46e9-464b-9a22-5a9595bba253</id>
     <title type="text">Новый сайт QS: База арендаторов</title>
