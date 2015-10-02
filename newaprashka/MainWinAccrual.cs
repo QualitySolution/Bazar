@@ -75,16 +75,18 @@ public partial class MainWindow : Gtk.Window
 		logger.Info("Получаем таблицу начислений...");
 		
 		TreeIter iter;
-		string WhereCash = "";
+		string cashClause = "";
 		if(comboAccrualCash.GetActiveIter(out iter) && comboAccrualCash.Active > 0)
 		{
-			WhereCash = String.Format ("WHERE cash_id = '{0}'", ComboWorks.GetActiveId (comboAccrualCash));
+			cashClause = String.Format ("cash_id = '{0}'", ComboWorks.GetActiveId (comboAccrualCash));
 		}
-		string WhereIncomeItem = "";
+		string incomeItemClause = "";
 		if (comboAccrualItem.GetActiveIter (out iter) && comboAccrualItem.Active > 0) 
 		{
-			WhereIncomeItem = String.Format ("WHERE income_id = '{0}'", ComboWorks.GetActiveId (comboAccrualItem));
+			incomeItemClause = String.Format ("income_id = '{0}'", ComboWorks.GetActiveId (comboAccrualItem));
 		}
+		string clause = ((cashClause.Length > 0) && (incomeItemClause.Length > 0)) ? cashClause +" AND "+ incomeItemClause : cashClause + incomeItemClause ;
+		string whereClause = (clause.Length > 0) ? "WHERE " + clause : "";
 
 		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
 			"SELECT accrual.id as id, month, year, contracts.number as contract_no, no_complete, contracts.lessee_id as lessee_id, " +
@@ -93,11 +95,11 @@ public partial class MainWindow : Gtk.Window
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 			"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays "+
 			"LEFT JOIN services ON accrual_pays.service_id = services.id " +
-			WhereCash + WhereIncomeItem + " GROUP BY accrual_id) as sumtable " +
+			whereClause + " GROUP BY accrual_id) as sumtable " +
 				"ON sumtable.accrual_id = accrual.id " +
 			"LEFT JOIN ("+
 				"SELECT accrual_id, SUM(sum) as sum FROM accrual_pays JOIN payment_details ON accrual_pays.id=payment_details.accrual_pay_id " +
-				WhereCash + WhereIncomeItem + " GROUP BY accrual_id) as paidtable " +
+			whereClause + " GROUP BY accrual_id) as paidtable " +
 			"ON paidtable.accrual_id = accrual.id");
 		sql.StartNewList (" WHERE ", " AND ");
 
