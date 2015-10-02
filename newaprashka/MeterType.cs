@@ -25,6 +25,8 @@ namespace bazar
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 
+			ComboWorks.ComboFillReference(serviceProviderComboBox,"service_providers",ComboWorks.ListMode.WithNo);
+
 			TariffListStore = new Gtk.ListStore (typeof (int), 	// 0 - tariff id
 			                                      typeof (string),	// 1 - Name
 			                                      typeof (int),		// 2 - Service id
@@ -79,6 +81,9 @@ namespace bazar
 
 					labelID.Text = rdr["id"].ToString();
 					entryName.Text = rdr["name"].ToString();
+					object activeItem = rdr["service_provider_id"];
+					int itemID = DBWorks.GetInt(rdr, "service_provider_id", -1);
+					ComboWorks.SetActiveItem(serviceProviderComboBox, itemID);
 				}
 				this.Title = entryName.Text;
 
@@ -125,12 +130,12 @@ namespace bazar
 			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			if(NewItem)
 			{
-				sql = "INSERT INTO meter_types (name) " +
-					"VALUES (@name)";
+				sql = "INSERT INTO meter_types (name,service_provider_id) " +
+					"VALUES (@name,@providerID)";
 			}
 			else
 			{
-				sql = "UPDATE meter_types SET name = @name WHERE id = @id";
+				sql = "UPDATE meter_types SET name = @name, service_provider_id = @providerID WHERE id = @id";
 			}
 			logger.Info("Запись типа счетчика...");
 			try 
@@ -139,6 +144,8 @@ namespace bazar
 
 				cmd.Parameters.AddWithValue("@id", Itemid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
+				object id = ComboWorks.GetActiveIdOrNull(serviceProviderComboBox);
+				cmd.Parameters.AddWithValue("@providerID",id); 
 
 				cmd.ExecuteNonQuery();
 

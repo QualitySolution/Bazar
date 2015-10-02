@@ -394,6 +394,17 @@ namespace bazar
 			                              new TableInfo.DeleteDependenceItem ("WHERE meters.meter_type_id = @id ", "", "@id"));
 			Tables.Add ("meter_types", PrepareTable);
 
+
+			PrepareTable = new TableInfo ();
+			PrepareTable.ObjectsName = "Поставщики услуг";
+			PrepareTable.ObjectName = "поставщика"; 
+			PrepareTable.SqlSelect = "SELECT name, id FROM service_providers ";
+			PrepareTable.DisplayString = "{0}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys ("id");
+			PrepareTable.ClearItems.Add ("meter_types", 
+			                              new TableInfo.ClearDependenceItem ("WHERE service_provider_id = @id ", "", "@id","service_provider_id"));
+			Tables.Add ("service_providers", PrepareTable);
+
 			PrepareTable = new TableInfo ();
 			PrepareTable.ObjectsName = "Cчётчики";
 			PrepareTable.ObjectName = "счётчик"; 

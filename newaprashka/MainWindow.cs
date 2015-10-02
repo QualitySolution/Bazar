@@ -800,4 +800,16 @@ public partial class MainWindow : Gtk.Window
 	{
 		CheckUpdate.StartCheckUpdateThread (UpdaterFlags.ShowAnyway | UpdaterFlags.StartInThread);
 	}
+
+	protected void OnProvidersActionActivated (object sender, EventArgs e)
+	{
+		Reference winProviders = new Reference ();
+		winProviders.SetMode (true, false, true, true, true);
+		winProviders.FillList ("service_providers", "Поставщик", "Поставщики услуг");
+		winProviders.Show ();
+		winProviders.Run ();
+		winProviders.Destroy ();
+	}
+
+
 }
