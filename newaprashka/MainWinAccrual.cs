@@ -32,6 +32,7 @@ public partial class MainWindow : Gtk.Window
 		//Заполняем комбобокс
 		ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll, false);
 		ComboWorks.ComboFillReference(comboAccrualCash,"cash", ComboWorks.ListMode.WithAll, false);
+		ComboWorks.ComboFillReference (comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll, false);
 		MainClass.ComboAccrualYearsFill (comboAccuralYear, NameOfAllOption);
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
@@ -79,14 +80,24 @@ public partial class MainWindow : Gtk.Window
 		{
 			WhereCash = String.Format ("WHERE cash_id = '{0}'", ComboWorks.GetActiveId (comboAccrualCash));
 		}
+		string WhereIncomeItem = "";
+		if (comboAccrualItem.GetActiveIter (out iter) && comboAccrualItem.Active > 0) 
+		{
+			WhereIncomeItem = String.Format ("WHERE income_id = '{0}'", ComboWorks.GetActiveId (comboAccrualItem));
+		}
+
 		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
 			"SELECT accrual.id as id, month, year, contracts.number as contract_no, no_complete, contracts.lessee_id as lessee_id, " +
 			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
 			"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
-			"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays " + WhereCash + " GROUP BY accrual_id) as sumtable " +
+			"LEFT JOIN (SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays "+
+			"LEFT JOIN services ON accrual_pays.service_id = services.id " +
+			WhereCash + WhereIncomeItem + " GROUP BY accrual_id) as sumtable " +
 				"ON sumtable.accrual_id = accrual.id " +
-			"LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM credit_slips " + WhereCash + " GROUP BY accrual_id) as paidtable " +
+			"LEFT JOIN ("+
+				"SELECT accrual_id, SUM(sum) as sum FROM accrual_pays JOIN payment_details ON accrual_pays.id=payment_details.accrual_pay_id " +
+				WhereCash + WhereIncomeItem + " GROUP BY accrual_id) as paidtable " +
 			"ON paidtable.accrual_id = accrual.id");
 		sql.StartNewList (" WHERE ", " AND ");
 
@@ -324,6 +335,10 @@ public partial class MainWindow : Gtk.Window
 	}
 
 	protected void OnComboAccrualCashChanged(object sender, EventArgs e)
+	{
+		UpdateAccrual ();
+	}
+	protected void OnComboAccrualItemChanged(object sender, EventArgs e)
 	{
 		UpdateAccrual ();
 	}
