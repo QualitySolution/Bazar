@@ -811,5 +811,13 @@ public partial class MainWindow : Gtk.Window
 		winProviders.Destroy ();
 	}
 
+	protected void OnServiceProviderPaymentReport (object sender, EventArgs e)
+	{
+		ServiceProvidersPaymentReport paymentReport = new ServiceProvidersPaymentReport ();
+		paymentReport.Show ();
+		paymentReport.Run ();
+		paymentReport.Destroy ();
+	}
+
 
 }
