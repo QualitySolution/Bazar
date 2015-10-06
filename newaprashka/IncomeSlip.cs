@@ -61,11 +61,7 @@ namespace bazar
 			bool Lesseeok = !LesseeNull;
 			bool Paymentok = separationpayment.CanSave;
 			bool Rightok = QSMain.User.Permissions["edit_slips"] || NewSlip;
-			bool Sumok;
-			if(spinSum.Text != "")
-				Sumok = Convert.ToDecimal (spinSum.Text) != 0; 
-			else
-				Sumok = false;
+			bool Sumok = Convert.ToDecimal (spinSum.Value) > 0; 
 			bool Accountableok = !AccountableNull;
 
 			switch (comboOperation.Active) 
