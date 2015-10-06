@@ -134,6 +134,7 @@
     <Compile Include="gtk-gui\bazar.Cash.cs" />
     <Compile Include="gtk-gui\bazar.LesseeRentReport.cs" />
     <Compile Include="ReportDialogs\LesseeRentReport.cs" />
+    <Compile Include="gtk-gui\bazar.ServiceProvidersPaymentReport.cs" />
     <Compile Include="ReportDialogs\ServiceProvidersReport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -593,7 +593,7 @@ public partial class MainWindow
 		this.Action44 = new global::Gtk.Action ("Action44", global::Mono.Unix.Catalog.GetString ("Поставщики"), null, null);
 		this.Action44.ShortLabel = global::Mono.Unix.Catalog.GetString ("Поставщики");
 		w1.Add (this.Action44, null);
-		this.Action45 = new global::Gtk.Action ("Action45", global::Mono.Unix.Catalog.GetString ("Оплата по поставщикам"), null, null);
+		this.Action45 = new global::Gtk.Action ("Action45", global::Mono.Unix.Catalog.GetString ("Счетчики по поставщикам"), null, null);
 		this.Action45.ShortLabel = global::Mono.Unix.Catalog.GetString ("Оплата по поставщикам");
 		w1.Add (this.Action45, null);
 		this.UIManager.InsertActionGroup (w1, 0);

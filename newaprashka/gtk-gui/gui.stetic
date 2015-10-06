@@ -244,7 +244,7 @@
       </action>
       <action id="Action45">
         <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Оплата по поставщикам</property>
+        <property name="Label" translatable="yes">Счетчики по поставщикам</property>
         <property name="ShortLabel" translatable="yes">Оплата по поставщикам</property>
         <signal name="Activated" handler="OnServiceProviderPaymentReport" />
       </action>
@@ -2193,6 +2193,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2867,6 +2868,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>

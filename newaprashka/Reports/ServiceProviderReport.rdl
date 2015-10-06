@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Description>
   </Description>
@@ -20,16 +20,17 @@
   LEFT JOIN 
 	(Select service_provider_id, SUM(accrual_sum) as accrual_total 
     from
-		(select accrual_pays.id as accrual_pay_id,service_provider_id,service_providers.name as name,
-		month,year, count*price as accrual_sum
-		from 
+	 	(select accrual_pays.id as accrual_pay_id,service_provider_id,service_providers.name as name,
+	  	month,year, (meter_reading.value-IFNULL(meter_reading.prev_value,0))*price as accrual_sum
+        from
 		meters join meter_types on meters.meter_type_id=meter_types.id
 		join service_providers on meter_types.service_provider_id = service_providers.id
-		join meter_reading on meters.id=meter_reading.meter_id
+		join meter_reading_with_prev as meter_reading on meters.id=meter_reading.meter_id
 		join accrual_pays on meter_reading.accrual_pay_id = accrual_pays.id
-		join accrual on accrual.id = accrual_pays.accrual_id
+		join accrual on accrual.id = accrual_pays.accrual_id        
 		) account
-    where month=@month and year=@year    group by service_provider_id) as accrual_sum ON accrual_sum.service_provider_id = service_providers.id
+    where month=@month and year=@year
+    group by service_provider_id) as accrual_sum ON accrual_sum.service_provider_id = service_providers.id
 	
     left join 
     (
@@ -43,7 +44,8 @@
 		join accrual_pays on meter_reading.accrual_pay_id = accrual_pays.id
 		join payment_details on accrual_pays.id = payment_details.accrual_pay_id
 		join payments on payment_details.payment_id = payments.id		
-		where year(payments.createdate)=@year and month(payments.createdate)=@month        group by service_provider_id
+		where year(payments.createdate)=@year and month(payments.createdate)=@month
+        group by service_provider_id
 	
     ) payment on service_providers.id=payment.service_provider_id
   </CommandText>
@@ -365,7 +367,7 @@
     <DataSource Name="DS1">
       <ConnectionProperties>
         <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>database=bazar;user id=admin;password=123;server=192.168.1.40; port=3306</ConnectString>
+        <ConnectString>server=demo.qsolution.ru;user=demo;database=bazar;port=3306;password=demo;</ConnectString>
         <IntegratedSecurity>false</IntegratedSecurity>
       </ConnectionProperties>
     </DataSource>
