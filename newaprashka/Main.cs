@@ -451,7 +451,7 @@ namespace bazar
 					combo.Active = 0;
 				logger.Info ("Ok");
 			} catch (Exception ex) {
-				logger.WarnException ("Ошибка получения номеров мест!", ex);
+				logger.Warn (ex, "Ошибка получения номеров мест!", ex);
 			}
 		}
 
@@ -505,7 +505,7 @@ namespace bazar
 				combo.SetActiveIter (iter);
 				logger.Info ("Ok");
 			} catch (Exception ex) {
-				logger.WarnException ("Ошибка получения списка лет!", ex);
+				logger.Warn (ex, "Ошибка получения списка лет!");
 			}
 			
 		}
@@ -539,7 +539,7 @@ namespace bazar
 				rdr.Close ();
 				logger.Info ("Ok");
 			} catch (Exception ex) {
-				logger.WarnException ("Ошибка получения данных справочника!", ex);
+				logger.Warn (ex, "Ошибка получения данных справочника!");
 			}
 
 		}
@@ -564,7 +564,7 @@ namespace bazar
 				rdr.Close ();
 				logger.Info ("Ok");
 			} catch (Exception ex) {
-				logger.WarnException ("Ошибка обработки " + TableDB + "!", ex);
+				logger.Warn (ex, "Ошибка обработки " + TableDB + "!");
 			}
 
 		}

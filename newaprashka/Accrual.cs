@@ -809,7 +809,7 @@ namespace bazar
 			}
 			catch (Exception ex) 
 			{
-				logger.WarnException("Ошибка вычисления баланса!", ex);
+				logger.Warn(ex, "Ошибка вычисления баланса!");
 			}
 			return 0m;
 		}
@@ -893,7 +893,7 @@ namespace bazar
 			}
 			catch (Exception ex) 
 			{
-				logger.WarnException("Ошибка вычисления прошлого долга!", ex);
+				logger.Warn(ex, "Ошибка вычисления прошлого долга!");
 			}
 		}
 
