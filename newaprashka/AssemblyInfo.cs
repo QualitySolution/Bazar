@@ -6,7 +6,7 @@ using QSProjectsLib;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("QS: База арендаторов")]
-[assembly: AssemblyEdition(Edition = "gpl")]
+[assembly: AssemblyEdition(Edition = "salova")]
 [assembly: AssemblyDescription("Программа позволяет вести учет арендаторов, кассы и т.п.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Quality Solution")]
