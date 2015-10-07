@@ -48,7 +48,6 @@ public partial class MainWindow : Gtk.Window
 		}
 		QSMain.CheckServer (this); // Проверяем настройки сервера
 		QSUpdater.DB.DBUpdater.CheckMicroUpdates ();
-		MainNewsFeed.CheckNewsReads (); //Создаем при необходимости таблицу новостей.
 
 		if (QSMain.User.Login == "root") {
 			string Message = "Вы зашли в программу под администратором базы данных. У вас есть только возможность создавать других пользователей.";
@@ -83,15 +82,6 @@ public partial class MainWindow : Gtk.Window
 
 		UsersAction.Sensitive = QSMain.User.Admin;
 		labelUser.LabelProp = QSMain.User.Name;
-
-		//Настраиваем новости
-		MainNewsFeed.NewsFeeds = new List<NewsFeed> () {
-			new NewsFeed ("bazarnews", "Новости программы", "http://news.qsolution.ru/bazar.atom")
-		};
-		MainNewsFeed.LoadReadFeed ();
-		var newsmenu = new NewsMenuItem ();
-		menubar1.Add (newsmenu);
-		newsmenu.LoadFeed ();
 
 		PreparePlaces ();
 		PrepareLessee ();
