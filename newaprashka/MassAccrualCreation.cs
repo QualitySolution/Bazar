@@ -306,7 +306,7 @@ namespace bazar
 			} 
 			catch (Exception ex) 
 			{
-				logger.ErrorException ("Ошибка записи начисления!", ex);
+				logger.Error (ex, "Ошибка записи начисления!");
 				QSMain.ErrorMessage(this,ex);
 			}
 		}

@@ -104,8 +104,7 @@ namespace bazar
 			} 
 			catch (Exception ex) 
 			{
-				logger.ErrorException ("Ошибка записи услуги!", ex);
-				QSMain.ErrorMessage(this,ex);
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи услуги!", logger, ex);
 			}
 		}
 

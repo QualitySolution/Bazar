@@ -162,7 +162,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				logger.ErrorException ("Ошибка получения начисления!", ex);
+				logger.Error (ex, "Ошибка получения начисления!");
 				return false;
 			}
 		}
@@ -214,7 +214,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				logger.ErrorException ("Ошибка получения оплат!", ex);
+				logger.Error (ex, "Ошибка получения оплат!");
 			}
 		}
 
@@ -387,7 +387,7 @@ namespace bazar
 			}
 			catch (Exception ex)
 			{
-				logger.ErrorException("Ошибка записи строк оплаты!", ex);
+				logger.Error(ex, "Ошибка записи строк оплаты!");
 				return false;
 			}
 		}
