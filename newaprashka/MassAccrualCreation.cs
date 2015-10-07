@@ -265,7 +265,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@contract_id", row[(int)ContractsCol.id]);
 					cmd.Parameters.AddWithValue("@month", Month);
 					cmd.Parameters.AddWithValue("@year", Year);
-					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
 					cmd.Parameters.AddWithValue("@no_complete", NotComplete);
 					cmd.ExecuteNonQuery();
 

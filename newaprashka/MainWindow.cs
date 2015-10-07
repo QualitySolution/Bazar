@@ -47,7 +47,6 @@ public partial class MainWindow : Gtk.Window
 			return;
 		}
 		QSMain.CheckServer (this); // Проверяем настройки сервера
-		MainClass.MinorDBVersionChange (); // При необходимости корректируем базу.
 		QSUpdater.DB.DBUpdater.CheckMicroUpdates ();
 
 		if (QSMain.User.Login == "root") {
@@ -81,15 +80,7 @@ public partial class MainWindow : Gtk.Window
 			dialogAuthenticationAction.Sensitive = false;
 		}
 
-		//Загружаем информацию о пользователе
-		if ((QSSaaS.Session.IsSaasConnection && QSMain.User.TestUserExistByLogin (false)) ||
-		    (!QSSaaS.Session.IsSaasConnection && QSMain.User.TestUserExistByLogin (true)))
-			QSMain.User.UpdateUserInfoByLogin ();
-		else {
-			logger.Fatal (String.Format ("Пользователь {0} не найден в базе!", QSMain.User.Login));
-			Application.Quit ();
-		}
-		UsersAction.Sensitive = QSMain.User.admin;
+		UsersAction.Sensitive = QSMain.User.Admin;
 		labelUser.LabelProp = QSMain.User.Name;
 
 		PreparePlaces ();

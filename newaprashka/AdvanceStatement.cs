@@ -148,7 +148,7 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@employee_id", DBNull.Value);
 				if(NewStatement)
-					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
 				if(dateStatement.IsEmpty)
 					cmd.Parameters.AddWithValue("@date", DBNull.Value);
 				else
@@ -200,7 +200,7 @@ namespace bazar
 						cmd.Parameters.AddWithValue("@cash_id", comboCash.Model.GetValue(iter,1));
 					}	
 					cmd.Parameters.AddWithValue("@employee_id", Accountable_id);
-					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
 					if(dateStatement.IsEmpty)
 						cmd.Parameters.AddWithValue("@date", DBNull.Value);
 					else

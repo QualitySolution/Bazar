@@ -578,7 +578,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue (iter, 1));
 				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
 				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
-				cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
+				cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
 				if(textviewComments.Buffer.Text != "")
 					cmd.Parameters.AddWithValue ("@comments", textviewComments.Buffer.Text);
 				else
