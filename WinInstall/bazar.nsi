@@ -15,7 +15,7 @@ var NETInstalled
 Name "${PRODUCT_NAME}"
 
 ; The file to write
-OutFile "${EXE_NAME}-2.3.x.exe"
+OutFile "${EXE_NAME}-salova-2.3.x.exe"
 
 !include "MUI.nsh"
 !include "x64.nsh"
