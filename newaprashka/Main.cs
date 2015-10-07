@@ -16,10 +16,7 @@ namespace bazar
 		public static void Main (string[] args)
 		{
 			Application.Init ();
-			AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs e) {
-				logger.FatalException ("Поймано не обработаное исключение.", (Exception)e.ExceptionObject);
-				QSMain.ErrorMessage (MainWin, (Exception)e.ExceptionObject);
-			};
+			QSMain.SubscribeToUnhadledExceptions ();
 			QSMain.GuiThread = Thread.CurrentThread;
 			CreateProjectParam ();
 			// Создаем окно входа
@@ -59,7 +56,6 @@ namespace bazar
 
 		static void CreateProjectParam ()
 		{
-			QSMain.AdminFieldName = "admin";
 			QSMain.ProjectPermission = new Dictionary<string, UserPermission> ();
 			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission ("edit_slips", "Изменение кассы задним числом",
 			                                                                "Пользователь может изменять или добавлять кассовые документы задним числом."));
@@ -67,8 +63,6 @@ namespace bazar
 				new Version (2, 2),
 				new Version (2, 2, 1),
 				"bazar.Updates.2.2.1.sql");
-			
-			QSMain.User = new UserInfo ();
 			
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();
@@ -434,10 +428,6 @@ namespace bazar
 			                             new TableInfo.ClearDependenceItem ("WHERE user_id = @id", "", "@id", "user_id"));
 			Tables.Add ("users", PrepareTable);
 
-		}
-
-		public static void MinorDBVersionChange ()
-		{
 		}
 
 		public static void ComboPlaceNoFill (ComboBox combo, int Type_id)

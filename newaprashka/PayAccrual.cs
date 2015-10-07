@@ -333,7 +333,7 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@org_id", org_id);
 					cmd.Parameters.AddWithValue("@cash_id", item.CashId);
 					cmd.Parameters.AddWithValue("@lessee_id", lessee_id);
-					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
 					cmd.Parameters.AddWithValue("@date", DateTime.Now.Date);
 					cmd.Parameters.AddWithValue("@sum", sum);
 					cmd.Parameters.AddWithValue("@contract_id", contract_id);

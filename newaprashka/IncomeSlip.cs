@@ -154,7 +154,7 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@employee_id", DBNull.Value);
 				if(NewSlip)
-					cmd.Parameters.AddWithValue("@user_id", QSMain.User.id);
+					cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
 				if(dateSlip.IsEmpty)
 					cmd.Parameters.AddWithValue("@date", DBNull.Value);
 				else
