@@ -840,7 +840,7 @@ COMMIT;
 START TRANSACTION;
 USE `bazar`;
 INSERT INTO `bazar`.`income_items` (`id`, `name`) VALUES (NULL, 'Доход от аренды');
-INSERT INTO `bazar`.`income_items` (`id`, `name`) VALUES (NULL, 'Комунальные платежы');
+INSERT INTO `bazar`.`income_items` (`id`, `name`) VALUES (NULL, 'Комунальные платежи');
 
 COMMIT;
 
