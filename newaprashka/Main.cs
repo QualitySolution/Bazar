@@ -59,10 +59,6 @@ namespace bazar
 			QSMain.ProjectPermission = new Dictionary<string, UserPermission> ();
 			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission ("edit_slips", "Изменение кассы задним числом",
 			                                                                "Пользователь может изменять или добавлять кассовые документы задним числом."));
-			QSUpdater.DB.DBUpdater.AddMicroUpdate (
-				new Version (2, 2),
-				new Version (2, 2, 1),
-				"bazar.Updates.2.2.1.sql");
 			
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();
