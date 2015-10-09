@@ -51,7 +51,6 @@ namespace bazar
 						ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
 						comboIncomeItem.SetActiveIter(iter);
 					}
-					object activeItem = rdr["service_provider_id"];
 					int itemID = DBWorks.GetInt(rdr, "service_provider_id", -1);
 					ComboWorks.SetActiveItem(serviceProviderComboBox, itemID);
 					checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
