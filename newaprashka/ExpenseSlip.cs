@@ -36,11 +36,7 @@ namespace bazar
 		{
 			bool Orgok = comboOrg.Active > 0;
 			bool Cashok = comboCash.Active > 0;
-			bool Sumok;
-			if(spinSum.Text != "")
-				Sumok = Convert.ToDecimal (spinSum.Text) != 0; 
-			else
-				Sumok = false;
+			bool Sumok = Convert.ToDecimal (spinSum.Value) > 0;
 			bool Accountableok = !AccountableNull;
 
 			switch (comboOperation.Active) 
