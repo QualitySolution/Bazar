@@ -42,7 +42,7 @@ namespace bazar
 			w1.Name = "dialog1_VBox";
 			w1.BorderWidth = ((uint)(2));
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
-			this.table1 = new global::Gtk.Table (((uint)(3)), ((uint)(2)), false);
+			this.table1 = new global::Gtk.Table (((uint)(2)), ((uint)(2)), false);
 			this.table1.Name = "table1";
 			this.table1.RowSpacing = ((uint)(6));
 			this.table1.ColumnSpacing = ((uint)(6));
@@ -93,6 +93,8 @@ namespace bazar
 			w1.Add (this.table1);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(w1 [this.table1]));
 			w6.Position = 0;
+			w6.Expand = false;
+			w6.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
