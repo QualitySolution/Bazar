@@ -17,6 +17,7 @@ namespace bazar
 		{
 			this.Build ();
 
+			ComboWorks.ComboFillReference(serviceProviderComboBox,"service_providers",ComboWorks.ListMode.WithNo);
 			ComboWorks.ComboFillReference(comboUnits, "units", ComboWorks.ListMode.OnlyItems);
 			ComboWorks.ComboFillReference(comboIncomeItem, "income_items", ComboWorks.ListMode.WithNo);
 		}
@@ -50,6 +51,9 @@ namespace bazar
 						ListStoreWorks.SearchListStore((ListStore)comboIncomeItem.Model, rdr.GetInt32("income_id"), out iter);
 						comboIncomeItem.SetActiveIter(iter);
 					}
+					object activeItem = rdr["service_provider_id"];
+					int itemID = DBWorks.GetInt(rdr, "service_provider_id", -1);
+					ComboWorks.SetActiveItem(serviceProviderComboBox, itemID);
 					checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
 					checkIncomplete.Active= Boolean.Parse(rdr["incomplete_month"].ToString());
 				}
@@ -75,13 +79,13 @@ namespace bazar
 			string sql;
 			if(NewService)
 			{
-				sql = "INSERT INTO services (name, units_id, income_id, by_area, incomplete_month) " +
-					"VALUES (@name, @units_id, @income_id, @by_area, @incomplete_month)";
+				sql = "INSERT INTO services (name, units_id, income_id, by_area, incomplete_month, service_provider_id) " +
+					"VALUES (@name, @units_id, @income_id, @by_area, @incomplete_month, @providerID)";
 			}
 			else
 			{
 				sql = "UPDATE services SET name = @name, units_id = @units_id, income_id = @income_id, " +
-					"by_area = @by_area, incomplete_month = @incomplete_month WHERE id = @id";
+					"by_area = @by_area, incomplete_month = @incomplete_month, service_provider_id = @providerID WHERE id = @id";
 			}
 			logger.Info("Запись услуги...");
 			try 
@@ -98,6 +102,8 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@income_id", DBNull.Value);
 				cmd.Parameters.AddWithValue("by_area", checkArea.Active);
 				cmd.Parameters.AddWithValue("incomplete_month", checkIncomplete.Active);
+				var id = ComboWorks.GetActiveIdOrNull(serviceProviderComboBox);
+				cmd.Parameters.AddWithValue("@providerID",id); 
 				cmd.ExecuteNonQuery();
 				logger.Info("Ok");
 				Respond (ResponseType.Ok);

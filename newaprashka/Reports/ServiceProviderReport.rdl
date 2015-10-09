@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Description>
   </Description>
@@ -15,40 +15,43 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>select service_providers.id, service_providers.name, IFNULL(accrual_sum.accrual_total,0)as accrual_total , IFNULL(sum,0) as sum
-  from service_providers
-  LEFT JOIN 
-	(Select service_provider_id, SUM(accrual_sum) as accrual_total 
-    from
-	 	(select accrual_pays.id as accrual_pay_id,service_provider_id,service_providers.name as name,
-	  	month,year, (meter_reading.value-IFNULL(meter_reading.prev_value,0))*price as accrual_sum
-        from
-		meters join meter_types on meters.meter_type_id=meter_types.id
-		join service_providers on meter_types.service_provider_id = service_providers.id
-		join meter_reading_with_prev as meter_reading on meters.id=meter_reading.meter_id
-		join accrual_pays on meter_reading.accrual_pay_id = accrual_pays.id
-		join accrual on accrual.id = accrual_pays.accrual_id        
-		) account
-    where month=@month and year=@year
-    group by service_provider_id) as accrual_sum ON accrual_sum.service_provider_id = service_providers.id
-	
-    left join 
-    (
-		select 
-		service_provider_id,service_providers.name as name,
-        SUM(payment_details.sum) as sum
-		from 
-		meters join meter_types on meters.meter_type_id=meter_types.id
-		right join service_providers on meter_types.service_provider_id = service_providers.id
-		join meter_reading on meters.id=meter_reading.meter_id
-		join accrual_pays on meter_reading.accrual_pay_id = accrual_pays.id
-		join payment_details on accrual_pays.id = payment_details.accrual_pay_id
-		join payments on payment_details.payment_id = payments.id		
-		where year(payments.createdate)=@year and month(payments.createdate)=@month
-        group by service_provider_id
-	
-    ) payment on service_providers.id=payment.service_provider_id
-  </CommandText>
+        <CommandText>select 
+	providers.name,
+	IFNULL(providers_with_accrual.accrual_total,0) as accrual_total,
+	IFNULL(providers_with_payment.payment_total,0) as payment_total
+from
+service_providers as providers
+left join
+(
+	select 
+		service_providers.id as provider_id,
+		-- services.name as service_name,
+		-- service_providers.name as provider_name,
+		SUM(count*price) as accrual_total	
+	from service_providers
+	left join services ON services.service_provider_id=service_providers.id
+	left join accrual_pays ON accrual_pays.service_id = services.id
+	left join accrual ON accrual.id=accrual_pays.accrual_id	
+	where month=@month and year=@year
+	group by service_providers.id
+) as providers_with_accrual
+on providers.id=providers_with_accrual.provider_id
+left join
+(
+	select 
+		service_providers.id as provider_id,
+        -- services.name as service_name,
+        -- service_providers.name as provider_name,
+		SUM(payment_details.sum) as payment_total
+    from service_providers
+    left join services ON services.service_provider_id=service_providers.id
+    left join accrual_pays ON accrual_pays.service_id = services.id
+    left join payment_details ON accrual_pays.id=payment_details.accrual_pay_id
+    left join payments ON payments.id=payment_details.payment_id
+    where Month(payments.createdate)=@month and Year(payments.createdate)=@year
+    group by service_providers.id
+) as providers_with_payment
+ON providers.id=providers_with_payment.provider_id;  </CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!month.Value</Value>
@@ -59,10 +62,6 @@
         </QueryParameters>
       </Query>
       <Fields >
-        <Field Name="service_provider_id">
-          <DataField>id</DataField>
-          <rd:TypeName>System.UInt32</rd:TypeName>
-        </Field>
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -72,7 +71,7 @@
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="sum">
-          <DataField>sum</DataField>
+          <DataField>payment_total</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
@@ -82,7 +81,7 @@
     <Height>62.2pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
-    <ReportItems >
+    <ReportItems>
       <Textbox Name="Textbox4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Top>10.20pt</Top>
         <Left>3.10pt</Left>
@@ -93,9 +92,9 @@
           <FontSize>15pt</FontSize>
           <FontWeight>Bold</FontWeight>
           <TextAlign>Center</TextAlign>
-          <BorderStyle  />
-          <BorderColor  />
-          <BorderWidth  />
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
         </Style>
       </Textbox>
       <Textbox Name="Textbox7" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
@@ -123,14 +122,14 @@
           <BorderStyle>
             <Default>Solid</Default>
           </BorderStyle>
-          <BorderColor  />
-          <BorderWidth  />
+          <BorderColor />
+          <BorderWidth />
         </Style>
         <TableColumns>
           <TableColumn>
             <Width>2.375in</Width>
           </TableColumn>
-          <TableColumn >
+          <TableColumn>
             <Width>131.1pt</Width>
           </TableColumn>
           <TableColumn>
@@ -152,13 +151,13 @@
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
-                <TableCell >
+                <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox5">
                       <Value>Начислено</Value>
@@ -168,8 +167,8 @@
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -184,8 +183,8 @@
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -210,13 +209,13 @@
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
-                <TableCell >
+                <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox6">
                       <Value>=Fields!accrual_total.Value</Value>
@@ -226,9 +225,9 @@
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
-                        <BorderColor  />
-                        <BorderWidth  />
-                        <Format >C</Format>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -244,9 +243,9 @@
                         </BorderStyle>
                         <PaddingRight>2pt</PaddingRight>
                         <TextAlign>Right</TextAlign>
-                        <BorderColor  />
-                        <BorderWidth  />
-                        <Format >C</Format>
+                        <BorderColor />
+                        <BorderWidth />
+                        <Format>C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -255,7 +254,7 @@
             </TableRow>
           </TableRows>
         </Details>
-        <Footer >
+        <Footer>
           <TableRows>
             <TableRow>
               <Height>.2in</Height>
@@ -310,7 +309,7 @@
       </Table>
     </ReportItems>
     <Height>137.4pt</Height>
-    <Columns >1</Columns>
+    <Columns>1</Columns>
   </Body>
   <PageFooter>
     <Height>14pt</Height>
@@ -324,18 +323,18 @@
         <Style>
           <FontSize>10pt</FontSize>
           <FontWeight>Normal</FontWeight>
-          <BorderStyle  />
-          <BorderColor  />
-          <BorderWidth  />
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
         </Style>
       </Textbox>
     </ReportItems>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
-  <DataElementName >Report</DataElementName>
-  <DataElementStyle >AttributeNormal</DataElementStyle>
-  <ReportParameters >
+  <DataElementName>Report</DataElementName>
+  <DataElementStyle>AttributeNormal</DataElementStyle>
+  <ReportParameters>
     <ReportParameter Name="month">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -363,7 +362,7 @@
       </Prompt>
     </ReportParameter>
   </ReportParameters>
-  <DataSources >
+  <DataSources>
     <DataSource Name="DS1">
       <ConnectionProperties>
         <DataProvider>MySQL.NET</DataProvider>

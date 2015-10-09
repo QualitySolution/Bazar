@@ -391,7 +391,7 @@ namespace bazar
 			PrepareTable.SqlSelect = "SELECT name, id FROM service_providers ";
 			PrepareTable.DisplayString = "{0}";
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys ("id");
-			PrepareTable.ClearItems.Add ("meter_types", 
+			PrepareTable.ClearItems.Add ("services", 
 			                              new TableInfo.ClearDependenceItem ("WHERE service_provider_id = @id ", "", "@id","service_provider_id"));
 			Tables.Add ("service_providers", PrepareTable);
 
