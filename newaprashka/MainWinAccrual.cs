@@ -80,13 +80,18 @@ public partial class MainWindow : Gtk.Window
 		{
 			cashClause = String.Format ("cash_id = '{0}'", ComboWorks.GetActiveId (comboAccrualCash));
 		}
+		bool legacyPayments = true;
 		string incomeItemClause = "";
 		if (comboAccrualItem.GetActiveIter (out iter) && comboAccrualItem.Active > 0) 
 		{
 			incomeItemClause = String.Format ("income_id = '{0}'", ComboWorks.GetActiveId (comboAccrualItem));
+			legacyPayments = false;
 		}
+			
 		string clause = ((cashClause.Length > 0) && (incomeItemClause.Length > 0)) ? cashClause +" AND "+ incomeItemClause : cashClause + incomeItemClause ;
 		string whereClause = (clause.Length > 0) ? "WHERE " + clause : "";
+
+		string paymentsTableName = legacyPayments ? "credit_slips ": "accrual_pays LEFT JOIN payment_details ON accrual_pays.id=payment_details.accrual_pay_id ";
 
 		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
 			"SELECT accrual.id as id, month, year, contracts.number as contract_no, no_complete, contracts.lessee_id as lessee_id, " +
@@ -98,7 +103,7 @@ public partial class MainWindow : Gtk.Window
 			whereClause + " GROUP BY accrual_id) as sumtable " +
 				"ON sumtable.accrual_id = accrual.id " +
 			"LEFT JOIN ("+
-				"SELECT accrual_id, SUM(sum) as sum FROM accrual_pays JOIN payment_details ON accrual_pays.id=payment_details.accrual_pay_id " +
+			"SELECT accrual_id, SUM(sum) as sum FROM " + paymentsTableName +
 			whereClause + " GROUP BY accrual_id) as paidtable " +
 			"ON paidtable.accrual_id = accrual.id");
 		sql.StartNewList (" WHERE ", " AND ");
