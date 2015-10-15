@@ -654,6 +654,7 @@ public partial class MainWindow : Gtk.Window
 		case "income_items":
 			if (notebookCash.CurrentPage == 0)
 				ComboWorks.ComboFillReference (comboCashItem, "income_items", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference (comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll);
 			break;
 		case "expense_items": 
 			if (notebookCash.CurrentPage >= 1)
