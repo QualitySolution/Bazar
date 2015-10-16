@@ -16,6 +16,7 @@ namespace bazar
 		Gtk.ListStore ServiceListStore, ServiceRefListStore, IncomeListStore;
 		TreeModel ServiceNameList, CashNameList;
 		List<long> DeletedRowId = new List<long>();
+		List<int> servicesWithMeters;
 
 		decimal AccrualTotal = 0, IncomeTotal = 0;
 		int Place_type_id;
@@ -206,6 +207,7 @@ namespace bazar
 				}
 			}
 			while(ServiceRefListStore.IterNext (ref ServiceIter));
+			OnTreeviewServicesCursorChanged (this, null);
 			TestCanSave ();
 		}
 		
@@ -387,8 +389,24 @@ namespace bazar
 					                             );
 				}
 				rdr.Close();
-				logger.Info("Ok");
+				
+				sql = "SELECT services.id AS serviceID FROM services "+
+					"LEFT JOIN meter_tariffs ON meter_tariffs.service_id = services.id " +
+					"LEFT JOIN    meter_types ON meter_types.id = meter_tariffs.meter_type_id "+
+					"LEFT JOIN    meters ON meters.meter_type_id = meter_types.id "+
+					"WHERE    meters.place_type_id = @place_type_id AND meters.place_no = @place_no AND meters.disabled = 'FALSE'";
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
+				cmd.Parameters.AddWithValue("@place_type_id", Place_type_id);
+				cmd.Parameters.AddWithValue("@place_no", Place_no);
+				rdr = cmd.ExecuteReader();
+				servicesWithMeters = new List<int>();
+				while(rdr.Read()){
+					servicesWithMeters.Add(DBWorks.GetInt(rdr,"serviceID",-1));
+				}
+				rdr.Close();
 
+				logger.Info("Ok");
+		
 				CalculateServiceSum();
 				UpdateIncomes ();
 				ShowOldDebts ();
@@ -747,7 +765,7 @@ namespace bazar
 			bool isSelect = treeviewServices.Selection.CountSelectedRows() == 1;
 			bool MeterOk = false;
 			if (isSelect && treeviewServices.Selection.GetSelected (out iter))
-				MeterOk = (int)ServiceListStore.GetValue (iter, (int)ServiceCol.counters) > 0;
+				MeterOk = servicesWithMeters.Contains((int)ServiceListStore.GetValue(iter, (int)ServiceCol.service_id));
 			buttonDelService.Sensitive = isSelect;
 			buttonFromMeter.Sensitive = MeterOk;
 		}
