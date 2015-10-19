@@ -44,12 +44,12 @@ prepare stmt from @query;
 
 EXECUTE stmt;
 
-ALTER TABLE `meter_types` 
-ADD COLUMN `service_provider_id` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `name`,
-ADD INDEX `fk_meter_types_service_providers_idx` (`service_provider_id` ASC);
+ALTER TABLE `services` 
+ADD COLUMN `service_provider_id` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `incomplete_month`,
+ADD INDEX `fk_services_service_provider_id_idx` (`service_provider_id` ASC);
 
-ALTER TABLE `meter_types` 
-ADD CONSTRAINT `fk_meter_types_service_providers`
+ALTER TABLE `services` 
+ADD CONSTRAINT `fk_services_service_provider_id`
   FOREIGN KEY (`service_provider_id`)
   REFERENCES `service_providers` (`id`)
   ON DELETE SET NULL
