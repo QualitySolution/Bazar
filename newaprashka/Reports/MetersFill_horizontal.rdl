@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT lessees.name, lessees.FIO_dir, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
 meter_types.name type, meter_tariffs.name as tariff, 
@@ -28,7 +28,7 @@ SELECT  selectedmeters.*,
 (SELECT date FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastdate, 
 (SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue, 
 (SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1, 1) as prevalue 
-FROM (SELECT DISTINCT meter_reading.meter_id, meter_reading.meter_tariff_id FROM meter_reading) as selectedmeters
+FROM (select meters.id as meter_id,meter_tariffs.id as meter_tariff_id from meters join meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id) as selectedmeters
 ) as reading ON meters.id = reading.meter_id 
 LEFT JOIN place_types ON place_types.id = meters.place_type_id
 LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id
@@ -46,7 +46,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
