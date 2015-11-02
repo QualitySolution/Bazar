@@ -48,7 +48,7 @@ left join
     left join accrual_pays ON accrual_pays.service_id = services.id
     left join payment_details ON accrual_pays.id=payment_details.accrual_pay_id
     left join payments ON payments.id=payment_details.payment_id
-    where Month(payments.createdate)=@month and Year(payments.createdate)=@year
+    where Month(payments.createdate)=@paymentMonth and Year(payments.createdate)=@paymentYear
     group by service_providers.id
 ) as providers_with_payment
 ON providers.id=providers_with_payment.provider_id;  </CommandText>
@@ -58,6 +58,12 @@ ON providers.id=providers_with_payment.provider_id;  </CommandText>
           </QueryParameter>
           <QueryParameter Name="year">
             <Value>=Parameters!year.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="paymentMonth">
+            <Value>=Parameters!paymentMonth.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="paymentYear">
+            <Value>=Parameters!paymentYear.Value</Value>
           </QueryParameter>
         </QueryParameters>
       </Query>
@@ -176,7 +182,7 @@ ON providers.id=providers_with_payment.provider_id;  </CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox2">
-                      <Value>Оплачено за период</Value>
+                      <Value>="Оплачено в "+MonthNamePrepositional(Parameters!paymentMonth.Value)</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -334,7 +340,20 @@ ON providers.id=providers_with_payment.provider_id;  </CommandText>
   </PageFooter>
   <DataElementName>Report</DataElementName>
   <DataElementStyle>AttributeNormal</DataElementStyle>
-  <ReportParameters>
+  <DataSources>
+    <DataSource Name="DS1">
+      <ConnectionProperties>
+        <DataProvider>MySQL.NET</DataProvider>
+        <ConnectString>server=demo.qsolution.ru;user=demo;database=bazar;port=3306;password=demo;</ConnectString>
+        <IntegratedSecurity>false</IntegratedSecurity>
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <Code >Public Function MonthNamePrepositional(ByVal id As Integer) As String
+	Dim names = new String(11){"январе","феврале","марте","апреле","мае","июне","июле","августе","сентябре","октябре","ноябре","декабре"}
+	return names(id-1)
+End Function</Code>
+  <ReportParameters >
     <ReportParameter Name="month">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -361,14 +380,21 @@ ON providers.id=providers_with_payment.provider_id;  </CommandText>
       <Prompt>
       </Prompt>
     </ReportParameter>
+    <ReportParameter Name="paymentYear">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="paymentMonth">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
   </ReportParameters>
-  <DataSources>
-    <DataSource Name="DS1">
-      <ConnectionProperties>
-        <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>server=demo.qsolution.ru;user=demo;database=bazar;port=3306;password=demo;</ConnectString>
-        <IntegratedSecurity>false</IntegratedSecurity>
-      </ConnectionProperties>
-    </DataSource>
-  </DataSources>
 </Report>
