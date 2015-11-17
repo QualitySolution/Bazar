@@ -15,6 +15,7 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>SELECT accrual.id as id, month, year, cash.name as cash, contracts.number as contract_no, contracts.lessee_id as lessee_id, lessees.name as lessee, sumtable.sum as sum, IFNULL(paidtable.sum, 0) as paidsum, (sumtable.sum -  IFNULL(paidtable.sum, 0)) as debt, contracts.place_no as place FROM accrual
 LEFT JOIN contracts ON contracts.id = accrual.contract_id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id

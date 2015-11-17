@@ -23,6 +23,7 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>SELECT debit_slips.*, cash.name as cash, contractors.name as contractor, expense_items.name as expense_item, organizations.name as organization, employees.name as employee FROM debit_slips 
 LEFT JOIN cash ON debit_slips.cash_id = cash.id 
 LEFT JOIN contractors ON debit_slips.contractor_id = contractors.id 

@@ -23,7 +23,8 @@
     <DataSet Name="credit_slip">
       <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT `employees`.`name` as employee, `credit_slips`.`date` as docdate, `credit_slips`.`sum` as sum, 
+        <Timeout>300</Timeout>
+    	<CommandText>SELECT `employees`.`name` as employee, `credit_slips`.`date` as docdate, `credit_slips`.`sum` as sum, 
 users.name as user, `credit_slips`.`details` FROM credit_slips
 LEFT JOIN employees ON credit_slips.employee_id = employees.id
 LEFT JOIN users ON users.id = credit_slips.user_id

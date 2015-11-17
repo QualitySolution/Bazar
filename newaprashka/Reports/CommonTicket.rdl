@@ -23,6 +23,7 @@
     <DataSet Name="credit_slip">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>SELECT `lessees`.`name` as lessee, `credit_slips`.`date` as docdate, `credit_slips`.`sum` as sum, `contracts`.`number` as contract, 
 `accrual`.`month` as month, `accrual`.`year` as year, users.name as user, `credit_slips`.`details` FROM credit_slips
 LEFT JOIN payments ON payments.credit_slip_id = credit_slips.id

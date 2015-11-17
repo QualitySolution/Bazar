@@ -15,6 +15,7 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>SELECT services.name as service, cash.name as cash, units.name as units, count, price, (count * price) as sum, IFNULL(paysum.sum, 0) as paid FROM accrual_pays 
 LEFT JOIN services ON accrual_pays.service_id = services.id
 LEFT JOIN cash ON cash.id = accrual_pays.cash_id 

@@ -15,6 +15,7 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+   	 	<Timeout>300</Timeout>
         <CommandText>SELECT lessees.name, lessees.FIO_dir, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
 meter_types.name type, meter_tariffs.name as tariff, 
  reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0,

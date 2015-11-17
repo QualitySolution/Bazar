@@ -15,7 +15,8 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>select 
+        <Timeout>300</Timeout>
+		<CommandText>select 
 	providers.name,
 	IFNULL(providers_with_accrual.accrual_total,0) as accrual_total,
 	IFNULL(providers_with_payment.payment_total,0) as payment_total

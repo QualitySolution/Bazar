@@ -15,6 +15,7 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end FROM contracts
 LEFT JOIN place_types ON contracts.place_type_id = place_types.id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 

@@ -15,6 +15,7 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>use bazar;
 SELECT lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
 meter_types.name type, meter_tariffs.name as tariff, 

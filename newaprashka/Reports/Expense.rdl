@@ -35,6 +35,7 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
+   	 	<Timeout>300</Timeout>
         <CommandText>SELECT debit_slips.date as edate, debit_slips.sum as sum, debit_slips.details as details, expense_items.name as expense, contractors.name as contractor, employees.name as employee FROM debit_slips 
 LEFT JOIN expense_items ON debit_slips.expense_id = expense_items.id 
 LEFT JOIN employees ON debit_slips.employee_id = employees.id 

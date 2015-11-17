@@ -15,7 +15,8 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
+        <Timeout>300</Timeout>
+		<CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
  lessees.name as lessee, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
  (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt 
 FROM accrual 

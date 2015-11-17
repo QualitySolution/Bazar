@@ -35,7 +35,8 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT services.name as service, payment_details.sum as sum 
+        <Timeout>300</Timeout>
+    	<CommandText>SELECT services.name as service, payment_details.sum as sum 
 FROM payment_details
 LEFT JOIN payments ON payments.id = payment_details.payment_id
 LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id 

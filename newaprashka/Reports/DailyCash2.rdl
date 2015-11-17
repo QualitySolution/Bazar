@@ -23,6 +23,7 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
+    	<Timeout>300</Timeout>
         <CommandText>(SELECT *, IFNULL(table1.incomesum, 0) as incomesum0, IFNULL(table2.sum, 0) as expensesum FROM (SELECT @num1 := 0, @num2 := 0) as a, (
 SELECT @num1:=@num1 + 1 as num, contracts.number as contract, services.name as service, payment_details.sum as incomesum 
 FROM payment_details
