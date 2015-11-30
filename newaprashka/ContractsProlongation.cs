@@ -16,6 +16,8 @@ namespace bazar
 		bool ItemsSelected;
 		int SelectedItems, IgnoredItems;
 
+		bool DontCheck = false;
+
 		public ContractsProlongation ()
 		{
 			this.Build ();
@@ -156,6 +158,10 @@ namespace bazar
 
 		void CheckDateConflict()
 		{
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Adjustment.Upper = ContractsListStore.IterNChildren ();
+			progressbarMain.Text = "Проверка корректности дат...";
+			QSMain.WaitRedraw ();
 			//Проверка будут ли пересекаться даты новых договоров с уже имеющимися если мы проведем операцию.
 			TreeIter iter;
 			List<object[]> Contracts = new List<object[]> ();
@@ -177,11 +183,14 @@ namespace bazar
 				//Get data from server
 				using (MySqlDataReader rdr = cmd.ExecuteReader ()) 
 				{
+					progressbarMain.Adjustment.Upper += rdr.RecordsAffected;
 					while (rdr.Read ()) 
 					{
 						object[] Contract = new object[5];
 						rdr.GetValues (Contract);
 						Contracts.Add (Contract);
+						progressbarMain.Adjustment.Value++;
+						QSMain.WaitRedraw ();
 					}
 				}
 			}
@@ -210,7 +219,12 @@ namespace bazar
 						}
 					}
 				}
+				progressbarMain.Adjustment.Value++;
+				QSMain.WaitRedraw ();
 			} while (ContractsListStore.IterNext (ref iter));
+
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Text = String.Empty;
 		}
 
 		private void CheckPlaceDubSelected()
@@ -218,10 +232,18 @@ namespace bazar
 			TreeIter iter;
 			if (!ContractsListStore.GetIterFirst (out iter))
 				return;
+
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Adjustment.Upper = ContractsListStore.IterNChildren ();
+			progressbarMain.Text = "Проверка дубликатов мест...";
+
 			do 
 			{
 				BadContractChecks ContrChk = (BadContractChecks) ContractsListStore.GetValue (iter, 7);
 				ContrChk.PlaceDub = false;
+
+				progressbarMain.Adjustment.Value++;
+				QSMain.WaitRedraw ();
 
 				if(!checkEnd.Active && !checkStart.Active)
 					continue;
@@ -243,10 +265,17 @@ namespace bazar
 					}
 				}
 			} while (ContractsListStore.IterNext (ref iter));
+
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Text = String.Empty;
 		}
 	
 		private void CheckNumberDub()
 		{
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Adjustment.Upper = ContractsListStore.IterNChildren ();
+			progressbarMain.Text = "Проверка дубликатов номеров...";
+
 			TreeIter iter;
 			List<object[]> Contracts = new List<object[]> ();
 
@@ -266,21 +295,32 @@ namespace bazar
 				//Get data from server
 				using (MySqlDataReader rdr = cmd.ExecuteReader ()) 
 				{
+					progressbarMain.Adjustment.Upper += rdr.RecordsAffected;
 					while (rdr.Read ()) 
 					{
 						object[] Contract = new object[3];
 						rdr.GetValues (Contract);
 						Contracts.Add (Contract);
+
+						progressbarMain.Adjustment.Value++;
+						QSMain.WaitRedraw ();
 					}
 				}
 			}
 			//Check numbers
 			if (!ContractsListStore.GetIterFirst (out iter))
+			{
+				progressbarMain.Text = String.Empty;
 				return;
+			}
+				
 			do 
 			{
 				BadContractChecks ContrChk = (BadContractChecks) ContractsListStore.GetValue (iter, 7);
 				ContrChk.NumberDub = false;
+
+				progressbarMain.Adjustment.Value++;
+				QSMain.WaitRedraw ();
 
 				if(!checkSign.Active)
 					continue;
@@ -302,6 +342,10 @@ namespace bazar
 					}
 				}
 			} while (ContractsListStore.IterNext (ref iter));
+
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Text = String.Empty;
+			QSMain.WaitRedraw ();
 		}
 
 		private DateTime GetMinStartSelectedDate()
@@ -441,30 +485,46 @@ namespace bazar
 		protected void OnCheckSignClicked(object sender, EventArgs e)
 		{
 			dateSign.Sensitive = checkSign.Active;
-			CheckNumberDub ();
-			CalculateSelected ();
+			if(!DontCheck)
+			{
+				CheckNumberDub ();
+				CalculateSelected ();
+			}
 		}
 
 		protected void OnCheckStartClicked(object sender, EventArgs e)
 		{
 			dateStart.Sensitive = checkStart.Active;
-			CheckDateConflict ();
-			CheckPlaceDubSelected ();
-			CalculateSelected ();
+			if(!DontCheck)
+			{
+				CheckDateConflict ();
+				CheckPlaceDubSelected ();
+				CalculateSelected ();
+			}
 		}
 
 		protected void OnCheckEndClicked(object sender, EventArgs e)
 		{
 			dateEnd.Sensitive = checkEnd.Active;
-			CheckDateConflict ();
-			CheckPlaceDubSelected ();
-			CalculateSelected ();
+			if(!DontCheck)
+			{
+				CheckDateConflict ();
+				CheckPlaceDubSelected ();
+				CalculateSelected ();
+			}
 		}
 
 		protected void OnRadioCopyModeToggled(object sender, EventArgs e)
 		{
 			if(((RadioButton)sender).Active)
+			{
+				DontCheck = true;
 				checkEnd.Active = checkStart.Active = checkSign.Active = true;
+				DontCheck = false;
+				CheckDateConflict ();
+				CheckPlaceDubSelected ();
+				CalculateSelected ();
+			}
 			checkEnd.Sensitive = checkStart.Sensitive = checkSign.Sensitive = !((RadioButton)sender).Active;
 		}
 
@@ -489,6 +549,10 @@ namespace bazar
 		private void CopyContracts(MySqlTransaction trans)
 		{
 			int Count = 0;
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Adjustment.Upper = SelectedItems - IgnoredItems;
+			progressbarMain.Text = "Копирование договоров...";
+			QSMain.WaitRedraw ();
 
 			foreach (object[] row in ContractsListStore)
 			{
@@ -517,16 +581,20 @@ namespace bazar
 				cmd.ExecuteNonQuery ();
 
 				Count++;
-				progressbarMain.Fraction = Count / (SelectedItems - IgnoredItems);
-				while (GLib.MainContext.Pending())
-				{
-					Gtk.Main.Iteration();
-				}
+				progressbarMain.Adjustment.Value = Count;
+				QSMain.WaitRedraw ();
 			}
+
+			progressbarMain.Text = String.Empty;
 		}
 
 		private void ChangeContracts(MySqlTransaction trans)
 		{
+			progressbarMain.Adjustment.Value = 0;
+			progressbarMain.Adjustment.Upper = 2;
+			progressbarMain.Text = "Изменение договоров...";
+			QSMain.WaitRedraw ();
+
 			DBWorks.SQLHelper sql = new DBWorks.SQLHelper ("UPDATE contracts SET ");
 			if (checkSign.Active)
 				sql.AddAsList ("sign_date = @sign_date");
@@ -542,11 +610,18 @@ namespace bazar
 					sql.AddAsList (row [1].ToString ());
 			}
 			sql.Add (")");
+
+			progressbarMain.Adjustment.Value++;
+			QSMain.WaitRedraw ();
+
 			MySqlCommand cmd = new MySqlCommand(sql.Text, QSMain.connectionDB, trans);
 			cmd.Parameters.AddWithValue("@sign_date", dateSign.Date);
 			cmd.Parameters.AddWithValue("@start_date", dateStart.Date);
 			cmd.Parameters.AddWithValue("@end_date", dateEnd.Date);
 			cmd.ExecuteNonQuery ();
+
+			progressbarMain.Adjustment.Value++;
+			QSMain.WaitRedraw ();
 		}
 
 		protected void OnButtonOkClicked(object sender, EventArgs e)
