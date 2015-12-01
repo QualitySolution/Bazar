@@ -6,11 +6,21 @@ namespace bazar
 	{
 		private global::Gtk.VBox vbox2;
 		
-		private global::Gtk.HBox hbox2;
+		private global::Gtk.HBox hbox1;
 		
 		private global::Gtk.Label label1;
 		
-		private global::Gtk.ComboBox comboMonth;
+		private global::Gtk.VBox vbox3;
+		
+		private global::Gtk.RadioButton radioButtonMonth;
+		
+		private global::Gtk.RadioButton radioButtonQuarter;
+		
+		private global::Gtk.HBox hbox2;
+		
+		private global::Gtk.Label label2;
+		
+		private global::Gtk.ComboBox comboPeriod;
 		
 		private global::Gtk.ComboBox comboYear;
 		
@@ -34,62 +44,112 @@ namespace bazar
 			this.vbox2.Name = "vbox2";
 			this.vbox2.Spacing = 6;
 			// Container child vbox2.Gtk.Box+BoxChild
+			this.hbox1 = new global::Gtk.HBox ();
+			this.hbox1.Name = "hbox1";
+			this.hbox1.Spacing = 6;
+			// Container child hbox1.Gtk.Box+BoxChild
+			this.label1 = new global::Gtk.Label ();
+			this.label1.Name = "label1";
+			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Отчет за:");
+			this.hbox1.Add (this.label1);
+			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.label1]));
+			w2.Position = 0;
+			w2.Expand = false;
+			w2.Fill = false;
+			// Container child hbox1.Gtk.Box+BoxChild
+			this.vbox3 = new global::Gtk.VBox ();
+			this.vbox3.Name = "vbox3";
+			this.vbox3.Spacing = 6;
+			// Container child vbox3.Gtk.Box+BoxChild
+			this.radioButtonMonth = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Месяц"));
+			this.radioButtonMonth.CanFocus = true;
+			this.radioButtonMonth.Name = "radioButtonMonth";
+			this.radioButtonMonth.DrawIndicator = true;
+			this.radioButtonMonth.UseUnderline = true;
+			this.radioButtonMonth.Group = new global::GLib.SList (global::System.IntPtr.Zero);
+			this.vbox3.Add (this.radioButtonMonth);
+			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.radioButtonMonth]));
+			w3.Position = 0;
+			w3.Expand = false;
+			w3.Fill = false;
+			// Container child vbox3.Gtk.Box+BoxChild
+			this.radioButtonQuarter = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Квартал"));
+			this.radioButtonQuarter.CanFocus = true;
+			this.radioButtonQuarter.Name = "radioButtonQuarter";
+			this.radioButtonQuarter.DrawIndicator = true;
+			this.radioButtonQuarter.UseUnderline = true;
+			this.radioButtonQuarter.Group = this.radioButtonMonth.Group;
+			this.vbox3.Add (this.radioButtonQuarter);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox3 [this.radioButtonQuarter]));
+			w4.Position = 1;
+			w4.Expand = false;
+			w4.Fill = false;
+			this.hbox1.Add (this.vbox3);
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.vbox3]));
+			w5.Position = 1;
+			this.vbox2.Add (this.hbox1);
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox1]));
+			w6.Position = 0;
+			w6.Expand = false;
+			w6.Fill = false;
+			// Container child vbox2.Gtk.Box+BoxChild
 			this.hbox2 = new global::Gtk.HBox ();
 			this.hbox2.Name = "hbox2";
 			this.hbox2.Spacing = 6;
 			// Container child hbox2.Gtk.Box+BoxChild
-			this.label1 = new global::Gtk.Label ();
-			this.label1.Name = "label1";
-			this.label1.Xalign = 1F;
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Отчет за месяц:");
-			this.hbox2.Add (this.label1);
-			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label1]));
-			w2.Position = 0;
-			w2.Expand = false;
-			w2.Fill = false;
+			this.label2 = new global::Gtk.Label ();
+			this.label2.Name = "label2";
+			this.label2.Xalign = 1F;
+			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Период:");
+			this.hbox2.Add (this.label2);
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.label2]));
+			w7.Position = 0;
+			w7.Expand = false;
+			w7.Fill = false;
 			// Container child hbox2.Gtk.Box+BoxChild
-			this.comboMonth = global::Gtk.ComboBox.NewText ();
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Январь"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Февраль"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Март"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Апрель"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Май"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Июнь"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Июль"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Август"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Сентябрь"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Октябрь"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Ноябрь"));
-			this.comboMonth.AppendText (global::Mono.Unix.Catalog.GetString ("Декабрь"));
-			this.comboMonth.Name = "comboMonth";
-			this.hbox2.Add (this.comboMonth);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.comboMonth]));
-			w3.Position = 1;
-			w3.Expand = false;
-			w3.Fill = false;
+			this.comboPeriod = global::Gtk.ComboBox.NewText ();
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Январь"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Февраль"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Март"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Апрель"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Май"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Июнь"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Июль"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Август"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Сентябрь"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Октябрь"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Ноябрь"));
+			this.comboPeriod.AppendText (global::Mono.Unix.Catalog.GetString ("Декабрь"));
+			this.comboPeriod.Name = "comboPeriod";
+			this.hbox2.Add (this.comboPeriod);
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.comboPeriod]));
+			w8.Position = 1;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.comboYear = global::Gtk.ComboBox.NewText ();
 			this.comboYear.Name = "comboYear";
 			this.hbox2.Add (this.comboYear);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.comboYear]));
-			w4.Position = 2;
-			w4.Expand = false;
-			w4.Fill = false;
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.comboYear]));
+			w9.Position = 2;
+			w9.Expand = false;
+			w9.Fill = false;
 			this.vbox2.Add (this.hbox2);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox2]));
-			w5.Position = 0;
-			w5.Fill = false;
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox2]));
+			w10.Position = 1;
+			w10.Expand = false;
+			w10.Fill = false;
 			w1.Add (this.vbox2);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(w1 [this.vbox2]));
-			w6.Position = 0;
-			w6.Expand = false;
-			w6.Fill = false;
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(w1 [this.vbox2]));
+			w11.Position = 0;
+			w11.Expand = false;
+			w11.Fill = false;
 			// Internal child bazar.ServiceProvidersPaymentReport.ActionArea
-			global::Gtk.HButtonBox w7 = this.ActionArea;
-			w7.Name = "dialog1_ActionArea";
-			w7.Spacing = 10;
-			w7.BorderWidth = ((uint)(5));
-			w7.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w12 = this.ActionArea;
+			w12.Name = "dialog1_ActionArea";
+			w12.Spacing = 10;
+			w12.BorderWidth = ((uint)(5));
+			w12.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -99,9 +159,9 @@ namespace bazar
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w8 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w7 [this.buttonCancel]));
-			w8.Expand = false;
-			w8.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w13 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w12 [this.buttonCancel]));
+			w13.Expand = false;
+			w13.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -111,16 +171,17 @@ namespace bazar
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w9 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w7 [this.buttonOk]));
-			w9.Position = 1;
-			w9.Expand = false;
-			w9.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w14 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w12 [this.buttonOk]));
+			w14.Position = 1;
+			w14.Expand = false;
+			w14.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
 			this.DefaultWidth = 400;
-			this.DefaultHeight = 132;
+			this.DefaultHeight = 135;
 			this.Show ();
+			this.radioButtonQuarter.Toggled += new global::System.EventHandler (this.OnRadiobuttonQuarterToggled);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnButtonOkClicked);
 		}
 	}
