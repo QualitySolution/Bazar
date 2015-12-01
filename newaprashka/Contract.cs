@@ -551,7 +551,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
 				cmd.Parameters.AddWithValue("@id", ContractId);
 				if(datepickerSign.IsEmpty)
-					cmd.Parameters.AddWithValue("@sign_date", DBNull.Value);
+					cmd.Parameters.AddWithValue("@sign_date", datepickerStart.Date);
 				else
 					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
 				long Count = (long) cmd.ExecuteScalar();
@@ -644,7 +644,7 @@ namespace bazar
 				if(!datepickerSign.IsEmpty)
 					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
 				else
-					cmd.Parameters.AddWithValue("@sign_date", DBNull.Value);
+					cmd.Parameters.AddWithValue("@sign_date", datepickerStart.Date);
 				if(!datepickerStart.IsEmpty)
 					cmd.Parameters.AddWithValue("@start_date", datepickerStart.Date);
 				if(!datepickerEnd.IsEmpty)
