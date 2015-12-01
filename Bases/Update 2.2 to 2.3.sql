@@ -1,4 +1,4 @@
-USE `bazar2`;
+USE `bazar`;
 
 ALTER TABLE `places` 
 CHANGE COLUMN `place_no` `place_no` VARCHAR(20) NOT NULL ;
@@ -132,6 +132,9 @@ CREATE  OR REPLACE VIEW `reading_with_prev_date_subquery` AS
             and (`a`.`date` >= `b`.`date`)
             and (`a`.`id` <> `b`.`id`))));
 
+-- Исправляем договора, проставляем даты подписания. Без этого есть проблемы с пролонгацией.
+
+UPDATE contracts SET sign_date = start_date WHERE sign_date IS NULL;
 
 -- Обновляем версию базы.
 
