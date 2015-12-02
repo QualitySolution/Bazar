@@ -655,7 +655,8 @@ namespace bazar
 						ServiceListStore.SetValue(iter, (int)ServiceCol.id, (object) cmd.LastInsertedId);
 				}
 				while(ServiceListStore.IterNext(ref iter));
-				
+				pendingSaveCommands.Clear();
+
 				//Удаляем удаленные строки из базы данных
 				sql = "DELETE FROM accrual_pays WHERE id = @id";
 				foreach( long id in DeletedRowId)
