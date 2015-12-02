@@ -10,6 +10,8 @@ namespace bazar
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore ReadingListStore, ChildListStore;
 		int accrual_detail_id, ChildCount;
+		private MySqlCommand saveReadingCommand;
+		public MySqlCommand SaveCommand{ get { return saveReadingCommand; } }
 		public decimal TotalCount;
 		string Units;
 		bool LastValues;
@@ -295,7 +297,6 @@ namespace bazar
 		{
 			string sql;
 			logger.Info("Запись показаний счётчиков...");
-			MySqlCommand cmd;
 			try 
 			{
 				TreeIter iter;
@@ -314,15 +315,12 @@ namespace bazar
 					else
 						sql = "INSERT INTO meter_reading (date, meter_id, meter_tariff_id, value, accrual_pay_id) " +
 							"VALUES (@date, @meter_id, @meter_tariff_id, @value, @accrual_pay_id)";
-					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@id", ReadingListStore.GetValue(iter, 3));
-					cmd.Parameters.AddWithValue("@date", DateTime.Today);
-					cmd.Parameters.AddWithValue("@meter_id", ReadingListStore.GetValue(iter, 0));
-					cmd.Parameters.AddWithValue("@meter_tariff_id", ReadingListStore.GetValue(iter, 1));
-					cmd.Parameters.AddWithValue("@value", ReadingListStore.GetValue(iter, 2));
-					cmd.Parameters.AddWithValue("@accrual_pay_id", accrual_detail_id);
-
-					cmd.ExecuteNonQuery();
+					saveReadingCommand = new MySqlCommand(sql, QSMain.connectionDB);
+					saveReadingCommand.Parameters.AddWithValue("@id", ReadingListStore.GetValue(iter, 3));
+					saveReadingCommand.Parameters.AddWithValue("@date", DateTime.Today);
+					saveReadingCommand.Parameters.AddWithValue("@meter_id", ReadingListStore.GetValue(iter, 0));
+					saveReadingCommand.Parameters.AddWithValue("@meter_tariff_id", ReadingListStore.GetValue(iter, 1));
+					saveReadingCommand.Parameters.AddWithValue("@value", ReadingListStore.GetValue(iter, 2));
 				}
 				while(ReadingListStore.IterNext(ref iter));
 
