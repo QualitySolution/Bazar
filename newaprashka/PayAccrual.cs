@@ -375,8 +375,9 @@ namespace bazar
 			}
 			catch (Exception ex) 
 			{
-				QSMain.ErrorMessageWithLog(this, "Ошибка записи оплаты!", logger, ex);
+				logger.Error (ex);
 				trans.Rollback ();
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи оплаты!", logger, ex);
 			}
 			Accrual.GetAccrualPaidBalance (Accrual_Id);
 		}
