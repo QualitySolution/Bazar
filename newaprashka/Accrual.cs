@@ -17,7 +17,7 @@ namespace bazar
 		TreeModel ServiceNameList, CashNameList;
 		List<long> DeletedRowId = new List<long>();
 		List<int> servicesWithMeters;
-		Dictionary<TreeIter,MySqlCommand> pendingSaveCommands;
+		Dictionary<TreeIter,List<MySqlCommand>> pendingSaveCommands;
 
 		decimal AccrualTotal = 0, IncomeTotal = 0;
 		int Place_type_id;
@@ -46,7 +46,7 @@ namespace bazar
 		public Accrual ()
 		{
 			this.Build ();
-			pendingSaveCommands = new Dictionary<TreeIter, MySqlCommand>();
+			pendingSaveCommands = new Dictionary<TreeIter, List<MySqlCommand>>();
 			MainClass.ComboAccrualYearsFill (comboAccuralYear);
 
 			ComboBox ServiceCombo = new ComboBox();
@@ -644,12 +644,14 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter, (int)ServiceCol.price));
 					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter, (int)ServiceCol.id));
 					cmd.ExecuteNonQuery();
-					MySqlCommand pendingCommand;
-					if(pendingSaveCommands.TryGetValue(iter,out pendingCommand)){
+					List<MySqlCommand> pendingMeterReadings;
+					if(pendingSaveCommands.TryGetValue(iter,out pendingMeterReadings)){
 						long accrualPayId = Convert.ToInt32 (ServiceListStore.GetValue (iter, (int)ServiceCol.id));
 						if(accrualPayId==0) accrualPayId = cmd.LastInsertedId;
-						pendingCommand.Parameters.AddWithValue("@accrual_pay_id",accrualPayId);
-						pendingCommand.ExecuteNonQuery();
+						foreach(MySqlCommand unsavedReading in pendingMeterReadings){
+							unsavedReading.Parameters.AddWithValue("@accrual_pay_id",accrualPayId);
+							unsavedReading.ExecuteNonQuery();
+						}
 					}
 					if((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id) <= 0)
 						ServiceListStore.SetValue(iter, (int)ServiceCol.id, (object) cmd.LastInsertedId);
@@ -999,8 +1001,10 @@ namespace bazar
 			               ServiceListStore.GetValue (iter, (int)ServiceCol.units).ToString ());
 			int result = WinMeter.Run ();
 			if(result == (int) ResponseType.Ok)
-			{
-				pendingSaveCommands.Add (iter,WinMeter.SaveCommand);
+			{				
+				if (pendingSaveCommands.ContainsKey (iter))
+					pendingSaveCommands.Remove (iter);
+				pendingSaveCommands.Add (iter, WinMeter.SaveCommands);
 				ServiceListStore.SetValue (iter, (int)ServiceCol.price, WinMeter.Price);
 				ServiceListStore.SetValue (iter, (int)ServiceCol.count, WinMeter.TotalCount);
 				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, WinMeter.Price * WinMeter.TotalCount);
