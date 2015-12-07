@@ -17,7 +17,7 @@ namespace bazar
 		TreeModel ServiceNameList, CashNameList;
 		List<long> DeletedRowId = new List<long>();
 		List<int> servicesWithMeters;
-		Dictionary<TreeIter,List<MySqlCommand>> pendingSaveCommands;
+		Dictionary<TreeIter,List<PendingMeterReading>> allPendingMeterReadings;
 
 		decimal AccrualTotal = 0, IncomeTotal = 0;
 		int Place_type_id;
@@ -46,7 +46,7 @@ namespace bazar
 		public Accrual ()
 		{
 			this.Build ();
-			pendingSaveCommands = new Dictionary<TreeIter, List<MySqlCommand>>();
+			allPendingMeterReadings = new Dictionary<TreeIter, List<PendingMeterReading>>();
 			MainClass.ComboAccrualYearsFill (comboAccuralYear);
 
 			ComboBox ServiceCombo = new ComboBox();
@@ -644,20 +644,20 @@ namespace bazar
 					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter, (int)ServiceCol.price));
 					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter, (int)ServiceCol.id));
 					cmd.ExecuteNonQuery();
-					List<MySqlCommand> pendingMeterReadings;
-					if(pendingSaveCommands.TryGetValue(iter,out pendingMeterReadings)){
+					List<PendingMeterReading> pendingReadings;
+					if(allPendingMeterReadings.TryGetValue(iter,out pendingReadings)){
 						long accrualPayId = Convert.ToInt32 (ServiceListStore.GetValue (iter, (int)ServiceCol.id));
 						if(accrualPayId==0) accrualPayId = cmd.LastInsertedId;
-						foreach(MySqlCommand unsavedReading in pendingMeterReadings){
-							unsavedReading.Parameters.AddWithValue("@accrual_pay_id",accrualPayId);
-							unsavedReading.ExecuteNonQuery();
+						foreach(PendingMeterReading unsavedReading in pendingReadings){
+							unsavedReading.accrualPayId=accrualPayId;
+							unsavedReading.Save();
 						}
 					}
 					if((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id) <= 0)
 						ServiceListStore.SetValue(iter, (int)ServiceCol.id, (object) cmd.LastInsertedId);
 				}
 				while(ServiceListStore.IterNext(ref iter));
-				pendingSaveCommands.Clear();
+				allPendingMeterReadings.Clear();
 
 				//Удаляем удаленные строки из базы данных
 				sql = "DELETE FROM accrual_pays WHERE id = @id";
@@ -999,12 +999,18 @@ namespace bazar
 			               Place_type_id,
 			               Place_no,
 			               ServiceListStore.GetValue (iter, (int)ServiceCol.units).ToString ());
+
+			List<PendingMeterReading> currentPendingReadings;
+			allPendingMeterReadings.TryGetValue (iter,out currentPendingReadings);
+			if (currentPendingReadings != null) {
+				WinMeter.SetPendingReadings (currentPendingReadings);
+			}
 			int result = WinMeter.Run ();
 			if(result == (int) ResponseType.Ok)
 			{				
-				if (pendingSaveCommands.ContainsKey (iter))
-					pendingSaveCommands.Remove (iter);
-				pendingSaveCommands.Add (iter, WinMeter.SaveCommands);
+				if (allPendingMeterReadings.ContainsKey (iter))
+					allPendingMeterReadings.Remove (iter);
+				allPendingMeterReadings.Add (iter, WinMeter.PendingReadings);
 				ServiceListStore.SetValue (iter, (int)ServiceCol.price, WinMeter.Price);
 				ServiceListStore.SetValue (iter, (int)ServiceCol.count, WinMeter.TotalCount);
 				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, WinMeter.Price * WinMeter.TotalCount);

@@ -3,6 +3,7 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace bazar
 {
@@ -11,8 +12,8 @@ namespace bazar
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore ReadingListStore, ChildListStore;
 		int accrual_detail_id, ChildCount;
-		private List<MySqlCommand> saveReadingCommands;
-		public List<MySqlCommand> SaveCommands{ get { return saveReadingCommands; } }
+		private List<PendingMeterReading> pendingReadings;
+		public List<PendingMeterReading> PendingReadings{ get { return pendingReadings; } }
 		public decimal TotalCount;
 		string Units;
 		bool LastValues;
@@ -66,6 +67,8 @@ namespace bazar
 			treeviewChilds.AppendColumn ("Расход", new Gtk.CellRendererText (), RenderChildValueColumn);
 			treeviewChilds.Model = ChildListStore;
 			treeviewChilds.ShowAll ();
+
+			pendingReadings = new List<PendingMeterReading>();
 		}
 
 		void OnValueSpinEdited (object o, EditedArgs args)
@@ -294,6 +297,26 @@ namespace bazar
 			}
 		}
 
+		public void SetPendingReadings(List<PendingMeterReading> readings){
+			foreach (PendingMeterReading pendingReading in readings) {
+				TreeIter iter;
+				ReadingListStore.GetIterFirst(out iter);
+				do
+				{
+					int id = (int)ReadingListStore.GetValue(iter,0);
+					int tariffId = (int)ReadingListStore.GetValue(iter,1);
+					var currentReading = readings.SingleOrDefault(r=>r.meterId==id && r.meterTariffId==tariffId);
+					if(currentReading!=null){
+						ReadingListStore.SetValue(iter,2,currentReading.value);
+						ReadingListStore.SetValue(iter,8,currentReading.date);
+						ReadingListStore.SetValue(iter,3,currentReading.id);
+						ReadingListStore.SetValue(iter,7,(int)(currentReading.value.Value-(int)ReadingListStore.GetValue(iter,6)));
+					}
+				}
+				while(ReadingListStore.IterNext(ref iter));
+			}
+		}
+
 		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
 			string sql;
@@ -302,7 +325,7 @@ namespace bazar
 			{
 				TreeIter iter;
 				ReadingListStore.GetIterFirst(out iter);
-				saveReadingCommands = new List<MySqlCommand>();
+
 				do
 				{
 					if(!ReadingListStore.IterIsValid (iter))
@@ -311,21 +334,17 @@ namespace bazar
 						continue; // Не записывать если дельта отрицательная
 					if((int)ReadingListStore.GetValue(iter, 7) == 0 && (int)ReadingListStore.GetValue(iter, 3) <= 0)
 						continue; // Не записывать если показания не введены
-					if((int)ReadingListStore.GetValue(iter, 3) > 0)
-						sql = "UPDATE meter_reading SET value = @value " +
-							"WHERE id = @id";
-					else
-						sql = "INSERT INTO meter_reading (date, meter_id, meter_tariff_id, value, accrual_pay_id) " +
-							"VALUES (@date, @meter_id, @meter_tariff_id, @value, @accrual_pay_id)";
-
-					MySqlCommand saveReadingCommand;
-					saveReadingCommand = new MySqlCommand(sql, QSMain.connectionDB);
-					saveReadingCommand.Parameters.AddWithValue("@id", ReadingListStore.GetValue(iter, 3));
-					saveReadingCommand.Parameters.AddWithValue("@date", DateTime.Today);
-					saveReadingCommand.Parameters.AddWithValue("@meter_id", ReadingListStore.GetValue(iter, 0));
-					saveReadingCommand.Parameters.AddWithValue("@meter_tariff_id", ReadingListStore.GetValue(iter, 1));
-					saveReadingCommand.Parameters.AddWithValue("@value", ReadingListStore.GetValue(iter, 2));
-					saveReadingCommands.Add(saveReadingCommand);
+					
+					bool isNewReading = !((int)ReadingListStore.GetValue(iter, 3) > 0);
+					PendingMeterReading pendingReading = new PendingMeterReading(){
+						isNew=isNewReading,
+						id=(int)ReadingListStore.GetValue(iter, 3),
+						date=DateTime.Today,
+						meterId=(int)ReadingListStore.GetValue(iter, 0),
+						meterTariffId=(int)ReadingListStore.GetValue(iter, 1),
+						value=(double)ReadingListStore.GetValue(iter, 2)
+					};
+					pendingReadings.Add(pendingReading);
 				}
 				while(ReadingListStore.IterNext(ref iter));
 
