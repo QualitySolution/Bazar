@@ -153,8 +153,7 @@ public partial class MainWindow : Gtk.Window
 				UpdateContract ();
 			break;
 		case 3:
-			treeviewAccrual.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (AccrualSort.GetValue (iter, (int)AccrualCol.id));
+			itemid = Convert.ToInt32 (treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id);
 			Accrual winAccrual = new Accrual ();
 			winAccrual.AccrualFill (itemid);
 			winAccrual.Show ();
@@ -455,8 +454,7 @@ public partial class MainWindow : Gtk.Window
 			UpdateContract ();
 			break;
 		case 3:
-			treeviewAccrual.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (AccrualSort.GetValue (iter, (int)AccrualCol.id));
+			itemid = Convert.ToInt32 (treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id);
 			winDelete.RunDeletion ("accrual", itemid);
 			UpdateAccrual ();
 			break;
