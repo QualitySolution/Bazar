@@ -5,14 +5,13 @@ using bazar;
 using QSProjectsLib;
 using System.Collections.Generic;
 using Gamma.GtkWidgets;
-using System.Diagnostics;
 using System.Linq;
 
 public partial class MainWindow : Gtk.Window
 {
-	Gtk.ListStore AccrualListStore;
-
 	List<AccrualListEntryDTO> AccrualList;
+
+	bool accrualPrepared = false;
 
 	private string NameOfAllOption = "Все";
 	private enum AccrualCol{
@@ -41,11 +40,11 @@ public partial class MainWindow : Gtk.Window
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
 		//Создаем таблицу "Начислений"
-		AccrualListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), 
+/*		AccrualListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), 
 		                                      typeof (int), typeof (string), typeof (string), typeof (decimal),
 		                                      typeof (string), typeof (decimal),typeof (string), typeof (decimal),
 		                                      typeof (bool));
-		/*
+*/		/*
 		treeviewAccrual.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)AccrualCol.id);
 		treeviewAccrual.AppendColumn("Месяц", new Gtk.CellRendererText (), "text", (int)AccrualCol.month_text);
 		treeviewAccrual.AppendColumn("Договор", new Gtk.CellRendererText (), "text", (int)AccrualCol.contract);
@@ -83,12 +82,14 @@ public partial class MainWindow : Gtk.Window
 			.AddColumn ("Незаполнено").AddToggleRenderer (node => node.NotComplete).Editing (false)
 			.AddColumn ("")
 			.Finish ();
+		accrualPrepared = true;
 	}
 
 	void UpdateAccrual()
 	{
-		if(AccrualListStore == null)
+		if (!accrualPrepared)
 			return;
+
 		logger.Info("Получаем таблицу начислений...");
 		
 		TreeIter iter;
@@ -189,7 +190,7 @@ public partial class MainWindow : Gtk.Window
 		OnTreeviewAccrualCursorChanged (null, EventArgs.Empty);
 	}
 
-	private int SumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
+/*	private int SumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
 	{
 		object oa = model.GetValue(a, (int)AccrualCol.sum);
 		object ob = model.GetValue(b, (int)AccrualCol.sum);
@@ -224,7 +225,7 @@ public partial class MainWindow : Gtk.Window
 
 		return ((decimal)oa).CompareTo ((decimal)ob);
 	}
-
+*/
 	protected void OnComboAccrualOrgChanged (object sender, EventArgs e)
 	{
 		UpdateAccrual ();
@@ -322,22 +323,7 @@ public partial class MainWindow : Gtk.Window
 		Refilter ();
 		CalculateAccrualSum();
 	}
-/*
-	private void RenderDebtColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-	{
-		decimal Debt = (decimal) model.GetValue (iter, (int)AccrualCol.debt);
-		string DebtText = model.GetValue (iter, (int)AccrualCol.debt_text).ToString ();
-		if (Debt > 0) 
-		{
-			(cell as Gtk.CellRendererText).Foreground = "red";
-		} 
-		else 
-		{
-			(cell as Gtk.CellRendererText).Foreground = "darkgreen";
-		}
-		(cell as Gtk.CellRendererText).Text = DebtText;
-	}
-*/
+
 	protected void OnComboAccrualCashChanged(object sender, EventArgs e)
 	{
 		UpdateAccrual ();
@@ -347,20 +333,36 @@ public partial class MainWindow : Gtk.Window
 		UpdateAccrual ();
 	}
 }
-public class AccrualListEntryDTO{
-	public int Id{ get; set;}
-	public int Month{get;set;}
-	public string MonthText{ get; set;}
-	public int Year{get;set;}
-	public bool Paid{get;set;}
-	public string ContractNumber{get;set;}
-	public bool NotComplete{get;set;}
-	public int LesseeId{get;set;}
-	public string Lessee{get;set;}
-	public decimal Sum{get;set;}
-	public string SumText{ get; set;}
-	public decimal PaidSum{ get; set;}
-	public string PaidSumText{get;set;}
-	public decimal Debt{get;set;}
-	public string DebtText{get;set;}
+
+public class AccrualListEntryDTO
+{
+	public int Id{ get; set; }
+
+	public int Month{ get; set; }
+
+	public string MonthText{ get; set; }
+
+	public int Year{ get; set; }
+
+	public bool Paid{ get; set; }
+
+	public string ContractNumber{ get; set; }
+
+	public bool NotComplete{ get; set; }
+
+	public int LesseeId{ get; set; }
+
+	public string Lessee{ get; set; }
+
+	public decimal Sum{ get; set; }
+
+	public string SumText{ get; set; }
+
+	public decimal PaidSum{ get; set; }
+
+	public string PaidSumText{ get; set; }
+
+	public decimal Debt{ get; set; }
+
+	public string DebtText{ get; set; }
 }
