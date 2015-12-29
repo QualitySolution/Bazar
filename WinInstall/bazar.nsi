@@ -4,9 +4,9 @@
 !define MIN_NET_MINOR "0"
 !define MIN_NET_BUILD "*"
 !define NETInstaller "dotNetFx40_Full_setup.exe"
-!define PRODUCT_NAME "QS: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
-!define SHORTCUT_NAME "QS пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
-!define MENU_DIR_NAME "пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+!define PRODUCT_NAME "QS: База арендаторов"
+!define SHORTCUT_NAME "QS База арендаторов"
+!define MENU_DIR_NAME "База арендаторов"
 !define EXE_NAME "bazar"
 
 var NETInstalled
@@ -21,7 +21,7 @@ OutFile "${EXE_NAME}-salova-2.3.x.exe"
 !include "x64.nsh"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\пїЅпїЅпїЅпїЅпїЅ
+InstallDir $PROGRAMFILES\Базар
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
@@ -300,9 +300,9 @@ Section "${PRODUCT_NAME}" SecProgram
   
   ; Delete Old version files
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Bazar"
-  Delete "$SMPROGRAMS\пїЅпїЅпїЅпїЅпїЅ\*.*"
-  Delete "$DESKTOP\пїЅпїЅпїЅпїЅпїЅ.lnk"
-  RMDir "$SMPROGRAMS\пїЅпїЅпїЅпїЅпїЅ"
+  Delete "$SMPROGRAMS\Базар\*.*"
+  Delete "$DESKTOP\Базар.lnk"
+  RMDir "$SMPROGRAMS\Базар"
   ; Delete files used before 2.2.4 version.
   Delete "$INSTDIR\Reports\Meters.rdl"
   Delete "$INSTDIR\Reports\MetersFill.rdl"
@@ -323,9 +323,9 @@ Section "${PRODUCT_NAME}" SecProgram
   ; Start Menu Shortcuts
   SetShellVarContext all
   CreateDirectory "$SMPROGRAMS\${MENU_DIR_NAME}"
-  CreateShortCut "$SMPROGRAMS\${MENU_DIR_NAME}\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\${MENU_DIR_NAME}\Удаление.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${MENU_DIR_NAME}\${SHORTCUT_NAME}.lnk" "$INSTDIR\${EXE_NAME}.exe" "" "$INSTDIR\${EXE_NAME}.exe" 0
-  CreateShortCut "$SMPROGRAMS\${MENU_DIR_NAME}\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.lnk" "$INSTDIR\bazar_ru.pdf"
+  CreateShortCut "$SMPROGRAMS\${MENU_DIR_NAME}\Документация.lnk" "$INSTDIR\bazar_ru.pdf"
   
 SectionEnd
 
@@ -338,7 +338,7 @@ Section "MS .NET Framework ${MIN_NET_MAJOR}.${MIN_NET_MINOR}" SecFramework
   StrCmp $NETInstalled "yes" NETFrameworkInstalled
   File ${NETInstaller}
  
-	MessageBox MB_OK "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ .NET Framework ${MIN_NET_MAJOR}.${MIN_NET_MINOR}. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ."
+	MessageBox MB_OK "Для работы программы необходима платформа .NET Framework ${MIN_NET_MAJOR}.${MIN_NET_MINOR}. Далее будет запущена установка платформы через интернет, если ваш компьютер не подключен к интернету, установите платформу вручную."
   DetailPrint "Starting Microsoft .NET Framework v${MIN_NET_MAJOR}.${MIN_NET_MINOR} Setup..."
   ExecWait "$pluginsdir\Requires\${NETInstaller}"
   Return
@@ -354,25 +354,25 @@ Section "GTK# 2.12.21" SecGTK
   ; Test 2.12.30
   System::Call "msi::MsiQueryProductStateA(t '{CA8017BD-8271-4C93-A409-186375C5A5CA}') i.r0"
   StrCmp $0 "5" GTKDone
-  DetailPrint "GTK# 2.12.30 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+  DetailPrint "GTK# 2.12.30 не установлен"
 
   ; Test 2.12.26
   System::Call "msi::MsiQueryProductStateA(t '{BC25B808-A11C-4C9F-9C0A-6682E47AAB83}') i.r0"
   StrCmp $0 "5" GTKDone
-  DetailPrint "GTK# 2.12.26 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+  DetailPrint "GTK# 2.12.26 не установлен"
 
   ; Test 2.12.25
   System::Call "msi::MsiQueryProductStateA(t '{889E7D77-2A98-4020-83B1-0296FA1BDE8A}') i.r0"
   StrCmp $0 "5" GTKDone
-  DetailPrint "GTK# 2.12.25 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+  DetailPrint "GTK# 2.12.25 не установлен"
 
   ; Test 2.12.21
   System::Call "msi::MsiQueryProductStateA(t '{71109D19-D8C1-437D-A6DA-03B94F5187FB}') i.r0"
   StrCmp $0 "5" GTKDone
-  DetailPrint "GTK# 2.12.21 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+  DetailPrint "GTK# 2.12.21 не установлен"
 
 ; Install 2.12.21
-  DetailPrint "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GTK# 2.12.21"
+  DetailPrint "Запуск установщика GTK# 2.12.21"
   File "gtk-sharp-2.12.21.msi"
   ExecWait '"msiexec" /i "$pluginsdir\Requires\gtk-sharp-2.12.21.msi"  /passive'
 
@@ -385,7 +385,7 @@ Section "GTK# 2.12.21" SecGTK
   GTKDone:
 SectionEnd
 
-Section "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ" SecDesktop
+Section "Ярлык на рабочий стол" SecDesktop
 
   SetShellVarContext all
   SetOutPath $INSTDIR
@@ -397,10 +397,10 @@ SectionEnd
 ;Descriptions
 
   ;Language strings
-  LangString DESC_SecProgram ${LANG_Russian} "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
-  LangString DESC_SecFramework ${LANG_Russian} "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ .NET Framework. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ."
-  LangString DESC_SecGTK ${LANG_Russian} "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GTK#, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
-  LangString DESC_SecDesktop ${LANG_Russian} "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ"
+  LangString DESC_SecProgram ${LANG_Russian} "Основные файлы программы"
+  LangString DESC_SecFramework ${LANG_Russian} "Для работы программы необходима платформа .NET Framework. При необходимости будет выполнена установка через интернет."
+  LangString DESC_SecGTK ${LANG_Russian} "Библиотеки GTK#, необходимые для работы программы"
+  LangString DESC_SecDesktop ${LANG_Russian} "Установит ярлык программы на рабочий стол"
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
@@ -438,7 +438,7 @@ Section "Uninstall"
   RMDir "$INSTDIR"
 
   ; Remove GTK#
-  MessageBox MB_YESNO "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GTK#? пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ ${PRODUCT_NAME}, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ." /SD IDYES IDNO endGTK
+  MessageBox MB_YESNO "Удалить библиотеки GTK#? Они были установлены для ${PRODUCT_NAME}, но могут использоваться другими приложениями." /SD IDYES IDNO endGTK
     ExecWait '"msiexec" /X{71109D19-D8C1-437D-A6DA-03B94F5187FB} /passive'
   endGTK:
 SectionEnd
