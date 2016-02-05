@@ -14,6 +14,7 @@ public partial class MainWindow : Gtk.Window
 	bool accrualPrepared = false;
 
 	private string NameOfAllOption = "Все";
+	private string NameOf2YearOption = String.Format ("{0:yyyy}-{1:yyyy}", DateTime.Today.AddYears (-1), DateTime.Today);
 	private enum AccrualCol{
 		id,
 		month_text,
@@ -36,7 +37,7 @@ public partial class MainWindow : Gtk.Window
 		ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll, false);
 		ComboWorks.ComboFillReference(comboAccrualCash,"cash", ComboWorks.ListMode.WithAll, false);
 		ComboWorks.ComboFillReference (comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll, false);
-		MainClass.ComboAccrualYearsFill (comboAccuralYear, NameOfAllOption);
+		MainClass.ComboAccrualYearsFill (comboAccuralYear, NameOfAllOption, NameOf2YearOption);
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
 		//Создаем таблицу "Начислений"
@@ -127,7 +128,9 @@ public partial class MainWindow : Gtk.Window
 			"ON paidtable.accrual_id = accrual.id");
 		sql.StartNewList (" WHERE ", " AND ");
 
-		if (comboAccuralYear.ActiveText != NameOfAllOption)
+		if (comboAccuralYear.ActiveText == NameOf2YearOption)
+			sql.AddAsList (String.Format("year IN ('{0:yyyy}','{1:yyyy}')", DateTime.Today, DateTime.Today.AddYears (-1)));
+		else if (comboAccuralYear.ActiveText != NameOfAllOption)
 			sql.AddAsList (String.Format("year = '{0}'", comboAccuralYear.ActiveText));
 
 		if(comboAccrualMonth.Active > 0)

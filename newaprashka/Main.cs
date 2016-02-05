@@ -476,7 +476,7 @@ namespace bazar
 			ComboWorks.ComboFillUniversal (combo, sql, Display, Param, 0, ComboWorks.ListMode.OnlyItems);
 		}
 
-		public static void ComboAccrualYearsFill (ComboBox combo, string FirstItem = "")
+		public static void ComboAccrualYearsFill (ComboBox combo, params string[] firstItems)
 		{   
 			try {
 				logger.Info ("Запрос лет для начислений...");
@@ -486,8 +486,12 @@ namespace bazar
 				MySqlDataReader rdr = cmd.ExecuteReader ();
 				
 				((ListStore)combo.Model).Clear ();
-				if (FirstItem != "")
-					combo.AppendText (FirstItem);
+
+				foreach(var item in firstItems)
+				{
+					combo.AppendText (item);
+				}
+					
 				combo.AppendText (Convert.ToString (DateTime.Now.AddYears (1).Year));
 				combo.AppendText (Convert.ToString (DateTime.Now.Year));
 				while (rdr.Read ()) {
