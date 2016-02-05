@@ -82,6 +82,7 @@ public partial class MainWindow : Gtk.Window
 			.AddColumn ("Незаполнено").AddToggleRenderer (node => node.NotComplete).Editing (false)
 			.AddColumn ("")
 			.Finish ();
+
 		accrualPrepared = true;
 	}
 
@@ -168,7 +169,7 @@ public partial class MainWindow : Gtk.Window
 			rowpaidsum = DBWorks.GetDecimal (rdr, Column.Paidsum, 0m);
 			AccrualList.Add (new AccrualListEntryDTO {
 				Id = rdr.GetInt32 (Column.Id),
-				MonthText = String.Format ("{0:MMMM}", new DateTime (1, rdr.GetInt32 (Column.Month), 1)),
+				MonthText = String.Format ("{0:MMMM yyyy}", new DateTime (rdr.GetInt32 (Column.Year), rdr.GetInt32 (Column.Month), 1)),
 				Month = rdr.GetInt32 (Column.Month),
 				ContractNumber = rdr [Column.ContractNumber].ToString (),
 				LesseeId = rdr.GetInt32 (Column.LesseeId),
