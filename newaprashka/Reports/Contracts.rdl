@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end FROM contracts
@@ -29,7 +29,7 @@ AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="number">
           <DataField>number</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -92,30 +92,30 @@ AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="OrganizationData">
-      <Query >
-        <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT name 
-FROM organizations 
-WHERE id = @org_id</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="org_id">
-            <Value>=Parameters!org_id</Value>
-          </QueryParameter>
-        </QueryParameters>
-      </Query>
-      <Fields >
-        <Field Name="name">
-          <DataField>name</DataField>
-          <TypeName>System.String</TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>0.0pt</Height>
+    <Height>27.9pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
+    <ReportItems >
+      <Textbox Name="Textbox1" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Top>5.1pt</Top>
+        <Left>0.0pt</Left>
+        <Width>578.21pt</Width>
+        <Height>20.34pt</Height>
+        <Value>="Реестр договоров на " + Format(Today(), "d")</Value>
+        <Style>
+          <FontSize>15pt</FontSize>
+          <FontWeight>Bold</FontWeight>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <TextAlign>Center</TextAlign>
+        </Style>
+        <CanGrow>false</CanGrow>
+        <CanShrink>false</CanShrink>
+      </Textbox>
+    </ReportItems>
   </PageHeader>
   <Body>
     <ReportItems>
@@ -126,8 +126,8 @@ WHERE id = @org_id</CommandText>
           <BorderStyle>
             <Default>Solid</Default>
           </BorderStyle>
-          <BorderColor  />
-          <BorderWidth  />
+          <BorderColor />
+          <BorderWidth />
         </Style>
         <TableColumns>
           <TableColumn>
@@ -147,8 +147,7 @@ WHERE id = @org_id</CommandText>
           </TableColumn>
           <TableColumn>
             <Width>1.5in</Width>
-            <Visibility >
-              <Hidden>=Parameters!org_id&gt;0</Hidden>
+            <Visibility>
             </Visibility>
           </TableColumn>
           <TableColumn>
@@ -376,6 +375,8 @@ WHERE id = @org_id</CommandText>
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor  />
+                        <BorderWidth  />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -399,28 +400,8 @@ WHERE id = @org_id</CommandText>
           </TableRows>
         </Details>
         <Left>0.0pt</Left>
-        <Top>37.6pt</Top>
+        <Top>9.6pt</Top>
       </Table>
-      <Textbox Name="Textbox3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Top>3.9pt</Top>
-        <Left>0.0pt</Left>
-        <Width>578.21pt</Width>
-        <Height>20.34pt</Height>
-        <Value>="Реестр договоров на " + Format(Today(), "d")
-+
-Iif(Parameters!org_id&gt;0,"\n по организации " + First(Fields!name.Value, 'OrganizationData') ,"")
-</Value>
-        <Style>
-          <FontSize>15pt</FontSize>
-          <FontWeight>Bold</FontWeight>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-          <TextAlign>Center</TextAlign>
-        </Style>
-        <CanGrow >true</CanGrow>
-        <CanShrink >false</CanShrink>
-      </Textbox>
     </ReportItems>
     <Height>126.7pt</Height>
     <Columns>1</Columns>
