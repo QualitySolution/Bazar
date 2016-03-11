@@ -15,13 +15,19 @@
     <DataSet Name="Data">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-    	<Timeout>300</Timeout>
+        <Timeout>300</Timeout>
         <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end FROM contracts
 LEFT JOIN place_types ON contracts.place_type_id = place_types.id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN organizations ON contracts.org_id = organizations.id
 WHERE ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) 
-OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))</CommandText>
+OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))
+AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="org_id">
+            <Value>=Parameters!org_id</Value>
+          </QueryParameter>
+        </QueryParameters>
       </Query>
       <Fields>
         <Field Name="number">
@@ -86,26 +92,28 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="OrganizationData">
+      <Query >
+        <DataSourceName>DS1</DataSourceName>
+        <CommandText>SELECT name 
+FROM organizations 
+WHERE id = @org_id</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="org_id">
+            <Value>=Parameters!org_id</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+      <Fields >
+        <Field Name="name">
+          <DataField>name</DataField>
+          <TypeName>System.String</TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>29.0pt</Height>
-    <ReportItems>
-      <Textbox Name="Textbox1">
-        <Top>7.23pt</Top>
-        <Left>7.23pt</Left>
-        <Width>578.21pt</Width>
-        <Height>20.34pt</Height>
-        <Value>="Реестр договоров на " + Format(Today(), "d")</Value>
-        <Style>
-          <FontSize>15pt</FontSize>
-          <FontWeight>Bold</FontWeight>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-          <TextAlign>Center</TextAlign>
-        </Style>
-      </Textbox>
-    </ReportItems>
+    <Height>0.0pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageHeader>
@@ -118,6 +126,8 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
           <BorderStyle>
             <Default>Solid</Default>
           </BorderStyle>
+          <BorderColor  />
+          <BorderWidth  />
         </Style>
         <TableColumns>
           <TableColumn>
@@ -137,6 +147,9 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
           </TableColumn>
           <TableColumn>
             <Width>1.5in</Width>
+            <Visibility >
+              <Hidden>=Parameters!org_id&gt;0</Hidden>
+            </Visibility>
           </TableColumn>
           <TableColumn>
             <Width>1.5in</Width>
@@ -237,9 +250,13 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
+                      <Visibility>
+                        <Hidden>
+                        </Hidden>
+                      </Visibility>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -382,10 +399,31 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
           </TableRows>
         </Details>
         <Left>0.0pt</Left>
-        <Top>0.0pt</Top>
+        <Top>37.6pt</Top>
       </Table>
+      <Textbox Name="Textbox3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Top>3.9pt</Top>
+        <Left>0.0pt</Left>
+        <Width>578.21pt</Width>
+        <Height>20.34pt</Height>
+        <Value>="Реестр договоров на " + Format(Today(), "d")
++
+Iif(Parameters!org_id&gt;0,"\n по организации " + First(Fields!name.Value, 'OrganizationData') ,"")
+</Value>
+        <Style>
+          <FontSize>15pt</FontSize>
+          <FontWeight>Bold</FontWeight>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <TextAlign>Center</TextAlign>
+        </Style>
+        <CanGrow >true</CanGrow>
+        <CanShrink >false</CanShrink>
+      </Textbox>
     </ReportItems>
-    <Height>36pt</Height>
+    <Height>126.7pt</Height>
+    <Columns>1</Columns>
   </Body>
   <PageFooter>
     <Height>14pt</Height>
@@ -408,7 +446,7 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
-  <DataSources >
+  <DataSources>
     <DataSource Name="DS1">
       <ConnectionProperties>
         <DataProvider>MySQL.NET</DataProvider>
@@ -417,4 +455,21 @@ OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date
       </ConnectionProperties>
     </DataSource>
   </DataSources>
+  <DataElementName>Report</DataElementName>
+  <DataElementStyle>AttributeNormal</DataElementStyle>
+  <ReportParameters >
+    <ReportParameter Name="org_id">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+  </ReportParameters>
 </Report>

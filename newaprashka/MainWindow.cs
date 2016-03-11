@@ -748,8 +748,10 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction39Activated (object sender, EventArgs e)
 	{
-		string param = "";
-		ViewReportExt.Run ("Contracts", param);
+		ContractsReportDlg dlg = new ContractsReportDlg ();
+		dlg.Show ();
+		dlg.Run ();
+		dlg.Destroy ();
 	}
 
 	protected void OnAction40Activated (object sender, EventArgs e)
