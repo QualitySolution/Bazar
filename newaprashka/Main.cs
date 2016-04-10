@@ -67,6 +67,12 @@ namespace bazar
 				"Чистая база",
 				"bazar.SQLScripts.new-2.3.sql"
 			);
+
+			//Настраиваем обновления
+			QSUpdater.DB.DBUpdater.AddUpdate (
+				new Version (2, 2),
+				new Version (2, 3),
+				"bazar.SQLScripts.Update 2.2 to 2.3.sql");
 			
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();

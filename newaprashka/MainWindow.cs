@@ -23,32 +23,14 @@ public partial class MainWindow : Gtk.Window
 		this.Title = QSSupportLib.MainSupport.GetTitle ();
 		QSMain.MakeNewStatusTargetForNlog ();
 
+		QSMain.CheckServer (this); // Проверяем настройки сервера
+
+		MainSupport.LoadBaseParameters ();
+
+		MainUpdater.RunCheckVersion (true, true, true);
+
 		Reference.RunReferenceItemDlg += OnRunReferenceItemDialog;
 		QSMain.ReferenceUpdated += OnReferenceUpdate;
-
-		//Test version of base
-		try {
-			MainSupport.BaseParameters = new BaseParam (QSMain.connectionDB);
-		} catch (MySqlException e) {
-			Console.WriteLine (e.Message);
-			MessageDialog BaseError = new MessageDialog (this, DialogFlags.DestroyWithParent,
-			                                             MessageType.Warning, 
-			                                             ButtonsType.Close, 
-			                                             "Не удалось получить информацию о версии базы данных.");
-			BaseError.Run ();
-			BaseError.Destroy ();
-			Environment.Exit (0);
-		}
-
-		if (!MainSupport.CheckVersion (this)) {//Проверяем версию базы 
-			CheckUpdate.StartCheckUpdateThread (UpdaterFlags.ShowAnyway | UpdaterFlags.UpdateRequired);
-			this.Destroy ();
-			this.Dispose ();
-			return;
-		}
-		QSMain.CheckServer (this); // Проверяем настройки сервера
-		QSUpdater.DB.DBUpdater.CheckMicroUpdates ();
-		MainNewsFeed.CheckNewsReads (); //Создаем при необходимости таблицу новостей.
 
 		if (QSMain.User.Login == "root") {
 			string Message = "Вы зашли в программу под администратором базы данных. У вас есть только возможность создавать других пользователей.";
