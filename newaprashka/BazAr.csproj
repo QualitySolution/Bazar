@@ -62,6 +62,7 @@
     <EmbeddedResource Include="icons\logo.png" />
     <EmbeddedResource Include="icons\meter.png" />
     <EmbeddedResource Include="icons\logo.ico" />
+    <EmbeddedResource Include="SQLScripts\new-2.3.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -187,6 +188,7 @@
     <Folder Include="Reports\" />
     <Folder Include="icons\" />
     <Folder Include="Updates\" />
+    <Folder Include="SQLScripts\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">
