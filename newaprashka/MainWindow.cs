@@ -83,7 +83,6 @@ public partial class MainWindow : Gtk.Window
 		PrepareCash ();
 		notebookMain.CurrentPage = 0;
 		UpdatePlaces ();
-		CheckUpdate.StartCheckUpdateThread (UpdaterFlags.StartInThread);
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
