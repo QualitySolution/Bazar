@@ -148,19 +148,6 @@ WHERE credit_slips.id = @id</CommandText>
               <FontStyle>Italic</FontStyle>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-            <Height>14.25pt</Height>
-            <Width>249.89pt</Width>
-            <Value>="Кассир: " + Fields!user.Value</Value>
-            <ZIndex>1</ZIndex>
-            <Left>8.1pt</Left>
-            <Top>181.3pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox9">
             <Height>11.99pt</Height>
             <Width>64.02pt</Width>
@@ -257,19 +244,6 @@ WHERE credit_slips.id = @id</CommandText>
               <BorderColor />
               <BorderWidth />
               <FontStyle>Italic</FontStyle>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox12" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-            <Height>14.25pt</Height>
-            <Width>249.89pt</Width>
-            <Value>="Кассир: " + Fields!user.Value</Value>
-            <ZIndex>1</ZIndex>
-            <Left>8.1pt</Left>
-            <Top>181.3pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
             </Style>
           </Textbox>
           <Textbox Name="Textbox17">

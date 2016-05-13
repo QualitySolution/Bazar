@@ -380,19 +380,6 @@ WHERE credit_slips.id = @id</CommandText>
               <FontStyle>Italic</FontStyle>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox12">
-            <Height>14.25pt</Height>
-            <Width>249.89pt</Width>
-            <Value>="Кассир: " + Fields!user.Value</Value>
-            <ZIndex>1</ZIndex>
-            <Left>0.0pt</Left>
-            <Top>34.1pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
-            </Style>
-          </Textbox>
         </ReportItems>
         <DataSetName>credit_slip</DataSetName>
       </List>
@@ -641,19 +628,6 @@ WHERE credit_slips.id = @id</CommandText>
               <BorderColor />
               <BorderWidth />
               <FontStyle>Italic</FontStyle>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox24">
-            <Height>14.25pt</Height>
-            <Width>249.89pt</Width>
-            <Value>="Кассир: " + Fields!user.Value</Value>
-            <ZIndex>1</ZIndex>
-            <Left>0.0pt</Left>
-            <Top>34.1pt</Top>
-            <Style>
-              <BorderStyle />
-              <BorderColor />
-              <BorderWidth />
             </Style>
           </Textbox>
         </ReportItems>
