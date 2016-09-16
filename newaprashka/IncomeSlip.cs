@@ -171,6 +171,11 @@ namespace bazar
 					CurrentAccrualId = (int)comboAccrual.Model.GetValue(AccrualIter,1);
 					cmd.Parameters.AddWithValue("@accrual_id", CurrentAccrualId);
 				}
+				else if(OriginalAccrual > 0)
+				{
+					CurrentAccrualId = OriginalAccrual;
+					cmd.Parameters.AddWithValue("@accrual_id", CurrentAccrualId);
+				}
 				else
 				{
 					cmd.Parameters.AddWithValue("@accrual_id", DBNull.Value);
