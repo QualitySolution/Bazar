@@ -11,7 +11,7 @@ using QSProjectsLib;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Quality Solution")]
 [assembly: AssemblyProduct("QS: База арендаторов")]
-[assembly: AssemblyCopyright("Quality Solution 2016")]
+[assembly: AssemblyCopyright("Quality Solution 2017")]
 [assembly: AssemblyLogoIcon("bazar.icons.logo.png")]
 [assembly: AssemblySupport("", true, "MySQL")]
 [assembly: AssemblyAppWebsite("http://bazar.qsolution.ru/")]
