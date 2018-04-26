@@ -27,7 +27,7 @@ namespace bazar
 			LoginDialog.DefaultLogin = "demo";
 			LoginDialog.DefaultServer = "demo.qsolution.ru";
 			LoginDialog.DefaultConnection = "Демонстрационная база";
-			LoginDialog.DemoServer = "demo.qsolution.ru";
+			Login.ApplicationDemoServer = "demo.qsolution.ru";
 			LoginDialog.DemoMessage = "Для подключения к демострационному серверу используйте следующие настройки:\n" +
 			"\n" +
 			"<b>Сервер:</b> demo.qsolution.ru\n" +
