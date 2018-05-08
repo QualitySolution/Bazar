@@ -16,13 +16,17 @@
       <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end FROM contracts
+        <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end,
+substring_index(SUBSTRING_INDEX(contracts.place_no,'\\',1), '/', 1) as sort_col,
+substring_index(SUBSTRING_INDEX(contracts.place_no,'\\',-1), '/', -1) as sort_col_2
+FROM contracts
 LEFT JOIN place_types ON contracts.place_type_id = place_types.id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN organizations ON contracts.org_id = organizations.id
 WHERE ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) 
 OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))
-AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
+AND (contracts.org_id = @org_id OR @org_id = 0)
+ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_no;</CommandText>
         <QueryParameters>
           <QueryParameter Name="org_id">
             <Value>=Parameters!org_id</Value>
@@ -97,7 +101,7 @@ AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
     <Height>27.9pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
-    <ReportItems >
+    <ReportItems>
       <Textbox Name="Textbox1" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Top>5.1pt</Top>
         <Left>0.0pt</Left>
@@ -375,8 +379,8 @@ AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor  />
-                        <BorderWidth  />
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -438,7 +442,7 @@ AND (contracts.org_id = @org_id OR @org_id = 0)</CommandText>
   </DataSources>
   <DataElementName>Report</DataElementName>
   <DataElementStyle>AttributeNormal</DataElementStyle>
-  <ReportParameters >
+  <ReportParameters>
     <ReportParameter Name="org_id">
       <DataType>Integer</DataType>
       <DefaultValue>

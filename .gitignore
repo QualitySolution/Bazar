@@ -1,0 +1,20 @@
+.DS_Store
+
+#Mono Project Files
+bin/
+obj/
+packages/*
+
+#Workbench Backup Files
+Bases/*.mwb.bak
+
+#User Specific
+*.userprefs
+*.usertasks
+*~
+.vs/
+
+#Project Specific
+WinInstall/*
+!*.nsi
+!*.sh

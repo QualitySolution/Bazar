@@ -18,6 +18,7 @@ namespace bazar
 			Application.Init ();
 			QSMain.SubscribeToUnhadledExceptions ();
 			QSMain.GuiThread = Thread.CurrentThread;
+			QSSupportLib.MainSupport.Init ();
 			CreateProjectParam ();
 			// Создаем окно входа
 			Login LoginDialog = new QSProjectsLib.Login ();
@@ -25,7 +26,8 @@ namespace bazar
 			LoginDialog.SetDefaultNames ("bazar");
 			LoginDialog.DefaultLogin = "demo";
 			LoginDialog.DefaultServer = "demo.qsolution.ru";
-			LoginDialog.DemoServer = "demo.qsolution.ru";
+			LoginDialog.DefaultConnection = "Демонстрационная база";
+			Login.ApplicationDemoServer = "demo.qsolution.ru";
 			LoginDialog.DemoMessage = "Для подключения к демострационному серверу используйте следующие настройки:\n" +
 			"\n" +
 			"<b>Сервер:</b> demo.qsolution.ru\n" +
@@ -59,6 +61,18 @@ namespace bazar
 			QSMain.ProjectPermission = new Dictionary<string, UserPermission> ();
 			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission ("edit_slips", "Изменение кассы задним числом",
 			                                                                "Пользователь может изменять или добавлять кассовые документы задним числом."));
+			//Скрипты создания базы
+			DBCreator.AddBaseScript (
+				new Version(2,3),
+				"Чистая база",
+				"bazar.SQLScripts.new-2.3.sql"
+			);
+
+			//Настраиваем обновления
+			QSUpdater.DB.DBUpdater.AddUpdate (
+				new Version (2, 2),
+				new Version (2, 3),
+				"bazar.SQLScripts.Update 2.2 to 2.3.sql");
 			
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();

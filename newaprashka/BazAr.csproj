@@ -14,6 +14,7 @@
     <ReleaseVersion>2.2</ReleaseVersion>
     <ApplicationIcon>icons\logo.ico</ApplicationIcon>
     <UseMSBuildEngine>False</UseMSBuildEngine>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>True</DebugSymbols>
@@ -48,11 +49,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="Mono.Posix" />
-    <Reference Include="NLog">
-      <HintPath>..\..\QSProjects\packages\NLog.4.2.3\lib\net40\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
-      <HintPath>..\..\QSProjects\packages\MySql.Data.6.9.7\lib\net40\MySql.Data.dll</HintPath>
+      <HintPath>..\..\QSProjects\packages\MySql.Data.6.9.9\lib\net40\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\QSProjects\packages\NLog.4.4.11\lib\net40\NLog.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +63,8 @@
     <EmbeddedResource Include="icons\logo.png" />
     <EmbeddedResource Include="icons\meter.png" />
     <EmbeddedResource Include="icons\logo.ico" />
+    <EmbeddedResource Include="SQLScripts\new-2.3.sql" />
+    <EmbeddedResource Include="SQLScripts\Update 2.2 to 2.3.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -186,7 +189,7 @@
     <Folder Include="ReportDialogs\" />
     <Folder Include="Reports\" />
     <Folder Include="icons\" />
-    <Folder Include="Updates\" />
+    <Folder Include="SQLScripts\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

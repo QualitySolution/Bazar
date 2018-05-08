@@ -276,7 +276,7 @@ namespace bazar
 
 		protected void OnButtonGoodsEditClicked (object sender, System.EventArgs e)
 		{
-			Reference GoodsSelect = new Reference();
+			Reference GoodsSelect = new Reference(orderBy: "name");
 			GoodsSelect.SetMode(true,true,true,true,false);
 			GoodsSelect.FillList("goods","Группа товаров", "Товары");
 			GoodsSelect.Show();

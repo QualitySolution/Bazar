@@ -319,7 +319,6 @@ namespace bazar
 
 		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
-			string sql;
 			logger.Info("Запись показаний счётчиков...");
 			try 
 			{

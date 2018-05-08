@@ -36,7 +36,7 @@ namespace bazar
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
 		{
-			Reference LesseeSelect = new Reference();
+			Reference LesseeSelect = new Reference(orderBy: "name");
 			LesseeSelect.SetMode(false,true,true,true,false);
 			LesseeSelect.FillList("lessees","Арендатор", "Арендаторы");
 			LesseeSelect.Show();
@@ -467,7 +467,7 @@ namespace bazar
 
 		protected void OnButtonAccountableEditClicked (object sender, EventArgs e)
 		{
-			Reference AccountableSelect = new Reference();
+			Reference AccountableSelect = new Reference(orderBy: "name");
 			AccountableSelect.SetMode(true,true,true,true,false);
 			AccountableSelect.FillList("employees","Сотрудник", "Сотрудники");
 			AccountableSelect.Show();
@@ -534,7 +534,7 @@ namespace bazar
 
 		protected void OnButtonIncomeClicked (object sender, EventArgs e)
 		{
-			Reference IncomeSelect = new Reference();
+			Reference IncomeSelect = new Reference(orderBy: "name");
 			IncomeSelect.SetMode(true,true,true,true,false);
 			IncomeSelect.FillList("income_items","Статья доходов", "Статьи доходов");
 			IncomeSelect.Show();
