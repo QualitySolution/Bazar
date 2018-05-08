@@ -10,7 +10,7 @@ namespace bazar
 		public LesseeRentReport ()
 		{
 			this.Build (); 
-			ComboWorks.ComboFillReference (comboPlaceType, "place_types", ComboWorks.ListMode.OnlyItems);
+			ComboWorks.ComboFillReference (comboPlaceType, "place_types", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
 			MainClass.ComboAccrualYearsFill (comboStartYear);
 			MainClass.ComboAccrualYearsFill (comboEndYear);
 		}

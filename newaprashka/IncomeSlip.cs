@@ -24,7 +24,7 @@ namespace bazar
 			this.Build ();
 
 			ComboWorks.ComboFillReference(comboCash,"cash", ComboWorks.ListMode.WithNo);
-			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo, OrderBy: "name");
 
 			//Заполняем поля по умолчанию
 			dateSlip.Date = DateTime.Now.Date;

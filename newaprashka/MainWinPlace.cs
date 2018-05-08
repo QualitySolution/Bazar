@@ -27,8 +27,8 @@ public partial class MainWindow : Gtk.Window
 	void PreparePlaces()
 	{
 		//Заполняем комбобокс
-		ComboWorks.ComboFillReference(comboPlaceType,"place_types", ComboWorks.ListMode.WithAll, false);
-		ComboWorks.ComboFillReference(comboPlaceOrg,"organizations", ComboWorks.ListMode.WithAll, false);
+		ComboWorks.ComboFillReference(comboPlaceType,"place_types", ComboWorks.ListMode.WithAll, false, OrderBy: "name");
+		ComboWorks.ComboFillReference(comboPlaceOrg,"organizations", ComboWorks.ListMode.WithAll, false, OrderBy: "name");
 
 		//Создаем таблицу "Места"
 		PlacesListStore = new Gtk.ListStore (typeof (int), typeof (string),typeof (string),

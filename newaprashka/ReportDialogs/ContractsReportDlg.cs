@@ -13,7 +13,7 @@ namespace bazar
 
 		public void Configure()
 		{
-			ComboWorks.ComboFillReference (comboOrg, "organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference (comboOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
 		}
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)

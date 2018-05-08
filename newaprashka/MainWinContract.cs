@@ -27,8 +27,8 @@ public partial class MainWindow : Gtk.Window
 	void PrepareContract()
 	{
 		//Заполняем комбобокс
-		ComboWorks.ComboFillReference(comboContractOrg, "organizations", ComboWorks.ListMode.WithAll, false);
-		ComboWorks.ComboFillReference(comboContractPlaceT,"place_types", ComboWorks.ListMode.WithAll, false);
+		ComboWorks.ComboFillReference(comboContractOrg, "organizations", ComboWorks.ListMode.WithAll, false, OrderBy: "name");
+		ComboWorks.ComboFillReference(comboContractPlaceT,"place_types", ComboWorks.ListMode.WithAll, false, OrderBy: "name");
 		
 		//Создаем таблицу "Договора"
 		ContractListStore = new Gtk.ListStore (typeof (int), 	//0 - ID

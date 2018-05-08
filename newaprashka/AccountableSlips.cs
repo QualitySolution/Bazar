@@ -20,7 +20,7 @@ namespace bazar
 			this.Build ();
 
 			ComboWorks.ComboFillReference(comboCash,"cash", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
 
 			SlipsListStore = new ListStore (typeof (string), typeof (string), typeof (string), typeof (string), typeof (string));
 			

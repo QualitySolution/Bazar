@@ -615,15 +615,15 @@ public partial class MainWindow : Gtk.Window
 	{
 		switch (e.ReferenceTable) {
 		case "place_types":
-			ComboWorks.ComboFillReference (comboPlaceType, "place_types", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboContractPlaceT, "place_types", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboEventPlaceT, "place_types", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference (comboPlaceType, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference (comboContractPlaceT, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference (comboEventPlaceT, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "organizations":
-			ComboWorks.ComboFillReference (comboPlaceOrg, "organizations", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboContractOrg, "organizations", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboCashOrg, "organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference (comboPlaceOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference (comboContractOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference (comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference (comboCashOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "cash":
 			ComboWorks.ComboFillReference (comboCashCash, "cash", ComboWorks.ListMode.WithAll);
@@ -631,12 +631,12 @@ public partial class MainWindow : Gtk.Window
 			break;
 		case "income_items":
 			if (notebookCash.CurrentPage == 0)
-				ComboWorks.ComboFillReference (comboCashItem, "income_items", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll);
+				ComboWorks.ComboFillReference (comboCashItem, "income_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference (comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "expense_items": 
 			if (notebookCash.CurrentPage >= 1)
-				ComboWorks.ComboFillReference (comboCashItem, "expense_items", ComboWorks.ListMode.WithAll);
+				ComboWorks.ComboFillReference (comboCashItem, "expense_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "classes":
 			ComboWorks.ComboFillReference (comboEventType, "classes", ComboWorks.ListMode.WithAll);

@@ -17,7 +17,7 @@ namespace bazar
 			this.Build ();
 
 			ComboWorks.ComboFillReference (comboCash, "cash", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboOrg, "organizations", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference (comboOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
 
 			BalanceTreeStore = new Gtk.TreeStore (typeof(string), typeof(string));
 			

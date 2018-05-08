@@ -49,7 +49,7 @@ namespace bazar
 			MainClass.ComboAccrualYearsFill (comboAccuralYear);
 
 			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems);
+			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 			

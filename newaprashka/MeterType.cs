@@ -21,7 +21,7 @@ namespace bazar
 			this.Build ();
 
 			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.WithNo, OrderBy: "name");
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 
