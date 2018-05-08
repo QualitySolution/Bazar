@@ -40,11 +40,11 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo);
-			ComboWorks.ComboFillReference(comboPlaceT,"place_types", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboPlaceT,"place_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
 
 			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems);
+			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
 

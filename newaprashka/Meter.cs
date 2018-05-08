@@ -15,8 +15,8 @@ namespace bazar
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboPlaceType,"place_types", ComboWorks.ListMode.WithNo);
-			ComboWorks.ComboFillReference(comboMeterType, "meter_types", ComboWorks.ListMode.WithNo);
+			ComboWorks.ComboFillReference(comboPlaceType,"place_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboMeterType, "meter_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
 			NewItem = New;
 		}
 

@@ -34,7 +34,7 @@ namespace bazar
 			this.Build ();
 
 			ComboBox IncomeCombo = new ComboBox();
-			ComboWorks.ComboFillReference(IncomeCombo,"income_items", ComboWorks.ListMode.OnlyItems);
+			ComboWorks.ComboFillReference(IncomeCombo,"income_items", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
 			IncomeNameList = IncomeCombo.Model;
 			IncomeCombo.Destroy ();
 
