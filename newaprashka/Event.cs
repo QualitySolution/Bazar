@@ -232,7 +232,7 @@ namespace bazar
 		
 		protected virtual void OnButtonLesseeEditClicked (object sender, System.EventArgs e)
 		{
-			Reference LesseeSelect = new Reference();
+			Reference LesseeSelect = new Reference(orderBy: "name");
 			LesseeSelect.SetMode(false,true,true,true,false);
 			LesseeSelect.FillList("lessees","Арендатор", "Арендаторы");
 			LesseeSelect.Show();

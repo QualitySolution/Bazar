@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using bazar;
 using Gtk;
-using MySql.Data.MySqlClient;
 using QSProjectsLib;
 using QSSupportLib;
-using bazar;
 using QSUpdater;
 
 public partial class MainWindow : Gtk.Window
@@ -280,7 +279,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction7Activated (object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference (true);
+		Reference winref = new Reference (true, orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("place_types", "Тип места", "Типы мест");
 		winref.Show ();
@@ -291,7 +290,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction6Activated (object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("goods", "Группа товаров", "Группы товаров");
 		winref.Show ();
@@ -302,7 +301,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction5Activated (object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("classes", "Тип события", "Типы событий");
 		winref.Show ();
@@ -312,7 +311,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction10Activated (object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (false, false, true, true, true);
 		winref.FillList ("lessees", "Арендатор", "Арендаторы");
 		winref.Show ();
@@ -323,7 +322,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected virtual void OnAction3Activated (object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (false, false, true, true, true);
 		winref.FillList ("contact_persons", "Контактное лицо", "Контактные лица");
 		winref.Show ();
@@ -334,7 +333,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction15Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("organizations", "Организация", "Организации");
 		winref.Show ();
@@ -475,7 +474,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction17Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (false, false, true, true, true);
 		winref.FillList ("services", "Услуга", "Услуги");
 		winref.Show ();
@@ -510,7 +509,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction24Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("expense_items", "Статья расхода", "Статьи расходов");
 		winref.Show ();
@@ -520,7 +519,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction25Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("income_items", "Статья дохода", "Статьи доходов");
 		winref.Show ();
@@ -530,7 +529,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction21Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("contractors", "Контрагент", "Контрагенты");
 		winref.Show ();
@@ -548,7 +547,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction27Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("employees", "Сотрудник", "Сотрудники");
 		winref.Show ();
@@ -745,7 +744,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction41Activated (object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
+		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (false, false, true, true, true);
 		winref.FillList ("meter_types", "Тип счётчика", "Типы счётчиков");
 		winref.Show ();
@@ -776,7 +775,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnProvidersActionActivated (object sender, EventArgs e)
 	{
-		Reference winProviders = new Reference ();
+		Reference winProviders = new Reference (orderBy: "name");
 		winProviders.SetMode (true, false, true, true, true);
 		winProviders.FillList ("service_providers", "Поставщик", "Поставщики услуг");
 		winProviders.Show ();

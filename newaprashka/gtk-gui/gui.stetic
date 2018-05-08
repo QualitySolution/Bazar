@@ -2269,6 +2269,7 @@
                               <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
+                                <property name="WithTime">False</property>
                                 <property name="Date">0</property>
                                 <property name="IsEditable">True</property>
                                 <property name="AutoSeparation">True</property>
@@ -2295,6 +2296,7 @@
                               <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
+                                <property name="WithTime">False</property>
                                 <property name="Date">0</property>
                                 <property name="IsEditable">True</property>
                                 <property name="AutoSeparation">True</property>
@@ -2868,6 +2870,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2943,6 +2946,7 @@
                               <widget class="QSWidgetLib.DatePicker" id="datepickerEventBegin">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
+                                <property name="WithTime">False</property>
                                 <property name="Date">0</property>
                                 <property name="IsEditable">True</property>
                                 <property name="AutoSeparation">True</property>
@@ -2968,6 +2972,7 @@
                               <widget class="QSWidgetLib.DatePicker" id="datepickerEventEnd">
                                 <property name="MemberName" />
                                 <property name="Events">ButtonPressMask</property>
+                                <property name="WithTime">False</property>
                                 <property name="Date">0</property>
                                 <property name="IsEditable">True</property>
                                 <property name="AutoSeparation">True</property>
@@ -6346,6 +6351,7 @@
                       <widget class="QSWidgetLib.DatePicker" id="datepickerSign">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -6678,6 +6684,7 @@
                           <widget class="QSWidgetLib.DatePicker" id="datepickerCancel">
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
+                            <property name="WithTime">False</property>
                             <property name="Date">0</property>
                             <property name="IsEditable">True</property>
                             <property name="AutoSeparation">True</property>
@@ -6702,6 +6709,7 @@
                           <widget class="QSWidgetLib.DatePicker" id="datepickerEnd">
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
+                            <property name="WithTime">False</property>
                             <property name="Date">0</property>
                             <property name="IsEditable">True</property>
                             <property name="AutoSeparation">True</property>
@@ -6726,6 +6734,7 @@
                           <widget class="QSWidgetLib.DatePicker" id="datepickerStart">
                             <property name="MemberName" />
                             <property name="Events">ButtonPressMask</property>
+                            <property name="WithTime">False</property>
                             <property name="Date">0</property>
                             <property name="IsEditable">True</property>
                             <property name="AutoSeparation">True</property>
@@ -7443,6 +7452,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -8142,6 +8152,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -8857,6 +8868,7 @@
                     <property name="MemberName" />
                     <property name="Sensitive">False</property>
                     <property name="Events">ButtonPressMask</property>
+                    <property name="WithTime">False</property>
                     <property name="Date">0</property>
                     <property name="IsEditable">True</property>
                     <property name="AutoSeparation">True</property>
@@ -9525,6 +9537,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">3 месяца</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
@@ -9632,6 +9645,7 @@
                       <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -9658,6 +9672,7 @@
                       <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -9985,6 +10000,7 @@
                       <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -10011,6 +10027,7 @@
                       <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                         <property name="MemberName" />
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -11486,6 +11503,7 @@
                   <widget class="QSWidgetLib.DatePicker" id="dateCashStart">
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
+                    <property name="WithTime">False</property>
                     <property name="Date">0</property>
                     <property name="IsEditable">True</property>
                     <property name="AutoSeparation">True</property>
@@ -11511,6 +11529,7 @@
                   <widget class="QSWidgetLib.DatePicker" id="dateCashEnd">
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
+                    <property name="WithTime">False</property>
                     <property name="Date">0</property>
                     <property name="IsEditable">True</property>
                     <property name="AutoSeparation">True</property>
@@ -11824,6 +11843,7 @@
               <widget class="QSWidgetLib.DatePicker" id="dateReport">
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
+                <property name="WithTime">False</property>
                 <property name="Date">0</property>
                 <property name="IsEditable">True</property>
                 <property name="AutoSeparation">True</property>
@@ -12050,6 +12070,7 @@
               <widget class="QSWidgetLib.DatePicker" id="datepickerCash">
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
+                <property name="WithTime">False</property>
                 <property name="Date">0</property>
                 <property name="IsEditable">True</property>
                 <property name="AutoSeparation">True</property>
@@ -12838,6 +12859,7 @@
               <widget class="QSWidgetLib.DatePicker" id="dateReading">
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
+                <property name="WithTime">False</property>
                 <property name="Date">0</property>
                 <property name="IsEditable">True</property>
                 <property name="AutoSeparation">True</property>
@@ -13573,6 +13595,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">Книжная</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
@@ -13711,6 +13734,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -13736,6 +13760,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -14079,6 +14104,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -14104,6 +14130,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>
@@ -14127,6 +14154,7 @@
                         <property name="MemberName" />
                         <property name="Sensitive">False</property>
                         <property name="Events">ButtonPressMask</property>
+                        <property name="WithTime">False</property>
                         <property name="Date">0</property>
                         <property name="IsEditable">True</property>
                         <property name="AutoSeparation">True</property>

@@ -522,7 +522,7 @@ namespace bazar
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
 		{
-			Reference LesseeSelect = new Reference();
+			Reference LesseeSelect = new Reference(orderBy: "name");
 			LesseeSelect.SetMode(false,true,true,true,false);
 			LesseeSelect.FillList("lessees","Арендатор", "Арендаторы");
 			LesseeSelect.Show();
