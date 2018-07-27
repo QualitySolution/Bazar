@@ -1,12 +1,18 @@
 #!/bin/bash
+set -e
 
 ProjectName="bazar"
-BinDir=../newaprashka/bin/Debug
+BinDir=../newaprashka/bin/Release
 
-# Очистка бин от лишний файлов
+# Сборка релиза
+msbuild /p:Configuration=Release /p:Platform=x86 ../${ProjectName}.sln
 
-rm -v ${BinDir}/*.mdb
+# Очистка от лишних файлов
+rm -v -f ${BinDir}/*.mdb
+rm -v -f ${BinDir}/*.pdb
+rm -v -f -R ./Files/*
 
+cp -r -v ExtraFiles/* ./Files
 cp -r -v ${BinDir}/* ./Files
 
 wine ~/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /INPUTCHARSET UTF8 ${ProjectName}.nsi
