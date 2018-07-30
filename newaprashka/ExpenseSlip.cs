@@ -242,6 +242,7 @@ namespace bazar
 		{
 			Reference ContractorSelect = new Reference(orderBy: "name");
 			ContractorSelect.SetMode(true,true,true,true,false);
+			ContractorSelect.NameMaxLength = 45;
 			ContractorSelect.FillList("contractors","Контрагент", "Контрагенты");
 			ContractorSelect.Show();
 			int result = ContractorSelect.Run();
@@ -281,6 +282,7 @@ namespace bazar
 		{
 			Reference AccountableSelect = new Reference(orderBy: "name");
 			AccountableSelect.SetMode(true,true,true,true,false);
+			AccountableSelect.NameMaxLength = 45;
 			AccountableSelect.FillList("employees","Сотрудник", "Сотрудники");
 			AccountableSelect.Show();
 			int result = AccountableSelect.Run();
@@ -310,6 +312,7 @@ namespace bazar
 		{
 			Reference ExpenseSelect = new Reference(orderBy: "name");
 			ExpenseSelect.SetMode(true,true,true,true,false);
+			ExpenseSelect.NameMaxLength = 45;
 			ExpenseSelect.FillList("expense_items","Статья расходов", "Статьи расходов");
 			ExpenseSelect.Show();
 			int result = ExpenseSelect.Run();

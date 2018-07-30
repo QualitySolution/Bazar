@@ -149,6 +149,7 @@ namespace bazar
 		{
 			Reference AccountableSelect = new Reference(orderBy: "name");
 			AccountableSelect.SetMode(true,true,true,true,false);
+			AccountableSelect.NameMaxLength = 45;
 			AccountableSelect.FillList("employees","Сотрудник", "Сотрудники");
 			AccountableSelect.Show();
 			int result = AccountableSelect.Run();
