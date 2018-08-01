@@ -86,6 +86,11 @@ namespace bazar
 				new Version (2, 2),
 				new Version (2, 3),
 				"bazar.SQLScripts.Update 2.2 to 2.3.sql");
+
+			QSUpdater.DB.DBUpdater.AddMicroUpdate (
+				new Version (2, 3),
+				new Version (2, 3, 1),
+				"bazar.SQLScripts.Update 2.3.1.sql");
 			
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();
