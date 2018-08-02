@@ -201,7 +201,7 @@ Section "MS .NET Framework ${NET_VERSION}" SecFramework
 SectionEnd
 
 Section "GTK# 2.12.21" SecGTK
-  SectionIn RO
+  ;SectionIn RO
 
   ; Test 2.12.30
   System::Call "msi::MsiQueryProductStateA(t '{CA8017BD-8271-4C93-A409-186375C5A5CA}') i.r0"
