@@ -4,6 +4,7 @@ using System.Threading;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
+using QS.Updater.DB;
 using QSProjectsLib;
 using QSSupportLib;
 
@@ -82,12 +83,12 @@ namespace bazar
 			);
 
 			//Настраиваем обновления
-			QSUpdater.DB.DBUpdater.AddUpdate (
+			DBUpdater.AddUpdate (
 				new Version (2, 2),
 				new Version (2, 3),
 				"bazar.SQLScripts.Update 2.2 to 2.3.sql");
 
-			QSUpdater.DB.DBUpdater.AddMicroUpdate (
+			DBUpdater.AddMicroUpdate (
 				new Version (2, 3),
 				new Version (2, 3, 1),
 				"bazar.SQLScripts.Update 2.3.1.sql");
