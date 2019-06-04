@@ -101,7 +101,7 @@ WHERE accrual.id = @id</CommandText>
     </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>33.4pt</Height>
+    <Height>28.8pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
     <ReportItems>
@@ -111,7 +111,7 @@ WHERE accrual.id = @id</CommandText>
         <Value>="Расчетный лист №" +  Convert.ToSingle({?id})</Value>
         <ZIndex>1</ZIndex>
         <Left>5.3pt</Left>
-        <Top>15.4pt</Top>
+        <Top>10.6pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -525,33 +525,19 @@ WHERE accrual.id = @id</CommandText>
         </TableGroups>
       </Table>
       <Textbox Name="Textbox20">
-        <Height>15.01pt</Height>
-        <Width>140.01pt</Width>
-        <Value>=MonthName( First(Fields!month.Value, "Accrual")) + "  " + First(Fields!year.Value, "Accrual")</Value>
+        <Height>15.77pt</Height>
+        <Width>551.76pt</Width>
+        <Value>="за " + MonthName( First(Fields!month.Value, "Accrual")) + "  " + First(Fields!year.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>212.4pt</Left>
-        <Top>3.4pt</Top>
+        <Left>4.50pt</Left>
+        <Top>2.70pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
           <Format>MM</Format>
           <FontSize>12pt</FontSize>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox18">
-        <Height>12.74pt</Height>
-        <Width>17.34pt</Width>
-        <Value>за</Value>
-        <ZIndex>1</ZIndex>
-        <Left>196.4pt</Left>
-        <Top>3.4pt</Top>
-        <Style>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-          <Format>0</Format>
-          <FontSize>12pt</FontSize>
+          <TextAlign>Center</TextAlign>
         </Style>
       </Textbox>
       <Textbox Name="Textbox22">
@@ -586,26 +572,9 @@ WHERE accrual.id = @id</CommandText>
     <Height>146.8pt</Height>
   </Body>
   <PageFooter>
-    <Height>15.5pt</Height>
+    <Height>0.0pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
-    <ReportItems >
-      <Textbox Name="Textbox1" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Height>12.78pt</Height>
-        <Width>328.18pt</Width>
-        <Value>ХорошиеАдмины.рф - Ваш внешний ИТ-отдел</Value>
-        <ZIndex>1</ZIndex>
-        <Left>230.3pt</Left>
-        <Top>1.6pt</Top>
-        <Style>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-          <FontSize>7pt</FontSize>
-          <TextAlign>Right</TextAlign>
-        </Style>
-      </Textbox>
-    </ReportItems>
   </PageFooter>
   <ReportParameters>
     <ReportParameter Name="id">

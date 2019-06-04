@@ -5,7 +5,7 @@
   <Author>
   </Author>
   <PageHeight>11in</PageHeight>
-  <PageWidth>8.5in</PageWidth>
+  <PageWidth>210mm</PageWidth>
   <DataSources>
     <DataSource Name="DS1">
       <ConnectionProperties>
@@ -16,8 +16,8 @@
   </DataSources>
   <Width>7.5in</Width>
   <TopMargin>.25in</TopMargin>
-  <LeftMargin>.25in</LeftMargin>
-  <RightMargin>.25in</RightMargin>
+  <LeftMargin>.15in</LeftMargin>
+  <RightMargin>.15in</RightMargin>
   <BottomMargin>.25in</BottomMargin>
   <ReportParameters>
     <ReportParameter Name="id">
@@ -36,7 +36,7 @@
       <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-    	<CommandText>SELECT services.name as service, payment_details.sum as sum 
+        <CommandText>SELECT services.name as service, payment_details.sum as sum 
 FROM payment_details
 LEFT JOIN payments ON payments.id = payment_details.payment_id
 LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id 
@@ -129,8 +129,8 @@ WHERE credit_slips.id = @id</CommandText>
       </Textbox>
       <Textbox Name="Textbox4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Top>5.5pt</Top>
-        <Left>309.1pt</Left>
-        <Width>280.74pt</Width>
+        <Left>297.9pt</Left>
+        <Width>275.49pt</Width>
         <Height>21.07pt</Height>
         <Value>= "Квитанция №" + {?id}</Value>
         <Style>
@@ -300,8 +300,8 @@ WHERE credit_slips.id = @id</CommandText>
       <List Name="List1">
         <Height>84.43pt</Height>
         <Width>280.04pt</Width>
-        <Left>10.10pt</Left>
-        <Top>3.10pt</Top>
+        <Left>8.5pt</Left>
+        <Top>3.1pt</Top>
         <ReportItems>
           <Textbox Name="Textbox5">
             <Height>12.73pt</Height>
@@ -321,7 +321,7 @@ WHERE credit_slips.id = @id</CommandText>
           <Textbox Name="Textbox6">
             <Height>14.25pt</Height>
             <Width>158.82pt</Width>
-            <Value>="По договору №" + Fields!contract.Value</Value>
+            <Value>=Fields!contract.Value</Value>
             <ZIndex>1</ZIndex>
             <Left>14.4pt</Left>
             <Top>17.4pt</Top>
@@ -334,10 +334,10 @@ WHERE credit_slips.id = @id</CommandText>
           <Textbox Name="Textbox7">
             <Height>29.24pt</Height>
             <Width>244.56pt</Width>
-            <Value>="Арендатор: " + Fields!lessee.Value</Value>
+            <Value>=Fields!lessee.Value</Value>
             <ZIndex>1</ZIndex>
-            <Left>13.30pt</Left>
-            <Top>33.60pt</Top>
+            <Left>14.1pt</Left>
+            <Top>33.6pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -400,9 +400,9 @@ WHERE credit_slips.id = @id</CommandText>
       </Line>
       <List Name="List3">
         <Height>84.43pt</Height>
-        <Width>280.04pt</Width>
-        <Left>314.1pt</Left>
-        <Top>2.4pt</Top>
+        <Width>267.29pt</Width>
+        <Left>306.10pt</Left>
+        <Top>2.40pt</Top>
         <ReportItems>
           <Textbox Name="Textbox13">
             <Height>12.73pt</Height>
@@ -422,7 +422,7 @@ WHERE credit_slips.id = @id</CommandText>
           <Textbox Name="Textbox14">
             <Height>14.25pt</Height>
             <Width>158.82pt</Width>
-            <Value>="По договору №" + Fields!contract.Value</Value>
+            <Value>=Fields!contract.Value</Value>
             <ZIndex>1</ZIndex>
             <Left>14.4pt</Left>
             <Top>17.4pt</Top>
@@ -435,10 +435,10 @@ WHERE credit_slips.id = @id</CommandText>
           <Textbox Name="Textbox15">
             <Height>29.24pt</Height>
             <Width>244.56pt</Width>
-            <Value>="Арендатор: " + Fields!lessee.Value</Value>
+            <Value>=Fields!lessee.Value</Value>
             <ZIndex>1</ZIndex>
-            <Left>13.30pt</Left>
-            <Top>33.60pt</Top>
+            <Left>14.1pt</Left>
+            <Top>33.6pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -612,9 +612,9 @@ WHERE credit_slips.id = @id</CommandText>
       </Table>
       <List Name="List4">
         <Height>47.49pt</Height>
-        <Width>264.96pt</Width>
-        <Left>314.8pt</Left>
-        <Top>146.4pt</Top>
+        <Width>257.46pt</Width>
+        <Left>314.80pt</Left>
+        <Top>146.40pt</Top>
         <ReportItems>
           <Textbox Name="Textbox23">
             <Height>23.99pt</Height>
