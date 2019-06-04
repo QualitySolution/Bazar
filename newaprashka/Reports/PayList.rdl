@@ -4,18 +4,18 @@
   </Description>
   <Author>
   </Author>
-  <PageHeight>11in</PageHeight>
-  <PageWidth>8.5in</PageWidth>
-  <Width>7.5in</Width>
+  <PageHeight>148mm</PageHeight>
+  <PageWidth>210mm</PageWidth>
+  <Width>210mm</Width>
   <TopMargin>.25in</TopMargin>
   <LeftMargin>.25in</LeftMargin>
   <RightMargin>.25in</RightMargin>
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
-    	<Timeout>300</Timeout>
+        <Timeout>300</Timeout>
         <CommandText>SELECT services.name as service, cash.name as cash, units.name as units, count, price, (count * price) as sum, IFNULL(paysum.sum, 0) as paid FROM accrual_pays 
 LEFT JOIN services ON accrual_pays.service_id = services.id
 LEFT JOIN cash ON cash.id = accrual_pays.cash_id 
@@ -30,7 +30,7 @@ WHERE accrual_pays.accrual_id = @id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="service">
           <DataField>service</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -106,17 +106,18 @@ WHERE accrual.id = @id</CommandText>
     <PrintOnLastPage>true</PrintOnLastPage>
     <ReportItems>
       <Textbox Name="Textbox5">
-        <Height>15.75pt</Height>
-        <Width>174.66pt</Width>
+        <Height>15.02pt</Height>
+        <Width>552.08pt</Width>
         <Value>="Расчетный лист №" +  Convert.ToSingle({?id})</Value>
         <ZIndex>1</ZIndex>
-        <Left>194.01pt</Left>
-        <Top>13.55pt</Top>
+        <Left>5.3pt</Left>
+        <Top>15.4pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
           <FontSize>12pt</FontSize>
+          <TextAlign>Center</TextAlign>
         </Style>
       </Textbox>
     </ReportItems>
@@ -262,8 +263,8 @@ WHERE accrual.id = @id</CommandText>
             </TableRow>
           </TableRows>
         </Details>
-        <Left>26.4pt</Left>
-        <Top>76.8pt</Top>
+        <Left>4.0pt</Left>
+        <Top>72.8pt</Top>
         <TableGroups>
           <TableGroup>
             <Grouping Name="cash">
@@ -553,65 +554,58 @@ WHERE accrual.id = @id</CommandText>
           <FontSize>12pt</FontSize>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox19">
-        <Height>12.76pt</Height>
-        <Width>66.27pt</Width>
-        <Value>Арендатор:</Value>
-        <ZIndex>1</ZIndex>
-        <Left>31.40pt</Left>
-        <Top>37.80pt</Top>
-        <Style>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox21">
-        <Height>11.25pt</Height>
-        <Width>52.72pt</Width>
-        <Value>Договор:</Value>
-        <ZIndex>1</ZIndex>
-        <Left>31.40pt</Left>
-        <Top>53.50pt</Top>
-        <Style>
-          <BorderStyle />
-          <BorderColor />
-          <BorderWidth />
-        </Style>
-      </Textbox>
       <Textbox Name="Textbox22">
         <Height>14.27pt</Height>
-        <Width>505.16pt</Width>
+        <Width>551.66pt</Width>
         <Value>=First(Fields!lessee.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>93pt</Left>
+        <Left>5.00pt</Left>
         <Top>38.00pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
+          <TextAlign>Center</TextAlign>
         </Style>
       </Textbox>
       <Textbox Name="Textbox23">
         <Height>14.27pt</Height>
-        <Width>513.41pt</Width>
+        <Width>550.91pt</Width>
         <Value>=First(Fields!contract_no.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>93pt</Left>
-        <Top>54.4pt</Top>
+        <Left>5.00pt</Left>
+        <Top>54.40pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
+          <TextAlign>Center</TextAlign>
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>173.1pt</Height>
+    <Height>146.8pt</Height>
   </Body>
   <PageFooter>
-    <Height>0.0pt</Height>
+    <Height>15.5pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
+    <ReportItems >
+      <Textbox Name="Textbox1" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <Height>12.78pt</Height>
+        <Width>328.18pt</Width>
+        <Value>ХорошиеАдмины.рф - Ваш внешний ИТ-отдел</Value>
+        <ZIndex>1</ZIndex>
+        <Left>230.3pt</Left>
+        <Top>1.6pt</Top>
+        <Style>
+          <BorderStyle />
+          <BorderColor />
+          <BorderWidth />
+          <FontSize>7pt</FontSize>
+          <TextAlign>Right</TextAlign>
+        </Style>
+      </Textbox>
+    </ReportItems>
   </PageFooter>
   <ReportParameters>
     <ReportParameter Name="id">
