@@ -3,7 +3,15 @@
   <subtitle type="text">Новости программы QS: База арендаторов</subtitle>
   <id>bazarnews</id>
   <rights type="text">Quality Solution 2015</rights>
-  <updated>2016-04-11T10:00:00+03:00</updated>
+  <updated>2018-07-27T21:00:00+03:00</updated>
+  <entry>
+    <id>urn:uuid:09af9ca5-8af3-410e-a626-48295fb12f89</id>
+    <title type="text">QS: База арендаторов 2.3.1</title>
+    <updated>2018-07-27T21:00:00+03:00</updated>
+	<published>2018-07-27T21:00:00+03:00</published>
+    <link rel="alternate" href="http://bazar.qsolution.ru/?p=481" />
+    <summary>Переход на новую платформу .Net 4.5.</summary>
+  </entry>
   <entry>
     <id>urn:uuid:1c53ddeb-64c1-4a6b-973e-fdce36d4a0cd</id>
     <title type="text">QS: База арендаторов 2.3</title>

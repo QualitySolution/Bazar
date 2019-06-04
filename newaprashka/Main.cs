@@ -5,6 +5,7 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
 using QSProjectsLib;
+using QSSupportLib;
 
 namespace bazar
 {
@@ -15,10 +16,22 @@ namespace bazar
 
 		public static void Main (string[] args)
 		{
-			Application.Init ();
-			QSMain.SubscribeToUnhadledExceptions ();
-			QSMain.GuiThread = Thread.CurrentThread;
-			QSSupportLib.MainSupport.Init ();
+			try {
+				WindowStartupFix.WindowsCheck ();
+				Application.Init ();
+				QSMain.SubscribeToUnhadledExceptions ();
+				QSMain.GuiThread = Thread.CurrentThread;
+				MainSupport.Init ();
+			} catch (Exception falalEx) {
+				if (WindowStartupFix.IsWindows)
+					WindowStartupFix.DisplayWindowsOkMessage (falalEx.ToString (), "Критическая ошибка");
+				else
+					Console.WriteLine (falalEx);
+
+				logger.Fatal (falalEx);
+				return;
+			}
+
 			CreateProjectParam ();
 			// Создаем окно входа
 			Login LoginDialog = new QSProjectsLib.Login ();
@@ -73,6 +86,11 @@ namespace bazar
 				new Version (2, 2),
 				new Version (2, 3),
 				"bazar.SQLScripts.Update 2.2 to 2.3.sql");
+
+			QSUpdater.DB.DBUpdater.AddMicroUpdate (
+				new Version (2, 3),
+				new Version (2, 3, 1),
+				"bazar.SQLScripts.Update 2.3.1.sql");
 			
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();

@@ -271,6 +271,8 @@ public partial class MainWindow : Gtk.Window
 	protected virtual void OnAction7Activated (object sender, System.EventArgs e)
 	{
 		Reference winref = new Reference (true, orderBy: "name");
+		winref.NameMaxLength = 10;
+		winref.DiscriptionMaxLength = 100;
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("place_types", "Тип места", "Типы мест");
 		winref.Show ();
@@ -282,6 +284,7 @@ public partial class MainWindow : Gtk.Window
 	protected virtual void OnAction6Activated (object sender, System.EventArgs e)
 	{
 		Reference winref = new Reference (orderBy: "name");
+		winref.NameMaxLength = 45;
 		winref.SetMode (true, false, true, true, true);
 		winref.FillList ("goods", "Группа товаров", "Группы товаров");
 		winref.Show ();
@@ -294,6 +297,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
+		winref.NameMaxLength = 45;
 		winref.FillList ("classes", "Тип события", "Типы событий");
 		winref.Show ();
 		winref.Run ();
@@ -326,6 +330,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
+		winref.NameMaxLength = 100;
 		winref.FillList ("organizations", "Организация", "Организации");
 		winref.Show ();
 		winref.Run ();
@@ -477,6 +482,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winref = new Reference ();
 		winref.SetMode (true, false, true, true, true);
+		winref.NameMaxLength = 10;
 		winref.FillList ("units", "Единица", "Единицы измерения");
 		winref.Show ();
 		winref.Run ();
@@ -502,6 +508,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
+		winref.NameMaxLength = 45;
 		winref.FillList ("expense_items", "Статья расхода", "Статьи расходов");
 		winref.Show ();
 		winref.Run ();
@@ -512,6 +519,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
+		winref.NameMaxLength = 45;
 		winref.FillList ("income_items", "Статья дохода", "Статьи доходов");
 		winref.Show ();
 		winref.Run ();
@@ -522,6 +530,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winref = new Reference (orderBy: "name");
 		winref.SetMode (true, false, true, true, true);
+		winref.NameMaxLength = 45;
 		winref.FillList ("contractors", "Контрагент", "Контрагенты");
 		winref.Show ();
 		winref.Run ();
@@ -768,6 +777,7 @@ public partial class MainWindow : Gtk.Window
 	{
 		Reference winProviders = new Reference (orderBy: "name");
 		winProviders.SetMode (true, false, true, true, true);
+		winProviders.NameMaxLength = 45;
 		winProviders.FillList ("service_providers", "Поставщик", "Поставщики услуг");
 		winProviders.Show ();
 		winProviders.Run ();

@@ -278,6 +278,7 @@ namespace bazar
 		{
 			Reference GoodsSelect = new Reference(orderBy: "name");
 			GoodsSelect.SetMode(true,true,true,true,false);
+			GoodsSelect.NameMaxLength = 45;
 			GoodsSelect.FillList("goods","Группа товаров", "Товары");
 			GoodsSelect.Show();
 			int result = GoodsSelect.Run();
