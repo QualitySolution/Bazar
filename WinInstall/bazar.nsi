@@ -1,7 +1,7 @@
 Unicode true
 ;--------------------------------
 !define PRODUCT_VERSION "2.3.1.2"
-!define NET_VERSION "4.5"
+!define NET_VERSION "4.6.1"
 !define PRODUCT_NAME "QS: База арендаторов"
 !define SHORTCUT_NAME "QS База арендаторов"
 !define MENU_DIR_NAME "База арендаторов"
@@ -196,7 +196,7 @@ SectionEnd
 Section "MS .NET Framework ${NET_VERSION}" SecFramework
   SectionIn RO
 
-  !insertmacro CheckNetFramework 45
+  !insertmacro CheckNetFramework 461
  
 SectionEnd
 
