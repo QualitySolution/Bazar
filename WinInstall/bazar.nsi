@@ -204,22 +204,22 @@ Section "GTK# 2.12.21" SecGTK
   ;SectionIn RO
 
   ; Test 2.12.30
-  System::Call "msi::MsiQueryProductStateA(t '{CA8017BD-8271-4C93-A409-186375C5A5CA}') i.r0"
+  System::Call "msi::MsiQueryProductStateW(t '{CA8017BD-8271-4C93-A409-186375C5A5CA}') i.r0"
   StrCmp $0 "5" GTKDone
   DetailPrint "GTK# 2.12.30 не установлен"
 
   ; Test 2.12.26
-  System::Call "msi::MsiQueryProductStateA(t '{BC25B808-A11C-4C9F-9C0A-6682E47AAB83}') i.r0"
+  System::Call "msi::MsiQueryProductStateW(t '{BC25B808-A11C-4C9F-9C0A-6682E47AAB83}') i.r0"
   StrCmp $0 "5" GTKDone
   DetailPrint "GTK# 2.12.26 не установлен"
 
   ; Test 2.12.25
-  System::Call "msi::MsiQueryProductStateA(t '{889E7D77-2A98-4020-83B1-0296FA1BDE8A}') i.r0"
+  System::Call "msi::MsiQueryProductStateW(t '{889E7D77-2A98-4020-83B1-0296FA1BDE8A}') i.r0"
   StrCmp $0 "5" GTKDone
   DetailPrint "GTK# 2.12.25 не установлен"
 
   ; Test 2.12.21
-  System::Call "msi::MsiQueryProductStateA(t '{71109D19-D8C1-437D-A6DA-03B94F5187FB}') i.r0"
+  System::Call "msi::MsiQueryProductStateW(t '{71109D19-D8C1-437D-A6DA-03B94F5187FB}') i.r0"
   StrCmp $0 "5" GTKDone
   DetailPrint "GTK# 2.12.21 не установлен"
 
