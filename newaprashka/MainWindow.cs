@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using bazar;
 using Gtk;
+using QS.Updater;
 using QSProjectsLib;
 using QSSupportLib;
-using QSUpdater;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -779,7 +779,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnCheckUpdateActionActivated (object sender, EventArgs e)
 	{
-		CheckUpdate.StartCheckUpdateThread (UpdaterFlags.ShowAnyway | UpdaterFlags.StartInThread);
+		MainUpdater.CheckAppVersionShowAnyway ();
 	}
 
 	protected void OnProvidersActionActivated (object sender, EventArgs e)

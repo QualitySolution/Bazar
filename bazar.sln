@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSaaS", "..\QSProjects\QSS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSupportLib", "..\QSProjects\QSSupportLib\QSSupportLib.csproj", "{9DF71899-3CE4-48F4-B3C3-0B21B15037B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSUpdater", "..\QSProjects\QSUpdater\QSUpdater.csproj", "{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSWidgetLib", "..\QSProjects\QSWidgetLib\QSWidgetLib.csproj", "{5A2BB01E-E124-432E-8099-D1343D3897B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSBugReporting", "..\QSProjects\QSBugReporting\QSBugReporting.csproj", "{F8E01CD3-8BDD-403B-8264-0ED24AC3FA21}"
@@ -28,6 +26,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaUtil", "..\GammaBinding\GammaUtil\GammaUtil.csproj", "{1BF2A638-420D-456C-96A7-36873A0FB894}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Bindings", "..\Gtk.DataBindings\System.Data.Bindings\System.Data.Bindings.csproj", "{54F958F5-7E58-4C89-9A04-8835E63B97C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater.Gtk", "..\QSProjects\QS.Updater.Gtk\QS.Updater.Gtk.csproj", "{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Project.Gtk", "..\QSProjects\QS.Project.Gtk\QS.Project.Gtk.csproj", "{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Project", "..\QSProjects\QS.Project\QS.Project.csproj", "{28A78143-42E3-40E7-86F5-DD7E1679BE86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater", "..\QSProjects\QS.Updater\QS.Updater.csproj", "{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Utilities", "..\QSProjects\QS.Utilities\QS.Utilities.csproj", "{E2228A2B-4883-4DD8-8A05-23501F7B8A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,10 +63,6 @@ Global
 		{5A2BB01E-E124-432E-8099-D1343D3897B9}.Debug|x86.Build.0 = Debug|Any CPU
 		{5A2BB01E-E124-432E-8099-D1343D3897B9}.Release|x86.ActiveCfg = Release|Any CPU
 		{5A2BB01E-E124-432E-8099-D1343D3897B9}.Release|x86.Build.0 = Release|Any CPU
-		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Debug|x86.ActiveCfg = Debug|x86
-		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Debug|x86.Build.0 = Debug|x86
-		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Release|x86.ActiveCfg = Release|x86
-		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Release|x86.Build.0 = Release|x86
 		{769710D2-BF98-4120-9E07-67BD740CFA1D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{769710D2-BF98-4120-9E07-67BD740CFA1D}.Debug|x86.Build.0 = Debug|Any CPU
 		{769710D2-BF98-4120-9E07-67BD740CFA1D}.Release|x86.ActiveCfg = Release|Any CPU
@@ -79,12 +83,31 @@ Global
 		{F8E01CD3-8BDD-403B-8264-0ED24AC3FA21}.Debug|x86.Build.0 = Debug|x86
 		{F8E01CD3-8BDD-403B-8264-0ED24AC3FA21}.Release|x86.ActiveCfg = Release|x86
 		{F8E01CD3-8BDD-403B-8264-0ED24AC3FA21}.Release|x86.Build.0 = Release|x86
+		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Debug|x86.ActiveCfg = Debug|x86
+		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Debug|x86.Build.0 = Debug|x86
+		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Release|x86.ActiveCfg = Release|x86
+		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}.Release|x86.Build.0 = Release|x86
+		{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}.Debug|x86.Build.0 = Debug|Any CPU
+		{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}.Release|x86.ActiveCfg = Release|Any CPU
+		{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}.Release|x86.Build.0 = Release|Any CPU
+		{28A78143-42E3-40E7-86F5-DD7E1679BE86}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28A78143-42E3-40E7-86F5-DD7E1679BE86}.Debug|x86.Build.0 = Debug|Any CPU
+		{28A78143-42E3-40E7-86F5-DD7E1679BE86}.Release|x86.ActiveCfg = Release|Any CPU
+		{28A78143-42E3-40E7-86F5-DD7E1679BE86}.Release|x86.Build.0 = Release|Any CPU
+		{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}.Debug|x86.Build.0 = Debug|Any CPU
+		{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}.Release|x86.Build.0 = Release|Any CPU
+		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Debug|x86.Build.0 = Debug|Any CPU
+		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Release|x86.ActiveCfg = Release|Any CPU
+		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A6C1914F-7732-49F5-BABA-8BBBA521FAAB} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{4B502FE5-D419-4B5C-9276-0A25EF2F508A} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{9DF71899-3CE4-48F4-B3C3-0B21B15037B1} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
-		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{5A2BB01E-E124-432E-8099-D1343D3897B9} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{F8E01CD3-8BDD-403B-8264-0ED24AC3FA21} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{769710D2-BF98-4120-9E07-67BD740CFA1D} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
@@ -92,41 +115,48 @@ Global
 		{190CEA0D-EA23-4C91-8030-203A5AFED7B7} = {39AA77A8-620A-490E-81B1-F7526E9C1AE1}
 		{1BF2A638-420D-456C-96A7-36873A0FB894} = {39AA77A8-620A-490E-81B1-F7526E9C1AE1}
 		{54F958F5-7E58-4C89-9A04-8835E63B97C3} = {39AA77A8-620A-490E-81B1-F7526E9C1AE1}
+		{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{28A78143-42E3-40E7-86F5-DD7E1679BE86} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{0F2A9FD4-6FC1-4912-9C8A-72028305A37E} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{E2228A2B-4883-4DD8-8A05-23501F7B8A33} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.TextStylePolicy = $1
-		$1.FileWidth = 120
-		$1.TabsToSpaces = False
-		$1.inheritsSet = VisualStudio
-		$1.inheritsScope = text/plain
 		$1.scope = text/plain
 		$0.TextStylePolicy = $2
-		$2.FileWidth = 120
-		$2.TabsToSpaces = False
 		$2.NoTabsAfterNonTabs = True
-		$2.inheritsSet = VisualStudio
-		$2.inheritsScope = text/plain
 		$2.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $3
 		$3.AlignToFirstMethodCallArgument = True
 		$3.AlignToFirstIndexerArgument = True
-		$3.inheritsSet = Mono
-		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
+		$3.IndentSwitchSection = False
+		$3.NewLinesForBracesInProperties = False
+		$3.NewLinesForBracesInAccessors = False
+		$3.NewLinesForBracesInAnonymousMethods = False
+		$3.NewLinesForBracesInControlBlocks = False
+		$3.NewLinesForBracesInAnonymousTypes = False
+		$3.NewLinesForBracesInObjectCollectionArrayInitializers = False
+		$3.NewLinesForBracesInLambdaExpressionBody = False
+		$3.NewLineForElse = False
+		$3.NewLineForCatch = False
+		$3.NewLineForFinally = False
+		$3.NewLineForMembersInObjectInit = False
+		$3.NewLineForMembersInAnonymousTypes = False
+		$3.NewLineForClausesInQuery = False
+		$3.SpacingAfterMethodDeclarationName = True
+		$3.SpaceAfterMethodCallName = True
+		$3.SpaceBeforeOpenSquareBracket = True
 		$0.StandardHeader = $4
-		$4.Text = 
-		$4.IncludeInNewFiles = True
 		$0.VersionControlPolicy = $5
-		$5.inheritsSet = Mono
 		$0.ChangeLogPolicy = $6
 		$6.UpdateMode = None
 		$6.MessageStyle = $7
 		$7.LineAlign = 0
 		$6.inheritsSet = Mono
 		$0.DotNetNamingPolicy = $8
-		$8.DirectoryNamespaceAssociation = None
-		$8.ResourceNamePolicy = FileFormatDefault
 		$0.NameConventionPolicy = $9
 		$9.Rules = $10
 		$10.NamingRule = $11
@@ -255,8 +285,6 @@ Global
 		$32.inheritsSet = null
 		$32.scope = application/xml
 		$0.XmlFormattingPolicy = $33
-		$33.inheritsSet = Mono
-		$33.inheritsScope = application/xml
 		$33.scope = application/xml
 		version = 2.2
 	EndGlobalSection
