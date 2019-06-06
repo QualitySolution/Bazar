@@ -117,7 +117,7 @@ WHERE credit_slips.id = @id</CommandText>
         <Left>7.23pt</Left>
         <Width>280.74pt</Width>
         <Height>21.07pt</Height>
-        <Value>= "Квитанция №" + {?id}</Value>
+        <Value>= "Квитанция"</Value>
         <Style>
           <FontSize>15pt</FontSize>
           <FontWeight>Bold</FontWeight>
@@ -132,7 +132,7 @@ WHERE credit_slips.id = @id</CommandText>
         <Left>297.9pt</Left>
         <Width>275.49pt</Width>
         <Height>21.07pt</Height>
-        <Value>= "Квитанция №" + {?id}</Value>
+        <Value>= "Квитанция"</Value>
         <Style>
           <FontSize>15pt</FontSize>
           <FontWeight>Bold</FontWeight>

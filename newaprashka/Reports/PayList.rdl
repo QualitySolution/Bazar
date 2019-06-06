@@ -108,7 +108,7 @@ WHERE accrual.id = @id</CommandText>
       <Textbox Name="Textbox5">
         <Height>15.02pt</Height>
         <Width>552.08pt</Width>
-        <Value>="Расчетный лист №" +  Convert.ToSingle({?id})</Value>
+        <Value>Расчетный лист</Value>
         <ZIndex>1</ZIndex>
         <Left>5.3pt</Left>
         <Top>10.6pt</Top>
