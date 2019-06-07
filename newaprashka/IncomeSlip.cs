@@ -1,6 +1,5 @@
 using System;
 using Gtk;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
@@ -45,7 +44,6 @@ namespace bazar
 			{
 				Lessee_id = LesseeSelect.SelectedID;
 				LesseeNull = false;
-				//buttonContactOpen.Sensitive = true;
 				entryLessee.Text = LesseeSelect.SelectedName;
 				entryLessee.TooltipText = LesseeSelect.SelectedName;
 				MainClass.ComboContractFill (comboContract, Lessee_id, NewSlip);
@@ -211,7 +209,6 @@ namespace bazar
 					}
 
 					// Записываем Операции оплаты.
-					//separationpayment.PaymentId = Payment;
 					separationpayment.SavePaymentDetails (Payment, trans);
 				}
 				trans.Commit ();
