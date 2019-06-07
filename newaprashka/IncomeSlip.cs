@@ -31,6 +31,16 @@ namespace bazar
 			if(QSMain.User.Permissions["edit_slips"])
 				dateSlip.Sensitive = true;
 			OnComboOperationChanged (null, null);
+
+			var menu = new Menu ();
+			var itemSimplePaymentPrint = new MenuItem ("Простая квитанция");
+			itemSimplePaymentPrint.Activated += ItemSimplePaymentPrint_Activated;
+			menu.Add (itemSimplePaymentPrint);
+			var itemDetailPaymentPrint = new MenuItem ("Подробная квитанция");
+			itemDetailPaymentPrint.Activated += ItemDetailPaymentPrint_Activated;
+			menu.Add (itemDetailPaymentPrint);
+			menu.ShowAll ();
+			buttonPrintPayment.Menu = menu;
 		}
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
@@ -409,6 +419,8 @@ namespace bazar
 				VisibleAccountable (false);
 				VisibleIncomeItems (true);
 				separationpayment.Visible = false;
+				buttonPrintPayment.Visible = false;
+				buttonPrint.Visible = true;
 				break;
 			case 1: //advance
 				VisibleLessee (false);
@@ -417,6 +429,8 @@ namespace bazar
 				VisibleAccountable (true);
 				VisibleIncomeItems (false);
 				separationpayment.Visible = false;
+				buttonPrintPayment.Visible = false;
+				buttonPrint.Visible = true;
 				break;
 			case 2: //payment
 				VisibleLessee (true);
@@ -425,6 +439,8 @@ namespace bazar
 				VisibleAccountable (false);
 				VisibleIncomeItems (false);
 				separationpayment.Visible = true;
+				buttonPrintPayment.Visible = true;
+				buttonPrint.Visible = false;
 				break;
 			}
 			this.Resize (1, 1);
@@ -508,6 +524,8 @@ namespace bazar
 				separationpayment.AccrualId = 0;
 		}
 
+		#region Печать
+
 		protected void OnButtonPrintClicked (object sender, EventArgs e)
 		{
 			string param = "id=" + entryNumber.Text;
@@ -519,11 +537,22 @@ namespace bazar
 			case 1:
 				ViewReportExt.Run ("ReturnTicket", param);
 				break;
-			case 2:
-				ViewReportExt.Run ("PaymentTicket", param);
-				break;
 			}
 		}
+
+		void ItemSimplePaymentPrint_Activated (object sender, EventArgs e)
+		{
+			string param = "id=" + entryNumber.Text;
+			ViewReportExt.Run ("PaymentTicket_Simple", param);
+		}
+
+		void ItemDetailPaymentPrint_Activated (object sender, EventArgs e)
+		{
+			string param = "id=" + entryNumber.Text;
+			ViewReportExt.Run ("PaymentTicket", param);
+		}
+
+		#endregion
 
 		protected void OnSeparationpaymentCanSaveStateChanged (object sender, EventArgs e)
 		{
