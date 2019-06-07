@@ -387,6 +387,9 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateCashIncome()
 	{
+		if (CashIncomeListStore == null)
+			return; //Попали сюда пока окно еще не прогрузилось до конца. Ничего не делаем чтобы не упасть дальше.
+
 		logger.Info("Получаем таблицу приходных ордеров...");
 
 		TreeIter iter;
@@ -482,6 +485,9 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateCashExpense()
 	{
+		if (CashIncomeListStore == null)
+			return; //Попали сюда пока окно еще не прогрузилось до конца. Ничего не делаем чтобы не упасть дальше.
+
 		logger.Info("Получаем таблицу расходных ордеров...");
 		
 		TreeIter iter;
@@ -553,6 +559,9 @@ public partial class MainWindow : Gtk.Window
 
 	void UpdateCashAdvance()
 	{
+		if (CashIncomeListStore == null)
+			return; //Попали сюда пока окно еще не прогрузилось до конца. Ничего не делаем чтобы не упасть дальше.
+
 		logger.Info("Получаем таблицу авансовых отчетов...");
 		
 		TreeIter iter;
