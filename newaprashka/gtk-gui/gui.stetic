@@ -10908,7 +10908,7 @@
         <property name="Size">3</property>
         <property name="LayoutStyle">End</property>
         <child>
-          <widget class="Gtk.Button" id="buttonPrint">
+          <widget class="QSWidgetLib.MenuButton" id="buttonPrint">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
             <property name="Type">TextAndIcon</property>
@@ -10916,7 +10916,8 @@
             <property name="Label" translatable="yes">Печать</property>
             <property name="UseUnderline">True</property>
             <property name="ResponseId">0</property>
-            <signal name="Clicked" handler="OnButtonPrintClicked" />
+            <property name="UseMarkup">False</property>
+            <property name="LabelXAlign">0</property>
           </widget>
           <packing>
             <property name="Expand">False</property>

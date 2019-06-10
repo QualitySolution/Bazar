@@ -4,6 +4,7 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
 using QSProjectsLib;
+using QSWidgetLib;
 
 namespace bazar
 {
@@ -163,6 +164,39 @@ namespace bazar
 			treeviewIncomes.ShowAll();
 
 			OnTreeviewServicesCursorChanged(null, null);
+
+			var menu = new Menu ();
+			var itemAllCashPrint = new MenuItem ("По всем кассам");
+			itemAllCashPrint.Activated += ItemAllCashPrint_Activated;;
+			menu.Add (itemAllCashPrint);
+			var separator = new SeparatorMenuItem ();
+			menu.Add (separator);
+
+			CashNameList.Foreach (delegate (TreeModel model, TreePath path, TreeIter iter) {
+				var cashName = (string)model.GetValue (iter, 0);
+				var cashId = (int)model.GetValue (iter, 1);
+				var itemSelectedCashPrint = new MenuItemId<int> (cashName);
+				itemSelectedCashPrint.ID = cashId;
+				itemSelectedCashPrint.Activated += ItemSelectedCashPrint_Activated;;
+				menu.Add (itemSelectedCashPrint);
+				return false;
+			});
+
+			menu.ShowAll ();
+			buttonPrint.Menu = menu;
+		}
+
+		void ItemAllCashPrint_Activated (object sender, EventArgs e)
+		{
+			string param = $"id={entryNumber.Text}&cash_id=-1";
+			ViewReportExt.Run ("PayList", param);
+		}
+
+		void ItemSelectedCashPrint_Activated (object sender, EventArgs e)
+		{
+			var id = (sender as MenuItemId<int>).ID;
+			string param = $"id={entryNumber.Text}&cash_id={id}";
+			ViewReportExt.Run ("PayList", param);
 		}
 
 		protected void OnComboAccrualMonthChanged (object sender, EventArgs e)
@@ -855,12 +889,6 @@ namespace bazar
 				}
 				winPay.Destroy ();
 			}
-		}
-
-		protected void OnButtonPrintClicked (object sender, EventArgs e)
-		{
-			string param = "id=" + entryNumber.Text;
-			ViewReportExt.Run ("PayList", param);
 		}
 
 		private void ShowOldDebts()
