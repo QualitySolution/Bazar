@@ -13,9 +13,9 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
-    	<Timeout>300</Timeout>
+        <Timeout>300</Timeout>
         <CommandText>SELECT services.name as service, cash.name as cash, units.name as units, count, price, (count * price) as sum, IFNULL(paysum.sum, 0) as paid FROM accrual_pays 
 LEFT JOIN services ON accrual_pays.service_id = services.id
 LEFT JOIN cash ON cash.id = accrual_pays.cash_id 
@@ -23,14 +23,17 @@ LEFT JOIN units ON services.units_id = units.id
 LEFT JOIN (
 SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
 ON paysum.accrual_pay_id = accrual_pays.id 
-WHERE accrual_pays.accrual_id = @id</CommandText>
+WHERE accrual_pays.accrual_id = @id AND (@cash_id = -1 OR accrual_pays.cash_id = @cash_id)</CommandText>
         <QueryParameters>
           <QueryParameter Name="id">
             <Value>=Parameters!id</Value>
           </QueryParameter>
+          <QueryParameter Name="cash_id">
+            <Value>={?cash_id}</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="service">
           <DataField>service</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -282,7 +285,7 @@ WHERE accrual.id = @id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox35">
-                          <Value>=Fields!cash.Value</Value>
+                          <Value>=Iif({?cash_id} = -1, Fields!cash.Value, "")</Value>
                           <Style>
                             <BorderStyle>
                               <Default>None</Default>
@@ -581,10 +584,10 @@ WHERE accrual.id = @id</CommandText>
       </Textbox>
       <Textbox Name="Textbox22">
         <Height>14.27pt</Height>
-        <Width>505.16pt</Width>
+        <Width>483.41pt</Width>
         <Value>=First(Fields!lessee.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>93pt</Left>
+        <Left>93.00pt</Left>
         <Top>38.00pt</Top>
         <Style>
           <BorderStyle />
@@ -594,11 +597,11 @@ WHERE accrual.id = @id</CommandText>
       </Textbox>
       <Textbox Name="Textbox23">
         <Height>14.27pt</Height>
-        <Width>513.41pt</Width>
+        <Width>483.41pt</Width>
         <Value>=First(Fields!contract_no.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>93pt</Left>
-        <Top>54.4pt</Top>
+        <Left>93.00pt</Left>
+        <Top>54.40pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -613,16 +616,6 @@ WHERE accrual.id = @id</CommandText>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
-  <ReportParameters>
-    <ReportParameter Name="id">
-      <DataType>Integer</DataType>
-      <Nullable>false</Nullable>
-      <AllowBlank>false</AllowBlank>
-      <MultiValue>false</MultiValue>
-      <Prompt>
-      </Prompt>
-    </ReportParameter>
-  </ReportParameters>
   <DataSources>
     <DataSource Name="DS1">
       <ConnectionProperties>
@@ -633,4 +626,26 @@ WHERE accrual.id = @id</CommandText>
       </ConnectionProperties>
     </DataSource>
   </DataSources>
+  <ReportParameters>
+    <ReportParameter Name="id">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="cash_id">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>true</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+  </ReportParameters>
 </Report>
