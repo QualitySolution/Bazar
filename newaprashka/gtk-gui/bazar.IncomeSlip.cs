@@ -612,7 +612,6 @@ namespace bazar
 			this.spinSum.ValueChanged += new global::System.EventHandler(this.OnSpinSumValueChanged);
 			this.buttonIncome.Clicked += new global::System.EventHandler(this.OnButtonIncomeClicked);
 			this.separationpayment.CanSaveStateChanged += new global::System.EventHandler(this.OnSeparationpaymentCanSaveStateChanged);
-			this.buttonPrintPayment.Clicked += new global::System.EventHandler(this.OnButtonPrintPaymentClicked);
 			this.buttonPrint.Clicked += new global::System.EventHandler(this.OnButtonPrintClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);
 		}

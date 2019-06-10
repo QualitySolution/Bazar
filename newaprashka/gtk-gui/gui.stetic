@@ -7789,7 +7789,6 @@
             <property name="ResponseId">0</property>
             <property name="UseMarkup">False</property>
             <property name="LabelXAlign">0</property>
-            <signal name="Clicked" handler="OnButtonPrintPaymentClicked" />
           </widget>
           <packing>
             <property name="Expand">False</property>
