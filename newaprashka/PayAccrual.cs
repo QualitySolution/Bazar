@@ -12,6 +12,7 @@ namespace bazar
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		Gtk.ListStore ServiceListStore;
 		TreeModel IncomeNameList;
+		List<CashDoc> PayList;
 
 		bool IncomeNotEmpty;
 		decimal PaySum, PayableSum;
@@ -82,6 +83,16 @@ namespace bazar
 			
 			treeviewServices.Model = ServiceListStore;
 			treeviewServices.ShowAll();
+
+			var menu = new Menu ();
+			var itemSimplePaymentPrint = new MenuItem ("Простая квитанция");
+			itemSimplePaymentPrint.Activated += ItemSimplePaymentPrint_Activated;
+			menu.Add (itemSimplePaymentPrint);
+			var itemDetailPaymentPrint = new MenuItem ("Подробная квитанция");
+			itemDetailPaymentPrint.Activated += ItemDetailPaymentPrint_Activated;
+			menu.Add (itemDetailPaymentPrint);
+			menu.ShowAll ();
+			buttonOkPrint.Menu = menu;
 		}
 
 		void onCellPayToggled(object o, ToggledArgs args) 
@@ -173,7 +184,7 @@ namespace bazar
 			bool SelectSumok = PaySum > 0;
 			bool IncomeOk = IncomeNotEmpty;
 
-			buttonOk.Sensitive = SelectSumok && IncomeOk;
+			buttonOk.Sensitive = buttonOkPrint.Sensitive = SelectSumok && IncomeOk;
 		}
 
 		public void FillPayTable(int AccrualId)
@@ -254,7 +265,12 @@ namespace bazar
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
-			List<CashDoc> PayList = new List<CashDoc>();
+			Save ();
+		}
+
+		private void Save()
+		{ 
+			PayList = new List<CashDoc>();
 			TreeIter iter;
 			//Составляем список касс
 			if(ServiceListStore.GetIterFirst(out iter))
@@ -371,7 +387,6 @@ namespace bazar
 					}
 				}
 				trans.Commit ();
-				PrintTicket (PayList[0].DocId);
 			}
 			catch (Exception ex) 
 			{
@@ -382,17 +397,24 @@ namespace bazar
 			Accrual.GetAccrualPaidBalance (Accrual_Id);
 		}
 
-		private void PrintTicket(int id)
+		void ItemSimplePaymentPrint_Activated (object sender, EventArgs e)
 		{
-			MessageDialog WinAsk = new MessageDialog(this, DialogFlags.Modal, MessageType.Question,
-			                                         ButtonsType.YesNo, "Распечатать квитанцию?");
-			WinAsk.Show ();
-			if((ResponseType) WinAsk.Run () == ResponseType.Yes)
-			{
-				string param = "id=" + id.ToString ();
+			Save ();
+			foreach(var doc in PayList) {
+				string param = $"id={doc.DocId}";
+				ViewReportExt.Run ("PaymentTicket_Simple", param);
+			}
+			Respond (ResponseType.Ok);
+		}
+
+		void ItemDetailPaymentPrint_Activated (object sender, EventArgs e)
+		{
+			Save ();
+			foreach (var doc in PayList) {
+				string param = $"id={doc.DocId}";
 				ViewReportExt.Run ("PaymentTicket", param);
 			}
-			WinAsk.Destroy ();
+			Respond (ResponseType.Ok);
 		}
 
 		private class CashDoc

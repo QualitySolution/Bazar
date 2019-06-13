@@ -10964,7 +10964,7 @@
   <widget class="Gtk.Dialog" id="bazar.PayAccrual" design-size="465 352">
     <property name="MemberName" />
     <property name="WindowPosition">CenterOnParent</property>
-    <property name="Buttons">2</property>
+    <property name="Buttons">3</property>
     <property name="HelpButton">False</property>
     <child internal-child="VBox">
       <widget class="Gtk.VBox" id="dialog1_VBox">
@@ -11061,7 +11061,7 @@
         <property name="MemberName" />
         <property name="Spacing">10</property>
         <property name="BorderWidth">5</property>
-        <property name="Size">2</property>
+        <property name="Size">3</property>
         <property name="LayoutStyle">End</property>
         <child>
           <widget class="Gtk.Button" id="buttonCancel">
@@ -11093,6 +11093,24 @@
           </widget>
           <packing>
             <property name="Position">1</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="QSWidgetLib.MenuButton" id="buttonOkPrint">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Type">TextAndIcon</property>
+            <property name="Icon">stock:gtk-print Menu</property>
+            <property name="Label" translatable="yes">Ок и Квитанция</property>
+            <property name="UseUnderline">True</property>
+            <property name="ResponseId">-1</property>
+            <property name="UseMarkup">False</property>
+            <property name="LabelXAlign">0</property>
+          </widget>
+          <packing>
+            <property name="Position">2</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
           </packing>
