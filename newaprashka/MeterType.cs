@@ -78,7 +78,7 @@ namespace bazar
 
 					labelID.Text = rdr["id"].ToString();
 					entryName.Text = rdr["name"].ToString();
-					yspinKilowattFactor.Value = rdr.GetDouble("kilowatt_factor");
+					yspinKilowattFactor.Value = rdr.GetDouble("reading_ratio");
 				}
 				this.Title = entryName.Text;
 
@@ -125,12 +125,12 @@ namespace bazar
 			MySqlTransaction trans = QSMain.connectionDB.BeginTransaction ();
 			if(NewItem)
 			{
-				sql = "INSERT INTO meter_types (name, kilowatt_factor) " +
+				sql = "INSERT INTO meter_types (name, reading_ratio) " +
 					"VALUES (@name)";
 			}
 			else
 			{
-				sql = "UPDATE meter_types SET name = @name, kilowatt_factor = @kilowatt_factor WHERE id = @id";
+				sql = "UPDATE meter_types SET name = @name, reading_ratio = @reading_ratio WHERE id = @id";
 			}
 			logger.Info("Запись типа счетчика...");
 			try 
@@ -139,7 +139,7 @@ namespace bazar
 
 				cmd.Parameters.AddWithValue("@id", Itemid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
-				cmd.Parameters.AddWithValue ("@kilowatt_factor", yspinKilowattFactor.Value);
+				cmd.Parameters.AddWithValue ("@reading_ratio", yspinKilowattFactor.Value);
 
 				cmd.ExecuteNonQuery();
 

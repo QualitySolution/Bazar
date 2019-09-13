@@ -1,2 +1,2 @@
-﻿ALTER TABLE `bazar`.`meter_types` 
-ADD COLUMN `kilowatt_factor` DOUBLE UNSIGNED NOT NULL DEFAULT 1 AFTER `name`;
+﻿ALTER TABLE `meter_types` 
+ADD COLUMN `reading_ratio` DOUBLE UNSIGNED NOT NULL DEFAULT 1 AFTER `name`;
