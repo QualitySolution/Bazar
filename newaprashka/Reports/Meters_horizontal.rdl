@@ -15,9 +15,9 @@
     <DataSet Name="Data">
       <Query >
         <DataSourceName>DS1</DataSourceName>
-    	<Timeout>300</Timeout>
+        <Timeout>300</Timeout>
         <CommandText>SELECT lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
-meter_types.name type, meter_tariffs.name as tariff, 
+meter_types.name type, meter_types.reading_ratio, meter_tariffs.name as tariff, 
  reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0 FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
@@ -63,6 +63,10 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         <Field Name="type">
           <DataField>type</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="reading_ratio">
+          <DataField>reading_ratio</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="tariff">
           <DataField>tariff</DataField>
@@ -445,7 +449,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="lastpayid">
-                      <Value>=Fields!prevalue.Value</Value>
+                      <Value>=Fields!prevalue.Value * {reading_ratio}</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -462,7 +466,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="lastvalue">
-                      <Value>=Fields!lastvalue.Value</Value>
+                      <Value>=Fields!lastvalue.Value * {reading_ratio}</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -497,7 +501,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox6">
-                      <Value>=Fields!lastvalue.Value-Fields!prevalue.Value</Value>
+                      <Value>=(Fields!lastvalue.Value-Fields!prevalue.Value) * {reading_ratio}</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
