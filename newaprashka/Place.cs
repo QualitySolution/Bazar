@@ -425,7 +425,7 @@ namespace bazar
 			logger.Info("Получаем счетчики места...");
 			try
 			{
-				string sql = "SELECT meters.id, meters.name, meter_types.name as type, meters.disabled FROM meters " +
+				string sql = "SELECT meters.id, meters.name, meter_types.name as type, meters.disabled, meter_types.reading_ratio FROM meters " +
 					"LEFT JOIN meter_types ON meter_types.id = meters.meter_type_id " +
 					"WHERE place_type_id = @place_type AND place_no = @place_no " +
 					"ORDER BY disabled";
@@ -452,7 +452,7 @@ namespace bazar
 					Meters = new MeterTable[DBRead.Count];
 					foreach(object[] row in DBRead)
 					{
-						Meters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2], (bool)row[3]);
+						Meters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2], (bool)row[3], (double)row [4]);
 						if(i == 0) // Удаляем вкладку по умочанию, только после добавления новой, иначе проблемы с отображением.
 						{
 							notebookMeters.RemovePage (0); //FIXME Подумать о обработки ситуации когда все счетчики удалены.
@@ -500,7 +500,7 @@ namespace bazar
 						}
 						if(Found)
 							continue;
-						NewMeters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2], (bool)row[3] );
+						NewMeters[i] = AddMeterPage(Convert.ToInt32 (row[0]), (string)row[2], (bool)row[3], (double)row [4]);
 						i++;
 					}
 					Meters = NewMeters;
@@ -540,14 +540,17 @@ namespace bazar
 						                              String.Format ("{0:d}", rdr.GetDateTime ("date")),
 						                              rdr["tariff"].ToString (),
 						                              String.Format (ValueFormat, rdr.GetInt32 ("value"), rdr["unit"].ToString ()),
-						                              "",
-						                              rdr.GetInt32 ("value")
-						                              );
+						                              String.Empty,
+						                              rdr.GetInt32 ("value"),
+													  String.Empty
+													  );
 						int tariff_id = rdr.GetInt32 ("meter_tariff_id");
 						if(LaterReading.ContainsKey (tariff_id))
 						{
 							int delta = (int)meter.liststore.GetValue (LaterReading[tariff_id], 5) - rdr.GetInt32 ("value");
 							meter.liststore.SetValue (LaterReading[tariff_id], 4, String.Format (ValueFormat, delta, rdr["unit"].ToString ()));
+							if(!meter.RatioIsOne)
+								meter.liststore.SetValue (LaterReading [tariff_id], 6, String.Format (ValueFormat, delta * meter.ReadingRatio, rdr ["unit"].ToString ()));
 						}
 						LaterReading[tariff_id] = CurIter;
 					}
@@ -561,26 +564,30 @@ namespace bazar
 			}
 		}		
 
-		private MeterTable AddMeterPage(int id, string name, bool disable)
+		private MeterTable AddMeterPage(int id, string name, bool disable, double ratio)
 		{
 			MeterTable meter = new MeterTable ();
 			meter.ID = id;
 			meter.Name = name;
 			meter.Filled = false;
 			meter.Disabled = disable;
+			meter.ReadingRatio = ratio;
 			meter.liststore = new ListStore (typeof(int), // 0 - ID
 			                             typeof(string), //1 - date
 			                             typeof(string), //2 - tariff
 			                             typeof(string), //3 - value
 			                             typeof(string),  //4 - delta
-			                             typeof(int)		//5 - digital value
-			                                 );
+			                             typeof(int),     //5 - digital value
+										 typeof (string) //6 - delta * ratio
+											 );
 			meter.treeview = new TreeView (meter.liststore);
 
 			meter.treeview.AppendColumn ("Дата", new CellRendererText (), "text", 1);
 			meter.treeview.AppendColumn ("Тариф", new CellRendererText (), "text", 2);
 			meter.treeview.AppendColumn ("Показания", new CellRendererText (), "text", 3);
-			meter.treeview.AppendColumn ("Расход", new CellRendererText (), "text", 4);
+			meter.treeview.AppendColumn (meter.RatioIsOne ? "Расход" : "Расход по показаниям", new CellRendererText (), "text", 4);
+			if (!meter.RatioIsOne)
+				meter.treeview.AppendColumn ($"Расход с коэф. {meter.ReadingRatio}", new CellRendererText (), "text", 6);
 
 			ScrolledWindow Scroll = new ScrolledWindow ();
 			if (disable)
@@ -665,6 +672,8 @@ namespace bazar
 			public string Name;
 			public TreeView treeview;
 			public ListStore liststore;
+			public double ReadingRatio;
+			public bool RatioIsOne => Math.Abs (ReadingRatio - 1) < 0.001;
 			public bool Disabled;
 			public bool Filled;
 

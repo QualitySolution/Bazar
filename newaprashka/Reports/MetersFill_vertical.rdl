@@ -13,11 +13,11 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
-   	 	<Timeout>300</Timeout>
+        <Timeout>300</Timeout>
         <CommandText>SELECT lessees.name, lessees.FIO_dir, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
-meter_types.name type, meter_tariffs.name as tariff, 
+meter_types.name type, meter_types.reading_ratio, meter_tariffs.name as tariff, 
  reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0,
 -- SUBSTRING(meters.place_no, GREATEST(LOCATE(meters.place_no, '/'), LOCATE(meters.place_no, '\\')))
 substring_index(SUBSTRING_INDEX(meters.place_no,'\\',1), '/', 1) as sort_col,
@@ -47,9 +47,13 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="name">
           <DataField>name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FIO_dir">
+          <DataField>FIO_dir</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="contract">
@@ -68,6 +72,10 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
           <DataField>type</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="reading_ratio">
+          <DataField>reading_ratio</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
         <Field Name="tariff">
           <DataField>tariff</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -82,7 +90,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         </Field>
         <Field Name="lastpayid">
           <DataField>lastpayid</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
+          <rd:TypeName>System.UInt32</rd:TypeName>
         </Field>
         <Field Name="lastdate">
           <DataField>lastdate</DataField>
@@ -90,11 +98,11 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         </Field>
         <Field Name="lastvalue">
           <DataField>lastvalue</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
+          <rd:TypeName>System.UInt32</rd:TypeName>
         </Field>
         <Field Name="prevalue">
           <DataField>prevalue</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
+          <rd:TypeName>System.UInt32</rd:TypeName>
         </Field>
         <Field Name="count">
           <DataField>count</DataField>
@@ -110,11 +118,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
         </Field>
         <Field Name="lastpayid0">
           <DataField>lastpayid0</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
-        </Field>
-        <Field Name="FIO_dir">
-          <DataField>FIO_dir</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="sort_col">
           <DataField>sort_col</DataField>
@@ -411,7 +415,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="lastvalue">
-                      <Value>=Fields!lastvalue.Value</Value>
+                      <Value>=Fields!lastvalue.Value * {reading_ratio}</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>

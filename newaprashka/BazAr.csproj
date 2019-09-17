@@ -50,13 +50,13 @@
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="Mono.Posix" />
     <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\packages\BouncyCastle.1.8.3.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf">
-      <HintPath>..\packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
+      <HintPath>..\packages\Google.Protobuf.3.9.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
-      <HintPath>..\packages\MySql.Data.8.0.16\lib\net452\MySql.Data.dll</HintPath>
+      <HintPath>..\packages\MySql.Data.8.0.17\lib\net452\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel" />
@@ -68,12 +68,15 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Transactions" />
     <Reference Include="NLog">
-      <HintPath>..\packages\NLog.4.6.4\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.6.7\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="Renci.SshNet">
+      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -85,6 +88,7 @@
     <EmbeddedResource Include="SQLScripts\new-2.3.sql" />
     <EmbeddedResource Include="SQLScripts\Update 2.2 to 2.3.sql" />
     <EmbeddedResource Include="SQLScripts\Update 2.3.1.sql" />
+    <EmbeddedResource Include="SQLScripts\2.3.4.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -161,12 +165,16 @@
     <Compile Include="PendingMeterReading.cs" />
     <Compile Include="ReportDialogs\ContractsReportDlg.cs" />
     <Compile Include="gtk-gui\bazar.ContractsReportDlg.cs" />
+    <Compile Include="Tools\BaseParameters.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
         <Deployment.LinuxDeployData generateScript="False" scriptName="newaprashka" />
+        <Policies>
+          <DotNetNamingPolicy ResourceNamePolicy="FileFormatDefault" DirectoryNamespaceAssociation="PrefixedHierarchical" />
+        </Policies>
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
@@ -214,6 +222,7 @@
     <Folder Include="Reports\" />
     <Folder Include="icons\" />
     <Folder Include="SQLScripts\" />
+    <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

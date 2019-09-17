@@ -1,6 +1,6 @@
 Unicode true
 ;--------------------------------
-!define PRODUCT_VERSION "2.3.3"
+!define PRODUCT_VERSION "2.3.4"
 !define NET_VERSION "4.6.1"
 !define PRODUCT_NAME "QS: База арендаторов"
 !define SHORTCUT_NAME "QS База арендаторов"
@@ -11,7 +11,7 @@ Unicode true
 Name "${PRODUCT_NAME}"
 
 ; The file to write
-OutFile "${EXE_NAME}-salova-2.3.x.exe"
+OutFile "${EXE_NAME}-salova-${PRODUCT_VERSION}.exe"
 
 !include "MUI.nsh"
 !include "x64.nsh"

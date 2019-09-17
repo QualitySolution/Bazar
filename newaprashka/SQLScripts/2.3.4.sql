@@ -1,0 +1,2 @@
+﻿ALTER TABLE `meter_types` 
+ADD COLUMN `reading_ratio` DOUBLE UNSIGNED NOT NULL DEFAULT 1 AFTER `name`;

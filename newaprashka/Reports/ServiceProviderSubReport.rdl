@@ -13,14 +13,15 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>select 
 	providers.name,
 	IFNULL(providers_with_accrual.accrual_total,0) as accrual_total,
 	IFNULL(providers_with_payment.payment_total,0) as payment_total,
-    IFNULL(providers_with_advance.advance_total,0) as advance_total
+    IFNULL(providers_with_advance.advance_total,0) as advance_total,
+    GROUP_CONCAT(concat_ws(" ", meters_delta.consumption, meters_delta.unit_name) SEPARATOR "\n") as meters_value
 from
 service_providers as providers
 left join
@@ -70,7 +71,37 @@ FROM
     and accrual.month=@month and accrual.year=@year
     group by service_providers.id
 ) as providers_with_advance
-ON providers.id=providers_with_advance.provider_id</CommandText>
+ON providers.id=providers_with_advance.provider_id
+LEFT JOIN (
+	SELECT service_provider_id, unit_name, SUM(delta) as consumption FROM (
+	SELECT service_provider_id, services.units_id, units.name as unit_name, ((last_reading.value - prev_reading.value) * meter_types.reading_ratio) as delta FROM
+	(
+		SELECT * FROM meter_reading
+		WHERE meter_reading.date &lt; ADDDATE(CONCAT_WS('-', @year, @month, @new_month_meters_day), INTERVAL 1 MONTH) 
+			AND meter_reading.date &gt;= DATE(CONCAT_WS('-', @year, @month, @new_month_meters_day))
+		GROUP BY meter_reading.meter_id, meter_reading.meter_tariff_id
+	)
+	AS last_reading
+	INNER JOIN (
+		SELECT * FROM meter_reading as mr1
+		WHERE NOT EXISTS (
+			SELECT * FROM meter_reading as mr2 
+			WHERE mr1.meter_id = mr2.meter_id
+				AND mr1.meter_tariff_id = mr2.meter_tariff_id
+				AND mr2.`date` &lt; DATE(CONCAT_WS('-', @year, @month, @new_month_meters_day))
+				AND mr2.date &gt; mr1.date
+			)
+			AND mr1.`date` &lt; DATE(CONCAT_WS('-', @year, @month, @new_month_meters_day))
+		) as prev_reading ON last_reading.meter_id = prev_reading.meter_id AND last_reading.meter_tariff_id = prev_reading.meter_tariff_id
+	LEFT JOIN meter_tariffs ON meter_tariffs.id = last_reading.meter_tariff_id
+	LEFT JOIN meter_types ON meter_types.id = meter_tariffs.meter_type_id
+	LEFT JOIN services ON meter_tariffs.service_id = services.id
+	LEFT JOIN service_providers ON service_providers.id = services.service_provider_id
+	LEFT JOIN units ON units.id = services.units_id
+	) readings
+	GROUP BY service_provider_id, units_id
+) meters_delta ON meters_delta.service_provider_id = providers.id
+GROUP BY providers.id</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!month.Value</Value>
@@ -84,9 +115,12 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
           <QueryParameter Name="paymentYear">
             <Value>=Parameters.paymentYear.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="new_month_meters_day">
+            <Value>={?new_month_meters_day}</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -95,27 +129,31 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
           <DataField>accrual_total</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="sum">
+        <Field Name="payment_total">
           <DataField>payment_total</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="advance">
+        <Field Name="advance_total">
           <DataField>advance_total</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="meters_value">
+          <DataField>meters_value</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
   </DataSets>
   <PageHeader>
-    <Height>54.9pt</Height>
+    <Height>51.7pt</Height>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
     <ReportItems>
       <Textbox Name="Textbox4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Top>10.20pt</Top>
-        <Left>3.10pt</Left>
-        <Width>598.55pt</Width>
-        <Height>19.57pt</Height>
+        <Left>0.00pt</Left>
+        <Width>575.97pt</Width>
+        <Height>20.32pt</Height>
         <Value>Отчет по поставщикам</Value>
         <Style>
           <FontSize>15pt</FontSize>
@@ -145,25 +183,45 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
             <Width>2.375in</Width>
           </TableColumn>
           <TableColumn>
-            <Width>131.1pt</Width>
+            <Width>101.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>131.1pt</Width>
+            <Width>84.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>131.1pt</Width>
+            <Width>106.9pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>111.2pt</Width>
           </TableColumn>
         </TableColumns>
         <Header>
           <TableRows>
             <TableRow>
-              <Height>12pt</Height>
+              <Height>25.2pt</Height>
               <TableCells>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox1">
                       <Value>Поставщик</Value>
                       <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox7">
+                      <Value>Расход
+по счетчикам</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -194,7 +252,7 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox2">
-                      <Value>="Оплачено в "+MonthNamePrepositional(Parameters!paymentMonth.Value)</Value>
+                      <Value>="Оплачено в \n"+MonthNamePrepositional({?paymentMonth})</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -210,7 +268,7 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox8">
-                      <Value>="Авансы за "+ MonthName(Parameters!month.Value)</Value>
+                      <Value>="Авансы за \n"+ MonthName(Parameters!month.Value)</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -251,6 +309,21 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox15">
+                      <Value>=Fields!meters_value.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox6">
                       <Value>=Fields!accrual_total.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
@@ -269,7 +342,7 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="total">
-                      <Value>=Fields!sum.Value</Value>
+                      <Value>=Fields!payment_total.Value</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -287,7 +360,7 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox9">
-                      <Value>=Fields!advance.Value</Value>
+                      <Value>=Fields!advance_total.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -323,6 +396,17 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox16">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Right</TextAlign>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox12">
                       <Style>
                         <BorderStyle>
@@ -349,14 +433,14 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
                         <BorderWidth />
                         <Format>C</Format>
                       </Style>
-                      <Value>=Sum(Fields!sum.Value)</Value>
+                      <Value>=Sum({payment_total})</Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox10">
-                      <Value>=Sum(Fields!advance.Value)</Value>
+                      <Value>=Sum({advance_total})</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -373,8 +457,8 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
             </TableRow>
           </TableRows>
         </Footer>
-        <Left >0.0pt</Left>
-        <Top >49.0pt</Top>
+        <Left>0.0pt</Left>
+        <Top>49.0pt</Top>
       </Table>
       <Textbox Name="Textbox11" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Height>14.26pt</Height>
@@ -430,7 +514,7 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
 	Dim names = new String(11){"январе","феврале","марте","апреле","мае","июне","июле","августе","сентябре","октябре","ноябре","декабре"}
 	return names(id-1)
 End Function</Code>
-  <ReportParameters >
+  <ReportParameters>
     <ReportParameter Name="month">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -472,6 +556,18 @@ End Function</Code>
       <MultiValue>false</MultiValue>
       <Prompt>
       </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="new_month_meters_day">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>15</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
     </ReportParameter>
   </ReportParameters>
 </Report>

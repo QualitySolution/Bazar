@@ -37,7 +37,8 @@ namespace bazar
 			                                      typeof (int),		// 6 - Last reading value
 			                                      typeof (int),		// 7 - delta of value
 			                                      typeof(string),	// 8 - current reading date
-			                                      typeof(bool)		// 9 - take next as PreValue (for fill only)
+			                                      typeof(bool),		// 9 - take next as PreValue (for fill only)
+												  typeof(double)	// 10- reading ratio
 			                                      );
 
 			Gtk.CellRendererSpin CellValue = new CellRendererSpin();
@@ -51,7 +52,9 @@ namespace bazar
 			treeviewMeters.AppendColumn ("Предыдущие", new Gtk.CellRendererText (), RenderPreValueColumn);
 			treeviewMeters.AppendColumn ("Дата", new Gtk.CellRendererText (), "text", 8);
 			treeviewMeters.AppendColumn ("Текущие", CellValue, RenderValueColumn);
-			treeviewMeters.AppendColumn ("Расход", new Gtk.CellRendererText (), RenderDeltaColumn);
+			treeviewMeters.AppendColumn ("Дельта", new Gtk.CellRendererText (), RenderDeltaColumn);
+			treeviewMeters.AppendColumn ("Коэф.", new Gtk.CellRendererText (), RenderRatioColumn);
+			treeviewMeters.AppendColumn ("Расход", new Gtk.CellRendererText (), RenderСonsumptionColumn);
 
 			treeviewMeters.Model = ReadingListStore;
 			treeviewMeters.ShowAll ();
@@ -107,6 +110,13 @@ namespace bazar
 			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", CurReading, Units);
 		}
 
+		private void RenderRatioColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			double ratio = (double)model.GetValue (iter, 10);
+
+			(cell as Gtk.CellRendererText).Text = String.Format ("x {0}", ratio);
+		}
+
 		private void RenderDeltaColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			int Delta = (int) model.GetValue (iter, 7);
@@ -124,6 +134,21 @@ namespace bazar
 				(cell as Gtk.CellRendererText).Text = "-//-";
 		}
 
+		private void RenderСonsumptionColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		{
+			int Delta = (int)model.GetValue (iter, 7);
+			double ratio = (double)model.GetValue (iter, 10);
+			if (Delta > 0) {
+				(cell as Gtk.CellRendererText).Foreground = "black";
+			} else {
+				(cell as Gtk.CellRendererText).Foreground = "red";
+			}
+			if ((double)model.GetValue (iter, 2) > 0)
+				(cell as Gtk.CellRendererText).Text = String.Format ("{0} {1}", Delta * ratio, Units);
+			else
+				(cell as Gtk.CellRendererText).Text = "-//-";
+		}
+
 		protected void CalculateSum ()
 		{
 			TotalCount = 0;
@@ -132,7 +157,7 @@ namespace bazar
 			foreach(object[] row in ReadingListStore )
 			{
 				if((int) row[7] > 0)
-					MeterValues += (int) row[7];
+					MeterValues += Convert.ToInt32((int) row[7] * (double)row[10]);
 			}
 			TotalCount = MeterValues - ChildCount;
 			labelCount.LabelProp = string.Format("{0} {1}", MeterValues, Units);
@@ -148,7 +173,7 @@ namespace bazar
 			logger.Info("Запрос показаний счетчиков...");
 			accrual_detail_id = AccrualRow;
 			Units = units;
-			string sql = "SELECT meters.id as meterid, meter_tariffs.id as tariffid, meter_tariffs.name as tariff, meter_types.name as meter_type " +
+			string sql = "SELECT meters.id as meterid, meter_tariffs.id as tariffid, meter_tariffs.name as tariff, meter_types.name as meter_type, meter_types.reading_ratio " +
 				"FROM meter_tariffs " +
 				"LEFT JOIN meter_types ON meter_types.id = meter_tariffs.meter_type_id " +
 				"LEFT JOIN meters ON meters.meter_type_id = meter_types.id " +
@@ -174,7 +199,8 @@ namespace bazar
 						                               0,
 						                               0,
 						                               "",
-						                               false
+						                               false,
+													   rdr.GetDouble("reading_ratio")
 							);
 					}
 				}
@@ -233,7 +259,7 @@ namespace bazar
 				}
 
 				// take childs values
-				sql = "SELECT meters.name, meter_tariffs.name as tariff, reading.* FROM meters " +
+				sql = "SELECT meters.name, meter_tariffs.name as tariff, meter_types.reading_ratio, reading.* FROM meters " +
 					"LEFT JOIN (" +
 					"SELECT  selectedmeters.*, " +
 					"(SELECT date FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastdate, " +
@@ -242,6 +268,7 @@ namespace bazar
 					"FROM (SELECT DISTINCT meter_reading.meter_id, meter_reading.meter_tariff_id FROM meter_reading) as selectedmeters" +
 					") as reading ON meters.id = reading.meter_id " +
 					"LEFT JOIN meter_tariffs ON meter_tariffs.id = reading.meter_tariff_id " +
+					"LEFT JOIN meter_types ON meter_types.id = meter_tariffs.meter_type_id " +
 					"WHERE meters.parent_meter_id IN (" + MetersIds + ") AND meters.disabled = 'FALSE'";
 
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -259,11 +286,12 @@ namespace bazar
 					ChildCount = 0;
 					while (rdr.Read())
 					{
+						var consumption = Convert.ToInt32((DBWorks.GetInt (rdr, "lastvalue", 0) - DBWorks.GetInt (rdr, "prevalue", 0)) * DBWorks.GetDouble(rdr, "reading_ratio", 1));
 						ChildListStore.AppendValues (rdr["name"].ToString () + "/" + rdr["tariff"].ToString (),
 						                             String.Format ("{0:d}", DBWorks.GetDateTime (rdr, "lastdate", new DateTime(1,1,1))),
-						                             DBWorks.GetInt (rdr,"lastvalue", 0) - DBWorks.GetInt (rdr,"prevalue", 0)
+						                             consumption
 													);
-						ChildCount += DBWorks.GetInt (rdr,"lastvalue", 0) - DBWorks.GetInt (rdr,"prevalue", 0);
+						ChildCount += consumption;
 					}
 					labelChilds.LabelProp = string.Format("{0} {1}", ChildCount, Units);
 				}
