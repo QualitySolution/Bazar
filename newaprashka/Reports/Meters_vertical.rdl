@@ -465,7 +465,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="lastpayid">
-                      <Value>=Fields!prevalue.Value * {reading_ratio}</Value>
+                      <Value>=Fields!prevalue.Value</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -483,7 +483,7 @@ WHERE meters.disabled = 'FALSE' AND meters.meter_type_id IN (@types)
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="lastvalue">
-                      <Value>=Fields!lastvalue.Value * {reading_ratio}</Value>
+                      <Value>=Fields!lastvalue.Value</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
