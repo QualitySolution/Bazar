@@ -113,8 +113,8 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
     <ReportItems>
       <Textbox Name="Textbox4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Top>10.20pt</Top>
-        <Left>3.10pt</Left>
-        <Width>598.55pt</Width>
+        <Left>0.00pt</Left>
+        <Width>576.80pt</Width>
         <Height>19.57pt</Height>
         <Value>Отчет по поставщикам</Value>
         <Style>
@@ -131,12 +131,12 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
   <Body>
     <Height>137.4pt</Height>
     <Columns>1</Columns>
-    <ReportItems >
+    <ReportItems>
       <Subreport Name="Subreport1">
         <Height>114.41pt</Height>
         <Width>577.56pt</Width>
-        <Left>20pt</Left>
-        <Top>0pt</Top>
+        <Left>0.0pt</Left>
+        <Top>0.0pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -157,6 +157,9 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
           </Parameter>
           <Parameter Name="paymentMonth">
             <Value>=Parameters!paymentMonth</Value>
+          </Parameter>
+          <Parameter Name="new_month_meters_day">
+            <Value>=Parameters!new_month_meters_day.Value</Value>
           </Parameter>
         </Parameters>
       </Subreport>
@@ -198,7 +201,7 @@ ON providers.id=providers_with_advance.provider_id</CommandText>
 	Dim names = new String(11){"январе","феврале","марте","апреле","мае","июне","июле","августе","сентябре","октябре","ноябре","декабре"}
 	return names(id-1)
 End Function</Code>
-  <ReportParameters>
+  <ReportParameters >
     <ReportParameter Name="month">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -240,6 +243,13 @@ End Function</Code>
       <MultiValue>false</MultiValue>
       <Prompt>
       </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="new_month_meters_day">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
     </ReportParameter>
   </ReportParameters>
 </Report>

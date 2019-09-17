@@ -1,6 +1,8 @@
 ﻿using System;
-using QSProjectsLib;
+using bazar.Tools;
 using Gtk;
+using QSProjectsLib;
+using QSSupportLib;
 
 namespace bazar
 {
@@ -30,6 +32,8 @@ namespace bazar
 			foreach (string quarter in quarters) {
 				quarterModel.AppendValues (quarter);
 			}
+
+			yspinLastReadingDay.ValueAsInt = BaseParameters.ReportLastReadingDay;
 		}
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
@@ -44,12 +48,12 @@ namespace bazar
 					paymentMonth %= 12;
 					paymentYear = year + 1;
 				}
-				args += "&paymentMonth=" + paymentMonth + "&paymentYear=" + paymentYear;
+				args += "&paymentMonth=" + paymentMonth + "&paymentYear=" + paymentYear + "&new_month_meters_day=" + yspinLastReadingDay.Text;
 				ViewReportExt.RunWithSubreports ("ServiceProviderReport", args,new string[]{subReportName});
 			} else if (radioButtonQuarter.Active) {
 				int quarter = comboPeriod.Active + 1;
 				int year = Convert.ToInt32 (comboYear.ActiveText);
-				string args = "quarter=" + quarter + "&year=" + year;
+				string args = "quarter=" + quarter + "&year=" + year + "&new_month_meters_day=" + yspinLastReadingDay.Text;
 				ViewReportExt.RunWithSubreports ("ServiceProviderQuarterlyReport", args,new string[]{subReportName});
 			}
 		}
@@ -65,6 +69,10 @@ namespace bazar
 			}
 		}
 
+		protected void OnYspinLastReadingDayValueChanged (object sender, EventArgs e)
+		{
+			MainSupport.BaseParameters.UpdateParameter (QSMain.ConnectionDB, BaseParameterNames.ReportLastReadingDay.ToString(), yspinLastReadingDay.Text);
+		}
 	}
 
 }

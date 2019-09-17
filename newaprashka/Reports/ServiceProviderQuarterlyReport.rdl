@@ -18,8 +18,8 @@
     <ReportItems>
       <Textbox Name="Textbox4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Top>10.20pt</Top>
-        <Left>3.10pt</Left>
-        <Width>598.55pt</Width>
+        <Left>0.00pt</Left>
+        <Width>576.80pt</Width>
         <Height>19.57pt</Height>
         <Value>Отчет по поставщикам</Value>
         <Style>
@@ -32,11 +32,11 @@
         </Style>
       </Textbox>
       <Textbox Name="Textbox7" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Height>14.26pt</Height>
-        <Width>208.54pt</Width>
+        <Height>12.78pt</Height>
+        <Width>574.46pt</Width>
         <Value>=QuarterName(Parameters!quarter.Value) + " квартал " + Parameters!year.Value</Value>
         <ZIndex>1</ZIndex>
-        <Left>200.10pt</Left>
+        <Left>0.00pt</Left>
         <Top>33.80pt</Top>
         <Style>
           <BorderStyle />
@@ -50,19 +50,19 @@
   <Body>
     <Height>581.6pt</Height>
     <Columns>1</Columns>
-    <ReportItems >
+    <ReportItems>
       <Subreport Name="Subreport1" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Height>92.17pt</Height>
         <Width>573.48pt</Width>
-        <Left>20.00pt</Left>
-        <Top>0.00pt</Top>
+        <Left>0.0pt</Left>
+        <Top>0.0pt</Top>
         <Style>
           <BorderStyle>
-            <Bottom >None</Bottom>
+            <Bottom>None</Bottom>
           </BorderStyle>
           <BorderColor />
           <BorderWidth />
-          <PaddingLeft >10pt</PaddingLeft>
+          <PaddingLeft>10pt</PaddingLeft>
         </Style>
         <ReportName>ServiceProviderSubReport</ReportName>
         <MergeTransactions>true</MergeTransactions>
@@ -72,6 +72,9 @@
           </Parameter>
           <Parameter Name="year" >
             <Value>=Parameters!year.Value</Value>
+          </Parameter>
+          <Parameter Name="new_month_meters_day" >
+            <Value>=Parameters!new_month_meters_day.Value</Value>
           </Parameter>
           <Parameter Name="paymentYear" >
             <Value>=DateIncYear(QuarterToStartMonth(Parameters!quarter.Value),Parameters!year.Value,1)</Value>
@@ -84,27 +87,30 @@
       <Subreport Name="Subreport2" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Height>107.55pt</Height>
         <Width>575.20pt</Width>
-        <Left>20pt</Left>
+        <Left>0.0pt</Left>
         <Top>123.5pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
-          <PaddingLeft >10pt</PaddingLeft>
+          <PaddingLeft>10pt</PaddingLeft>
         </Style>
         <ReportName>ServiceProviderSubReport</ReportName>
         <MergeTransactions>true</MergeTransactions>
         <Parameters>
-          <Parameter Name="month" >
+          <Parameter Name="month">
             <Value>=QuarterToStartMonth(Parameters!quarter.Value)+1</Value>
           </Parameter>
-          <Parameter Name="year" >
+          <Parameter Name="year">
             <Value>=Parameters!year.Value</Value>
           </Parameter>
-          <Parameter Name="paymentYear" >
+          <Parameter Name="new_month_meters_day">
+            <Value>=Parameters!new_month_meters_day.Value</Value>
+          </Parameter>
+          <Parameter Name="paymentYear">
             <Value>=DateIncYear(QuarterToStartMonth(Parameters!quarter.Value)+1,Parameters!year.Value,1)</Value>
           </Parameter>
-          <Parameter Name="paymentMonth" >
+          <Parameter Name="paymentMonth">
             <Value>=DateIncMonth(QuarterToStartMonth(Parameters!quarter.Value)+1,1)</Value>
           </Parameter>
         </Parameters>
@@ -112,27 +118,30 @@
       <Subreport Name="Subreport3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
         <Height>113.68pt</Height>
         <Width>569.11pt</Width>
-        <Left>20pt</Left>
-        <Top>258.80pt</Top>
+        <Left>1.6pt</Left>
+        <Top>258.8pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
-          <PaddingLeft >10pt</PaddingLeft>
+          <PaddingLeft>10pt</PaddingLeft>
         </Style>
         <ReportName>ServiceProviderSubReport</ReportName>
         <MergeTransactions>true</MergeTransactions>
         <Parameters>
-          <Parameter Name="month" >
+          <Parameter Name="month">
             <Value>=QuarterToStartMonth(Parameters!quarter.Value)+2</Value>
           </Parameter>
-          <Parameter Name="year" >
+          <Parameter Name="year">
             <Value>=Parameters!year.Value</Value>
           </Parameter>
-          <Parameter Name="paymentYear" >
+          <Parameter Name="new_month_meters_day">
+            <Value>=Parameters!new_month_meters_day.Value</Value>
+          </Parameter>
+          <Parameter Name="paymentYear">
             <Value>=DateIncYear(QuarterToStartMonth(Parameters!quarter.Value)+2,Parameters!year.Value,1)</Value>
           </Parameter>
-          <Parameter Name="paymentMonth" >
+          <Parameter Name="paymentMonth">
             <Value>=DateIncMonth(QuarterToStartMonth(Parameters!quarter.Value)+2,1)</Value>
           </Parameter>
         </Parameters>
@@ -183,7 +192,7 @@ End Function
 Public Function QuarterToStartMonth(ByVal quarter As Integer) As Integer
 	return (quarter-1)*3+1
 End Function</Code>
-  <ReportParameters >
+  <ReportParameters>
     <ReportParameter Name="year">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -204,6 +213,13 @@ End Function</Code>
       <MultiValue>false</MultiValue>
       <Prompt>
       </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="new_month_meters_day">
+      <DataType>Integer</DataType>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
     </ReportParameter>
   </ReportParameters>
 </Report>

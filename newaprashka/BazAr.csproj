@@ -165,6 +165,7 @@
     <Compile Include="PendingMeterReading.cs" />
     <Compile Include="ReportDialogs\ContractsReportDlg.cs" />
     <Compile Include="gtk-gui\bazar.ContractsReportDlg.cs" />
+    <Compile Include="Tools\BaseParameters.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -221,6 +222,7 @@
     <Folder Include="Reports\" />
     <Folder Include="icons\" />
     <Folder Include="SQLScripts\" />
+    <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">
