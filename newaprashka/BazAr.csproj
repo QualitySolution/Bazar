@@ -171,6 +171,9 @@
     <MonoDevelop>
       <Properties>
         <Deployment.LinuxDeployData generateScript="False" scriptName="newaprashka" />
+        <Policies>
+          <DotNetNamingPolicy ResourceNamePolicy="FileFormatDefault" DirectoryNamespaceAssociation="PrefixedHierarchical" />
+        </Policies>
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
