@@ -62,19 +62,28 @@ namespace bazar
 
 		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
-			string sql;
-			sql = "INSERT INTO meter_reading (meter_id, meter_tariff_id, date, value) " +
+			string sqlCheck = "SELECT COUNT(*) FROM meter_reading " +
+				"WHERE meter_id = @meter_id AND meter_tariff_id = @meter_tariff_id AND `date` = @date";
+			 
+			string sql = "INSERT INTO meter_reading (meter_id, meter_tariff_id, date, value) " +
 				"VALUES (@meter_id, @meter_tariff_id, @date, @value)";
 			logger.Info("Запись показаний счётчика...");
 			try 
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
+				MySqlCommand cmd = new MySqlCommand(sqlCheck, QSMain.connectionDB);
 
 				cmd.Parameters.AddWithValue("@meter_id", MeterId);
 				cmd.Parameters.AddWithValue("@meter_tariff_id", ComboWorks.GetActiveId (comboTariff));
 				cmd.Parameters.AddWithValue("@date", dateReading.Date);
 				cmd.Parameters.AddWithValue("@value", spinValue.ValueAsInt);
 
+				var count = (long)cmd.ExecuteScalar ();
+				if(count > 0) {
+					MessageDialogWorks.RunErrorDialog ($"На {dateReading.Date:d} для этого счетчика уже существуют показания.");
+					return;
+				}
+
+				cmd.CommandText = sql;
 				cmd.ExecuteNonQuery();
 				logger.Info("Ok");
 				Respond (Gtk.ResponseType.Ok);
