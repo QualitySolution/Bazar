@@ -352,6 +352,7 @@ namespace bazar
 			{
 				TreeIter iter;
 				ReadingListStore.GetIterFirst(out iter);
+				pendingReadings.Clear ();
 
 				do
 				{
@@ -371,9 +372,19 @@ namespace bazar
 						meterTariffId=(int)ReadingListStore.GetValue(iter, 1),
 						value=(double)ReadingListStore.GetValue(iter, 2)
 					};
+
+					if(pendingReading.CheckExist()) {
+						MessageDialogWorks.RunErrorDialog ("Для счетчика {0} уже существуют показания на сегодня.", (string)ReadingListStore.GetValue (iter, 4));
+						return;
+					}
 					pendingReadings.Add(pendingReading);
 				}
 				while(ReadingListStore.IterNext(ref iter));
+
+				if(pendingReadings.Count > 0) {
+					string sqlCheck = "SELECT COUNT(*) FROM meter_reading " +
+						"WHERE meter_id = @meter_id AND meter_tariff_id = @meter_tariff_id AND `date` = @date";
+				}
 
 				logger.Info("Ok");
 				Respond (Gtk.ResponseType.Ok);
