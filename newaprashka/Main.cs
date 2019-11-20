@@ -98,6 +98,11 @@ namespace bazar
 				new Version (2, 3, 4),
 				"bazar.SQLScripts.2.3.4.sql");
 
+			DBUpdater.AddUpdate (
+				new Version (2, 3),
+				new Version (2, 4),
+				"bazar.SQLScripts.2.4.sql");
+
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();
 			QSMain.ProjectTables = Tables;
