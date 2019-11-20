@@ -82,15 +82,20 @@ public partial class MainWindow : Gtk.Window
 		logger.Info("Получаем таблицу c местами...");
 		TreeIter iter;
 		
-		string sql = "SELECT places.*, place_types.name as type, contracts.lessee_id as lessee_id, lessees.name as lessee, contact_persons.name as contact," +
-			"contact_persons.telephones as telephones, organizations.name as organization FROM places " +
+		string sql = "SELECT places.*, place_types.name as type, contact_persons.name as contact, cur_contract.lessee_id, lessees.name as lessee, " +
+				"contact_persons.telephones as telephones, organizations.name as organization " +
+				"FROM places " +
 				"LEFT JOIN place_types ON places.type_id = place_types.id " +
 				"LEFT JOIN contact_persons ON places.contact_person_id = contact_persons.id " +
 				"LEFT JOIN organizations ON places.org_id = organizations.id " +
-				"LEFT JOIN contracts ON places.type_id = contracts.place_type_id AND places.place_no = contracts.place_no AND " +
-				"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
-				"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) " +
-				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id";
+				"LEFT JOIN " +
+					"(SELECT contract_pays.place_id, contracts.lessee_id as lessee_id " +
+					"FROM contract_pays, contracts " +
+					"WHERE contracts.id = contract_pays.contract_id AND " +
+					"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
+					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) " +
+				") as cur_contract ON cur_contract.place_id = places.id " +
+				"LEFT JOIN lessees ON cur_contract.lessee_id = lessees.id";
 		bool WhereExist = false;
 		if(comboPlaceType.GetActiveIter(out iter) && comboPlaceType.Active != 0)
 		{
@@ -106,6 +111,9 @@ public partial class MainWindow : Gtk.Window
 			sql += " places.org_id = '" + comboPlaceOrg.Model.GetValue(iter,1) + "' ";
 			WhereExist = true;
 		}
+
+		sql += " GROUP BY places.id";
+
 		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 		
 		using( MySqlDataReader rdr = cmd.ExecuteReader()) 
