@@ -1,7 +1,5 @@
 using System;
-using System.Data;
 using Gtk;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
@@ -14,8 +12,24 @@ namespace bazar
 		int Lesseeid, Goods_id;
 		bool GoodsNull;
 		
-		Gtk.ListStore ContractsListStore;		
-				
+		Gtk.ListStore ContractsListStore;
+
+		private enum ContractCol
+		{
+			id,
+			active,
+			begin_date,
+			end_date,
+			contract_no,
+			place_id,
+			_null,
+			places_text,
+			places_aria,
+			_null2,
+			_null3,
+			canceled_date
+		}
+
 		AccelGroup grup;
 		
 		public lessee ()
@@ -35,14 +49,12 @@ namespace bazar
 			treeviewContracts.AppendColumn ("с", new Gtk.CellRendererText (), "text", 2);
 			treeviewContracts.AppendColumn ("по", new Gtk.CellRendererText (), "text", 3);
 			treeviewContracts.AppendColumn ("Договор", new Gtk.CellRendererText (), "text", 4);
-			treeviewContracts.AppendColumn ("Место", new Gtk.CellRendererText (), "text", 7);
+			treeviewContracts.AppendColumn ("Места", new Gtk.CellRendererText (), "text", 7);
 			treeviewContracts.AppendColumn ("Площадь", new Gtk.CellRendererText (), "text", 8);
-			treeviewContracts.AppendColumn ("Контактное лицо", new Gtk.CellRendererText (), "text", 10);
 			treeviewContracts.AppendColumn ("Расторгнут", new Gtk.CellRendererText (), "text", 11);
 			
 			treeviewContracts.Model = ContractsListStore;
 			treeviewContracts.ShowAll();
-			
 		}
 		
 		public void LesseeFill(int id)
@@ -157,32 +169,30 @@ namespace bazar
 		{
 	        logger.Info("Получаем таблицу договоров...");
 			
-			string sql = "SELECT contracts.*, place_types.name as type, contact_persons.name as contact, " +
-				"places.contact_person_id as contact_id, places.area as area FROM contracts " +
-				"LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
-				"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no = contracts.place_no " +
-				"LEFT JOIN contact_persons ON places.contact_person_id = contact_persons.id " +
+			string sql = "SELECT contracts.*, GROUP_CONCAT(DISTINCT CONCAT(place_types.name, '-', places.place_no) SEPARATOR ', ') as places, " +
+				"contract_pays.place_id, SUM(places.area) as area " +
+				"FROM contracts " +
+				"LEFT JOIN contract_pays ON contract_pays.contract_id = contracts.id " +
+				"LEFT JOIN places ON places.id = contract_pays.place_id " +
+				"LEFT JOIN place_types ON places.type_id = place_types.id " +
 				"WHERE contracts.lessee_id = @lessee";
 			if(checkActiveContracts.Active)
 				sql += " AND ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) ";
-			
+
+			sql += " GROUP BY contracts.id";
+
 	        MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 	
 			cmd.Parameters.AddWithValue("@lessee",Lesseeid);
 		
 			MySqlDataReader rdr = cmd.ExecuteReader();
-			int contact_person_id;
 			string cancel_date;
 			bool ActiveContract;
 				
 			ContractsListStore.Clear();
 			while (rdr.Read())
 			{
-				if(rdr["contact_id"] != DBNull.Value)
-					contact_person_id = int.Parse (rdr["contact_id"].ToString());
-				else
-					contact_person_id = -1;
 				if(rdr["cancel_date"] != DBNull.Value)
 				{
 					cancel_date = ((DateTime)rdr["cancel_date"]).ToShortDateString();
@@ -198,12 +208,12 @@ namespace bazar
 				                             ((DateTime)rdr["start_date"]).ToShortDateString(),
 				                             ((DateTime)rdr["end_date"]).ToShortDateString(),
 				                             rdr["number"].ToString(),
-											 rdr.GetInt32("place_type_id"),
-				                             rdr["place_no"].ToString(),
-				                             rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),				                             
+											 rdr.GetInt32("place_id"),
+				                             null,
+				                             rdr["places"],				                             
 				                             rdr["area"].ToString(),
-				                             contact_person_id,
-				                             rdr["contact"].ToString(),
+				                             null,
+				                             null,
 				                             cancel_date);
 	   		}
 			rdr.Close();
@@ -253,15 +263,13 @@ namespace bazar
 
 		protected virtual void OnContractsOpenPlace (object o, EventArgs args)
 		{
-			int type;
-			string place;
+			int place_id;
 			TreeIter iter;
 			
 			treeviewContracts.Selection.GetSelected(out iter);
-			type = Convert.ToInt32(ContractsListStore.GetValue(iter,5));
-			place = (string)ContractsListStore.GetValue(iter,6);
+			place_id = Convert.ToInt32(ContractsListStore.GetValue(iter, (int)ContractCol.place_id));
 			Place winPlace = new Place(false);
-			winPlace.PlaceFill(type, place);
+			winPlace.PlaceFill(place_id);
 			winPlace.Show();
 			winPlace.Run();
 			winPlace.Destroy();

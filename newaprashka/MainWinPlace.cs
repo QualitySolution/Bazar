@@ -11,6 +11,7 @@ public partial class MainWindow : Gtk.Window
 	Gtk.TreeModelSort PlaceSort;
 
 	private enum PlaceCol {
+		place_id,
 		type_place_id,
 		type_place,
 		place_no,
@@ -31,7 +32,7 @@ public partial class MainWindow : Gtk.Window
 		ComboWorks.ComboFillReference(comboPlaceOrg,"organizations", ComboWorks.ListMode.WithAll, false, OrderBy: "name");
 
 		//Создаем таблицу "Места"
-		PlacesListStore = new Gtk.ListStore (typeof (int), typeof (string),typeof (string),
+		PlacesListStore = new Gtk.ListStore (typeof (int), typeof (int), typeof (string),typeof (string),
 		                                     typeof (string), typeof (int),typeof (string), typeof (int),
 		                                     typeof (string), typeof (string), typeof (int), typeof (decimal));
 
@@ -121,7 +122,9 @@ public partial class MainWindow : Gtk.Window
 			PlacesListStore.Clear ();
 			while (rdr.Read ()) 
 			{
-				PlacesListStore.AppendValues (rdr.GetInt32 ("type_id"),
+				PlacesListStore.AppendValues (
+											rdr.GetInt32 ("id"),
+											rdr.GetInt32 ("type_id"),
 				                            rdr ["type"].ToString (),
 				                            rdr ["place_no"].ToString (),
 				                            rdr ["lessee"].ToString (),
@@ -278,15 +281,13 @@ public partial class MainWindow : Gtk.Window
 	
 	protected virtual void OnPlaceOpenPlace (object o, EventArgs args)
 	{
-		int result, type;
-		string place;
+		int result, place_id;
 		TreeIter iter;
 		
 		treeviewPlaces.Selection.GetSelected(out iter);
-		place = PlaceSort.GetValue(iter, (int)PlaceCol.place_no).ToString ();
-		type = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.type_place_id));
+		place_id = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.place_id));
 		Place winPlace = new Place(false);
-		winPlace.PlaceFill(type, place);
+		winPlace.PlaceFill(place_id);
 		winPlace.Show();
 		result = winPlace.Run();
 		winPlace.Destroy();

@@ -12,7 +12,7 @@ namespace bazar
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		private bool NewPlace;
 		string PlaceNumber;
-		int lessee_id, contact_id, type_id, ContractId;
+		int place_id, lessee_id, contact_id, type_id, ContractId;
 		bool contactNull = true;
 		MeterTable[] Meters;
 
@@ -57,10 +57,9 @@ namespace bazar
 				notebookMain.GetNthPage (1).Hide (); //FIXME отключил вкладку что бы пользователь не мог создавать счетчики у не записаного места, надо исправить.
 		}
 
-		public void PlaceFill(int type, string place)
+		public void PlaceFill(int id)
 		{
-			type_id = type;
-			PlaceNumber = place;
+			this.place_id = id;
 			NewPlace = false;
 			buttonOk.Sensitive = true;
 			comboPType.Sensitive = false;
@@ -75,14 +74,14 @@ namespace bazar
 				"LEFT JOIN place_types ON places.type_id = place_types.id " +
 				"LEFT JOIN contact_persons ON places.contact_person_id = contact_persons.id " +
 				"LEFT JOIN organizations ON places.org_id = organizations.id " +
-				"WHERE places.type_id = @type_id AND places.place_no = @place";
+				"WHERE places.id = @id";
 			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-			cmd.Parameters.AddWithValue("@type_id", type_id);
-			cmd.Parameters.AddWithValue("@place", PlaceNumber);
+			cmd.Parameters.AddWithValue("@id", place_id);
 			MySqlDataReader rdr = cmd.ExecuteReader();
 
-			rdr.Read ();
+			var res = rdr.Read ();
 
+			type_id = DBWorks.GetInt (rdr, "type_id").Value;
 			ListStoreWorks.SearchListStore((ListStore)comboPType.Model, int.Parse(rdr["type_id"].ToString()), out iter);
 			comboPType.SetActiveIter(iter);
 			if(rdr["org_id"] != DBNull.Value)
@@ -90,7 +89,7 @@ namespace bazar
 			else
 				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
 			comboOrg.SetActiveIter(iter);
-			entryNumber.Text = rdr["place_no"].ToString();
+			PlaceNumber = entryNumber.Text = rdr["place_no"].ToString();
 			if(rdr["area"] != DBNull.Value)
 				spinArea.Value = Convert.ToDouble(rdr["area"].ToString());
 			if(rdr["contact_person_id"] != DBNull.Value)
@@ -106,7 +105,7 @@ namespace bazar
 			FillCurrentContract ();
 
 			logger.Info("Ok");
-			this.Title = "Место " + comboPType.ActiveText + " - " + place;
+			this.Title = "Место " + comboPType.ActiveText + " - " + PlaceNumber;
 			TestCanSave();
 			UpdateHistory();
 		}
@@ -116,14 +115,15 @@ namespace bazar
 			string sql = "SELECT lessees.name as lessee, lessees.comments as l_comments, " +
 			 	"contracts.id as contract_id, contracts.lessee_id as contr_lessee_id, contracts.number as contr_number, " +
 			 	"contracts.start_date as start_date, contracts.end_date as end_date, " +
-			 	"contracts.cancel_date as cancel_date FROM contracts " +
+			 	"contracts.cancel_date as cancel_date " +
+			 	"FROM contract_pays " +
+				"LEFT JOIN contracts ON contract_pays.contract_id = contracts.id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
-				"WHERE contracts.place_type_id = @type AND contracts.place_no = @place AND " +
+				"WHERE contract_pays.place_id = @place_id AND " +
 				"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 				"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))";
 			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-			cmd.Parameters.AddWithValue("@type", type_id);
-			cmd.Parameters.AddWithValue("@place", PlaceNumber);
+			cmd.Parameters.AddWithValue("@place_id", place_id);
 			MySqlDataReader rdr = cmd.ExecuteReader();
 					
 			if(rdr.Read())
@@ -276,18 +276,14 @@ namespace bazar
 		void UpdateHistory()
 		{
 	        logger.Info("Получаем историю места...");
-			TreeIter iter;
 			
 			string sql = "SELECT contracts.*, lessees.name as lessee FROM contracts " +
 			 	"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
-			 	"WHERE place_type_id = @place_type AND place_no = @place_no";
+			 	"LEFT JOIN contract_pays ON contract_pays.contract_id = contracts.id " +
+			 	"WHERE contract_pays.place_id = @place_id " +
+			 	"GROUP BY contracts.id";
 	        MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-			
-			if(comboPType.GetActiveIter(out iter))
-			{
-				cmd.Parameters.AddWithValue("@place_type", comboPType.Model.GetValue(iter,1));
-			}
-			cmd.Parameters.AddWithValue("@place_no", entryNumber.Text);
+			cmd.Parameters.AddWithValue("@place_id", place_id);
 			
 			MySqlDataReader rdr = cmd.ExecuteReader();
 				
