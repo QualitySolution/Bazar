@@ -172,7 +172,7 @@
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
-        <Deployment.LinuxDeployData generateScript="False" scriptName="newaprashka" />
+        <Deployment.LinuxDeployData generateScript="False" scriptName="Bazar" />
         <Policies>
           <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="MSBuild" />
         </Policies>

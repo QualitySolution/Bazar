@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")"
 
 ProjectName="bazar"
-BinDir=../newaprashka/bin/Release
+BinDir=../Bazar/bin/Release
 
 # Сборка релиза
 msbuild /p:Configuration=Release /p:Platform=x86 ../${ProjectName}.sln

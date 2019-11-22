@@ -1,3 +1,3 @@
 #!/bin/bash
-cd newaprashka/bin/Debug
+cd Bazar/bin/Debug
 mono BazAr.exe

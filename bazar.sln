@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BazAr", "newaprashka\BazAr.csproj", "{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BazAr", "Bazar\BazAr.csproj", "{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QSLibs", "QSLibs", "{3E32171D-7CBA-42A7-BA47-986C7E9D90D8}"
 EndProject
