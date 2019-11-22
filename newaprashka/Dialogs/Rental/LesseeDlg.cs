@@ -1,11 +1,12 @@
 using System;
+using Bazar.Dialogs.Estate;
 using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Rental
 {
-	public partial class lessee : Gtk.Dialog
+	public partial class LesseeDlg : Gtk.Dialog
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public bool NewLessee;
@@ -32,7 +33,7 @@ namespace bazar
 
 		AccelGroup grup;
 		
-		public lessee ()
+		public LesseeDlg ()
 		{
 			this.Build ();
 			
@@ -253,7 +254,7 @@ namespace bazar
 			
 			treeviewContracts.Selection.GetSelected(out iter);
 			itemid = (int) ContractsListStore.GetValue(iter,0);
-			Contract winContract = new Contract();
+			ContractDlg winContract = new ContractDlg();
 			winContract.ContractFill(itemid);
 			winContract.Show();
 			winContract.Run();
@@ -268,7 +269,7 @@ namespace bazar
 			
 			treeviewContracts.Selection.GetSelected(out iter);
 			place_id = Convert.ToInt32(ContractsListStore.GetValue(iter, (int)ContractCol.place_id));
-			Place winPlace = new Place(false);
+			PlaceDlg winPlace = new PlaceDlg(false);
 			winPlace.PlaceFill(place_id);
 			winPlace.Show();
 			winPlace.Run();

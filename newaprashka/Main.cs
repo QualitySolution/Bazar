@@ -36,7 +36,7 @@ namespace bazar
 			CreateProjectParam ();
 			// Создаем окно входа
 			Login LoginDialog = new QSProjectsLib.Login ();
-			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
+			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("Bazar.icons.logo.png");
 			LoginDialog.SetDefaultNames ("bazar");
 			LoginDialog.DefaultLogin = "demo";
 			LoginDialog.DefaultServer = "demo.qsolution.ru";

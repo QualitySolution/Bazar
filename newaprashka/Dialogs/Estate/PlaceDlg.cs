@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using bazar;
+using Bazar.Dialogs.Rental;
 using Gtk;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Estate
 {
-	public partial class Place : Gtk.Dialog
+	public partial class PlaceDlg : Gtk.Dialog
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		private bool NewPlace;
@@ -20,7 +21,7 @@ namespace bazar
 		
 		AccelGroup grup;
 		
-		public Place (bool New)
+		public PlaceDlg (bool New)
 		{
 			this.Build ();
 			ComboWorks.ComboFillReference(comboPType,"place_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
@@ -343,7 +344,7 @@ namespace bazar
 			
 			treeviewHistory.Selection.GetSelected(out iter);
 			itemid = (int) HistoryStore.GetValue(iter,0);
-			Contract winContract = new Contract();
+			ContractDlg winContract = new ContractDlg();
 			winContract.ContractFill(itemid);
 			winContract.Show();
 			winContract.Run();
@@ -358,7 +359,7 @@ namespace bazar
 			
 			treeviewHistory.Selection.GetSelected(out iter);
 			itemid = Convert.ToInt32(HistoryStore.GetValue(iter,5));
-			lessee winLessee = new lessee();
+			LesseeDlg winLessee = new LesseeDlg();
 			winLessee.LesseeFill(itemid);
 			winLessee.Show();
 			winLessee.Run();
@@ -376,7 +377,7 @@ namespace bazar
 		}
 		protected void OnButtonLesseeClicked (object sender, EventArgs e)
 		{
-			lessee winLessee = new lessee();
+			LesseeDlg winLessee = new LesseeDlg();
 			winLessee.LesseeFill(lessee_id);
 			winLessee.Show();
 			winLessee.Run();
@@ -386,7 +387,7 @@ namespace bazar
 
 		protected void OnButtonContractClicked (object sender, EventArgs e)
 		{
-			Contract winContract = new Contract();
+			ContractDlg winContract = new ContractDlg();
 			winContract.ContractFill(ContractId);
 			winContract.Show();
 			winContract.Run();
@@ -396,7 +397,7 @@ namespace bazar
 
 		protected void OnButtonNewContractClicked (object sender, EventArgs e)
 		{
-			Contract winContract = new Contract();
+			ContractDlg winContract = new ContractDlg();
 			winContract.NewContract = true;
 			winContract.Show();
 			winContract.SetPlace (type_id, PlaceNumber);

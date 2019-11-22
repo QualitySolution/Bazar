@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Bazar.Dialogs.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
@@ -958,7 +959,7 @@ namespace bazar
 			comboContract.GetActiveIter(out iter);
 			int itemid = (int) comboContract.Model.GetValue (iter, 1);
 
-			Contract winContract = new Contract();
+			ContractDlg winContract = new ContractDlg();
 			winContract.ContractFill(itemid);
 			winContract.Show();
 			winContract.Run();

@@ -3,15 +3,15 @@ using MySql.Data.MySqlClient;
 using NLog;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Payments
 {
-	public partial class Cash : Gtk.Dialog
+	public partial class CashDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewItem;
 		int Cashid;
 
-		public Cash ()
+		public CashDlg ()
 		{
 			this.Build ();
 		}

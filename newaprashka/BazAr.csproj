@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E756C2DD-AD5F-4B44-AC70-F8B0BAA0C7CB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>bazar</RootNamespace>
+    <RootNamespace>Bazar</RootNamespace>
     <AssemblyName>BazAr</AssemblyName>
     <CodePage>65001</CodePage>
     <StartupObject>bazar.MainClass</StartupObject>
@@ -99,18 +99,12 @@
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Place.cs" />
     <Compile Include="Contact.cs" />
-    <Compile Include="Lessee.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="gtk-gui\bazar.Service.cs" />
-    <Compile Include="gtk-gui\bazar.Place.cs" />
     <Compile Include="gtk-gui\bazar.Event.cs" />
-    <Compile Include="gtk-gui\bazar.lessee.cs" />
     <Compile Include="gtk-gui\bazar.Contact.cs" />
-    <Compile Include="Contract.cs" />
-    <Compile Include="gtk-gui\bazar.Contract.cs" />
     <Compile Include="MainWinPlace.cs" />
     <Compile Include="MainWinLessee.cs" />
     <Compile Include="MainWinEvent.cs" />
@@ -157,8 +151,6 @@
     <Compile Include="gtk-gui\bazar.MetersReport.cs" />
     <Compile Include="ContractsProlongation.cs" />
     <Compile Include="gtk-gui\bazar.ContractsProlongation.cs" />
-    <Compile Include="Cash.cs" />
-    <Compile Include="gtk-gui\bazar.Cash.cs" />
     <Compile Include="gtk-gui\bazar.LesseeRentReport.cs" />
     <Compile Include="ReportDialogs\LesseeRentReport.cs" />
     <Compile Include="gtk-gui\bazar.ServiceProvidersPaymentReport.cs" />
@@ -167,6 +159,14 @@
     <Compile Include="ReportDialogs\ContractsReportDlg.cs" />
     <Compile Include="gtk-gui\bazar.ContractsReportDlg.cs" />
     <Compile Include="Tools\BaseParameters.cs" />
+    <Compile Include="Dialogs\Rental\ContractDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Rental.ContractDlg.cs" />
+    <Compile Include="Dialogs\Estate\PlaceDlg.cs" />
+    <Compile Include="Dialogs\Payments\CashDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Estate.PlaceDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Payments.CashDlg.cs" />
+    <Compile Include="Dialogs\Rental\LesseeDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Rental.LesseeDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -174,7 +174,7 @@
       <Properties>
         <Deployment.LinuxDeployData generateScript="False" scriptName="newaprashka" />
         <Policies>
-          <DotNetNamingPolicy ResourceNamePolicy="FileFormatDefault" DirectoryNamespaceAssociation="PrefixedHierarchical" />
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="MSBuild" />
         </Policies>
       </Properties>
     </MonoDevelop>
@@ -224,6 +224,18 @@
     <Folder Include="icons\" />
     <Folder Include="SQLScripts\" />
     <Folder Include="Tools\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Dialogs\" />
+    <Folder Include="Dialogs\Estate\" />
+    <Folder Include="Dialogs\Payments\" />
+    <Folder Include="Dialogs\Rental\" />
+    <Folder Include="Domain\Payments\" />
+    <Folder Include="Domain\Estate\" />
+    <Folder Include="Domain\Rental\" />
+    <Folder Include="HibernateMapping\" />
+    <Folder Include="HibernateMapping\Payments\" />
+    <Folder Include="HibernateMapping\Estate\" />
+    <Folder Include="HibernateMapping\Rental\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

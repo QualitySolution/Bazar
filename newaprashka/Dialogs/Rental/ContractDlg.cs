@@ -4,10 +4,11 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 using NLog;
+using bazar;
 
-namespace bazar
+namespace Bazar.Dialogs.Rental
 {
-	public partial class Contract : Gtk.Dialog
+	public partial class ContractDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewContract;
@@ -22,6 +23,7 @@ namespace bazar
 		decimal PlaceArea = 0;
 
 		private enum ServiceCol{
+			id,
 			service_id,
 			service,
 			cash_id,
@@ -30,18 +32,16 @@ namespace bazar
 			count,
 			price,
 			sum,
-			id,
 			by_aria,
 			min_pay,
 			row_color
 		}
 
-		public Contract ()
+		public ContractDlg ()
 		{
 			this.Build ();
 
 			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo, OrderBy: "name");
-			ComboWorks.ComboFillReference(comboPlaceT,"place_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
 
 			ComboBox ServiceCombo = new ComboBox();
 			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
@@ -57,18 +57,21 @@ namespace bazar
 			MainClass.FillServiceListStore(out ServiceRefListStore);
 
 			//Создаем таблицу "Услуги"
-			ServiceListStore = new Gtk.ListStore (typeof(int), 	// 0 - idServiceColumn
-			                                      typeof(string),	// 1 - Наименование
-			                                      typeof(int),		// 2 - idКасса
-			                                      typeof(string),	// 3 - Касса
-			                                      typeof(string), 	// 5 - Ед. изм.
-			                                      typeof(decimal), 	// 6 - Количество
-			                                      typeof(decimal),	// 7 - Цена
-			                                      typeof(decimal),	// 8 - Сумма
-			                                      typeof(int), 	// 9 - id
-			                                      typeof(bool),	// 10 - Есть ли расчет по метражу
-			                                      typeof(decimal),	// 11 - Минимальный платеж.
-			                                      typeof(string) 	// 12 - Цвет строки
+			ServiceListStore = new Gtk.ListStore (
+												  typeof(int),  // 0 - id
+												  typeof(int),    // 1 - idServiceColumn
+												  typeof(string),   // 2 - Наименование
+												  typeof (int),      // 3 - Место id
+												  typeof (string),   // 4 - Место
+												  typeof (int),      // 5 - idКасса
+												  typeof(string),   // 6 - Касса
+												  typeof(string),   // 7 - Ед. изм.
+												  typeof(decimal),  // 8 - Количество
+												  typeof(decimal),  // 9 - Цена
+												  typeof(decimal),	// 10 - Сумма
+			                                      typeof(bool),	// 11 - Есть ли расчет по метражу
+			                                      typeof(decimal),	// 12 - Минимальный платеж.
+			                                      typeof(string) 	// 13 - Цвет строки
 			);
 			
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
@@ -129,12 +132,17 @@ namespace bazar
 				}
 			}
 
-			treeviewServices.Columns[3].MinWidth = 90;
-
+			treeviewServices.Columns[4].MinWidth = 90;
+			treeviewServices.Selection.Changed += Selection_Changed;
 			treeviewServices.Model = ServiceListStore;
 			treeviewServices.ShowAll();
+		}
 
-			OnTreeviewServicesCursorChanged(null, null);
+		#region Работа с таблицей услуг.
+		void Selection_Changed (object sender, EventArgs e)
+		{
+			bool isSelect = treeviewServices.Selection.CountSelectedRows () == 1;
+			buttonDelService.Sensitive = isSelect;
 		}
 
 		void OnServiceComboEdited (object o, EditedArgs args)
@@ -261,6 +269,8 @@ namespace bazar
 			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
 		}
 
+		#endregion
+
 		public void ContractFill(int Id)
 		{
 			NewContract = false;
@@ -268,9 +278,8 @@ namespace bazar
 			TreeIter iter;
 			
 			logger.Info("Запрос договора ID:" + Id +"...");
-			string sql = "SELECT contracts.*, lessees.name as lessee, places.area FROM contracts " +
+			string sql = "SELECT contracts.*, lessees.name as lessee, FROM contracts " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
-				"LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no = contracts.place_no " +
 				"WHERE contracts.id = @id";
 			try
 			{
@@ -311,33 +320,21 @@ namespace bazar
 				decimal area = 0;
 				if(rdr["area"] != DBNull.Value)
 					area = rdr.GetDecimal("area");
-				labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
+				//labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
 				PlaceArea = area;
 				textComments.Buffer.Text = rdr["comments"].ToString();
-				//запоминаем переменные что бы освободить соединение
-				object DBPlaceT = rdr["place_type_id"];
-				object DBPlaceNo = rdr["place_no"];
-				
 				rdr.Close();
 
-				if(DBPlaceT != DBNull.Value)
-					ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, int.Parse(DBPlaceT.ToString()), out iter);
-				else
-					ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, -1, out iter);
-				comboPlaceT.SetActiveIter (iter);
-				if(DBPlaceNo != DBNull.Value)
-				{
-					ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, DBPlaceNo.ToString(), out iter);
-					comboPlaceNo.SetActiveIter(iter);
-				}
 				this.Title = "Договор №" + entryNumber.Text;
 
 				//Получаем таблицу услуг
 				sql = "SELECT contract_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, services.by_area as by_area," +
-					"units.name as units FROM contract_pays " +
+					"units.name as units, places.place_no, place_types.name as place_type FROM contract_pays " +
 					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
 					"LEFT JOIN services ON contract_pays.service_id = services.id " +
 					"LEFT JOIN units ON services.units_id = units.id " +
+					"LEFT JOIN places ON places.id = contract_pays.place_id " +
+					"LEFT JOIN place_types ON places.type_id = place_types.id " +
 					"WHERE contract_pays.contract_id = @contract_id";
 
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
@@ -351,15 +348,18 @@ namespace bazar
 					count = DBWorks.GetDecimal (rdr, "count", 0);
 					price = DBWorks.GetDecimal (rdr, "price", 0);
 
-					ServiceListStore.AppendValues(int.Parse(rdr["service_id"].ToString()),
+					ServiceListStore.AppendValues(
+												rdr.GetInt32("id"),
+												 rdr.GetInt32 ("service_id"),
 					                             rdr["service"].ToString(),
-					                             DBWorks.GetInt (rdr, "cash_id", -1),
+												 DBWorks.GetInt(rdr, "place_id"),
+												 $"{rdr ["place_type"]}-{rdr["place_no"]}",
+												 DBWorks.GetInt (rdr, "cash_id", -1),
 					                             rdr["cash"].ToString(),
 					                             rdr["units"].ToString(),
 					                             count,
 					                             price,
 					                             count * price,
-					                             int.Parse(rdr["id"].ToString()),
 					                             rdr.GetBoolean("by_area"),
 					                              DBWorks.GetDecimal (rdr, "min_sum", 0),
 					                              DBWorks.GetString(rdr, "cashcolor", null)
@@ -376,32 +376,18 @@ namespace bazar
 			}
 
 			TestCanSave();
-			OnTreeviewServicesCursorChanged(null, null);
-		}
-
-		protected void OnComboPlaceTChanged (object sender, EventArgs e)
-		{
-			TreeIter iter;
-			int id;
-			if(comboPlaceT.GetActiveIter(out iter) && comboPlaceT.Active > 0)
-			{
-				id = (int)comboPlaceT.Model.GetValue(iter,1);
-				MainClass.ComboPlaceNoFill(comboPlaceNo,id);
-			}
-			TestCanSave();
 		}
 
 		protected	void TestCanSave ()
 		{
 			bool Numberok = (entryNumber.Text != "");
 			bool Orgok = comboOrg.Active > 0;
-			bool Placeok = comboPlaceT.Active > 0 && comboPlaceNo.Active >= 0;
 			bool Lesseeok = !LesseeisNull;
 			bool DatesCorrectok = TestCorrectDates (false);
 			bool ServiceOk = TestServiceAndCash ();
 
 			buttonLesseeOpen.Sensitive = Lesseeok;
-			buttonOk.Sensitive = Numberok && Orgok && Placeok && Lesseeok && DatesCorrectok && ServiceOk;
+			buttonOk.Sensitive = Numberok && Orgok && Lesseeok && DatesCorrectok && ServiceOk;
 		}
 
 		protected bool TestServiceAndCash()
@@ -461,63 +447,63 @@ namespace bazar
 
 		protected void OnComboPlaceNoChanged (object sender, EventArgs e)
 		{
-			TreeIter iter;
-			if(NewContract && comboPlaceNo.ActiveText != null)
-			{
-				logger.Info("Запрос информации о месте...");
-				string sql = "SELECT org_id, area FROM places " +
-					"WHERE type_id = @type_id AND place_no = @place_no";
-				try
-				{
-					MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
+			//TreeIter iter;
+			//if(NewContract && comboPlaceNo.ActiveText != null)
+			//{
+			//	logger.Info("Запрос информации о месте...");
+			//	string sql = "SELECT org_id, area FROM places " +
+			//		"WHERE type_id = @type_id AND place_no = @place_no";
+			//	try
+			//	{
+			//		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					
-					if(comboPlaceT.GetActiveIter(out iter))
-					{
-						cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
-					}	
-					cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.ActiveText);
+			//		if(comboPlaceT.GetActiveIter(out iter))
+			//		{
+			//			cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
+			//		}	
+			//		cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.ActiveText);
 			
-					MySqlDataReader rdr = cmd.ExecuteReader();
+			//		MySqlDataReader rdr = cmd.ExecuteReader();
 						
-					if(rdr.Read() )
-					{
-						if(rdr["org_id"] != DBNull.Value)
-							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
-						else
-							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
-						comboOrg.SetActiveIter (iter);
-						decimal old_area = PlaceArea;
-						if(rdr["area"] != DBNull.Value)
-							PlaceArea = rdr.GetDecimal("area");
-						labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", PlaceArea);
+			//		if(rdr.Read() )
+			//		{
+			//			if(rdr["org_id"] != DBNull.Value)
+			//				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
+			//			else
+			//				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
+			//			comboOrg.SetActiveIter (iter);
+			//			decimal old_area = PlaceArea;
+			//			if(rdr["area"] != DBNull.Value)
+			//				PlaceArea = rdr.GetDecimal("area");
+			//			labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", PlaceArea);
 
-						TreeIter ServiceIter;
-						if (ServiceListStore != null && ServiceListStore.GetIterFirst (out ServiceIter))
-						{
-							do
-							{
-								bool b = (bool) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.by_aria);
-								decimal i = (decimal) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.count);
-								if( b && i == old_area)
-								{
-									ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.count, PlaceArea);
-									decimal Price = (decimal)ServiceListStore.GetValue (ServiceIter, (int)ServiceCol.price);
-									ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.sum, Price * PlaceArea);
-								}
-							}
-							while(ServiceListStore.IterNext (ref ServiceIter));
-							CalculateServiceSum ();
-						}
-					}
-					rdr.Close();
-					logger.Info("Ok");
-				}
-				catch (Exception ex)
-				{
-					QSMain.ErrorMessageWithLog(this, "Ошибка получения места!", logger, ex);
-				}				
-			}
-			TestCanSave();
+			//			TreeIter ServiceIter;
+			//			if (ServiceListStore != null && ServiceListStore.GetIterFirst (out ServiceIter))
+			//			{
+			//				do
+			//				{
+			//					bool b = (bool) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.by_aria);
+			//					decimal i = (decimal) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.count);
+			//					if( b && i == old_area)
+			//					{
+			//						ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.count, PlaceArea);
+			//						decimal Price = (decimal)ServiceListStore.GetValue (ServiceIter, (int)ServiceCol.price);
+			//						ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.sum, Price * PlaceArea);
+			//					}
+			//				}
+			//				while(ServiceListStore.IterNext (ref ServiceIter));
+			//				CalculateServiceSum ();
+			//			}
+			//		}
+			//		rdr.Close();
+			//		logger.Info("Ok");
+			//	}
+			//	catch (Exception ex)
+			//	{
+			//		QSMain.ErrorMessageWithLog(this, "Ошибка получения места!", logger, ex);
+			//	}				
+			//}
+			//TestCanSave();
 		}
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
@@ -573,14 +559,14 @@ namespace bazar
 					"WHERE place_type_id = @type_id AND place_no = @place_no AND " +
 						"!(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date)" ;
 				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				if(comboPlaceT.GetActiveIter(out iter))
-				{
-					cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
-				}
-				if(comboPlaceNo.GetActiveIter(out iter))
-				{
-					cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.Model.GetValue(iter,0));
-				}	
+				//if(comboPlaceT.GetActiveIter(out iter))
+				//{
+				//	cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
+				//}
+				//if(comboPlaceNo.GetActiveIter(out iter))
+				//{
+				//	cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.Model.GetValue(iter,0));
+				//}	
 				cmd.Parameters.AddWithValue("@start", datepickerStart.Date);
 				if(datepickerCancel.IsEmpty)
 					cmd.Parameters.AddWithValue("@end", datepickerEnd.Date);
@@ -633,14 +619,14 @@ namespace bazar
 				else
 					cmd.Parameters.AddWithValue("@org_id", DBNull.Value);
 
-				if(comboPlaceT.GetActiveIter(out iter))
-				{
-					cmd.Parameters.AddWithValue("@place_type_id", comboPlaceT.Model.GetValue(iter,1));
-				}	
-				if(comboPlaceNo.GetActiveIter(out iter))
-				{
-					cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.Model.GetValue(iter,0));
-				}	
+				//if(comboPlaceT.GetActiveIter(out iter))
+				//{
+				//	cmd.Parameters.AddWithValue("@place_type_id", comboPlaceT.Model.GetValue(iter,1));
+				//}	
+				//if(comboPlaceNo.GetActiveIter(out iter))
+				//{
+					//cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.Model.GetValue(iter,0));
+				//}	
 				if(!datepickerSign.IsEmpty)
 					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
 				else
@@ -764,7 +750,7 @@ namespace bazar
 
 		protected void OnButtonLesseeOpenClicked (object sender, EventArgs e)
 		{
-			lessee winLessee = new lessee();
+			LesseeDlg winLessee = new LesseeDlg();
 			winLessee.LesseeFill(LesseeId);
 			winLessee.Show();
 			winLessee.Run();
@@ -786,7 +772,6 @@ namespace bazar
 				ServiceListStore.SetValue (iter, (int)ServiceCol.cash_id, CashNameList.GetValue (CashIter, 1));
 			}
 			TestCanSave ();
-			OnTreeviewServicesCursorChanged (null, null);
 		}
 
 		protected void CalculateServiceSum ()
@@ -825,7 +810,6 @@ namespace bazar
 			ServiceListStore.Remove(ref iter);
 			CalculateServiceSum ();
 			TestCanSave ();
-			OnTreeviewServicesCursorChanged (null, null);
 		}
 
 		public bool SetPlace(int place_type_id, string place_no)
@@ -833,10 +817,10 @@ namespace bazar
 			TreeIter iter;
 			try
 			{
-				ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, place_type_id, out iter);
-				comboPlaceT.SetActiveIter (iter);
-				ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, place_no, out iter);
-				comboPlaceNo.SetActiveIter(iter);
+				//ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, place_type_id, out iter);
+				//comboPlaceT.SetActiveIter (iter);
+				//ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, place_no, out iter);
+				//comboPlaceNo.SetActiveIter(iter);
 				return true;
 			}
 			catch
@@ -849,12 +833,6 @@ namespace bazar
 		{
 			TestCorrectDates (true);
 			TestCanSave();
-		}
-
-		protected void OnTreeviewServicesCursorChanged (object sender, EventArgs e)
-		{
-			bool isSelect = treeviewServices.Selection.CountSelectedRows() == 1;
-			buttonDelService.Sensitive = isSelect;
 		}
 
 		protected void OnEntryActivated (object sender, EventArgs e)

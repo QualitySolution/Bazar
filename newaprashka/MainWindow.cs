@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using bazar;
+using Bazar.Dialogs.Estate;
+using Bazar.Dialogs.Payments;
+using Bazar.Dialogs.Rental;
 using Gtk;
 using QS.Updater;
 using QSProjectsLib;
@@ -100,7 +103,7 @@ public partial class MainWindow : Gtk.Window
 		case 0:
 			treeviewPlaces.Selection.GetSelected (out iter);
 			itemid = Convert.ToInt32 (PlaceSort.GetValue (iter, (int)PlaceCol.place_id));
-			Place winPlace = new Place (false);
+			PlaceDlg winPlace = new PlaceDlg (false);
 			winPlace.PlaceFill (itemid);
 			winPlace.Show ();
 			result = (ResponseType)winPlace.Run ();
@@ -111,7 +114,7 @@ public partial class MainWindow : Gtk.Window
 		case 1:
 			treeviewLessees.Selection.GetSelected (out iter);
 			itemid = Convert.ToInt32 (LesseesSort.GetValue (iter, (int)LesseesCol.id));
-			lessee winLessee = new lessee ();
+			LesseeDlg winLessee = new LesseeDlg ();
 			winLessee.LesseeFill (itemid);
 			winLessee.Show ();
 			result = (ResponseType)winLessee.Run ();
@@ -122,7 +125,7 @@ public partial class MainWindow : Gtk.Window
 		case 2:
 			treeviewContract.Selection.GetSelected (out iter);
 			itemid = (int)ContractSort.GetValue (iter, (int)ContractCol.id);
-			Contract winContract = new Contract ();
+			ContractDlg winContract = new ContractDlg ();
 			winContract.ContractFill (itemid);
 			winContract.Show ();
 			result = (ResponseType)winContract.Run ();
@@ -202,14 +205,14 @@ public partial class MainWindow : Gtk.Window
 	{
 		switch (notebookMain.CurrentPage) {
 		case 0:
-			Place winPlace = new Place (true);
+			PlaceDlg winPlace = new PlaceDlg (true);
 			winPlace.Show ();
 			winPlace.Run ();
 			winPlace.Destroy ();
 			UpdatePlaces ();
 			break;
 		case 1:
-			lessee winLessee = new lessee ();
+			LesseeDlg winLessee = new LesseeDlg ();
 			winLessee.NewLessee = true;
 			winLessee.Show ();
 			winLessee.Run ();
@@ -217,7 +220,7 @@ public partial class MainWindow : Gtk.Window
 			UpdateLessees ();
 			break;
 		case 2:
-			Contract winContract = new Contract ();
+			ContractDlg winContract = new ContractDlg ();
 			winContract.NewContract = true;
 			winContract.Show ();
 			winContract.Run ();
@@ -584,7 +587,7 @@ public partial class MainWindow : Gtk.Window
 			ContactEdit.Destroy ();
 			break;
 		case "lessees":
-			lessee LesseeEdit = new lessee ();
+			LesseeDlg LesseeEdit = new LesseeDlg ();
 			LesseeEdit.NewLessee = e.NewItem;
 			if (!e.NewItem)
 				LesseeEdit.LesseeFill (e.ItemId);
@@ -602,7 +605,7 @@ public partial class MainWindow : Gtk.Window
 			ServiceEdit.Destroy ();
 			break;
 		case "cash":
-			Cash CashEdit = new Cash ();
+			CashDlg CashEdit = new CashDlg ();
 			CashEdit.NewItem = e.NewItem;
 			if (!e.NewItem)
 				CashEdit.Fill (e.ItemId);

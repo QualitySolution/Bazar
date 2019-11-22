@@ -1,7 +1,9 @@
 using System;
+using bazar;
+using Bazar.Dialogs.Estate;
+using Bazar.Dialogs.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
-using bazar;
 using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
@@ -286,7 +288,7 @@ public partial class MainWindow : Gtk.Window
 		
 		treeviewPlaces.Selection.GetSelected(out iter);
 		place_id = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.place_id));
-		Place winPlace = new Place(false);
+		PlaceDlg winPlace = new PlaceDlg(false);
 		winPlace.PlaceFill(place_id);
 		winPlace.Show();
 		result = winPlace.Run();
@@ -304,7 +306,7 @@ public partial class MainWindow : Gtk.Window
 		
 		treeviewPlaces.Selection.GetSelected(out iter);
 		itemid = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.lessee_id));
-		lessee winLessee = new lessee();
+		LesseeDlg winLessee = new LesseeDlg();
 		winLessee.LesseeFill(itemid);
 		winLessee.Show();
 		result = winLessee.Run();
