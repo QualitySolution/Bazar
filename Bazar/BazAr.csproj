@@ -101,8 +101,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Event.cs" />
-    <Compile Include="Service.cs" />
-    <Compile Include="gtk-gui\bazar.Service.cs" />
     <Compile Include="gtk-gui\bazar.Event.cs" />
     <Compile Include="gtk-gui\bazar.Contact.cs" />
     <Compile Include="MainWinPlace.cs" />
@@ -167,6 +165,8 @@
     <Compile Include="gtk-gui\Bazar.Dialogs.Payments.CashDlg.cs" />
     <Compile Include="Dialogs\Rental\LesseeDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Rental.LesseeDlg.cs" />
+    <Compile Include="Dialogs\Rental\ServiceDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Rental.ServiceDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

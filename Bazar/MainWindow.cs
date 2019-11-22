@@ -596,7 +596,7 @@ public partial class MainWindow : Gtk.Window
 			LesseeEdit.Destroy ();
 			break;
 		case "services":
-			Service ServiceEdit = new Service ();
+			ServiceDlg ServiceEdit = new ServiceDlg ();
 			ServiceEdit.NewService = e.NewItem;
 			if (!e.NewItem)
 				ServiceEdit.ServiceFill (e.ItemId);

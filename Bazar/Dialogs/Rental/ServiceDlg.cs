@@ -4,16 +4,16 @@ using MySql.Data.MySqlClient;
 using QSProjectsLib;
 using NLog;
 
-namespace bazar
+namespace Bazar.Dialogs.Rental
 {
-	public partial class Service : Gtk.Dialog
+	public partial class ServiceDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewService;
 		int Serviceid;
 		TreeIter iter;
 
-		public Service ()
+		public ServiceDlg ()
 		{
 			this.Build ();
 
