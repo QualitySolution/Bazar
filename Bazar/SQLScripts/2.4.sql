@@ -14,6 +14,10 @@ ALTER TABLE `accrual_pays`
 ADD COLUMN `place_id` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `service_id`,
 ADD INDEX `fk_accrual_pays_1_idx` (`place_id` ASC);
 
+ALTER TABLE `units` 
+ADD COLUMN `digits` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0 AFTER `name`,
+ADD COLUMN `okei` VARCHAR(3) NULL DEFAULT NULL AFTER `digits`;
+
 -- Миграция из старых данных в новые
 
 UPDATE contract_pays, contracts, places

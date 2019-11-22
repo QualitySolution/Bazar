@@ -77,6 +77,24 @@
     <Reference Include="Renci.SshNet">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq">
+      <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq.EagerFetching">
+      <HintPath>..\packages\Remotion.Linq.EagerFetching.2.2.0\lib\net45\Remotion.Linq.EagerFetching.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.5.2.6\lib\net461\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\packages\FluentNHibernate.2.1.2\lib\net461\FluentNHibernate.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -165,8 +183,30 @@
     <Compile Include="gtk-gui\Bazar.Dialogs.Payments.CashDlg.cs" />
     <Compile Include="Dialogs\Rental\LesseeDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Rental.LesseeDlg.cs" />
+    <Compile Include="Domain\Rental\Contract.cs" />
+    <Compile Include="Domain\Estate\Organization.cs" />
+    <Compile Include="HibernateMapping\Estate\OrganizationMap.cs" />
+    <Compile Include="Domain\Rental\Lessee.cs" />
+    <Compile Include="HibernateMapping\Rental\LesseeMap.cs" />
+    <Compile Include="HibernateMapping\Rental\ContractMap.cs" />
+    <Compile Include="Domain\Rental\ContractItem.cs" />
     <Compile Include="Dialogs\Rental\ServiceDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Rental.ServiceDlg.cs" />
+    <Compile Include="Domain\Rental\Service.cs" />
+    <Compile Include="Domain\Payments\IncomeCategory.cs" />
+    <Compile Include="HibernateMapping\Payments\IncomeCategoryMap.cs" />
+    <Compile Include="Domain\Rental\ServiceProvider.cs" />
+    <Compile Include="HibernateMapping\Rental\ServiceProviderMap.cs" />
+    <Compile Include="HibernateMapping\Rental\ServiceMap.cs" />
+    <Compile Include="HibernateMapping\Rental\MeasurementUnitsMap.cs" />
+    <Compile Include="Domain\Estate\Place.cs" />
+    <Compile Include="Domain\Estate\PlaceType.cs" />
+    <Compile Include="HibernateMapping\Estate\PlaceTypeMap.cs" />
+    <Compile Include="Domain\Estate\ContactPerson.cs" />
+    <Compile Include="HibernateMapping\Estate\ContactPersonMap.cs" />
+    <Compile Include="Domain\Payments\Cash.cs" />
+    <Compile Include="HibernateMapping\Payments\CashMap.cs" />
+    <Compile Include="HibernateMapping\Rental\ContractItemMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -216,6 +256,14 @@
     <ProjectReference Include="..\..\QSProjects\QS.Updater.Gtk\QS.Updater.Gtk.csproj">
       <Project>{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}</Project>
       <Name>QS.Updater.Gtk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QSProjects\QS.Project\QS.Project.csproj">
+      <Project>{28A78143-42E3-40E7-86F5-DD7E1679BE86}</Project>
+      <Name>QS.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QSProjects\Modules\QS.BusinessCommon\QS.BusinessCommon.csproj">
+      <Project>{F22749B2-E35B-455D-BD8D-081373B16FC7}</Project>
+      <Name>QS.BusinessCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

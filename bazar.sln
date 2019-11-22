@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater", "..\QSProjects
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Utilities", "..\QSProjects\QS.Utilities\QS.Utilities.csproj", "{E2228A2B-4883-4DD8-8A05-23501F7B8A33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.BusinessCommon", "..\QSProjects\Modules\QS.BusinessCommon\QS.BusinessCommon.csproj", "{F22749B2-E35B-455D-BD8D-081373B16FC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -97,6 +99,10 @@ Global
 		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Debug|x86.Build.0 = Debug|Any CPU
 		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Release|x86.ActiveCfg = Release|Any CPU
 		{E2228A2B-4883-4DD8-8A05-23501F7B8A33}.Release|x86.Build.0 = Release|Any CPU
+		{F22749B2-E35B-455D-BD8D-081373B16FC7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F22749B2-E35B-455D-BD8D-081373B16FC7}.Debug|x86.Build.0 = Debug|Any CPU
+		{F22749B2-E35B-455D-BD8D-081373B16FC7}.Release|x86.ActiveCfg = Release|Any CPU
+		{F22749B2-E35B-455D-BD8D-081373B16FC7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A6C1914F-7732-49F5-BABA-8BBBA521FAAB} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
@@ -113,6 +119,7 @@ Global
 		{28A78143-42E3-40E7-86F5-DD7E1679BE86} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{0F2A9FD4-6FC1-4912-9C8A-72028305A37E} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 		{E2228A2B-4883-4DD8-8A05-23501F7B8A33} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
+		{F22749B2-E35B-455D-BD8D-081373B16FC7} = {3E32171D-7CBA-42A7-BA47-986C7E9D90D8}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
