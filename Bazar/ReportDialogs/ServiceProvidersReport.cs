@@ -1,5 +1,6 @@
 ﻿using System;
 using bazar.Tools;
+using Bazar;
 using Gtk;
 using QSProjectsLib;
 using QSSupportLib;

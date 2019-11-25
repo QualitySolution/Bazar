@@ -10,8 +10,8 @@
     <RootNamespace>Bazar</RootNamespace>
     <AssemblyName>BazAr</AssemblyName>
     <CodePage>65001</CodePage>
-    <StartupObject>bazar.MainClass</StartupObject>
-    <ReleaseVersion>2.2</ReleaseVersion>
+    <StartupObject>Bazar.MainClass</StartupObject>
+    <ReleaseVersion>2.3</ReleaseVersion>
     <ApplicationIcon>icons\logo.ico</ApplicationIcon>
     <UseMSBuildEngine>False</UseMSBuildEngine>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -207,6 +207,8 @@
     <Compile Include="Domain\Payments\Cash.cs" />
     <Compile Include="HibernateMapping\Payments\CashMap.cs" />
     <Compile Include="HibernateMapping\Rental\ContractItemMap.cs" />
+    <Compile Include="CreateBaseConfig.cs" />
+    <Compile Include="HibernateMapping\Estate\PlaceMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

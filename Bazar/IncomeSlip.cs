@@ -1,4 +1,5 @@
 using System;
+using Bazar;
 using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;

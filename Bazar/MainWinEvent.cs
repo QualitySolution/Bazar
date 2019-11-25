@@ -1,7 +1,7 @@
 using System;
+using Bazar;
 using Gtk;
 using MySql.Data.MySqlClient;
-using bazar;
 using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window

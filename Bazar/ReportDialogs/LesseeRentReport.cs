@@ -1,7 +1,8 @@
 ﻿using System;
-using QSProjectsLib;
-using MySql.Data.MySqlClient;
+using Bazar;
 using Gtk;
+using MySql.Data.MySqlClient;
+using QSProjectsLib;
 
 namespace bazar
 {

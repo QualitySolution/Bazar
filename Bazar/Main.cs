@@ -8,9 +8,9 @@ using QS.Updater.DB;
 using QSProjectsLib;
 using QSSupportLib;
 
-namespace bazar
+namespace Bazar
 {
-	class MainClass
+	partial class MainClass
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger ();
 		public static MainWindow MainWin;
@@ -59,6 +59,9 @@ namespace bazar
 			LoginDialog.Destroy ();
 			//Проверка на предмет использования SaaS и запуск обновления сессии.
 			QSSaaS.Session.StartSessionRefresh ();
+
+			//Настройка базы
+			CreateBaseConfig();
 
 			//Запускаем программу
 			MainWin = new MainWindow ();

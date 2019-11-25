@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using bazar;
+using Bazar;
+using Gamma.GtkWidgets;
 using Gtk;
 using MySql.Data.MySqlClient;
-using bazar;
 using QSProjectsLib;
-using System.Collections.Generic;
-using Gamma.GtkWidgets;
-using System.Linq;
 
 public partial class MainWindow : Gtk.Window
 {

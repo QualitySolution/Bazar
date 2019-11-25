@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Bazar;
 using Bazar.Dialogs.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
