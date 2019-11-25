@@ -128,6 +128,7 @@ Global
 		$0.TextStylePolicy = $2
 		$2.NoTabsAfterNonTabs = True
 		$2.scope = text/x-csharp
+		$2.EolMarker = Unix
 		$0.CSharpFormattingPolicy = $3
 		$3.AlignToFirstMethodCallArgument = True
 		$3.AlignToFirstIndexerArgument = True
@@ -146,9 +147,7 @@ Global
 		$3.NewLineForMembersInObjectInit = False
 		$3.NewLineForMembersInAnonymousTypes = False
 		$3.NewLineForClausesInQuery = False
-		$3.SpacingAfterMethodDeclarationName = True
-		$3.SpaceAfterMethodCallName = True
-		$3.SpaceBeforeOpenSquareBracket = True
+		$3.SpaceAfterControlFlowStatementKeyword = False
 		$0.StandardHeader = $4
 		$0.VersionControlPolicy = $5
 		$0.ChangeLogPolicy = $6
@@ -286,6 +285,6 @@ Global
 		$32.scope = application/xml
 		$0.XmlFormattingPolicy = $33
 		$33.scope = application/xml
-		version = 2.2
+		version = 2.3
 	EndGlobalSection
 EndGlobal
