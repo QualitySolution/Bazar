@@ -66,7 +66,7 @@ namespace Bazar.Dialogs.Rental
 
 		private global::Gtk.ScrolledWindow GtkScrolledWindow1;
 
-		private global::Gtk.TreeView treeviewServices;
+		private global::Gamma.GtkWidgets.yTreeView treeviewServices;
 
 		private global::Gtk.HBox hbox7;
 
@@ -450,7 +450,7 @@ namespace Bazar.Dialogs.Rental
 			this.GtkScrolledWindow1.Name = "GtkScrolledWindow1";
 			this.GtkScrolledWindow1.ShadowType = ((global::Gtk.ShadowType)(1));
 			// Container child GtkScrolledWindow1.Gtk.Container+ContainerChild
-			this.treeviewServices = new global::Gtk.TreeView();
+			this.treeviewServices = new global::Gamma.GtkWidgets.yTreeView();
 			this.treeviewServices.CanFocus = true;
 			this.treeviewServices.Name = "treeviewServices";
 			this.GtkScrolledWindow1.Add(this.treeviewServices);
@@ -505,42 +505,42 @@ namespace Bazar.Dialogs.Rental
 			w38.Position = 2;
 			w38.Expand = false;
 			w38.Fill = false;
-			this.vbox4.Add(this.hbox9);
-			global::Gtk.Box.BoxChild w39 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.hbox9]));
-			w39.Position = 0;
-			w39.Expand = false;
-			w39.Fill = false;
-			this.hbox7.Add(this.vbox4);
-			global::Gtk.Box.BoxChild w40 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.vbox4]));
-			w40.Position = 0;
-			w40.Expand = false;
-			w40.Fill = false;
-			// Container child hbox7.Gtk.Box+BoxChild
+			// Container child hbox9.Gtk.Box+BoxChild
 			this.buttonPlaceSet = new global::Gtk.Button();
 			this.buttonPlaceSet.CanFocus = true;
 			this.buttonPlaceSet.Name = "buttonPlaceSet";
 			this.buttonPlaceSet.UseUnderline = true;
 			this.buttonPlaceSet.Label = global::Mono.Unix.Catalog.GetString("Указать место");
-			global::Gtk.Image w41 = new global::Gtk.Image();
-			w41.Pixbuf = global::Stetic.IconLoader.LoadIcon(this, "gtk-edit", global::Gtk.IconSize.Menu);
-			this.buttonPlaceSet.Image = w41;
-			this.hbox7.Add(this.buttonPlaceSet);
-			global::Gtk.Box.BoxChild w42 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.buttonPlaceSet]));
-			w42.Position = 1;
-			w42.Expand = false;
-			w42.Fill = false;
-			// Container child hbox7.Gtk.Box+BoxChild
+			global::Gtk.Image w39 = new global::Gtk.Image();
+			w39.Pixbuf = global::Stetic.IconLoader.LoadIcon(this, "gtk-edit", global::Gtk.IconSize.Menu);
+			this.buttonPlaceSet.Image = w39;
+			this.hbox9.Add(this.buttonPlaceSet);
+			global::Gtk.Box.BoxChild w40 = ((global::Gtk.Box.BoxChild)(this.hbox9[this.buttonPlaceSet]));
+			w40.Position = 3;
+			w40.Expand = false;
+			w40.Fill = false;
+			// Container child hbox9.Gtk.Box+BoxChild
 			this.buttonPlaceClean = new global::Gtk.Button();
 			this.buttonPlaceClean.CanFocus = true;
 			this.buttonPlaceClean.Name = "buttonPlaceClean";
 			this.buttonPlaceClean.UseUnderline = true;
 			this.buttonPlaceClean.Label = global::Mono.Unix.Catalog.GetString("Очистить место");
-			global::Gtk.Image w43 = new global::Gtk.Image();
-			w43.Pixbuf = global::Stetic.IconLoader.LoadIcon(this, "gtk-clear", global::Gtk.IconSize.Menu);
-			this.buttonPlaceClean.Image = w43;
-			this.hbox7.Add(this.buttonPlaceClean);
-			global::Gtk.Box.BoxChild w44 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.buttonPlaceClean]));
-			w44.Position = 2;
+			global::Gtk.Image w41 = new global::Gtk.Image();
+			w41.Pixbuf = global::Stetic.IconLoader.LoadIcon(this, "gtk-clear", global::Gtk.IconSize.Menu);
+			this.buttonPlaceClean.Image = w41;
+			this.hbox9.Add(this.buttonPlaceClean);
+			global::Gtk.Box.BoxChild w42 = ((global::Gtk.Box.BoxChild)(this.hbox9[this.buttonPlaceClean]));
+			w42.Position = 4;
+			w42.Expand = false;
+			w42.Fill = false;
+			this.vbox4.Add(this.hbox9);
+			global::Gtk.Box.BoxChild w43 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.hbox9]));
+			w43.Position = 0;
+			w43.Expand = false;
+			w43.Fill = false;
+			this.hbox7.Add(this.vbox4);
+			global::Gtk.Box.BoxChild w44 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.vbox4]));
+			w44.Position = 0;
 			w44.Expand = false;
 			w44.Fill = false;
 			// Container child hbox7.Gtk.Box+BoxChild
@@ -551,7 +551,7 @@ namespace Bazar.Dialogs.Rental
 			this.labelSum.Justify = ((global::Gtk.Justification)(1));
 			this.hbox7.Add(this.labelSum);
 			global::Gtk.Box.BoxChild w45 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.labelSum]));
-			w45.Position = 3;
+			w45.Position = 1;
 			this.vbox2.Add(this.hbox7);
 			global::Gtk.Box.BoxChild w46 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.hbox7]));
 			w46.Position = 3;
@@ -613,6 +613,7 @@ namespace Bazar.Dialogs.Rental
 			this.datepickerCancel.DateChanged += new global::System.EventHandler(this.OnDatepickerCancelDateChanged);
 			this.buttonAddService.Clicked += new global::System.EventHandler(this.OnButtonAddServiceClicked);
 			this.buttonDelService.Clicked += new global::System.EventHandler(this.OnButtonDelServiceClicked);
+			this.buttonPlaceClean.Clicked += new global::System.EventHandler(this.OnButtonPlaceCleanClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);
 		}
 	}

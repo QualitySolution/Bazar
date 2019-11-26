@@ -63,5 +63,11 @@ namespace Bazar.Domain.Estate
 		}
 
 		#endregion
+
+		#region Расчетные
+
+		public virtual string Title => PlaceType != null ? $"{PlaceType.Name}-{PlaceNumber}" : PlaceNumber;
+
+		#endregion
 	}
 }

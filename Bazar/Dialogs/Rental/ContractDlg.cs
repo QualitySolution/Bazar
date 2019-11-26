@@ -1,10 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Bindings.Collections.Generic;
+using System.Linq;
+using Bazar.Domain.Estate;
+using Bazar.Domain.Payments;
+using Bazar.Domain.Rental;
+using Bazar.Repositories.Payments;
+using Bazar.Repositories.Rental;
+using Gamma.GtkWidgets;
 using Gtk;
 using MySql.Data.MySqlClient;
-using QSProjectsLib;
 using NLog;
-using bazar;
+using QS.Dialog.GtkUI;
+using QS.DomainModel.UoW;
+using QSProjectsLib;
 
 namespace Bazar.Dialogs.Rental
 {
@@ -13,263 +22,56 @@ namespace Bazar.Dialogs.Rental
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewContract;
 
-		Gtk.ListStore ServiceListStore, ServiceRefListStore;
-		TreeModel ServiceNameList, CashNameList;
 		int LesseeId; 
 		int ContractId = -1;
 		int OrigLesseeId = -1;
 		bool LesseeisNull = true;
-		List<int> DeletedRowId = new List<int>();
-		decimal PlaceArea = 0;
 
-		private enum ServiceCol{
-			id,
-			service_id,
-			service,
-			cash_id,
-			cash,
-			units,
-			count,
-			price,
-			sum,
-			by_aria,
-			min_pay,
-			row_color
-		}
+		IUnitOfWork UoW = UnitOfWorkFactory.CreateWithoutRoot();
+		List<ContractItem> ContractItems = new List<ContractItem> ();
+		GenericObservableList<ContractItem> ObservableContractItems;
+		List<ContractItem> deletedRows = new List<ContractItem>();
+		Place DefaultPlace;
 
 		public ContractDlg ()
 		{
 			this.Build ();
 
+			ObservableContractItems = new GenericObservableList<ContractItem> (ContractItems);
+			ObservableContractItems.ListContentChanged += ObservableContractItems_ListContentChanged;;
+
 			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo, OrderBy: "name");
 
-			ComboBox ServiceCombo = new ComboBox();
-			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
-			ServiceNameList = ServiceCombo.Model;
-			ServiceCombo.Destroy ();
+			treeviewServices.ColumnsConfig = ColumnsConfigFactory.Create<ContractItem>()
+				.AddColumn("Наименованиe").MinWidth(180)
+					.AddComboRenderer(x => x.Service).Editing()
+						.SetDisplayFunc(x => x.Name)
+						.FillItems(ServiceRepository.GetActiveServices(UoW))
+				.AddColumn("Место")
+					.AddTextRenderer(x => x.Place != null ? x.Place.Title : String.Empty)
+				.AddColumn("Касса").MinWidth(130)
+					.AddComboRenderer(x => x.Cash).Editing()
+						.SetDisplayFunc(x => x.Name)
+						.FillItems(CashRepository.GetActiveCashes(UoW))
+				.AddColumn("Количество")
+					.AddNumericRenderer(x => x.Amount).Editing(new Adjustment(1, 0, 100000, 1, 10, 10)).Digits(2).WidthChars(9)
+					.AddTextRenderer(x => x.Service != null && x.Service.Units != null ? x.Service.Units.Name : String.Empty)
+				.AddColumn("Цена").MinWidth(90)
+					.AddNumericRenderer(x => x.Price).Editing(new Adjustment(0, 0, 10000000, 100, 1000, 1000)).Digits(2)
+				.AddColumn("Сумма")
+					.AddTextRenderer(x => x.Total.ToShortCurrencyString())
+				.AddColumn("Мин. платеж")
+					.AddNumericRenderer(x => x.MinimalSum).Editing(new Adjustment(0, 0, 10000000, 100, 1000, 1000))
+				.RowCells ().AddSetter<Gtk.CellRendererText> ((c, x) => c.Background = x.Cash != null ? x.Cash.Color : null)
+				.Finish ();
 
-			ComboBox CashCombo = new ComboBox();
-			string sqlSelect = "SELECT name, id, color FROM cash";
-			ComboWorks.ComboFillUniversal(CashCombo, sqlSelect, "{0}", null, 1, ComboWorks.ListMode.OnlyItems, true);
-			CashNameList = CashCombo.Model;
-			CashCombo.Destroy ();
-
-			MainClass.FillServiceListStore(out ServiceRefListStore);
-
-			//Создаем таблицу "Услуги"
-			ServiceListStore = new Gtk.ListStore (
-												  typeof(int),  // 0 - id
-												  typeof(int),    // 1 - idServiceColumn
-												  typeof(string),   // 2 - Наименование
-												  typeof (int),      // 3 - Место id
-												  typeof (string),   // 4 - Место
-												  typeof (int),      // 5 - idКасса
-												  typeof(string),   // 6 - Касса
-												  typeof(string),   // 7 - Ед. изм.
-												  typeof(decimal),  // 8 - Количество
-												  typeof(decimal),  // 9 - Цена
-												  typeof(decimal),	// 10 - Сумма
-			                                      typeof(bool),	// 11 - Есть ли расчет по метражу
-			                                      typeof(decimal),	// 12 - Минимальный платеж.
-			                                      typeof(string) 	// 13 - Цвет строки
-			);
-			
-			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
-			ServiceColumn.Title = "Наименование";
-			ServiceColumn.MinWidth = 180;
-			Gtk.CellRendererCombo CellService = new CellRendererCombo();
-			CellService.TextColumn = 0;
-			CellService.Editable = true;
-			CellService.Model = ServiceNameList;
-			CellService.HasEntry = false;
-			CellService.Edited += OnServiceComboEdited;
-			ServiceColumn.PackStart (CellService, true);
-
-			Gtk.TreeViewColumn CashColumn = new Gtk.TreeViewColumn ();
-			CashColumn.Title = "Касса";
-			CashColumn.MinWidth = 130;
-			Gtk.CellRendererCombo CellCash = new CellRendererCombo();
-			CellCash.TextColumn = 0;
-			CellCash.Editable = true;
-			CellCash.Model = CashNameList;
-			CellCash.HasEntry = false;
-			CellCash.Edited += OnCashComboEdited;
-			CashColumn.PackStart (CellCash, true);
-
-			Gtk.TreeViewColumn CountColumn = new Gtk.TreeViewColumn ();
-			CountColumn.Title = "Количество";
-			Gtk.CellRendererText CellCount = new CellRendererText();
-			CellCount.Editable = true;
-			CellCount.Edited += OnServiceCountEdited;
-			CountColumn.PackStart (CellCount, true);
-			Gtk.CellRendererText CellUnits = new CellRendererText ();
-			CountColumn.PackStart (CellUnits, false);
-
-			Gtk.CellRendererText CellPrice = new CellRendererText();
-			CellPrice.Editable = true;
-			CellPrice.Edited += OnServicePriceEdited;
-
-			Gtk.CellRendererText CellMinSum = new CellRendererText();
-			CellMinSum.Editable = true;
-			CellMinSum.Edited += OnServiceMinSumEdited;
-
-			treeviewServices.AppendColumn (ServiceColumn);
-			ServiceColumn.AddAttribute (CellService, "text", (int)ServiceCol.service);
-			treeviewServices.AppendColumn (CashColumn);
-			CashColumn.AddAttribute (CellCash,"text", (int)ServiceCol.cash);
-			treeviewServices.AppendColumn (CountColumn);
-			CountColumn.AddAttribute (CellUnits,"text", (int)ServiceCol.units);
-			CountColumn.SetCellDataFunc (CellCount, RenderCountColumn);
-			treeviewServices.AppendColumn ("Цена", CellPrice, RenderPriceColumn);
-			treeviewServices.AppendColumn ("Сумма", new Gtk.CellRendererText (), RenderSumColumn);
-			treeviewServices.AppendColumn ("Мин. платеж", CellMinSum, RenderMinSumColumn);
-
-			foreach(TreeViewColumn column in treeviewServices.Columns)
-			{
-				foreach(CellRenderer render in column.CellRenderers)
-				{
-					column.AddAttribute (render, "background", (int)ServiceCol.row_color);
-				}
-			}
-
-			treeviewServices.Columns[4].MinWidth = 90;
+			treeviewServices.Selection.Mode = SelectionMode.Multiple;
 			treeviewServices.Selection.Changed += Selection_Changed;
-			treeviewServices.Model = ServiceListStore;
+			treeviewServices.SetItemsSource<ContractItem>(ObservableContractItems);
 			treeviewServices.ShowAll();
 		}
 
-		#region Работа с таблицей услуг.
-		void Selection_Changed (object sender, EventArgs e)
-		{
-			bool isSelect = treeviewServices.Selection.CountSelectedRows () == 1;
-			buttonDelService.Sensitive = isSelect;
-		}
-
-		void OnServiceComboEdited (object o, EditedArgs args)
-		{
-			TreeIter iter;
-			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
-				return;
-			if(args.NewText == null){
-				return;
-			}
-			ServiceListStore.SetValue(iter, (int)ServiceCol.service, args.NewText);
-			TreeIter ServiceIter;
-			if (!ServiceRefListStore.GetIterFirst (out ServiceIter))
-				return;
-			do
-			{
-				if(args.NewText.Equals (ServiceRefListStore.GetValue (ServiceIter, 1).ToString ()))
-				{
-					ServiceListStore.SetValue (iter, (int)ServiceCol.service_id, ServiceRefListStore.GetValue (ServiceIter,0));
-					ServiceListStore.SetValue (iter, (int)ServiceCol.units, ServiceRefListStore.GetValue (ServiceIter,3));
-
-					bool choice = (bool) ServiceRefListStore.GetValue (ServiceIter,4);
-					ServiceListStore.SetValue (iter, (int)ServiceCol.by_aria, choice);
-					if(choice)
-						ServiceListStore.SetValue (iter, (int)ServiceCol.count, PlaceArea);
-					break;
-				}
-			}
-			while(ServiceRefListStore.IterNext (ref ServiceIter));
-			TestCanSave ();
-		}
-
-		void OnCashComboEdited (object o, EditedArgs args)
-		{
-			TreeIter iter;
-			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
-				return;
-			if(args.NewText == null){
-				return;
-			}
-			ServiceListStore.SetValue(iter, (int)ServiceCol.cash, args.NewText);
-			TreeIter CashIter;
-			if (!CashNameList.GetIterFirst (out CashIter))
-				return;
-			do
-			{
-				if(CashNameList.GetValue (CashIter,0).ToString () == args.NewText)
-				{
-					ServiceListStore.SetValue (iter, (int)ServiceCol.cash_id, CashNameList.GetValue (CashIter, 1));
-					object[] Values = (object[]) CashNameList.GetValue (CashIter, 2);
-					ServiceListStore.SetValue (iter, (int)ServiceCol.row_color, Values[2] != DBNull.Value ? (string)Values[2] : null) ;
-					break;
-				}
-			}
-			while(CashNameList.IterNext (ref CashIter));
-			TestCanSave ();
-			CalculateServiceSum ();
-		}
-
-		void OnServiceCountEdited (object o, EditedArgs args)
-		{
-			TreeIter iter;
-			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
-				return;
-			decimal Price = (decimal)ServiceListStore.GetValue (iter, (int)ServiceCol.price);
-			decimal count;
-			if(decimal.TryParse(args.NewText, out count))
-			{
-				logger.Debug ("Parsed:{0}", count);
-				ServiceListStore.SetValue (iter, (int)ServiceCol.count, count);
-				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, Price * count);
-				CalculateServiceSum ();
-			}
-		}
-
-		void OnServicePriceEdited (object o, EditedArgs args)
-		{
-			TreeIter iter;
-			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
-				return;
-			decimal Price;
-			decimal count = (decimal)ServiceListStore.GetValue (iter, (int)ServiceCol.count);
-			if (decimal.TryParse (args.NewText, out Price)) 
-			{
-				ServiceListStore.SetValue (iter, (int)ServiceCol.price, Price);
-				ServiceListStore.SetValue (iter, (int)ServiceCol.sum, Price * count);
-				CalculateServiceSum ();
-			}
-		}
-
-		void OnServiceMinSumEdited (object o, EditedArgs args)
-		{
-			TreeIter iter;
-			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
-				return;
-			decimal MinSum;
-			if (decimal.TryParse (args.NewText, out MinSum)) 
-			{
-				ServiceListStore.SetValue (iter, (int)ServiceCol.min_pay, MinSum);
-			}
-		}
-
-		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-		{
-			decimal Count = (decimal) model.GetValue (iter, (int)ServiceCol.count);
-			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Count);
-		}
-
-		private void RenderPriceColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-		{
-			decimal Price = (decimal) model.GetValue (iter, (int)ServiceCol.price);
-			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Price);
-		}
-
-		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-		{
-			decimal Sum = (decimal) model.GetValue (iter, (int)ServiceCol.sum);
-			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
-		}
-
-		private void RenderMinSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-		{
-			decimal Sum = (decimal) model.GetValue (iter, (int)ServiceCol.min_pay);
-			(cell as Gtk.CellRendererText).Text = String.Format("{0:0.00}", Sum);
-		}
-
-		#endregion
+		#region Загрука\сохранение
 
 		public void ContractFill(int Id)
 		{
@@ -278,7 +80,7 @@ namespace Bazar.Dialogs.Rental
 			TreeIter iter;
 			
 			logger.Info("Запрос договора ID:" + Id +"...");
-			string sql = "SELECT contracts.*, lessees.name as lessee, FROM contracts " +
+			string sql = "SELECT contracts.*, lessees.name as lessee FROM contracts " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 				"WHERE contracts.id = @id";
 			try
@@ -317,90 +119,188 @@ namespace Bazar.Dialogs.Rental
 				else
 					comboPayDay.Active = 0;
 
-				decimal area = 0;
-				if(rdr["area"] != DBNull.Value)
-					area = rdr.GetDecimal("area");
-				//labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", area);
-				PlaceArea = area;
 				textComments.Buffer.Text = rdr["comments"].ToString();
 				rdr.Close();
 
 				this.Title = "Договор №" + entryNumber.Text;
 
-				//Получаем таблицу услуг
-				sql = "SELECT contract_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, services.by_area as by_area," +
-					"units.name as units, places.place_no, place_types.name as place_type FROM contract_pays " +
-					"LEFT JOIN cash ON cash.id = contract_pays.cash_id " +
-					"LEFT JOIN services ON contract_pays.service_id = services.id " +
-					"LEFT JOIN units ON services.units_id = units.id " +
-					"LEFT JOIN places ON places.id = contract_pays.place_id " +
-					"LEFT JOIN place_types ON places.type_id = place_types.id " +
-					"WHERE contract_pays.contract_id = @contract_id";
+				ContractItems.AddRange(ContractRepository.GetContractItems(UoW, ContractId));
+				treeviewServices.YTreeModel.EmitModelChanged();
 
-				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@contract_id", ContractId);
-				rdr = cmd.ExecuteReader();
-
-				decimal count, price;
-
-				while (rdr.Read())
-				{
-					count = DBWorks.GetDecimal (rdr, "count", 0);
-					price = DBWorks.GetDecimal (rdr, "price", 0);
-
-					ServiceListStore.AppendValues(
-												rdr.GetInt32("id"),
-												 rdr.GetInt32 ("service_id"),
-					                             rdr["service"].ToString(),
-												 DBWorks.GetInt(rdr, "place_id"),
-												 $"{rdr ["place_type"]}-{rdr["place_no"]}",
-												 DBWorks.GetInt (rdr, "cash_id", -1),
-					                             rdr["cash"].ToString(),
-					                             rdr["units"].ToString(),
-					                             count,
-					                             price,
-					                             count * price,
-					                             rdr.GetBoolean("by_area"),
-					                              DBWorks.GetDecimal (rdr, "min_sum", 0),
-					                              DBWorks.GetString(rdr, "cashcolor", null)
-					                             );
-				}
-				rdr.Close();
 				CalculateServiceSum();
 
 				logger.Info("Ok");
-			}
-			catch (Exception ex)
-			{
+			} catch(Exception ex) {
 				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о договоре!", logger, ex);
 			}
 
 			TestCanSave();
 		}
 
-		protected	void TestCanSave ()
+		protected void OnButtonOkClicked(object sender, EventArgs e)
+		{
+			TreeIter iter;
+
+			logger.Info("Запись договора...");
+			try {
+				// Проверка номера договора на дубликат
+				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number AND sign_date = @sign_date AND id <> @id ";
+				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
+				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
+				cmd.Parameters.AddWithValue("@id", ContractId);
+				if(datepickerSign.IsEmpty)
+					cmd.Parameters.AddWithValue("@sign_date", datepickerStart.Date);
+				else
+					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
+				long Count = (long)cmd.ExecuteScalar();
+
+				if(Count > 0) {
+					logger.Warn("Договор уже существует!");
+					MessageDialog md = new MessageDialog(this, DialogFlags.Modal,
+						  MessageType.Error,
+						  ButtonsType.Ok, "ошибка");
+					md.UseMarkup = false;
+					md.Text = String.Format("Договор с номером {0} от {1:d}, уже существует в базе данных!", entryNumber.Text, datepickerSign.Date);
+					md.Run();
+					md.Destroy();
+					return;
+				}
+
+				var allPlaces = ContractItems.Select(x => x.Place).Where(x => x != null).Distinct().ToList();
+
+				foreach(var place in allPlaces) {
+					var conflicted = ContractRepository.GetContractItemsOnPlace(UoW, place.Id, datepickerStart.Date, (datepickerCancel.IsEmpty ? datepickerEnd.Date : datepickerCancel.Date))
+						.Select(x => x.Contract).Distinct().Where(x => x.Id != ContractId).ToList();
+					if(conflicted.Count > 0) {
+						var validity = String.Join(", ", conflicted.Select(x => $"№{x.Number} ({x.ValidityText})"));
+						MessageDialogHelper.RunErrorDialog($"Для места {place.Title}, период действия договора пересекается с другими договорами, со следующими датами:\n" +
+							$"{validity}\n Вы должны, либо изменить даты " +
+							"аренды в текущем договоре, либо досрочно расторгнуть предыдущий договор на это место.", "Место уже занято!");
+						return;
+					}
+				}
+
+				// записываем
+				if(NewContract) {
+					sql = "INSERT INTO contracts (number, lessee_id, org_id, sign_date, " +
+						"start_date, end_date, pay_day, cancel_date, comments) " +
+							"VALUES (@number, @lessee_id, @org_id, @sign_date, " +
+							"@start_date, @end_date, @pay_day, @cancel_date, @comments)";
+				} else {
+					sql = "UPDATE contracts SET number = @number, lessee_id = @lessee_id, org_id = @org_id, " +
+						"sign_date = @sign_date, start_date = @start_date, " +
+						"end_date = @end_date, pay_day = @pay_day, cancel_date = @cancel_date, comments = @comments " +
+						"WHERE id = @id";
+				}
+
+				cmd = new MySqlCommand(sql, QSMain.connectionDB);
+
+				cmd.Parameters.AddWithValue("@id", ContractId);
+				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
+				cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
+				if(comboOrg.GetActiveIter(out iter) && (int)comboOrg.Model.GetValue(iter, 1) != -1)
+					cmd.Parameters.AddWithValue("@org_id", comboOrg.Model.GetValue(iter, 1));
+				else
+					cmd.Parameters.AddWithValue("@org_id", DBNull.Value);
+
+				if(!datepickerSign.IsEmpty)
+					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
+				else
+					cmd.Parameters.AddWithValue("@sign_date", datepickerStart.Date);
+				if(!datepickerStart.IsEmpty)
+					cmd.Parameters.AddWithValue("@start_date", datepickerStart.Date);
+				if(!datepickerEnd.IsEmpty)
+					cmd.Parameters.AddWithValue("@end_date", datepickerEnd.Date);
+				if(!datepickerCancel.IsEmpty)
+					cmd.Parameters.AddWithValue("@cancel_date", datepickerCancel.Date);
+				else
+					cmd.Parameters.AddWithValue("@cancel_date", DBNull.Value);
+
+				if(comboPayDay.Active > 0)
+					cmd.Parameters.AddWithValue("@pay_day", comboPayDay.Active);
+				else
+					cmd.Parameters.AddWithValue("@pay_day", DBNull.Value);
+
+				if(textComments.Buffer.Text == "")
+					cmd.Parameters.AddWithValue("@comments", DBNull.Value);
+				else
+					cmd.Parameters.AddWithValue("@comments", textComments.Buffer.Text);
+
+				cmd.ExecuteNonQuery();
+				if(NewContract)
+					ContractId = (int)cmd.LastInsertedId;
+				//записываем таблицу услуг
+				var contract = UoW.GetById<Contract>(ContractId);
+				foreach(var item in ContractItems) {
+					item.Contract = contract;
+					UoW.Save(item);
+				}
+
+				//Удаляем удаленные строки из базы данных
+				sql = "DELETE FROM contract_pays WHERE id = @id";
+				foreach(var item in deletedRows) {
+					UoW.Delete(item);
+				}
+				UoW.Commit();
+
+				//Корректная смена арендатора
+				if(!NewContract && OrigLesseeId != LesseeId && !LesseeisNull) {
+					logger.Info("Арендатор изменился...");
+					sql = "SELECT COUNT(*) FROM credit_slips WHERE contract_id = @contract AND lessee_id = @old_lessee";
+					cmd = new MySqlCommand(sql, QSMain.connectionDB);
+					cmd.Parameters.AddWithValue("@contract", ContractId);
+					cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
+					long rowcount = (long)cmd.ExecuteScalar();
+					if(rowcount > 0) {
+						MessageDialog md = new MessageDialog(this, DialogFlags.Modal,
+															 MessageType.Warning,
+															 ButtonsType.YesNo, "Предупреждение");
+						md.UseMarkup = false;
+						md.Text = String.Format("У договора изменился арендатор, но поэтому договору уже " +
+							"было создано {0} приходных ордеров. Заменить арендатора в приходных ордерах?", rowcount);
+						int result = md.Run();
+						md.Destroy();
+
+						if(result == (int)ResponseType.Yes) {
+							logger.Info("Меняем арендатора в приходных ордерах...");
+							sql = "UPDATE credit_slips SET lessee_id = @lessee_id " +
+								"WHERE contract_id = @contract AND lessee_id = @old_lessee ";
+							cmd = new MySqlCommand(sql, QSMain.connectionDB);
+							cmd.Parameters.AddWithValue("@contract", ContractId);
+							cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
+							cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
+							cmd.ExecuteNonQuery();
+						}
+					}
+				}
+
+				logger.Info("Ok");
+				Respond(ResponseType.Ok);
+			} catch(Exception ex) {
+				QSMain.ErrorMessageWithLog(this, "Ошибка записи договора!", logger, ex);
+			}
+
+		}
+
+		public void SetPlace(int place_id)
+		{
+			DefaultPlace = UoW.GetById<Place>(place_id);
+		}
+
+		#endregion
+
+		#region Проверки
+
+		protected void TestCanSave ()
 		{
 			bool Numberok = (entryNumber.Text != "");
 			bool Orgok = comboOrg.Active > 0;
 			bool Lesseeok = !LesseeisNull;
 			bool DatesCorrectok = TestCorrectDates (false);
-			bool ServiceOk = TestServiceAndCash ();
+			bool ServiceOk = ContractItems.All(x => x.Service != null && x.Cash != null);
 
 			buttonLesseeOpen.Sensitive = Lesseeok;
 			buttonOk.Sensitive = Numberok && Orgok && Lesseeok && DatesCorrectok && ServiceOk;
-		}
-
-		protected bool TestServiceAndCash()
-		{
-			if(ServiceListStore == null)
-				return true;
-			
-			foreach(object[] row in ServiceListStore)
-			{
-				if( (int) row[(int)ServiceCol.service_id] <= 0 || (int) row[(int)ServiceCol.cash_id] <= 0)
-					return false;
-			}
-			return true;
 		}
 
 		protected bool TestCorrectDates(bool DisplayMessage)
@@ -435,6 +335,10 @@ namespace Bazar.Dialogs.Rental
 			return DateCorrectok && DateCancelok;
 		}
 
+		#endregion
+
+		#region События виджетов
+
 		protected void OnEntryNumberChanged (object sender, EventArgs e)
 		{
 			TestCanSave();
@@ -443,67 +347,6 @@ namespace Bazar.Dialogs.Rental
 		protected void OnComboOrgChanged (object sender, EventArgs e)
 		{
 			TestCanSave();
-		}
-
-		protected void OnComboPlaceNoChanged (object sender, EventArgs e)
-		{
-			//TreeIter iter;
-			//if(NewContract && comboPlaceNo.ActiveText != null)
-			//{
-			//	logger.Info("Запрос информации о месте...");
-			//	string sql = "SELECT org_id, area FROM places " +
-			//		"WHERE type_id = @type_id AND place_no = @place_no";
-			//	try
-			//	{
-			//		MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					
-			//		if(comboPlaceT.GetActiveIter(out iter))
-			//		{
-			//			cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
-			//		}	
-			//		cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.ActiveText);
-			
-			//		MySqlDataReader rdr = cmd.ExecuteReader();
-						
-			//		if(rdr.Read() )
-			//		{
-			//			if(rdr["org_id"] != DBNull.Value)
-			//				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
-			//			else
-			//				ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
-			//			comboOrg.SetActiveIter (iter);
-			//			decimal old_area = PlaceArea;
-			//			if(rdr["area"] != DBNull.Value)
-			//				PlaceArea = rdr.GetDecimal("area");
-			//			labelArea.LabelProp = String.Format ("{0} м<sup>2</sup>", PlaceArea);
-
-			//			TreeIter ServiceIter;
-			//			if (ServiceListStore != null && ServiceListStore.GetIterFirst (out ServiceIter))
-			//			{
-			//				do
-			//				{
-			//					bool b = (bool) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.by_aria);
-			//					decimal i = (decimal) ServiceListStore.GetValue(ServiceIter, (int)ServiceCol.count);
-			//					if( b && i == old_area)
-			//					{
-			//						ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.count, PlaceArea);
-			//						decimal Price = (decimal)ServiceListStore.GetValue (ServiceIter, (int)ServiceCol.price);
-			//						ServiceListStore.SetValue(ServiceIter, (int)ServiceCol.sum, Price * PlaceArea);
-			//					}
-			//				}
-			//				while(ServiceListStore.IterNext (ref ServiceIter));
-			//				CalculateServiceSum ();
-			//			}
-			//		}
-			//		rdr.Close();
-			//		logger.Info("Ok");
-			//	}
-			//	catch (Exception ex)
-			//	{
-			//		QSMain.ErrorMessageWithLog(this, "Ошибка получения места!", logger, ex);
-			//	}				
-			//}
-			//TestCanSave();
 		}
 
 		protected void OnButtonLesseeEditClicked (object sender, EventArgs e)
@@ -524,320 +367,103 @@ namespace Bazar.Dialogs.Rental
 			TestCanSave();
 		}
 
-		protected void OnButtonOkClicked (object sender, EventArgs e)
+		protected void OnDatepickerStartDateChanged(object sender, EventArgs e)
 		{
-			TreeIter iter;
-
-			logger.Info("Запись договора...");
-			try 
-			{
-				// Проверка номера договора на дубликат
-				string sql = "SELECT COUNT(*) AS cnt FROM contracts WHERE number = @number AND sign_date = @sign_date AND id <> @id ";
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
-				cmd.Parameters.AddWithValue("@id", ContractId);
-				if(datepickerSign.IsEmpty)
-					cmd.Parameters.AddWithValue("@sign_date", datepickerStart.Date);
-				else
-					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
-				long Count = (long) cmd.ExecuteScalar();
-
-				if( Count > 0)
-				{
-					logger.Warn("Договор уже существует!");
-					MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
-                          MessageType.Error, 
-                          ButtonsType.Ok,"ошибка");
-					md.UseMarkup = false;
-					md.Text = String.Format ("Договор с номером {0} от {1:d}, уже существует в базе данных!",  entryNumber.Text, datepickerSign.Date);
-					md.Run ();
-					md.Destroy();
-					return;
-				}
-				// Проверка не занято ли место другим арендатором
-				sql = "SELECT id, number, start_date AS start, IFNULL(cancel_date,end_date) AS end FROM contracts " +
-					"WHERE place_type_id = @type_id AND place_no = @place_no AND " +
-						"!(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date)" ;
-				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				//if(comboPlaceT.GetActiveIter(out iter))
-				//{
-				//	cmd.Parameters.AddWithValue("@type_id", comboPlaceT.Model.GetValue(iter,1));
-				//}
-				//if(comboPlaceNo.GetActiveIter(out iter))
-				//{
-				//	cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.Model.GetValue(iter,0));
-				//}	
-				cmd.Parameters.AddWithValue("@start", datepickerStart.Date);
-				if(datepickerCancel.IsEmpty)
-					cmd.Parameters.AddWithValue("@end", datepickerEnd.Date);
-				else
-					cmd.Parameters.AddWithValue("@end", datepickerCancel.Date);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-
-				while(rdr.Read())
-				{
-					if(rdr.GetInt32("id") == ContractId)
-						continue;
-					logger.Warn("Место уже занято!");
-					MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
-					                                     MessageType.Error, 
-					                                     ButtonsType.Ok,"ошибка");
-					md.UseMarkup = false;
-					md.Text = "Период действия договора пересекается с договором №" + rdr["number"].ToString () + 
-						", по которому это место уже сдается в аренду с " + rdr.GetDateTime ("start").ToShortDateString() +
-							" по " + rdr.GetDateTime ("end").ToShortDateString() + ". \n Вы должны, либо изменить даты " +
-							"аренды в текущем договоре, либо досрочно расторгнуть предыдущий договор на это место.";
-					md.Run ();
-					md.Destroy();
-					rdr.Close();
-					return;
-				}
-				rdr.Close();
-				// записываем
-				if(NewContract)
-				{
-					sql = "INSERT INTO contracts (number, lessee_id, org_id, place_type_id, place_no, sign_date, " +
-						"start_date, end_date, pay_day, cancel_date, comments) " +
-							"VALUES (@number, @lessee_id, @org_id, @place_type_id, @place_no, @sign_date, " +
-							"@start_date, @end_date, @pay_day, @cancel_date, @comments)";
-				}
-				else
-				{
-					sql = "UPDATE contracts SET number = @number, lessee_id = @lessee_id, org_id = @org_id, " +
-						"place_type_id = @place_type_id, place_no = @place_no, sign_date = @sign_date, start_date = @start_date, " +
-						"end_date = @end_date, pay_day = @pay_day, cancel_date = @cancel_date, comments = @comments " +
-						"WHERE id = @id";
-				}
-
-				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-
-				cmd.Parameters.AddWithValue("@id", ContractId);
-				cmd.Parameters.AddWithValue("@number", entryNumber.Text);
-				cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
-				if(comboOrg.GetActiveIter(out iter) && (int)comboOrg.Model.GetValue(iter,1) != -1)
-					cmd.Parameters.AddWithValue("@org_id",comboOrg.Model.GetValue(iter,1));
-				else
-					cmd.Parameters.AddWithValue("@org_id", DBNull.Value);
-
-				//if(comboPlaceT.GetActiveIter(out iter))
-				//{
-				//	cmd.Parameters.AddWithValue("@place_type_id", comboPlaceT.Model.GetValue(iter,1));
-				//}	
-				//if(comboPlaceNo.GetActiveIter(out iter))
-				//{
-					//cmd.Parameters.AddWithValue("@place_no", comboPlaceNo.Model.GetValue(iter,0));
-				//}	
-				if(!datepickerSign.IsEmpty)
-					cmd.Parameters.AddWithValue("@sign_date", datepickerSign.Date);
-				else
-					cmd.Parameters.AddWithValue("@sign_date", datepickerStart.Date);
-				if(!datepickerStart.IsEmpty)
-					cmd.Parameters.AddWithValue("@start_date", datepickerStart.Date);
-				if(!datepickerEnd.IsEmpty)
-					cmd.Parameters.AddWithValue("@end_date", datepickerEnd.Date);
-				if(!datepickerCancel.IsEmpty)
-					cmd.Parameters.AddWithValue("@cancel_date", datepickerCancel.Date);
-				else
-					cmd.Parameters.AddWithValue("@cancel_date", DBNull.Value);
-
-				if(comboPayDay.Active > 0)
-					cmd.Parameters.AddWithValue("@pay_day", comboPayDay.Active);
-				else
-					cmd.Parameters.AddWithValue("@pay_day", DBNull.Value);
-
-				if(textComments.Buffer.Text == "")
-					cmd.Parameters.AddWithValue("@comments", DBNull.Value);
-				else
-					cmd.Parameters.AddWithValue("@comments", textComments.Buffer.Text);
-				
-				cmd.ExecuteNonQuery();
-				if(NewContract)
-					ContractId = (int) cmd.LastInsertedId;
-				//записываем таблицу услуг
-				ServiceListStore.GetIterFirst(out iter);
-				do
-				{
-					if(!ServiceListStore.IterIsValid (iter))
-						break;
-					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.service_id) < 1)
-						break; // не указано название услуги
-					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.id) > 0)
-						sql = "UPDATE contract_pays SET service_id = @service_id, " +
-							"cash_id = @cash_id, count = @count, price = @price, min_sum = @min_sum " +
-							"WHERE id = @id";
-					else
-						sql = "INSERT INTO contract_pays (contract_id, service_id, cash_id, count, price, min_sum) " +
-							"VALUES (@contract_id, @service_id, @cash_id, @count, @price, @min_sum)";
-					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@contract_id", ContractId);
-					cmd.Parameters.AddWithValue("@service_id", ServiceListStore.GetValue(iter, (int)ServiceCol.service_id));
-					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.cash_id) > 0)
-						cmd.Parameters.AddWithValue("@cash_id", ServiceListStore.GetValue(iter, (int)ServiceCol.cash_id));
-					else
-						cmd.Parameters.AddWithValue("@cash_id", DBNull.Value);
-					cmd.Parameters.AddWithValue("@count", ServiceListStore.GetValue(iter, (int)ServiceCol.count));
-					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter, (int)ServiceCol.price));
-					cmd.Parameters.AddWithValue("@min_sum", DBWorks.ValueOrNull ((decimal) ServiceListStore.GetValue(iter, (int)ServiceCol.min_pay) > 0, ServiceListStore.GetValue(iter, (int)ServiceCol.min_pay)));
-					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter, (int)ServiceCol.id));
-
-					cmd.ExecuteNonQuery();
-				}
-				while(ServiceListStore.IterNext(ref iter));
-
-				//Удаляем удаленные строки из базы данных
-				sql = "DELETE FROM contract_pays WHERE id = @id";
-				foreach( int id in DeletedRowId)
-				{
-					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@id", id);
-					cmd.ExecuteNonQuery();
-				}
-				//Корректная смена арендатора
-				if(!NewContract && OrigLesseeId != LesseeId && !LesseeisNull)
-				{
-					logger.Info("Арендатор изменился...");
-					sql = "SELECT COUNT(*) FROM credit_slips WHERE contract_id = @contract AND lessee_id = @old_lessee";
-					cmd = new MySqlCommand(sql, QSMain.connectionDB);
-					cmd.Parameters.AddWithValue("@contract", ContractId);
-					cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
-					long rowcount = (long) cmd.ExecuteScalar();
-					if( rowcount > 0)
-					{
-						MessageDialog md = new MessageDialog( this, DialogFlags.Modal,
-						                                     MessageType.Warning, 
-						                                     ButtonsType.YesNo, "Предупреждение");
-						md.UseMarkup = false;
-						md.Text = String.Format("У договора изменился арендатор, но поэтому договору уже " +
-							"было создано {0} приходных ордеров. Заменить арендатора в приходных ордерах?", rowcount);
-						int result = md.Run ();
-						md.Destroy();
-
-						if(result == (int) ResponseType.Yes)
-						{
-							logger.Info("Меняем арендатора в приходных ордерах...");
-							sql = "UPDATE credit_slips SET lessee_id = @lessee_id " +
-								"WHERE contract_id = @contract AND lessee_id = @old_lessee ";
-							cmd = new MySqlCommand(sql, QSMain.connectionDB);
-							cmd.Parameters.AddWithValue("@contract", ContractId);
-							cmd.Parameters.AddWithValue("@old_lessee", OrigLesseeId);
-							cmd.Parameters.AddWithValue("@lessee_id", LesseeId);
-							cmd.ExecuteNonQuery();
-						}
-					}
-				}
-
-				logger.Info("Ok");
-				Respond (ResponseType.Ok);
-			} 
-			catch (Exception ex) 
-			{
-				QSMain.ErrorMessageWithLog(this, "Ошибка записи договора!", logger, ex);
-			}
-
-		}
-
-		protected void OnDatepickerStartDateChanged (object sender, EventArgs e)
-		{
-			TestCorrectDates (true);
+			TestCorrectDates(true);
 			TestCanSave();
 		}
 
-		protected void OnDatepickerEndDateChanged (object sender, EventArgs e)
+		protected void OnDatepickerEndDateChanged(object sender, EventArgs e)
 		{
-			TestCorrectDates (true);
+			TestCorrectDates(true);
 			TestCanSave();
 		}
 
-		protected void OnButtonLesseeOpenClicked (object sender, EventArgs e)
+		protected void OnButtonLesseeOpenClicked(object sender, EventArgs e)
 		{
 			LesseeDlg winLessee = new LesseeDlg();
 			winLessee.LesseeFill(LesseeId);
 			winLessee.Show();
 			winLessee.Run();
 			winLessee.Destroy();
-		}		
-
-		protected void OnButtonAddServiceClicked (object sender, EventArgs e)
-		{
-			TreeIter iter, CashIter;
-			iter = ServiceListStore.Append();
-			ServiceListStore.SetValue(iter, (int)ServiceCol.count, 1m);
-			ServiceListStore.SetValue(iter, (int)ServiceCol.price, 0m);
-			ServiceListStore.SetValue(iter, (int)ServiceCol.sum, 0m);
-			ServiceListStore.SetValue(iter, (int)ServiceCol.min_pay, 0m);
-			if(CashNameList.IterNChildren() == 1)
-			{
-				CashNameList.GetIterFirst (out CashIter);
-				ServiceListStore.SetValue(iter, (int)ServiceCol.cash, CashNameList.GetValue (CashIter, 0));
-				ServiceListStore.SetValue (iter, (int)ServiceCol.cash_id, CashNameList.GetValue (CashIter, 1));
-			}
-			TestCanSave ();
 		}
 
-		protected void CalculateServiceSum ()
+		protected void OnDatepickerCancelDateChanged(object sender, EventArgs e)
 		{
-			Dictionary<int, decimal> CashSum = new Dictionary<int, decimal> ();
-			decimal TotalSum = 0;
-			TreeIter iter;
-			
-			foreach(object[] row in ServiceListStore)
-			{
-				if (!CashSum.ContainsKey ((int)row [(int)ServiceCol.cash_id]))
-					CashSum.Add ((int)row [(int)ServiceCol.cash_id], 0);
-				CashSum [(int)row [(int)ServiceCol.cash_id]] += (decimal)row [(int)ServiceCol.sum];
-				TotalSum += (decimal)row [(int)ServiceCol.sum];
-			}
-
-			string Text = "";
-			if(CashSum.Count > 1)
-			{
-				foreach(KeyValuePair<int, decimal> pair in CashSum)
-				{
-					ListStoreWorks.SearchListStore ((ListStore)CashNameList, pair.Key, out iter);
-					Text += string.Format("{1}: {0:C} \n", pair.Value, (string) CashNameList.GetValue(iter, 0));
-				}
-			}
-			Text += string.Format("Всего: {0:C} ", TotalSum);
-			labelSum.LabelProp = Text; 
-		}		
-
-		protected void OnButtonDelServiceClicked (object sender, EventArgs e)
-		{
-			TreeIter iter;
-			treeviewServices.Selection.GetSelected (out iter);
-			if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.id) > 0)
-				DeletedRowId.Add ((int)ServiceListStore.GetValue(iter, (int)ServiceCol.id));
-			ServiceListStore.Remove(ref iter);
-			CalculateServiceSum ();
-			TestCanSave ();
-		}
-
-		public bool SetPlace(int place_type_id, string place_no)
-		{
-			TreeIter iter;
-			try
-			{
-				//ListStoreWorks.SearchListStore((ListStore)comboPlaceT.Model, place_type_id, out iter);
-				//comboPlaceT.SetActiveIter (iter);
-				//ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, place_no, out iter);
-				//comboPlaceNo.SetActiveIter(iter);
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
-		}
-
-		protected void OnDatepickerCancelDateChanged (object sender, EventArgs e)
-		{
-			TestCorrectDates (true);
+			TestCorrectDates(true);
 			TestCanSave();
 		}
 
-		protected void OnEntryActivated (object sender, EventArgs e)
+		protected void OnEntryActivated(object sender, EventArgs e)
 		{
-			this.ChildFocus (DirectionType.TabForward);
+			this.ChildFocus(DirectionType.TabForward);
 		}
+
+		#endregion
+
+		#region Работа с таблицей услуг.
+
+		void Selection_Changed(object sender, EventArgs e)
+		{
+			bool isSelect = treeviewServices.Selection.CountSelectedRows() >= 1;
+			buttonDelService.Sensitive = buttonPlaceSet.Sensitive = buttonPlaceClean.Sensitive = isSelect;
+		}
+
+		void ObservableContractItems_ListContentChanged(object sender, EventArgs e)
+		{
+			TestCanSave();
+			CalculateServiceSum();
+		}
+
+		protected void OnButtonAddServiceClicked(object sender, EventArgs e)
+		{
+			var newitem = new ContractItem();
+			newitem.Place = DefaultPlace;
+			newitem.Amount = 1;
+			var cashes = CashRepository.GetActiveCashes(UoW);
+			if(cashes.Count == 1)
+				newitem.Cash = cashes.First();
+
+			ObservableContractItems.Add(newitem);
+		}
+
+		protected void CalculateServiceSum()
+		{
+			Dictionary<Cash, decimal> cashSums = new Dictionary<Cash, decimal>();
+			decimal TotalSum = 0;
+
+			foreach(var item in ContractItems) {
+				if(item.Cash != null) {
+					if(!cashSums.ContainsKey(item.Cash))
+						cashSums.Add(item.Cash, 0);
+					cashSums[item.Cash] += item.Total;
+				}
+				TotalSum += item.Total;
+			}
+
+			string Text = "";
+			foreach(var pair in cashSums) {
+				Text += string.Format("{0}: {1:C} \n", pair.Key.Name, pair.Value);
+			}
+			Text += string.Format("Всего: {0:C} ", TotalSum);
+			labelSum.LabelProp = Text;
+		}
+
+		protected void OnButtonDelServiceClicked(object sender, EventArgs e)
+		{
+			foreach(var item in treeviewServices.GetSelectedObjects<ContractItem>()) {
+				deletedRows.Add(item);
+				ObservableContractItems.Remove(item);
+			}
+		}
+
+		protected void OnButtonPlaceCleanClicked(object sender, EventArgs e)
+		{
+			foreach(var item in treeviewServices.GetSelectedObjects<ContractItem>()) {
+				item.Place = null;
+			}
+		}
+
+		#endregion
 	}
 }

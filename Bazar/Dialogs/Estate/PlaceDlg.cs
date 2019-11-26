@@ -400,7 +400,7 @@ namespace Bazar.Dialogs.Estate
 			ContractDlg winContract = new ContractDlg();
 			winContract.NewContract = true;
 			winContract.Show();
-			winContract.SetPlace (type_id, PlaceNumber);
+			winContract.SetPlace (place_id);
 			winContract.Run();
 			winContract.Destroy();
 			FillCurrentContract ();
@@ -673,9 +673,6 @@ namespace Bazar.Dialogs.Estate
 			public bool RatioIsOne => Math.Abs (ReadingRatio - 1) < 0.001;
 			public bool Disabled;
 			public bool Filled;
-
-			public MeterTable()
-			{}
 		}
 
 	}

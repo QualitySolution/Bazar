@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
@@ -11,6 +11,7 @@
     <widget-library name="../../../QSProjects/QS.Updater.Gtk/bin/Debug/QSUpdater.dll" />
     <widget-library name="../../../GammaBinding/GammaBinding/bin/Debug/GammaBinding.dll" />
     <widget-library name="../../../QSProjects/QS.Updater.Gtk/bin/Debug/QSUpdater.dll" />
+    <widget-library name="../../../QSProjects/QS.Project.Gtk/bin/Debug/QS.Project.Gtk.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="875 590">
@@ -4204,7 +4205,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Contact" design-size="492 330">
+  <widget class="Gtk.Dialog" id="bazar.Contact" design-size="500 330">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новый контакт</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -6804,7 +6805,7 @@
                 <property name="MemberName" />
                 <property name="ShadowType">In</property>
                 <child>
-                  <widget class="Gtk.TreeView" id="treeviewServices">
+                  <widget class="Gamma.GtkWidgets.yTreeView" id="treeviewServices">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="ShowScrollbars">True</property>
@@ -6873,6 +6874,39 @@
                             <property name="Fill">False</property>
                           </packing>
                         </child>
+                        <child>
+                          <widget class="Gtk.Button" id="buttonPlaceSet">
+                            <property name="MemberName" />
+                            <property name="CanFocus">True</property>
+                            <property name="Type">TextAndIcon</property>
+                            <property name="Icon">stock:gtk-edit Menu</property>
+                            <property name="Label" translatable="yes">Указать место</property>
+                            <property name="UseUnderline">True</property>
+                          </widget>
+                          <packing>
+                            <property name="Position">3</property>
+                            <property name="AutoSize">True</property>
+                            <property name="Expand">False</property>
+                            <property name="Fill">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="Gtk.Button" id="buttonPlaceClean">
+                            <property name="MemberName" />
+                            <property name="CanFocus">True</property>
+                            <property name="Type">TextAndIcon</property>
+                            <property name="Icon">stock:gtk-clear Menu</property>
+                            <property name="Label" translatable="yes">Очистить место</property>
+                            <property name="UseUnderline">True</property>
+                            <signal name="Clicked" handler="OnButtonPlaceCleanClicked" />
+                          </widget>
+                          <packing>
+                            <property name="Position">4</property>
+                            <property name="AutoSize">True</property>
+                            <property name="Expand">False</property>
+                            <property name="Fill">False</property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
                         <property name="Position">0</property>
@@ -6890,38 +6924,6 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Button" id="buttonPlaceSet">
-                    <property name="MemberName" />
-                    <property name="CanFocus">True</property>
-                    <property name="Type">TextAndIcon</property>
-                    <property name="Icon">stock:gtk-edit Menu</property>
-                    <property name="Label" translatable="yes">Указать место</property>
-                    <property name="UseUnderline">True</property>
-                  </widget>
-                  <packing>
-                    <property name="Position">1</property>
-                    <property name="AutoSize">True</property>
-                    <property name="Expand">False</property>
-                    <property name="Fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="Gtk.Button" id="buttonPlaceClean">
-                    <property name="MemberName" />
-                    <property name="CanFocus">True</property>
-                    <property name="Type">TextAndIcon</property>
-                    <property name="Icon">stock:gtk-clear Menu</property>
-                    <property name="Label" translatable="yes">Очистить место</property>
-                    <property name="UseUnderline">True</property>
-                  </widget>
-                  <packing>
-                    <property name="Position">2</property>
-                    <property name="AutoSize">True</property>
-                    <property name="Expand">False</property>
-                    <property name="Fill">False</property>
-                  </packing>
-                </child>
-                <child>
                   <widget class="Gtk.Label" id="labelSum">
                     <property name="MemberName" />
                     <property name="Xalign">1</property>
@@ -6929,7 +6931,7 @@
                     <property name="Justify">Right</property>
                   </widget>
                   <packing>
-                    <property name="Position">3</property>
+                    <property name="Position">1</property>
                     <property name="AutoSize">False</property>
                   </packing>
                 </child>

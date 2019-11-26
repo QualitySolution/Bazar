@@ -207,6 +207,9 @@
     <Compile Include="Domain\Payments\Cash.cs" />
     <Compile Include="HibernateMapping\Payments\CashMap.cs" />
     <Compile Include="HibernateMapping\Rental\ContractItemMap.cs" />
+    <Compile Include="Repositories\Rental\ServiceRepository.cs" />
+    <Compile Include="Repositories\Payments\CashRepository.cs" />
+    <Compile Include="Repositories\Rental\ContractRepository.cs" />
     <Compile Include="CreateBaseConfig.cs" />
     <Compile Include="HibernateMapping\Estate\PlaceMap.cs" />
   </ItemGroup>
@@ -267,6 +270,14 @@
       <Project>{F22749B2-E35B-455D-BD8D-081373B16FC7}</Project>
       <Name>QS.BusinessCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Gtk.DataBindings\System.Data.Bindings\System.Data.Bindings.csproj">
+      <Project>{54F958F5-7E58-4C89-9A04-8835E63B97C3}</Project>
+      <Name>System.Data.Bindings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QSProjects\QS.Project.Gtk\QS.Project.Gtk.csproj">
+      <Project>{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}</Project>
+      <Name>QS.Project.Gtk</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ReportDialogs\" />
@@ -286,6 +297,9 @@
     <Folder Include="HibernateMapping\Payments\" />
     <Folder Include="HibernateMapping\Estate\" />
     <Folder Include="HibernateMapping\Rental\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Repositories\Rental\" />
+    <Folder Include="Repositories\Payments\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

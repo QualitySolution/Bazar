@@ -17,8 +17,8 @@ namespace Bazar.HibernateMapping.Rental
 			Map (x => x.MinimalSum).Column ("min_sum");
 
 			References (x => x.Contract).Column ("contract_id").Not.Nullable();
-			References (x => x.Service).Column ("service_id").Not.Nullable ();
-			References (x => x.Place).Column ("place_id");
+			References (x => x.Service_NhOnly).Column ("service_id").Not.Nullable ();
+			References (x => x.Place_NhOnly).Column ("place_id");
 			References (x => x.Cash).Column ("cash_id").Not.Nullable ();
 		}
 	}

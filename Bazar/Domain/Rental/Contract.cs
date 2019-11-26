@@ -63,10 +63,10 @@ namespace Bazar.Domain.Rental
 			set { SetField (ref endDate, value); }
 		}
 
-		private DateTime cancelDate;
+		private DateTime? cancelDate;
 
 		[Display (Name = "Дата расторжения")]
-		public virtual DateTime CancelDate {
+		public virtual DateTime? CancelDate {
 			get { return cancelDate; }
 			set { SetField (ref cancelDate, value); }
 		}
@@ -86,6 +86,12 @@ namespace Bazar.Domain.Rental
 			get { return comments; }
 			set { SetField (ref comments, value); }
 		}
+
+		#endregion
+
+		#region Расчетные
+
+		public virtual string ValidityText => BeginDate.ToShortDateString() + "—" + (CancelDate ?? EndDate).ToShortDateString();
 
 		#endregion
 	}
