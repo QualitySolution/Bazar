@@ -5,6 +5,7 @@ using System.Linq;
 using Bazar.Domain.Estate;
 using Bazar.Domain.Payments;
 using Bazar.Domain.Rental;
+using Bazar.JournalViewModels.Estate;
 using Bazar.Repositories.Payments;
 using Bazar.Repositories.Rental;
 using Gamma.GtkWidgets;
@@ -12,7 +13,10 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
 using QS.Dialog.GtkUI;
+using QS.DomainModel.Entity;
 using QS.DomainModel.UoW;
+using QS.Journal.GtkUI;
+using QS.Project.Services.GtkUI;
 using QSProjectsLib;
 
 namespace Bazar.Dialogs.Rental
@@ -36,9 +40,6 @@ namespace Bazar.Dialogs.Rental
 		public ContractDlg ()
 		{
 			this.Build ();
-
-			ObservableContractItems = new GenericObservableList<ContractItem> (ContractItems);
-			ObservableContractItems.ListContentChanged += ObservableContractItems_ListContentChanged;;
 
 			ComboWorks.ComboFillReference(comboOrg, "organizations", ComboWorks.ListMode.WithNo, OrderBy: "name");
 
@@ -67,11 +68,19 @@ namespace Bazar.Dialogs.Rental
 
 			treeviewServices.Selection.Mode = SelectionMode.Multiple;
 			treeviewServices.Selection.Changed += Selection_Changed;
-			treeviewServices.SetItemsSource<ContractItem>(ObservableContractItems);
+			RecreateObservable();
 			treeviewServices.ShowAll();
 		}
 
 		#region Загрука\сохранение
+
+		// Так как мы заполняем лист без Observable, нам нужно его пересоздавать, чтобы он корректно подписался все объекты списка.
+		private void RecreateObservable()
+		{
+			ObservableContractItems = new GenericObservableList<ContractItem>(ContractItems);
+			ObservableContractItems.ListContentChanged += ObservableContractItems_ListContentChanged;
+			treeviewServices.SetItemsSource<ContractItem>(ObservableContractItems);
+		}
 
 		public void ContractFill(int Id)
 		{
@@ -125,7 +134,7 @@ namespace Bazar.Dialogs.Rental
 				this.Title = "Договор №" + entryNumber.Text;
 
 				ContractItems.AddRange(ContractRepository.GetContractItems(UoW, ContractId));
-				treeviewServices.YTreeModel.EmitModelChanged();
+				RecreateObservable();
 
 				CalculateServiceSum();
 
@@ -462,6 +471,36 @@ namespace Bazar.Dialogs.Rental
 			foreach(var item in treeviewServices.GetSelectedObjects<ContractItem>()) {
 				item.Place = null;
 			}
+		}
+
+		ContractItem[] SetPlaceItems;
+		Dialog SelectWindow;
+
+		protected void OnButtonPlaceSetClicked(object sender, EventArgs e)
+		{
+			SetPlaceItems = treeviewServices.GetSelectedObjects<ContractItem>();
+
+			var viewModel = new PlacesJournalViewModel(UnitOfWorkFactory.GetDefaultFactory, new GtkInteractiveService());
+			viewModel.SelectionMode = QS.Project.Journal.JournalSelectionMode.Single;
+			viewModel.OnSelectResult += ViewModel_OnSelectResult;
+
+			var view = new JournalView(viewModel);
+			SelectWindow = new Gtk.Dialog("Выберите место", this, DialogFlags.Modal);
+			SelectWindow.SetDefaultSize(600, 500);
+			SelectWindow.VBox.Add(view);
+			view.Show();
+			SelectWindow.Show();
+			SelectWindow.Run();
+			SelectWindow.Destroy();
+		}
+
+		void ViewModel_OnSelectResult(object sender, QS.Project.Journal.JournalSelectedEventArgs e)
+		{
+			var place = UoW.GetById<Place>(DomainHelper.GetId(e.SelectedObjects.First()));
+			foreach(var item in SetPlaceItems) {
+				item.Place = place;
+			}
+			SelectWindow.Respond(ResponseType.Ok);
 		}
 
 		#endregion

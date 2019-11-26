@@ -1,5 +1,6 @@
 ﻿using System;
 using Bazar.Domain.Estate;
+using Bazar.JournalViewModels;
 using QS.BusinessCommon.Domain;
 using QS.DomainModel.NotifyChange;
 using QS.Project.DB;
@@ -25,6 +26,7 @@ namespace Bazar
 			});
 
 			NotifyConfiguration.Enable();
+			JournalsColumnsConfigs.RegisterColumns();
 		}
 	}
 }

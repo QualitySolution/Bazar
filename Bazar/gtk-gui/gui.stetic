@@ -6882,6 +6882,7 @@
                             <property name="Icon">stock:gtk-edit Menu</property>
                             <property name="Label" translatable="yes">Указать место</property>
                             <property name="UseUnderline">True</property>
+                            <signal name="Clicked" handler="OnButtonPlaceSetClicked" />
                           </widget>
                           <packing>
                             <property name="Position">3</property>

@@ -613,6 +613,7 @@ namespace Bazar.Dialogs.Rental
 			this.datepickerCancel.DateChanged += new global::System.EventHandler(this.OnDatepickerCancelDateChanged);
 			this.buttonAddService.Clicked += new global::System.EventHandler(this.OnButtonAddServiceClicked);
 			this.buttonDelService.Clicked += new global::System.EventHandler(this.OnButtonDelServiceClicked);
+			this.buttonPlaceSet.Clicked += new global::System.EventHandler(this.OnButtonPlaceSetClicked);
 			this.buttonPlaceClean.Clicked += new global::System.EventHandler(this.OnButtonPlaceCleanClicked);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);
 		}

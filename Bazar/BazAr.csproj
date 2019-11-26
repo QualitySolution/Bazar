@@ -212,6 +212,8 @@
     <Compile Include="Repositories\Rental\ContractRepository.cs" />
     <Compile Include="CreateBaseConfig.cs" />
     <Compile Include="HibernateMapping\Estate\PlaceMap.cs" />
+    <Compile Include="JournalViewModels\JournalsColumnsConfigs.cs" />
+    <Compile Include="JournalViewModels\Estate\PlacesJournalViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -300,6 +302,8 @@
     <Folder Include="Repositories\" />
     <Folder Include="Repositories\Rental\" />
     <Folder Include="Repositories\Payments\" />
+    <Folder Include="JournalViewModels\" />
+    <Folder Include="JournalViewModels\Estate\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">
