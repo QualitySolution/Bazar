@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
+using Bazar.Dialogs.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
-using System.Collections.Generic;
-using QSProjectsLib;
 using NLog;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -379,7 +380,7 @@ namespace bazar
 				trans.Rollback ();
 				QSMain.ErrorMessageWithLog(this, "Ошибка записи оплаты!", logger, ex);
 			}
-			Accrual.GetAccrualPaidBalance (Accrual_Id);
+			AccrualDlg.GetAccrualPaidBalance (Accrual_Id);
 		}
 
 		private void PrintTicket(int id)

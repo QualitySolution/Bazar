@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Bazar;
-using Bazar.Dialogs.Rental;
+using bazar;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
 using QSProjectsLib;
 using QSWidgetLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Rental
 {
-	public partial class Accrual : Gtk.Dialog
+	public partial class AccrualDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewAccrual;
@@ -45,7 +44,7 @@ namespace bazar
 			row_color
 		}
 
-		public Accrual ()
+		public AccrualDlg ()
 		{
 			this.Build ();
 			allPendingMeterReadings = new Dictionary<TreeIter, List<PendingMeterReading>>();

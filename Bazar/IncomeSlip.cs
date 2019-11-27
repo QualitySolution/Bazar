@@ -1,5 +1,6 @@
 using System;
 using Bazar;
+using Bazar.Dialogs.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
@@ -217,11 +218,11 @@ namespace bazar
 
 				if(OriginalAccrual != 0 && OriginalAccrual != CurrentAccrualId)
 				{
-					Accrual.GetAccrualPaidBalance (OriginalAccrual);
+					AccrualDlg.GetAccrualPaidBalance (OriginalAccrual);
 				}
 				if(CurrentAccrualId > 0)
 				{
-					Balance = Accrual.GetAccrualPaidBalance(CurrentAccrualId);
+					Balance = AccrualDlg.GetAccrualPaidBalance(CurrentAccrualId);
 					if(Balance < 0)
 					{
 						MessageDialog md = new MessageDialog( this , DialogFlags.Modal,

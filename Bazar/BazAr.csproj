@@ -139,8 +139,6 @@
     <Compile Include="CashBalance.cs" />
     <Compile Include="gtk-gui\bazar.CashBalance.cs" />
     <Compile Include="MainWinAccrual.cs" />
-    <Compile Include="Accrual.cs" />
-    <Compile Include="gtk-gui\bazar.Accrual.cs" />
     <Compile Include="PayAccrual.cs" />
     <Compile Include="gtk-gui\bazar.PayAccrual.cs" />
     <Compile Include="MassAccrualCreation.cs" />
@@ -214,6 +212,8 @@
     <Compile Include="HibernateMapping\Estate\PlaceMap.cs" />
     <Compile Include="JournalViewModels\JournalsColumnsConfigs.cs" />
     <Compile Include="JournalViewModels\Estate\PlacesJournalViewModel.cs" />
+    <Compile Include="Dialogs\Rental\AccrualDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Rental.AccrualDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
