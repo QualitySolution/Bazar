@@ -39,6 +39,28 @@ namespace Bazar.JournalViewModels.Estate
 			Organization organizationAlias = null;
 			ContractItem contractItemAlias = null;
 			Contract contractAlias = null;
+			Lessee lesseeAlias = null;
+
+			var contractSubquery = QueryOver.Of<ContractItem>(() => contractItemAlias)
+				.JoinAlias(() => contractItemAlias.Contract, () => contractAlias)
+				.JoinAlias(() => contractAlias.Lessee, () => lesseeAlias)
+				.Where(x => x.Place_NhOnly.Id == placeAlias.Id)
+				.Where(() => contractAlias.BeginDate < DateTime.Now)
+				.Where(Restrictions.GeProperty(
+					Projections.SqlFunction("COALESCE", NHibernateUtil.DateTime,
+						Projections.Property(() => contractAlias.CancelDate),
+						Projections.Property(() => contractAlias.EndDate)),
+					Projections.Constant(DateTime.Now)))
+				.Select(Projections.SqlFunction("CONCAT", NHibernateUtil.String,
+						Projections.Property(() => lesseeAlias.Name),
+						Projections.Constant("|"),
+						Projections.Property(() => contractAlias.BeginDate),
+						Projections.Constant("|"),
+						Projections.SqlFunction("COALESCE", NHibernateUtil.DateTime,
+						Projections.Property(() => contractAlias.CancelDate),
+						Projections.Property(() => contractAlias.EndDate))
+					))
+				.Take(1);
 
 			PlaceJournalNode resultAlias = null;
 			return uow.Session.QueryOver<Place>(() => placeAlias)
@@ -47,13 +69,14 @@ namespace Bazar.JournalViewModels.Estate
 					() => placeTypeAlias.Name
 					))
 				.JoinAlias(x => x.PlaceType, () => placeTypeAlias)
-				.JoinAlias(x => x.Organization, ()=> organizationAlias)
+				.JoinAlias(x => x.Organization, ()=> organizationAlias, NHibernate.SqlCommand.JoinType.LeftOuterJoin)
 				.SelectList((list) => list
-					.Select(x => x.Id).WithAlias(() => resultAlias.Id)
+					.SelectGroup(x => x.Id).WithAlias(() => resultAlias.Id)
 					.Select(x => x.PlaceNumber).WithAlias(() => resultAlias.Number)
 					.Select(x => x.Area).WithAlias(() => resultAlias.Area)
 					.Select(() => placeTypeAlias.Name).WithAlias(() => resultAlias.TypeName)
 					.Select(() => organizationAlias.Name).WithAlias(() => resultAlias.Organization)
+					.SelectSubQuery(contractSubquery).WithAlias(() => resultAlias.LeaseInfo)
 				).TransformUsing(Transformers.AliasToBean<PlaceJournalNode>());
 		}
 
@@ -65,8 +88,6 @@ namespace Bazar.JournalViewModels.Estate
 		}
 
 		private readonly SearchHelper searchHelper;
-		//FIXME
-		public override Type NodeType => throw new NotImplementedException();
 
 		protected ICriterion GetSearchCriterion(params Expression<Func<object>>[] aliasPropertiesExpr)
 		{
@@ -88,8 +109,11 @@ namespace Bazar.JournalViewModels.Estate
 		public string PlaceName => $"{TypeName}-{Number}";
 		public decimal Area { get; set; }
 		public string AreaText => Area > 0 ? String.Format("{0} м<sup>2</sup>", Area) : String.Empty;
-		public string Lessee { get; set; }
-		public string LeaseDates { get; set; }
 		public string Organization { get; set; }
+
+		public string LeaseInfo { get; set; } // Здесь информация передается в виде 'арендатор|2019-01-01|2019-01-01'
+		public string Lessee => String.IsNullOrEmpty(LeaseInfo) ? null : LeaseInfo.Split('|')[0];
+		public string LeaseDates => String.IsNullOrEmpty(LeaseInfo) ? null 
+			: DateTime.Parse(LeaseInfo.Split('|')[1]).ToShortDateString() + "—" + DateTime.Parse(LeaseInfo.Split('|')[2]).ToShortDateString();
 	}
 }
