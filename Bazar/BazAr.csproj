@@ -214,6 +214,11 @@
     <Compile Include="JournalViewModels\Estate\PlacesJournalViewModel.cs" />
     <Compile Include="Dialogs\Rental\AccrualDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Rental.AccrualDlg.cs" />
+    <Compile Include="Domain\Rental\Accrual.cs" />
+    <Compile Include="Domain\Rental\AccrualItem.cs" />
+    <Compile Include="HibernateMapping\Rental\AccrualItemMap.cs" />
+    <Compile Include="HibernateMapping\Rental\AccrualMap.cs" />
+    <Compile Include="HibernateMapping\Application\UserMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -304,6 +309,7 @@
     <Folder Include="Repositories\Payments\" />
     <Folder Include="JournalViewModels\" />
     <Folder Include="JournalViewModels\Estate\" />
+    <Folder Include="HibernateMapping\Application\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">
