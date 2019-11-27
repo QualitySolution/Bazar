@@ -526,7 +526,7 @@ namespace bazar
 			this.buttonFromMeter.UseUnderline = true;
 			this.buttonFromMeter.Label = global::Mono.Unix.Catalog.GetString("По счётчику");
 			global::Gtk.Image w41 = new global::Gtk.Image();
-			w41.Pixbuf = global::Gdk.Pixbuf.LoadFromResource("bazar.icons.meter.png");
+			w41.Pixbuf = global::Gdk.Pixbuf.LoadFromResource("Bazar.Icons.meter.png");
 			this.buttonFromMeter.Image = w41;
 			this.hbox2.Add(this.buttonFromMeter);
 			global::Gtk.Box.BoxChild w42 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.buttonFromMeter]));

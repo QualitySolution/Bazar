@@ -254,7 +254,7 @@
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">QS: База арендаторов</property>
-    <property name="Icon">resource:Bazar.icons.logo.png</property>
+    <property name="Icon">resource:Bazar.Icons.logo.png</property>
     <property name="WindowPosition">Center</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
@@ -10715,7 +10715,7 @@
                                 <property name="MemberName" />
                                 <property name="CanFocus">True</property>
                                 <property name="Type">TextAndIcon</property>
-                                <property name="Icon">resource:bazar.icons.meter.png</property>
+                                <property name="Icon">resource:Bazar.Icons.meter.png</property>
                                 <property name="Label" translatable="yes">По счётчику</property>
                                 <property name="UseUnderline">True</property>
                                 <signal name="Clicked" handler="OnButtonFromMeterClicked" />

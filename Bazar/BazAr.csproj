@@ -100,9 +100,9 @@
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="icons\logo.png" />
-    <EmbeddedResource Include="icons\meter.png" />
-    <EmbeddedResource Include="icons\logo.ico" />
+    <EmbeddedResource Include="Icons\logo.png" />
+    <EmbeddedResource Include="Icons\meter.png" />
+    <EmbeddedResource Include="Icons\logo.ico" />
     <EmbeddedResource Include="SQLScripts\new-2.3.sql" />
     <EmbeddedResource Include="SQLScripts\Update 2.2 to 2.3.sql" />
     <EmbeddedResource Include="SQLScripts\Update 2.3.1.sql" />
@@ -284,7 +284,7 @@
   <ItemGroup>
     <Folder Include="ReportDialogs\" />
     <Folder Include="Reports\" />
-    <Folder Include="icons\" />
+    <Folder Include="Icons\" />
     <Folder Include="SQLScripts\" />
     <Folder Include="Tools\" />
     <Folder Include="Domain\" />
