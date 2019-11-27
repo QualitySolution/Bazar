@@ -486,7 +486,7 @@ namespace Bazar.Dialogs.Rental
 
 			var view = new JournalView(viewModel);
 			SelectWindow = new Gtk.Dialog("Выберите место", this, DialogFlags.Modal);
-			SelectWindow.SetDefaultSize(600, 500);
+			SelectWindow.SetDefaultSize(800, 500);
 			SelectWindow.VBox.Add(view);
 			view.Show();
 			SelectWindow.Show();
