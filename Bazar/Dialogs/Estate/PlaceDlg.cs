@@ -408,7 +408,7 @@ namespace Bazar.Dialogs.Estate
 
 		protected void OnButtonAddMeterClicked(object sender, EventArgs e)
 		{
-			Meter WinMeter = new Meter (true);
+			MeterDlg WinMeter = new MeterDlg (true);
 			WinMeter.SetPlace (type_id, PlaceNumber);
 			WinMeter.Show ();
 			ResponseType result = (ResponseType) WinMeter.Run ();
@@ -608,7 +608,7 @@ namespace Bazar.Dialogs.Estate
 		protected void OnButtonEditMeterClicked(object sender, EventArgs e)
 		{
 			int itemid = Meters[notebookMeters.CurrentPage].ID;
-			Meter winMeter = new Meter(false);
+			MeterDlg winMeter = new MeterDlg(false);
 			winMeter.Fill(itemid);
 			winMeter.Show();
 			ResponseType result = (ResponseType)winMeter.Run();
@@ -638,7 +638,7 @@ namespace Bazar.Dialogs.Estate
 		protected void OnButtonAddReadingClicked(object sender, EventArgs e)
 		{
 			int itemid = Meters[notebookMeters.CurrentPage].ID;
-			MeterReading winMeterReading = new MeterReading(itemid);
+			MeterReadingDlg winMeterReading = new MeterReadingDlg(itemid);
 			winMeterReading.Show();
 			ResponseType result = (ResponseType)winMeterReading.Run();
 			winMeterReading.Destroy();

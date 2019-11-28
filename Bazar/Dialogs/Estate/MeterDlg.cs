@@ -4,15 +4,15 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Estate
 {
-	public partial class Meter : Gtk.Dialog
+	public partial class MeterDlg : Gtk.Dialog
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		bool NewItem;
 		int Itemid, ParentId;
 
-		public Meter (bool New)
+		public MeterDlg (bool New)
 		{
 			this.Build ();
 

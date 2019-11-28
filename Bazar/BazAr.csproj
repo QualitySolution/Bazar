@@ -149,12 +149,6 @@
     <Compile Include="ReportDialogs\DailyCashReport.cs" />
     <Compile Include="gtk-gui\bazar.DailyCashReport.cs" />
     <Compile Include="ReportDialogs\DocRegister.cs" />
-    <Compile Include="MeterType.cs" />
-    <Compile Include="gtk-gui\bazar.MeterType.cs" />
-    <Compile Include="Meter.cs" />
-    <Compile Include="gtk-gui\bazar.Meter.cs" />
-    <Compile Include="MeterReading.cs" />
-    <Compile Include="gtk-gui\bazar.MeterReading.cs" />
     <Compile Include="PayFromMeter.cs" />
     <Compile Include="gtk-gui\bazar.PayFromMeter.cs" />
     <Compile Include="ReportDialogs\MetersReport.cs" />
@@ -218,7 +212,6 @@
     <Compile Include="Domain\Payments\Payment.cs" />
     <Compile Include="Dialogs\Payments\ExpenseSlipDlg.cs" />
     <Compile Include="Dialogs\Payments\IncomeSlipDlg.cs" />
-    <Compile Include="gtk-gui\bazar.ExpenseSlip.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Payments.IncomeSlipDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Payments.ExpenseSlipDlg.cs" />
     <Compile Include="Domain\Payments\IncomeSlip.cs" />
@@ -226,6 +219,12 @@
     <Compile Include="Domain\Payments\PaymentItem.cs" />
     <Compile Include="HibernateMapping\Payments\PaymentMap.cs" />
     <Compile Include="HibernateMapping\Payments\PaymentItemMap.cs" />
+    <Compile Include="Dialogs\Estate\MeterDlg.cs" />
+    <Compile Include="Dialogs\Estate\MeterTypeDlg.cs" />
+    <Compile Include="Dialogs\Estate\MeterReadingDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Estate.MeterTypeDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Estate.MeterDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Estate.MeterReadingDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

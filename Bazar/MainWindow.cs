@@ -570,7 +570,7 @@ public partial class MainWindow : Gtk.Window
 		ResponseType Result;
 		switch (e.TableName) {
 		case "meter_types":
-			MeterType MeterTypeEdit = new MeterType (e.NewItem);
+			MeterTypeDlg MeterTypeEdit = new MeterTypeDlg (e.NewItem);
 			if (!e.NewItem)
 				MeterTypeEdit.Fill (e.ItemId);
 			MeterTypeEdit.Show ();

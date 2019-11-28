@@ -3,9 +3,9 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Estate
 {
-	public partial class MeterType : Gtk.Dialog
+	public partial class MeterTypeDlg : Gtk.Dialog
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public bool NewItem;
@@ -15,7 +15,7 @@ namespace bazar
 		TreeModel ServiceNameList;
 		CellEditable ServiceCellEdit;
 
-		public MeterType ( bool New)
+		public MeterTypeDlg ( bool New)
 		{
 			this.Build ();
 

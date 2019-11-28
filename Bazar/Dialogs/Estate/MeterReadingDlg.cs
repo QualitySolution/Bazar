@@ -3,14 +3,14 @@ using Gtk;
 using MySql.Data.MySqlClient;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Estate
 {
-	public partial class MeterReading : Gtk.Dialog
+	public partial class MeterReadingDlg : Gtk.Dialog
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		int MeterId;
 
-		public MeterReading (int MeterID)
+		public MeterReadingDlg (int MeterID)
 		{
 			this.Build ();
 
