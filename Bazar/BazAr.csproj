@@ -126,10 +126,6 @@
     <Compile Include="MainWinEvent.cs" />
     <Compile Include="MainWinContract.cs" />
     <Compile Include="MainWinCash.cs" />
-    <Compile Include="IncomeSlip.cs" />
-    <Compile Include="gtk-gui\bazar.IncomeSlip.cs" />
-    <Compile Include="gtk-gui\bazar.ExpenseSlip.cs" />
-    <Compile Include="ExpenseSlip.cs" />
     <Compile Include="AdvanceStatement.cs" />
     <Compile Include="gtk-gui\bazar.AdvanceStatement.cs" />
     <Compile Include="AccountableDebts.cs" />
@@ -219,6 +215,17 @@
     <Compile Include="HibernateMapping\Rental\AccrualItemMap.cs" />
     <Compile Include="HibernateMapping\Rental\AccrualMap.cs" />
     <Compile Include="HibernateMapping\Application\UserMap.cs" />
+    <Compile Include="Domain\Payments\Payment.cs" />
+    <Compile Include="Dialogs\Payments\ExpenseSlipDlg.cs" />
+    <Compile Include="Dialogs\Payments\IncomeSlipDlg.cs" />
+    <Compile Include="gtk-gui\bazar.ExpenseSlip.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Payments.IncomeSlipDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Payments.ExpenseSlipDlg.cs" />
+    <Compile Include="Domain\Payments\IncomeSlip.cs" />
+    <Compile Include="HibernateMapping\Payments\IncomeSlipMap.cs" />
+    <Compile Include="Domain\Payments\PaymentItem.cs" />
+    <Compile Include="HibernateMapping\Payments\PaymentMap.cs" />
+    <Compile Include="HibernateMapping\Payments\PaymentItemMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
