@@ -14,6 +14,10 @@ ALTER TABLE `accrual_pays`
 ADD COLUMN `place_id` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `service_id`,
 ADD INDEX `fk_accrual_pays_1_idx` (`place_id` ASC);
 
+ALTER TABLE `meters` 
+ADD COLUMN `place_id` INT(10) UNSIGNED NOT NULL AFTER `name`,
+ADD INDEX `fk_meters_1_idx` (`place_id` ASC);
+
 ALTER TABLE `units` 
 ADD COLUMN `digits` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0 AFTER `name`,
 ADD COLUMN `okei` VARCHAR(3) NULL DEFAULT NULL AFTER `digits`;
@@ -28,6 +32,10 @@ UPDATE accrual_pays, accrual, contracts, places
 SET accrual_pays.place_id = places.id
 WHERE accrual_pays.accrual_id = accrual.id AND accrual.contract_id = contracts.id AND contracts.place_type_id = places.type_id AND contracts.place_no = places.place_no;
 
+UPDATE meters, places
+SET meters.place_id = places.id
+WHERE meters.place_type_id = places.type_id AND meters.place_no = places.place_no;
+
 -- Удаляем старые поля
 ALTER TABLE `contracts` 
 DROP FOREIGN KEY `fk_place_id`;
@@ -36,7 +44,14 @@ ALTER TABLE `contracts`
 DROP COLUMN `place_no`,
 DROP COLUMN `place_type_id`,
 DROP INDEX `fk_place_id_idx` ;
-;
+
+ALTER TABLE `meters` 
+DROP FOREIGN KEY `fk_meters_place`;
+
+ALTER TABLE `meters` 
+DROP COLUMN `place_no`,
+DROP COLUMN `place_type_id`,
+DROP INDEX `fk_meters_place_idx` ;
 
 -- Создаем индексы
 
@@ -53,7 +68,14 @@ ADD CONSTRAINT `fk_accrual_pays_1`
   REFERENCES `places` (`id`)
   ON DELETE RESTRICT
   ON UPDATE CASCADE;
-
+  
+ALTER TABLE `meters` 
+ADD CONSTRAINT `fk_meters_1`
+  FOREIGN KEY (`place_id`)
+  REFERENCES `places` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+  
 -- Версия базы
 DELETE FROM base_parameters WHERE name = 'micro_updates';
 UPDATE base_parameters SET str_value = '2.4' WHERE name = 'version';
