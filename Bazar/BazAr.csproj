@@ -225,6 +225,14 @@
     <Compile Include="gtk-gui\Bazar.Dialogs.Estate.MeterTypeDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Estate.MeterDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Estate.MeterReadingDlg.cs" />
+    <Compile Include="Domain\Estate\MeterType.cs" />
+    <Compile Include="HibernateMapping\Estate\MeterTypeMap.cs" />
+    <Compile Include="Domain\Estate\MeterTariff.cs" />
+    <Compile Include="HibernateMapping\Estate\MeterTariffMap.cs" />
+    <Compile Include="Domain\Estate\Meter.cs" />
+    <Compile Include="HibernateMapping\Estate\MeterMap.cs" />
+    <Compile Include="Domain\Estate\MeterReading.cs" />
+    <Compile Include="HibernateMapping\Estate\MeterReadingMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
