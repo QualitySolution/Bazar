@@ -5,9 +5,9 @@ using MySql.Data.MySqlClient;
 using NLog;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Payments
 {
-	public partial class ExpenseSlip : Gtk.Dialog
+	public partial class ExpenseSlipDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		public bool NewSlip;
@@ -18,7 +18,7 @@ namespace bazar
 		bool AccountableNull = true;
 		bool ExpenseNull = true;
 
-		public ExpenseSlip ()
+		public ExpenseSlipDlg ()
 		{
 			this.Build ();
 

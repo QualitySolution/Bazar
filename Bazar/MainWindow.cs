@@ -148,7 +148,7 @@ public partial class MainWindow : Gtk.Window
 			case 0:
 				treeviewIncome.Selection.GetSelected (out iter);
 				itemid = Convert.ToInt32 (CashIncomeSort.GetValue (iter, (int)CashIncomeCol.id));
-				IncomeSlip winIncome = new IncomeSlip ();
+				IncomeSlipDlg winIncome = new IncomeSlipDlg ();
 				winIncome.SlipFill (itemid, false);
 				winIncome.Show ();
 				result = (ResponseType)winIncome.Run ();
@@ -161,7 +161,7 @@ public partial class MainWindow : Gtk.Window
 			case 1:
 				treeviewExpense.Selection.GetSelected (out iter);
 				itemid = Convert.ToInt32 (CashExpenseSort.GetValue (iter, (int)CashExpenseCol.id));
-				ExpenseSlip winExpense = new  ExpenseSlip ();
+				ExpenseSlipDlg winExpense = new  ExpenseSlipDlg ();
 				winExpense.SlipFill (itemid, false);
 				winExpense.Show ();
 				result = (ResponseType)winExpense.Run ();
@@ -238,7 +238,7 @@ public partial class MainWindow : Gtk.Window
 		case 4:
 			switch (notebookCash.CurrentPage) {
 			case 0:
-				IncomeSlip winIncomeSlip = new IncomeSlip ();
+				IncomeSlipDlg winIncomeSlip = new IncomeSlipDlg ();
 				winIncomeSlip.NewSlip = true;
 				winIncomeSlip.Show ();
 				winIncomeSlip.Run ();
@@ -247,7 +247,7 @@ public partial class MainWindow : Gtk.Window
 				CalculateTotalCash ();
 				break;
 			case 1:
-				ExpenseSlip winExpenseSlip = new ExpenseSlip ();
+				ExpenseSlipDlg winExpenseSlip = new ExpenseSlipDlg ();
 				winExpenseSlip.NewSlip = true;
 				winExpenseSlip.Show ();
 				winExpenseSlip.Run ();

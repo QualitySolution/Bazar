@@ -878,7 +878,7 @@ public partial class MainWindow : Gtk.Window
 		treeviewExpense.Selection.GetSelected(out iter);
 		int itemid = Convert.ToInt32(CashExpenseSort.GetValue(iter, (int)CashExpenseCol.id));
 
-		ExpenseSlip winExpenseSlip = new ExpenseSlip();
+		ExpenseSlipDlg winExpenseSlip = new ExpenseSlipDlg();
 		winExpenseSlip.SlipFill(itemid, true);
 		winExpenseSlip.Show();
 		winExpenseSlip.Run();
@@ -930,7 +930,7 @@ public partial class MainWindow : Gtk.Window
 		TreeIter iter;
 		treeviewIncome.Selection.GetSelected(out iter);
 		int itemid = Convert.ToInt32(CashIncomeSort.GetValue(iter, (int)CashIncomeCol.id));
-		IncomeSlip winIncomeSlip = new IncomeSlip();
+		IncomeSlipDlg winIncomeSlip = new IncomeSlipDlg();
 		winIncomeSlip.SlipFill(itemid, true);
 		winIncomeSlip.Show();
 		winIncomeSlip.Run();
