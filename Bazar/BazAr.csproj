@@ -219,6 +219,8 @@
     <Compile Include="Domain\Payments\PaymentItem.cs" />
     <Compile Include="HibernateMapping\Payments\PaymentMap.cs" />
     <Compile Include="HibernateMapping\Payments\PaymentItemMap.cs" />
+    <Compile Include="Repositories\Rental\AccrualRepository.cs" />
+    <Compile Include="Repositories\Payments\PaymentRepository.cs" />
     <Compile Include="Dialogs\Estate\MeterDlg.cs" />
     <Compile Include="Dialogs\Estate\MeterTypeDlg.cs" />
     <Compile Include="Dialogs\Estate\MeterReadingDlg.cs" />
@@ -233,6 +235,8 @@
     <Compile Include="HibernateMapping\Estate\MeterMap.cs" />
     <Compile Include="Domain\Estate\MeterReading.cs" />
     <Compile Include="HibernateMapping\Estate\MeterReadingMap.cs" />
+    <Compile Include="Repositories\Estate\MetersRepository.cs" />
+    <Compile Include="Repositories\Estate\CachedMetersRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -324,6 +328,7 @@
     <Folder Include="JournalViewModels\" />
     <Folder Include="JournalViewModels\Estate\" />
     <Folder Include="HibernateMapping\Application\" />
+    <Folder Include="Repositories\Estate\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

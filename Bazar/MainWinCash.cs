@@ -1,7 +1,8 @@
 using System;
+using bazar;
+using Bazar.Dialogs.Payments;
 using Gtk;
 using MySql.Data.MySqlClient;
-using bazar;
 using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
