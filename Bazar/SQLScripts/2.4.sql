@@ -1,6 +1,15 @@
 ﻿-- Обновление с 2.3 на 2.4
 
+-- Удаляем старые связи
+
+ALTER TABLE `contracts` 
+DROP FOREIGN KEY `fk_place_id`;
+
+ALTER TABLE `meters` 
+DROP FOREIGN KEY `fk_meters_place`;
+
 -- Создаем новые поля
+
 ALTER TABLE `places` 
 ADD COLUMN `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST,
 DROP PRIMARY KEY,
@@ -37,16 +46,11 @@ SET meters.place_id = places.id
 WHERE meters.place_type_id = places.type_id AND meters.place_no = places.place_no;
 
 -- Удаляем старые поля
-ALTER TABLE `contracts` 
-DROP FOREIGN KEY `fk_place_id`;
 
 ALTER TABLE `contracts` 
 DROP COLUMN `place_no`,
 DROP COLUMN `place_type_id`,
 DROP INDEX `fk_place_id_idx` ;
-
-ALTER TABLE `meters` 
-DROP FOREIGN KEY `fk_meters_place`;
 
 ALTER TABLE `meters` 
 DROP COLUMN `place_no`,
