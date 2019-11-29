@@ -611,6 +611,7 @@ namespace Bazar.Dialogs.Rental
 			this.datepickerStart.DateChanged += new global::System.EventHandler(this.OnDatepickerStartDateChanged);
 			this.datepickerEnd.DateChanged += new global::System.EventHandler(this.OnDatepickerEndDateChanged);
 			this.datepickerCancel.DateChanged += new global::System.EventHandler(this.OnDatepickerCancelDateChanged);
+			this.treeviewServices.RowActivated += new global::Gtk.RowActivatedHandler(this.OnTreeviewServicesRowActivated);
 			this.buttonAddService.Clicked += new global::System.EventHandler(this.OnButtonAddServiceClicked);
 			this.buttonDelService.Clicked += new global::System.EventHandler(this.OnButtonDelServiceClicked);
 			this.buttonPlaceSet.Clicked += new global::System.EventHandler(this.OnButtonPlaceSetClicked);

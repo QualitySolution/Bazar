@@ -48,7 +48,7 @@ namespace Bazar.Dialogs.Rental
 					.AddComboRenderer(x => x.Service).Editing()
 						.SetDisplayFunc(x => x.Name)
 						.FillItems(ServiceRepository.GetActiveServices(UoW))
-				.AddColumn("Место")
+				.AddColumn("Место").Tag("IsPlaceColumn")
 					.AddTextRenderer(x => x.Place != null ? x.Place.Title : String.Empty)
 				.AddColumn("Касса").MinWidth(130)
 					.AddComboRenderer(x => x.Cash).Editing()
@@ -501,6 +501,13 @@ namespace Bazar.Dialogs.Rental
 				item.Place = place;
 			}
 			SelectWindow.Respond(ResponseType.Ok);
+		}
+
+		protected void OnTreeviewServicesRowActivated(object o, RowActivatedArgs args)
+		{
+			if(treeviewServices.ColumnsConfig.GetColumnsByTag("IsPlaceColumn").First() == args.Column) {
+				buttonPlaceSet.Click();
+			}
 		}
 
 		#endregion
