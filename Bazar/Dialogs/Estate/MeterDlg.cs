@@ -2,6 +2,7 @@ using System;
 using Bazar;
 using Gtk;
 using MySql.Data.MySqlClient;
+using QS.DomainModel.UoW;
 using QSProjectsLib;
 
 namespace Bazar.Dialogs.Estate
@@ -10,13 +11,14 @@ namespace Bazar.Dialogs.Estate
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		bool NewItem;
-		int Itemid, ParentId;
+		int Itemid, ParentId, placeId;
+
+		IUnitOfWork UoW = UnitOfWorkFactory.CreateWithoutRoot();
 
 		public MeterDlg (bool New)
 		{
 			this.Build ();
 
-			ComboWorks.ComboFillReference(comboPlaceType,"place_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
 			ComboWorks.ComboFillReference(comboMeterType, "meter_types", ComboWorks.ListMode.WithNo, OrderBy: "name");
 			NewItem = New;
 		}
@@ -34,7 +36,6 @@ namespace Bazar.Dialogs.Estate
 
 				cmd.Parameters.AddWithValue("@id", id);
 
-				object DBPlaceT, DBPlaceNo;
 				using(MySqlDataReader rdr = cmd.ExecuteReader())
 				{		
 					rdr.Read();
@@ -44,10 +45,7 @@ namespace Bazar.Dialogs.Estate
 					ComboWorks.SetActiveItem (comboMeterType, rdr.GetInt32 ("meter_type_id"));
 					ParentId = DBWorks.GetInt (rdr, "parent_meter_id", -1);
 					checkDisabled.Active = rdr.GetBoolean ("disabled");
-				
-					//запоминаем переменные что бы освободить соединение
-					DBPlaceT = rdr["place_type_id"];
-					DBPlaceNo = rdr["place_no"];
+					placeId = rdr.GetInt32("place_id");
 				}
 				if(ParentId > 0)
 				{
@@ -58,16 +56,6 @@ namespace Bazar.Dialogs.Estate
 					entryParent.TooltipText = entryParent.Text;
 				}
 
-				if(DBPlaceT != DBNull.Value)
-					ComboWorks.SetActiveItem (comboPlaceType, Convert.ToInt32 (DBPlaceT));
-				else
-					ComboWorks.SetActiveItem (comboPlaceType, -1);
-				if(DBPlaceNo != DBNull.Value)
-				{
-					TreeIter iter;
-					ListStoreWorks.SearchListStore((ListStore)comboPlaceNo.Model, DBPlaceNo.ToString(), out iter);
-					comboPlaceNo.SetActiveIter(iter);
-				}
 				logger.Info("Ok");
 				this.Title = entryName.Text;
 			}
@@ -79,21 +67,17 @@ namespace Bazar.Dialogs.Estate
 			TestCanSave();
 		}
 
-		public void SetPlace(int PlaceTypeId, string PlaceNo, bool DefaultName = true)
+		public void SetPlace(int placeId, string DefaultName)
 		{
-			ComboWorks.SetActiveItem (comboPlaceType, PlaceTypeId);
-			ComboWorks.SetActiveItem (comboPlaceNo, PlaceNo);
-			comboPlaceType.Sensitive = false;
-			comboPlaceNo.Sensitive = false;
-			entryName.Text = String.Format ("{0}-{1}", comboPlaceType.ActiveText, comboPlaceNo.ActiveText);
+			this.placeId = placeId;
+			entryName.Text = DefaultName;
 		}
 
 		protected void TestCanSave ()
 		{
 			bool Nameok = entryName.Text != "";
 			bool MeterTypeOk = ComboWorks.GetActiveId (comboMeterType) > 0;
-			bool PlaceOk = ComboWorks.GetActiveId (comboMeterType) > 0 && comboPlaceNo.Active >= 0;
-			buttonOk.Sensitive = Nameok && MeterTypeOk && PlaceOk;
+			buttonOk.Sensitive = Nameok && MeterTypeOk;
 		}
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
@@ -101,13 +85,13 @@ namespace Bazar.Dialogs.Estate
 			string sql;
 			if(NewItem)
 			{
-				sql = "INSERT INTO meters (name, meter_type_id, place_type_id, place_no, parent_meter_id, disabled) " +
-					"VALUES (@name, @meter_type_id, @place_type_id, @place_no, @parent_meter_id, @disabled)";
+				sql = "INSERT INTO meters (name, meter_type_id, place_id, parent_meter_id, disabled) " +
+					"VALUES (@name, @meter_type_id, @place_id, @parent_meter_id, @disabled)";
 			}
 			else
 			{
-				sql = "UPDATE meters SET name = @name, meter_type_id = @meter_type_id, place_type_id = @place_type_id, " +
-					"place_no = @place_no, parent_meter_id = @parent_meter_id, disabled = @disabled WHERE id = @id";
+				sql = "UPDATE meters SET name = @name, meter_type_id = @meter_type_id, place_id = @place_id, " +
+					"parent_meter_id = @parent_meter_id, disabled = @disabled WHERE id = @id";
 			}
 			logger.Info("Запись счётчика...");
 			try 
@@ -117,8 +101,7 @@ namespace Bazar.Dialogs.Estate
 				cmd.Parameters.AddWithValue("@id", Itemid);
 				cmd.Parameters.AddWithValue("@name", entryName.Text);
 				cmd.Parameters.AddWithValue("@meter_type_id", DBWorks.ValueOrNull (comboMeterType.Active > 0, ComboWorks.GetActiveId (comboMeterType)));
-				cmd.Parameters.AddWithValue("@place_type_id", DBWorks.ValueOrNull (comboPlaceType.Active > 0, ComboWorks.GetActiveId (comboPlaceType)));
-				cmd.Parameters.AddWithValue("@place_no", DBWorks.ValueOrNull(comboPlaceNo.Active >= 0, comboPlaceNo.ActiveText));
+				cmd.Parameters.AddWithValue("@place_id", placeId);
 				cmd.Parameters.AddWithValue("@parent_meter_id", DBWorks.ValueOrNull(ParentId > 0, ParentId));
 				cmd.Parameters.AddWithValue("@disabled", checkDisabled.Active );
 
@@ -138,23 +121,6 @@ namespace Bazar.Dialogs.Estate
 		}
 
 		protected void OnComboMeterTypeChanged(object sender, EventArgs e)
-		{
-			TestCanSave();
-		}
-
-		protected void OnComboPlaceTypeChanged(object sender, EventArgs e)
-		{
-			TreeIter iter;
-			int id;
-			if(comboPlaceType.GetActiveIter(out iter) && comboPlaceType.Active > 0)
-			{
-				id = (int)comboPlaceType.Model.GetValue(iter,1);
-				MainClass.ComboPlaceNoFill(comboPlaceNo, id);
-			}
-			TestCanSave();
-		}
-
-		protected void OnComboPlaceNoChanged(object sender, EventArgs e)
 		{
 			TestCanSave();
 		}

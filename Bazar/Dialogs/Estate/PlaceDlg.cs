@@ -409,7 +409,8 @@ namespace Bazar.Dialogs.Estate
 		protected void OnButtonAddMeterClicked(object sender, EventArgs e)
 		{
 			MeterDlg WinMeter = new MeterDlg (true);
-			WinMeter.SetPlace (type_id, PlaceNumber);
+			var title = String.Format("{0}-{1}", comboPType.ActiveText, entryNumber.Text);
+			WinMeter.SetPlace (place_id, title);
 			WinMeter.Show ();
 			ResponseType result = (ResponseType) WinMeter.Run ();
 			WinMeter.Destroy ();
@@ -424,12 +425,11 @@ namespace Bazar.Dialogs.Estate
 			{
 				string sql = "SELECT meters.id, meters.name, meter_types.name as type, meters.disabled, meter_types.reading_ratio FROM meters " +
 					"LEFT JOIN meter_types ON meter_types.id = meters.meter_type_id " +
-					"WHERE place_type_id = @place_type AND place_no = @place_no " +
+					"WHERE place_id = @place_id " +
 					"ORDER BY disabled";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 
-				cmd.Parameters.AddWithValue("@place_type", ComboWorks.GetActiveId (comboPType));
-				cmd.Parameters.AddWithValue("@place_no", entryNumber.Text);
+				cmd.Parameters.AddWithValue("@place_id", place_id);
 
 				List<object[]> DBRead = new List<object[]>();
 				using(MySqlDataReader rdr = cmd.ExecuteReader())
