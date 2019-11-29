@@ -533,8 +533,7 @@ namespace Bazar.Dialogs.Rental
 			WinMeter.Price = row.Price;
 			WinMeter.Fill(row.Id,
 						   row.Service.Id,
-						   row.Place.PlaceType.Id,
-						   row.Place.PlaceNumber,
+						   row.Place.Id,
 						   row.Service.Units.Name);
 
 			if(allPendingMeterReadings.ContainsKey(row)) {

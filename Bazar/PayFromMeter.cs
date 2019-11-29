@@ -167,7 +167,7 @@ namespace bazar
 				TotalCount = (spinPrice.Value == 0) ? 0 : ( MinSum / Price);
 		}
 
-		public void Fill(int AccrualRow, int service_id, int place_type_id, string place_no, string units)
+		public void Fill(int AccrualRow, int service_id, int place_id, string units)
 		{
 			TreeIter iter;
 			logger.Info("Запрос показаний счетчиков...");
@@ -177,14 +177,13 @@ namespace bazar
 				"FROM meter_tariffs " +
 				"LEFT JOIN meter_types ON meter_types.id = meter_tariffs.meter_type_id " +
 				"LEFT JOIN meters ON meters.meter_type_id = meter_types.id " +
-				"WHERE meter_tariffs.service_id = @service_id AND meters.place_type_id = @place_type_id AND meters.place_no = @place_no AND meters.disabled = 'FALSE'";
+				"WHERE meter_tariffs.service_id = @service_id AND meters.place_id = @place_id AND meters.disabled = 'FALSE'";
 			try
 			{
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 
 				cmd.Parameters.AddWithValue("@service_id", service_id);
-				cmd.Parameters.AddWithValue("@place_type_id", place_type_id);
-				cmd.Parameters.AddWithValue("@place_no", place_no);
+				cmd.Parameters.AddWithValue("@place_id", place_id);
 
 				using(MySqlDataReader rdr = cmd.ExecuteReader())
 				{		
@@ -401,4 +400,3 @@ namespace bazar
 		}
 	}
 }
-
