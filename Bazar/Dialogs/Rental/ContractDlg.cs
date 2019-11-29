@@ -246,7 +246,6 @@ namespace Bazar.Dialogs.Rental
 				}
 
 				//Удаляем удаленные строки из базы данных
-				sql = "DELETE FROM contract_pays WHERE id = @id";
 				foreach(var item in deletedRows) {
 					UoW.Delete(item);
 				}
@@ -461,7 +460,8 @@ namespace Bazar.Dialogs.Rental
 		protected void OnButtonDelServiceClicked(object sender, EventArgs e)
 		{
 			foreach(var item in treeviewServices.GetSelectedObjects<ContractItem>()) {
-				deletedRows.Add(item);
+				if(item.Id > 0)
+					deletedRows.Add(item);
 				ObservableContractItems.Remove(item);
 			}
 		}
