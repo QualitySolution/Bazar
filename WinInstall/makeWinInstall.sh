@@ -5,20 +5,24 @@ cd "$(dirname "$0")"
 
 ProjectName="bazar"
 BinDir=../Bazar/bin/Release
+Configuration="Release"
 NsisOptions=""
 
 # Параметры
 
 while [ "$1" != "" ]; do
     case $1 in
-        -b | --beta ) NsisOptions+=" /DBETA"
-                                ;;
+        -b | --beta ) 
+		NsisOptions+=" /DBETA"
+		BinDir=../Bazar/bin/Debug
+		Configuration="Debug"
+                ;;
     esac
     shift
 done
 
 # Сборка релиза
-msbuild /p:Configuration=Release /p:Platform=x86 ../${ProjectName}.sln
+msbuild /p:Configuration=${Configuration} /p:Platform=x86 ../${ProjectName}.sln
 
 # Очистка от лишних файлов
 rm -v -f ${BinDir}/*.mdb

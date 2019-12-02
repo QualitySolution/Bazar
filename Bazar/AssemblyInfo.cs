@@ -15,6 +15,10 @@ using QSProjectsLib;
 [assembly: AssemblySupport("", true, "MySQL")]
 [assembly: AssemblyAppWebsite("http://bazar.qsolution.ru/")]
 
+#if DEBUG
+[assembly: AssemblyBetaBuild]
+#endif
+
 [assembly: AssemblyAuthor("Ганьков Андрей <gav@qsolution.ru>")]
 [assembly: AssemblyAuthor("Виноградов Андрей <vad@qsolution.ru>")]
 [assembly: AssemblyAuthor("Никитин Дмитрий <nds@qsolution.ru>")]

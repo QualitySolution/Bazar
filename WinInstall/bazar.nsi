@@ -2,14 +2,21 @@ Unicode true
 ;--------------------------------
 !define PRODUCT_VERSION "2.4"
 !define NET_VERSION "4.6.1"
-!define PRODUCT_NAME "QS: База арендаторов"
-!define SHORTCUT_NAME "QS База арендаторов"
-!define MENU_DIR_NAME "База арендаторов"
 !define EXE_NAME "bazar"
 
 !ifdef BETA
+	!define PRODUCT_NAME "QS: База арендаторов БЕТА"
+	!define SHORTCUT_NAME "QS База арендаторов БЕТА"
+	!define MENU_DIR_NAME "База арендаторов БЕТА"
+	!define APP_DIR_NAME "Базар-beta"
+	!define UNINSTAL_KEY "bazar-beta"
 	!define SETUP_POSTFIX "-beta"
 !else
+	!define PRODUCT_NAME "QS: База арендаторов"
+	!define SHORTCUT_NAME "QS База арендаторов"
+	!define MENU_DIR_NAME "База арендаторов"
+	!define APP_DIR_NAME "Базар"
+	!define UNINSTAL_KEY "bazar"
 	!define SETUP_POSTFIX ""
 !endif
 
@@ -26,7 +33,7 @@ OutFile "${EXE_NAME}-${PRODUCT_VERSION}${SETUP_POSTFIX}.exe"
 !include "NsisDotNetChecker\nsis\DotNetChecker_ru.nsh"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\Базар
+InstallDir $PROGRAMFILES\${APP_DIR_NAME}
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
@@ -168,11 +175,6 @@ Section "${PRODUCT_NAME}" SecProgram
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   
-  ; Delete Old version files
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Bazar"
-  Delete "$SMPROGRAMS\Базар\*.*"
-  Delete "$DESKTOP\Базар.lnk"
-  RMDir "$SMPROGRAMS\Базар"
   ; Delete files used before 2.2.4 version.
   Delete "$INSTDIR\Reports\Meters.rdl"
   Delete "$INSTDIR\Reports\MetersFill.rdl"
@@ -181,13 +183,13 @@ Section "${PRODUCT_NAME}" SecProgram
   File /r "Files\*.*"
   
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "DisplayName" "${PRODUCT_NAME}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "DisplayIcon" '"$INSTDIR\${EXE_NAME}.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "Publisher" "Quality Solution"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "DisplayVersion" "${PRODUCT_VERSION}"
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "DisplayName" "${PRODUCT_NAME}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "DisplayIcon" '"$INSTDIR\${EXE_NAME}.exe"'
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "Publisher" "Quality Solution"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
   ; Start Menu Shortcuts
@@ -275,7 +277,7 @@ Section "Uninstall"
   
   SetShellVarContext all
   ; Remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${EXE_NAME}"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${UNINSTAL_KEY}"
 
   ; Remove files and uninstaller
   Delete $INSTDIR\*
