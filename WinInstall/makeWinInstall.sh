@@ -5,6 +5,17 @@ cd "$(dirname "$0")"
 
 ProjectName="bazar"
 BinDir=../Bazar/bin/Release
+NsisOptions=""
+
+# Параметры
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -b | --beta ) NsisOptions+=" /DBETA"
+                                ;;
+    esac
+    shift
+done
 
 # Сборка релиза
 msbuild /p:Configuration=Release /p:Platform=x86 ../${ProjectName}.sln
@@ -22,4 +33,4 @@ if [ ! -f "gtk-sharp-2.12.21.msi" ]; then
     wget https://xamarin.azureedge.net/GTKforWindows/Windows/gtk-sharp-2.12.21.msi
 fi
 
-wine ~/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /INPUTCHARSET UTF8 ${ProjectName}.nsi
+wine ~/.wine/drive_c/Program\ Files\ \(x86\)/NSIS/makensis.exe /INPUTCHARSET UTF8 ${NsisOptions} ${ProjectName}.nsi

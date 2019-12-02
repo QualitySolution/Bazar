@@ -7,11 +7,17 @@ Unicode true
 !define MENU_DIR_NAME "База арендаторов"
 !define EXE_NAME "bazar"
 
+!ifdef BETA
+	!define SETUP_POSTFIX "-beta"
+!else
+	!define SETUP_POSTFIX ""
+!endif
+
 ; The name of the installer
 Name "${PRODUCT_NAME}"
 
 ; The file to write
-OutFile "${EXE_NAME}-${PRODUCT_VERSION}.exe"
+OutFile "${EXE_NAME}-${PRODUCT_VERSION}${SETUP_POSTFIX}.exe"
 
 !include "MUI.nsh"
 !include "x64.nsh"
