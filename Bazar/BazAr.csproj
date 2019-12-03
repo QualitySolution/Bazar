@@ -237,6 +237,7 @@
     <Compile Include="HibernateMapping\Estate\MeterReadingMap.cs" />
     <Compile Include="Repositories\Estate\MetersRepository.cs" />
     <Compile Include="Repositories\Estate\CachedMetersRepository.cs" />
+    <Compile Include="Repositories\Estate\PlaceRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

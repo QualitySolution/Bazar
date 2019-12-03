@@ -1,13 +1,17 @@
 ﻿using System;
 using Bazar;
+using Bazar.Repositories.Estate;
 using Gtk;
 using MySql.Data.MySqlClient;
+using QS.DomainModel.UoW;
 using QSProjectsLib;
 
 namespace bazar
 {
 	public partial class LesseeRentReport : Gtk.Dialog
 	{
+		IUnitOfWork UoW = UnitOfWorkFactory.CreateWithoutRoot();
+
 		public LesseeRentReport ()
 		{
 			this.Build (); 
@@ -38,11 +42,11 @@ namespace bazar
 			}
 			string SQL = "SELECT DISTINCT lessees.id, lessees.name FROM lessees " +
 				"LEFT JOIN contracts ON contracts.lessee_id = lessees.id " +
-				"WHERE contracts.place_no = @place_no AND " +
-				"contracts.place_type_id = @place_type_id";
+				"WHERE contracts.id IN " +
+				"(SELECT contract_pays.contract_id FROM contract_pays WHERE contract_pays.place_id = @place_id)";
+			var placeId = PlaceRepository.GetPlaceId(UoW, ComboWorks.GetActiveId(comboPlaceType), comboPlace.ActiveText);
 			MySqlParameter[] Param = { 
-				new MySqlParameter("@place_no", comboPlace.ActiveText),
-				new MySqlParameter("@place_type_id", ComboWorks.GetActiveId(comboPlaceType)) 
+				new MySqlParameter("@place_id", placeId)
 			};
 			ComboWorks.ComboFillUniversal (comboLessee, SQL, "{1}", Param, 0, ComboWorks.ListMode.OnlyItems, true);
 			comboLessee.Sensitive = true;
@@ -65,12 +69,12 @@ namespace bazar
 			    ComboWorks.GetActiveIdOrNull (comboPlaceType) != null &&
 			    !String.IsNullOrEmpty(comboPlace.ActiveText)) {
 				buttonOk.Sensitive = true;
-				string SQL = "SELECT MIN(start_date) AS start, MAX(end_date) AS end FROM contracts " +
-					"WHERE lessee_id = @lessee_id AND place_type_id = @place_type_id AND place_no = @place_no";
+				var placeId = PlaceRepository.GetPlaceId(UoW, ComboWorks.GetActiveId(comboPlaceType), comboPlace.ActiveText);
+				string SQL = "SELECT MIN(start_date) AS start, MAX(end_date) AS end FROM contracts, contract_pays " +
+					"WHERE contract_pays.contract_id = contracts.id AND contracts.lessee_id = @lessee_id AND contract_pays.place_id = @place_id";
 				MySqlCommand cmd = new MySqlCommand(SQL, QSMain.connectionDB);
 				cmd.Parameters.AddWithValue ("@lessee_id", ComboWorks.GetActiveId (comboLessee));
-				cmd.Parameters.AddWithValue ("@place_type_id", ComboWorks.GetActiveId(comboPlaceType));
-				cmd.Parameters.AddWithValue ("@place_no", comboPlace.ActiveText);
+				cmd.Parameters.AddWithValue ("@place_id", placeId);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				if (!rdr.Read ())
 					return;

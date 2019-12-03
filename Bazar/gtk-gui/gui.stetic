@@ -14432,7 +14432,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.LesseeRentReport" design-size="435 173">
+  <widget class="Gtk.Dialog" id="bazar.LesseeRentReport" design-size="435 177">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Отчет по оплате за место</property>
     <property name="WindowPosition">CenterOnParent</property>
