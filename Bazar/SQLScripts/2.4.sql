@@ -80,6 +80,22 @@ ADD CONSTRAINT `fk_meters_1`
   ON DELETE RESTRICT
   ON UPDATE CASCADE;
   
+-- Добавляем новое представление
+
+CREATE OR REPLACE VIEW `current_place_leases` AS
+    SELECT 
+        contracts.*,
+        contract_pays.place_id,
+        IFNULL(contracts.cancel_date, contracts.end_date) AS finish_date
+    FROM
+        contract_pays,
+        contracts
+    WHERE
+        contract_pays.place_id IS NOT NULL
+            AND contract_pays.contract_id = contracts.id
+            AND CURDATE() BETWEEN contracts.start_date AND IFNULL(contracts.cancel_date, contracts.end_date)
+    GROUP BY place_id;
+
 -- Версия базы
 DELETE FROM base_parameters WHERE name = 'micro_updates';
 UPDATE base_parameters SET str_value = '2.4' WHERE name = 'version';

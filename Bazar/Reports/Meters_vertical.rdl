@@ -16,9 +16,8 @@
       <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>use bazar;
-SELECT lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
-meter_types.name type, meter_types.reading_ratio, meter_tariffs.name as tariff, 
+        <CommandText>SELECT lessees.name, current_place_leases.number as contract, place_types.name as place_type, places.place_no, 
+meter_types.name as type, meter_types.reading_ratio, meter_tariffs.name as tariff, 
  reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0 FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
@@ -26,13 +25,14 @@ SELECT  selectedmeters.*,
 (SELECT date FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastdate, 
 (SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue, 
 (SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1, 1) as prevalue 
-FROM (select meters.id as meter_id,meter_tariffs.id as meter_tariff_id from meters join meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id) as selectedmeters
+FROM ( select meters.id as meter_id, meter_tariffs.id as meter_tariff_id from meters join meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id) as selectedmeters
 ) as reading ON meters.id = reading.meter_id 
-LEFT JOIN place_types ON place_types.id = meters.place_type_id
+LEFT JOIN places ON places.id = meters.place_id
+LEFT JOIN place_types ON place_types.id = places.type_id
 LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id
 LEFT JOIN meter_tariffs ON meter_tariffs.id = reading.meter_tariff_id
-LEFT JOIN active_contracts ON meters.place_type_id = active_contracts.place_type_id AND meters.place_no = active_contracts.place_no
-LEFT JOIN lessees ON active_contracts.lessee_id = lessees.id
+LEFT JOIN current_place_leases ON meters.place_id = current_place_leases.place_id
+LEFT JOIN lessees ON current_place_leases.lessee_id = lessees.id
 LEFT JOIN accrual_pays ON accrual_pays.id = reading.lastpayid
 LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
 ON paysum.accrual_pay_id = accrual_pays.id
