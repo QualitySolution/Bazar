@@ -16,17 +16,20 @@
       <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end,
-substring_index(SUBSTRING_INDEX(contracts.place_no,'\\',1), '/', 1) as sort_col,
-substring_index(SUBSTRING_INDEX(contracts.place_no,'\\',-1), '/', -1) as sort_col_2
+        <CommandText>SELECT contracts.*, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end, 
+(SELECT GROUP_CONCAT(DISTINCT CONCAT(place_types.name, "-", places.place_no) SEPARATOR ", ") 
+	FROM contract_pays 
+ 	INNER JOIN places ON places.id = contract_pays.place_id
+	INNER JOIN place_types ON place_types.id = places.type_id
+ 	WHERE contract_pays.contract_id = contracts.id
+) as contract_places
 FROM contracts
-LEFT JOIN place_types ON contracts.place_type_id = place_types.id 
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN organizations ON contracts.org_id = organizations.id
 WHERE ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) 
 OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))
 AND (contracts.org_id = @org_id OR @org_id = 0)
-ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_no;</CommandText>
+ORDER BY contracts.number;</CommandText>
         <QueryParameters>
           <QueryParameter Name="org_id">
             <Value>=Parameters!org_id</Value>
@@ -46,12 +49,8 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
           <DataField>org_id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
         </Field>
-        <Field Name="place_type_id">
-          <DataField>place_type_id</DataField>
-          <rd:TypeName>System.UInt32</rd:TypeName>
-        </Field>
-        <Field Name="place_no">
-          <DataField>place_no</DataField>
+        <Field Name="contract_places">
+          <DataField>contract_places</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="sign_date">
@@ -76,10 +75,6 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
         </Field>
         <Field Name="comments">
           <DataField>comments</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="type">
-          <DataField>type</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="lessee">
@@ -182,7 +177,7 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox6">
-                      <Value>Место</Value>
+                      <Value>Места</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -306,7 +301,7 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="place_no">
-                      <Value>=Fields!type.Value + "-" + Fields!place_no.Value</Value>
+                      <Value>=Fields!contract_places.Value</Value>
                       <CanGrow>true</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -407,7 +402,7 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
         <Top>9.6pt</Top>
       </Table>
     </ReportItems>
-    <Height>126.7pt</Height>
+    <Height>44.5pt</Height>
     <Columns>1</Columns>
   </Body>
   <PageFooter>
