@@ -67,11 +67,10 @@ WHERE accrual_pays.accrual_id = @id AND (@cash_id = -1 OR accrual_pays.cash_id =
     <DataSet Name="Accrual">
       <Query>
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT accrual.id, accrual.month, accrual.year, contracts.number as contract_no, lessees.name as lessee, place_types.name as type, contracts.place_no as place_no 
+        <CommandText>SELECT accrual.id, accrual.month, accrual.year, contracts.number as contract_no, lessees.name as lessee 
 FROM accrual 
 LEFT JOIN contracts ON contracts.id = accrual.contract_id 
 LEFT JOIN lessees ON lessees.id = contracts.lessee_id 
-LEFT JOIN place_types ON place_types.id = contracts.place_type_id 
 WHERE accrual.id = @id</CommandText>
         <QueryParameters>
           <QueryParameter Name="id">
@@ -93,12 +92,6 @@ WHERE accrual.id = @id</CommandText>
         </Field>
         <Field Name="lessee">
           <DataField>lessee</DataField>
-        </Field>
-        <Field Name="type">
-          <DataField>type</DataField>
-        </Field>
-        <Field Name="place_no">
-          <DataField>place_no</DataField>
         </Field>
       </Fields>
     </DataSet>

@@ -23,12 +23,13 @@ namespace bazar
 		{
 			if (ComboWorks.GetActiveIdOrNull (comboLessee) == null || String.IsNullOrEmpty(comboPlace.ActiveText))
 				return;
+			var placeId = PlaceRepository.GetPlaceId(UoW, ComboWorks.GetActiveId(comboPlaceType), comboPlace.ActiveText);
 			string param = "MonthStart=" + (comboStartMonth.Active + 1).ToString () +
 				"&MonthEnd=" + (comboEndMonth.Active + 1).ToString() +
 				"&YearStart=" + comboStartYear.ActiveText + 
 				"&YearEnd=" + comboEndYear.ActiveText +
 				"&LesseeId=" + ComboWorks.GetActiveId(comboLessee) +
-				"&Place=" + comboPlace.ActiveText.Replace(@"\",@"\\") ;
+				"&Place=" + placeId.ToString();
 
 			ViewReportExt.Run ("LesseeReport", param);
 		}
