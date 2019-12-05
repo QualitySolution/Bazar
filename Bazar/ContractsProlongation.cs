@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
@@ -26,13 +27,13 @@ namespace bazar
 			ContractsListStore = new Gtk.ListStore (typeof (bool), // 0 - select
 				typeof(int), // 1 - id
 				typeof (string), // 2 - number
-				typeof (string), // 3 - place
+				typeof (string), // 3 - places
 				typeof (string), // 4 - lessee
 				typeof (DateTime), // 5 - Start date
 				typeof (DateTime), // 6 - End date
 				typeof (BadContractChecks), //  7 - Conflict checks
-				typeof (int), // 8 - place type id
-				typeof (string), // 9 - place number
+				typeof (int), // 8 - null
+				typeof (int[]), // 9 - place_ids
 				typeof (DateTime) // 10 - sign date
 			);
 
@@ -44,7 +45,7 @@ namespace bazar
 
 			treeviewContracts.AppendColumn(SelectColumn);
 			treeviewContracts.AppendColumn("Номер", new Gtk.CellRendererText (), RenderNumberColumn);
-			treeviewContracts.AppendColumn("Место", new Gtk.CellRendererText (), "text", 3);
+			treeviewContracts.AppendColumn("Места", new Gtk.CellRendererText (), "text", 3);
 			treeviewContracts.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", 4);
 			treeviewContracts.AppendColumn("Начало аренды", new Gtk.CellRendererText (), RenderStartDateColumn);
 			treeviewContracts.AppendColumn("Окончание", new Gtk.CellRendererText (), RenderEndDateColumn);
@@ -168,7 +169,8 @@ namespace bazar
 			bool FastCheck = (!checkStart.Active || dateStart.IsEmpty) && (!checkEnd.Active || dateEnd.IsEmpty);
 			if(!FastCheck)
 			{
-				string sql = "SELECT id, start_date, (DATE(IFNULL(cancel_date,end_date))) as stop_date, place_type_id, place_no FROM contracts " +
+				string sql = "SELECT contracts.id, start_date, (DATE(IFNULL(cancel_date,end_date))) as stop_date, contract_pays.place_id FROM contract_pays " +
+					"INNER JOIN contracts ON contracts.id = contract_pays.contract_id " +
 				             "WHERE !(@start > DATE(IFNULL(cancel_date,end_date)) OR @end < start_date)";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 
@@ -186,7 +188,7 @@ namespace bazar
 					progressbarMain.Adjustment.Upper += rdr.RecordsAffected;
 					while (rdr.Read ()) 
 					{
-						object[] Contract = new object[5];
+						object[] Contract = new object[4];
 						rdr.GetValues (Contract);
 						Contracts.Add (Contract);
 						progressbarMain.Adjustment.Value++;
@@ -203,8 +205,7 @@ namespace bazar
 				ContrChk.RentDates = false;
 				if((bool)ContractsListStore.GetValue(iter, 0))
 				{
-					int TypeId = (int) ContractsListStore.GetValue (iter, 8);
-					string PlaceNo = (string) ContractsListStore.GetValue (iter, 9);
+					int[] placesIds = (int[]) ContractsListStore.GetValue (iter, 9);
 					DateTime Start = checkStart.Active ? dateStart.Date : (DateTime) ContractsListStore.GetValue (iter, 5);
 					DateTime End = checkEnd.Active ? dateEnd.Date : (DateTime) ContractsListStore.GetValue (iter, 6);
 
@@ -212,7 +213,7 @@ namespace bazar
 					{
 						if(radioChangeMode.Active && Convert.ToInt32 (row[0]) == (int)ContractsListStore.GetValue(iter, 1) )
 							continue;
-						if(TypeId == Convert.ToInt32 (row[3]) && PlaceNo == (string)row[4] && !(Start > (DateTime)row[2] || End <  (DateTime)row[1]))
+						if(placesIds.Contains(Convert.ToInt32 (row[3])) && !(Start > (DateTime)row[2] || End <  (DateTime)row[1]))
 						{
 							ContrChk.RentDates = true;
 							break;
@@ -250,14 +251,13 @@ namespace bazar
 
 				if((bool)ContractsListStore.GetValue(iter, 0))
 				{
-					int TypeId = (int) ContractsListStore.GetValue (iter, 8);
-					string PlaceNo = (string) ContractsListStore.GetValue (iter, 9);
+					int[] placeids = (int[]) ContractsListStore.GetValue (iter, 9);
 
 					foreach(object[] row in ContractsListStore)
 					{
 						if(Convert.ToInt32 (row[1]) == (int)ContractsListStore.GetValue(iter, 1) )
 							continue;
-						if(TypeId == Convert.ToInt32 (row[8]) && PlaceNo == (string)row[9])
+						if(((int[])row[9]).Any(p => placeids.Contains(p)))
 						{
 							ContrChk.PlaceDub = true;
 							break;
@@ -405,9 +405,17 @@ namespace bazar
 				return;
 			logger.Info("Получаем таблицу договоров...");
 
-			string sql = "SELECT contracts.*, place_types.name as type, lessees.name as lessee FROM contracts " +
-			             "LEFT JOIN place_types ON contracts.place_type_id = place_types.id " +
-			             "LEFT JOIN lessees ON contracts.lessee_id = lessees.id ";
+			string sql = "SELECT contracts.*, lessees.name as lessee, " +
+				"(SELECT GROUP_CONCAT(DISTINCT CONCAT(place_types.name, \"-\", places.place_no) SEPARATOR \", \") " +
+					"FROM contract_pays " +
+					"INNER JOIN places ON places.id = contract_pays.place_id " +
+					"INNER JOIN place_types ON place_types.id = places.type_id " +
+					"WHERE contract_pays.contract_id = contracts.id) as places_text, " +
+				"(SELECT GROUP_CONCAT(DISTINCT contract_pays.place_id SEPARATOR \",\") " +
+					"FROM contract_pays " +
+					"WHERE contract_pays.contract_id = contracts.id) as places_ids " +
+				"FROM contracts " +
+			    "LEFT JOIN lessees ON contracts.lessee_id = lessees.id ";
 			if(radiobuttonActiveOnly.Active)
 				sql += "WHERE ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))";
@@ -424,13 +432,13 @@ namespace bazar
 				ContractsListStore.AppendValues(false,
 					rdr.GetInt32 ("id"),
 					rdr["number"].ToString(),
-					rdr["type"].ToString() + " - " + rdr["place_no"].ToString(),
+					rdr["places_text"].ToString(),
 					rdr["lessee"].ToString(),
 					rdr.GetDateTime("start_date"),
 					DBWorks.GetDateTime(rdr, "cancel_date", rdr.GetDateTime ("end_date")),
 					new BadContractChecks(),
-					rdr.GetInt32("place_type_id"),
-					rdr.GetString("place_no"),
+					null,
+					DBWorks.GetString(rdr, "places_ids", String.Empty).Split(',').Select(x => int.Parse(x)).ToArray(),
 					DBWorks.GetDateTime(rdr, "sign_date", new DateTime() )
 				);
 			}
@@ -558,9 +566,9 @@ namespace bazar
 			{
 				if( !(bool) row[0] || ((BadContractChecks)row[7]).Bad)
 					continue;
-				string sql = "INSERT INTO contracts (number, lessee_id, org_id, place_type_id, place_no, sign_date, " +
+				string sql = "INSERT INTO contracts (number, lessee_id, org_id, sign_date, " +
 				             "start_date, end_date, pay_day, cancel_date, comments) " +
-				             "SELECT number, lessee_id, org_id, place_type_id, place_no, @sign_date, @start_date, @end_date, pay_day, NULL, comments " +
+				             "SELECT number, lessee_id, org_id, @sign_date, @start_date, @end_date, pay_day, NULL, comments " +
 				             "FROM contracts " +
 				             "WHERE id = @id";
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
@@ -572,8 +580,8 @@ namespace bazar
 
 				long NewContract_id = cmd.LastInsertedId;
 
-				sql = "INSERT INTO contract_pays (contract_id, service_id, cash_id, count, price, min_sum) " +
-				      "SELECT @newcontract_id, service_id, cash_id, count, price, min_sum FROM contract_pays WHERE contract_id = @oldcontract_id ";
+				sql = "INSERT INTO contract_pays (contract_id, service_id, place_id, cash_id, count, price, min_sum) " +
+				      "SELECT @newcontract_id, service_id, place_id, cash_id, count, price, min_sum FROM contract_pays WHERE contract_id = @oldcontract_id ";
 
 				cmd = new MySqlCommand(sql, QSMain.connectionDB, trans);
 				cmd.Parameters.AddWithValue("@oldcontract_id", row[1]);
@@ -656,4 +664,3 @@ namespace bazar
 		}
 	}
 }
-
