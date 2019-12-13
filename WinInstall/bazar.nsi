@@ -1,6 +1,6 @@
 Unicode true
 ;--------------------------------
-!define PRODUCT_VERSION "2.3.4.3"
+!define PRODUCT_VERSION "2.3.4.4"
 !define NET_VERSION "4.6.1"
 !define PRODUCT_NAME "QS: База арендаторов"
 !define SHORTCUT_NAME "QS База арендаторов"
