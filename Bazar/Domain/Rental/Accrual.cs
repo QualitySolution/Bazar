@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using QS.DomainModel.Entity;
 using QS.Project.Domain;
@@ -29,6 +29,20 @@ namespace Bazar.Domain.Rental
 		public virtual Contract Contract {
 			get { return contract; }
 			set { SetField(ref contract, value); }
+		}
+
+		private DateTime date;
+		[Display(Name = "Дата")]
+		public virtual DateTime Date {
+			get => date;
+			set => SetField(ref date, value);
+		}
+
+		private string invoiceNumber;
+		[Display(Name = "Номер счета")]
+		public virtual string InvoiceNumber {
+			get => invoiceNumber;
+			set => SetField(ref invoiceNumber, value);
 		}
 
 		private uint month;

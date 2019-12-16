@@ -1,4 +1,4 @@
-﻿using Bazar.Domain.Rental;
+using Bazar.Domain.Rental;
 using FluentNHibernate.Mapping;
 
 namespace Bazar.HibernateMapping.Rental
@@ -11,6 +11,8 @@ namespace Bazar.HibernateMapping.Rental
 
 			Id (x => x.Id).Column ("id").GeneratedBy.Native ();
 
+			Map(x => x.Date).Column("date");
+			Map(x => x.InvoiceNumber).Column("invoice_number");
 			Map (x => x.Month).Column ("month");
 			Map (x => x.Year).Column ("year");
 			Map (x => x.Paid).Column ("paid");
