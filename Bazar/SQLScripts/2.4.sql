@@ -31,6 +31,14 @@ ALTER TABLE `units`
 ADD COLUMN `digits` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0 AFTER `name`,
 ADD COLUMN `okei` VARCHAR(3) NULL DEFAULT NULL AFTER `digits`;
 
+ALTER TABLE `accrual` 
+ADD COLUMN `date` DATE NULL DEFAULT NULL AFTER `contract_id`,
+ADD COLUMN `invoice_number` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `date`,
+CHANGE COLUMN `paid` `paid` TINYINT(1) NOT NULL DEFAULT FALSE ,
+ADD UNIQUE INDEX `index4` (`contract_id` ASC, `date` ASC),
+ADD UNIQUE INDEX `index5` (`year` ASC, `invoice_number` ASC),
+DROP INDEX `Contract_per_month` ;
+
 -- Миграция из старых данных в новые
 
 UPDATE contract_pays, contracts, places
