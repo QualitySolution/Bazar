@@ -1,5 +1,8 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Bindings.Collections.Generic;
+using System.Linq;
 using QS.DomainModel.Entity;
 using QS.Project.Domain;
 
@@ -53,10 +56,10 @@ namespace Bazar.Domain.Rental
 			set { SetField(ref month, value); }
 		}
 
-		private int year;
+		private uint year;
 
 		[Display(Name = "Год")]
-		public virtual int Year {
+		public virtual uint Year {
 			get { return year; }
 			set { SetField(ref year, value); }
 		}
@@ -69,12 +72,10 @@ namespace Bazar.Domain.Rental
 			set { SetField(ref paid, value); }
 		}
 
-		private bool notComplete;
-
 		[Display(Name = "Не полностью начислено")]
 		public virtual bool NotComplete {
-			get { return notComplete; }
-			set { SetField(ref notComplete, value); }
+			get { return Items.Any(x => x.Total == 0); }
+			set { }
 		}
 
 		private string comments;
@@ -84,6 +85,29 @@ namespace Bazar.Domain.Rental
 			get { return comments; }
 			set { SetField(ref comments, value); }
 		}
+
+		IList<AccrualItem> items = new List<AccrualItem>();
+		[Display(Name = "Строки")]
+		public virtual IList<AccrualItem> Items {
+			get => items;
+			set => SetField(ref items, value);
+		}
+
+		GenericObservableList<AccrualItem> observableItems;
+		//FIXME Кослыль пока не разберемся как научить hibernate работать с обновляемыми списками.
+		public virtual GenericObservableList<AccrualItem> ObservableItems {
+			get {
+				if(observableItems == null)
+					observableItems = new GenericObservableList<AccrualItem>(Items);
+				return observableItems;
+			}
+		}
+
+		#endregion
+
+		#region Расчетные
+
+		public virtual decimal AccrualTotal => Items.Sum(x => x.Total);
 
 		#endregion
 	}

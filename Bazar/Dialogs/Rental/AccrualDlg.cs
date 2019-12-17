@@ -19,6 +19,7 @@ using QS.Dialog.GtkUI;
 using QS.DomainModel.Entity;
 using QS.DomainModel.UoW;
 using QS.Journal.GtkUI;
+using QS.Project.Repositories;
 using QS.Project.Services.GtkUI;
 using QSProjectsLib;
 using QSWidgetLib;
@@ -28,30 +29,40 @@ namespace Bazar.Dialogs.Rental
 	public partial class AccrualDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
-		public bool NewAccrual;
-		private int AccrualId;
 
 		Gtk.ListStore IncomeListStore;
 		CachedMetersRepository CachedMeters;
 		Dictionary<AccrualItem,List<PendingMeterReading>> allPendingMeterReadings = new Dictionary<AccrualItem, List<PendingMeterReading>>();
 
-		IUnitOfWork UoW = UnitOfWorkFactory.CreateWithoutRoot();
-		List<AccrualItem> AccrualItems = new List<AccrualItem>();
-		GenericObservableList<AccrualItem> ObservableAccrualItems;
-		List<AccrualItem> deletedRows = new List<AccrualItem>();
+		IUnitOfWorkGeneric<Accrual> UoW;
+		Accrual Entity => UoW.Root;
 		IList<PaymentItem> paids = new List<PaymentItem>();
 
 		#region Внутренние свойства
 
-		decimal AccrualTotal => AccrualItems.Sum(x => x.Total);
 		decimal IncomeTotal => paids.Sum(x => x.Sum);
 
 		#endregion
 
 		public AccrualDlg ()
 		{
-			this.Build ();
-			MainClass.ComboAccrualYearsFill (comboAccuralYear);
+			UoW = UnitOfWorkFactory.CreateWithNewRoot<Accrual>();
+			Entity.User = UserRepository.GetCurrentUser(UoW);
+			ConfigureDlg();
+		}
+
+		public AccrualDlg(int id)
+		{
+			UoW = UnitOfWorkFactory.CreateForRoot<Accrual>(id);
+
+			ConfigureDlg();
+			AccrualFill(id);
+		}
+
+		void ConfigureDlg()
+		{
+			this.Build();
+			MainClass.ComboAccrualYearsFill(comboAccuralYear);
 
 			CachedMeters = new CachedMetersRepository(UoW);
 
@@ -80,110 +91,77 @@ namespace Bazar.Dialogs.Rental
 
 			treeviewServices.Selection.Mode = SelectionMode.Multiple;
 			treeviewServices.Selection.Changed += Selection_Changed;
-			RecreateObservable();
+			Entity.ObservableItems.ListContentChanged += ObservableAccrualItems_ListContentChanged;
+			treeviewServices.SetItemsSource<AccrualItem>(Entity.ObservableItems);
 			treeviewServices.ShowAll();
 
 			//Создаем таблицу оплат
-			IncomeListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (string), typeof (string),
-			                                     typeof (string), typeof (string), typeof (decimal));
+			IncomeListStore = new Gtk.ListStore(typeof(int), typeof(string), typeof(string), typeof(string),
+												 typeof(string), typeof(string), typeof(decimal));
 
 			//ID -0
-			treeviewIncomes.AppendColumn("Документ", new Gtk.CellRendererText (), "text", 1);
-			treeviewIncomes.AppendColumn("Дата", new Gtk.CellRendererText (), "text", 2);
-			treeviewIncomes.AppendColumn("Касса", new Gtk.CellRendererText (), "text", 3);
+			treeviewIncomes.AppendColumn("Документ", new Gtk.CellRendererText(), "text", 1);
+			treeviewIncomes.AppendColumn("Дата", new Gtk.CellRendererText(), "text", 2);
+			treeviewIncomes.AppendColumn("Касса", new Gtk.CellRendererText(), "text", 3);
 			// пусто
-			treeviewIncomes.AppendColumn("Сумма", new Gtk.CellRendererText (), "text", 5);
+			treeviewIncomes.AppendColumn("Сумма", new Gtk.CellRendererText(), "text", 5);
 			//Сумма цифровое -6
-			
+
 			treeviewIncomes.Model = IncomeListStore;
 			treeviewIncomes.ShowAll();
 
-			var menu = new Menu ();
-			var itemAllCashPrint = new MenuItem ("По всем кассам");
-			itemAllCashPrint.Activated += ItemAllCashPrint_Activated;;
-			menu.Add (itemAllCashPrint);
-			var separator = new SeparatorMenuItem ();
-			menu.Add (separator);
+			var menu = new Menu();
+			var itemAllCashPrint = new MenuItem("По всем кассам");
+			itemAllCashPrint.Activated += ItemAllCashPrint_Activated; ;
+			menu.Add(itemAllCashPrint);
+			var separator = new SeparatorMenuItem();
+			menu.Add(separator);
 
 			foreach(var cash in CashRepository.GetActiveCashes(UoW)) {
-				var itemSelectedCashPrint = new MenuItemId<Cash> (cash.Name);
+				var itemSelectedCashPrint = new MenuItemId<Cash>(cash.Name);
 				itemSelectedCashPrint.ID = cash;
-				itemSelectedCashPrint.Activated += ItemSelectedCashPrint_Activated;;
-				menu.Add (itemSelectedCashPrint);
+				itemSelectedCashPrint.Activated += ItemSelectedCashPrint_Activated; ;
+				menu.Add(itemSelectedCashPrint);
 			}
 
-			menu.ShowAll ();
+			menu.ShowAll();
 			buttonPrint.Menu = menu;
+
 		}
 
 		#region Загрука\сохранение
 
-		// Так как мы заполняем лист без Observable, нам нужно его пересоздавать, чтобы он корректно подписался все объекты списка.
-		private void RecreateObservable()
+		private void AccrualFill(int accrualId)
 		{
-			ObservableAccrualItems = new GenericObservableList<AccrualItem>(AccrualItems);
-			ObservableAccrualItems.ListContentChanged += ObservableAccrualItems_ListContentChanged;
-			treeviewServices.SetItemsSource<AccrualItem>(ObservableAccrualItems);
-		}
-
-		public void AccrualFill(int accrualId)
-		{
-			AccrualId = accrualId;
-			NewAccrual = false;
 			TreeIter iter;
 			
-			logger.Info("Запрос начисления №" + AccrualId +"...");
-			string sql = "SELECT accrual.*, users.name as user FROM accrual " +
-				"LEFT JOIN users ON users.id = accrual.user_id " +
-				"WHERE accrual.id = @id";
-			try
+			logger.Info("Запрос начисления №" + accrualId +"...");
+
+			entryNumber.Text = Entity.Id.ToString();
+			entryUser.Text = Entity.User.Name;
+			textviewComments.Buffer.Text = Entity.Comments;
+
+			comboAccrualMonth.Active = (int)Entity.Month;
+			ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model, Entity.Year.ToString(), out iter);
+			comboAccuralYear.SetActiveIter (iter);
+			if(Entity.Contract != null)
 			{
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				cmd.Parameters.AddWithValue("@id", AccrualId);
-				MySqlDataReader rdr = cmd.ExecuteReader();
-		
-				if(!rdr.Read())
-					return;
-				
-				entryNumber.Text = rdr["id"].ToString();
-				entryUser.Text = rdr["user"].ToString ();
-				textviewComments.Buffer.Text = rdr["comments"].ToString ();
-
-				//запоминаем переменные что бы освободить соединение
-				object DBContract_id = rdr["contract_id"];
-				object DBMonth = rdr["month"];
-				object DBYear = rdr["year"];
-
-				rdr.Close();
-
-				comboAccrualMonth.Active = Convert.ToInt32(DBMonth);
-				ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model, DBYear.ToString (), out iter);
-				comboAccuralYear.SetActiveIter (iter);
-				if(DBContract_id != DBNull.Value)
+				if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, Entity.Contract.Id, out iter))
 				{
-					if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, Convert.ToInt32(DBContract_id), out iter))
-					{
-						comboContract.SetActiveIter (iter);
-						comboContract.Sensitive = false;
-					}
+					comboContract.SetActiveIter (iter);
+					comboContract.Sensitive = false;
 				}
-				this.Title = "Начисление №" + entryNumber.Text;
-
-				//Получаем таблицу услуг
-				AccrualItems.AddRange(AccrualRepository.GetAccrualItems(UoW, AccrualId));
-				UpdatePaid();
-				RecreateObservable();
-
-				logger.Info("Ok");
-
-				UpdateIncomes ();
-				ShowOldDebts ();
 			}
-			catch (Exception ex)
-			{
-				QSMain.ErrorMessageWithLog(this, "Ошибка получения информации о начисление!", logger, ex);
-			}
-			
+			this.Title = "Начисление №" + entryNumber.Text;
+
+			//Получаем таблицу услуг
+			UpdatePaid();
+
+			logger.Info("Ok");
+
+			UpdateIncomes ();
+			ShowOldDebts ();
+
 			TestCanSave();
 		}
 
@@ -197,92 +175,37 @@ namespace Bazar.Dialogs.Rental
 		{
 			TreeIter iter;
 			logger.Info("Запись начисления...");
-			try {
-				// Проверка нет ли уже начисления по этому договору
-				string sql = "SELECT id FROM accrual WHERE contract_id = @contract AND month = @month AND year = @year";
-				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				comboContract.GetActiveIter(out iter);
-				cmd.Parameters.AddWithValue("@contract", comboContract.Model.GetValue(iter, 1));
-				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
-				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
-				MySqlDataReader rdr = cmd.ExecuteReader();
 
-				if(rdr.Read() && rdr["id"].ToString() != entryNumber.Text) {
-					logger.Warn("Начисление уже существует!");
-					MessageDialog md = new MessageDialog(this, DialogFlags.Modal,
-														 MessageType.Error,
-														 ButtonsType.Ok, "ошибка");
-					md.UseMarkup = false;
-					md.Text = "Начисление на указанный месяц по этому договору уже произведено. Начисление имеет номер " + rdr["id"].ToString();
-					md.Run();
-					md.Destroy();
-					rdr.Close();
-					return false;
+			comboContract.GetActiveIter(out iter);
+			var contract_id = (int)comboContract.Model.GetValue(iter, 1);
+			if(Entity.Contract?.Id != contract_id)
+				Entity.Contract = UoW.GetById<Contract>(contract_id);
+
+			Entity.Month = (uint)comboAccrualMonth.Active;
+			Entity.Year = uint.Parse(comboAccuralYear.ActiveText);
+			Entity.Comments = textviewComments.Buffer.Text;
+
+			Entity.Paid = Entity.AccrualTotal - IncomeTotal <= 0;
+
+			//записываем таблицу услуг
+			foreach(var item in Entity.Items) {
+				UoW.Save(item);
+			}
+
+			UoW.Commit();
+
+			entryNumber.Text = Entity.Id.ToString();
+
+			foreach(var pair in allPendingMeterReadings) {
+				foreach(PendingMeterReading unsavedReading in pair.Value) {
+					unsavedReading.accrualPayId = pair.Key.Id;
+					unsavedReading.Save();
 				}
-				rdr.Close();
-				// записываем
-				if(NewAccrual) {
-					sql = "INSERT INTO accrual (contract_id, month, year, user_id, no_complete, comments) " +
-						"VALUES (@contract_id, @month, @year, @user_id, @no_complete, @comments)";
-				} else {
-					sql = "UPDATE accrual SET contract_id = @contract_id, month = @month, year = @year, " +
-						"no_complete = @no_complete, paid = @paid, comments = @comments " +
-						"WHERE id = @id";
-				}
-
-				cmd = new MySqlCommand(sql, QSMain.connectionDB);
-
-				cmd.Parameters.AddWithValue("@id", entryNumber.Text);
-				comboContract.GetActiveIter(out iter);
-				cmd.Parameters.AddWithValue("@contract_id", comboContract.Model.GetValue(iter, 1));
-				cmd.Parameters.AddWithValue("@month", comboAccrualMonth.Active);
-				cmd.Parameters.AddWithValue("@year", comboAccuralYear.ActiveText);
-				cmd.Parameters.AddWithValue("@user_id", QSMain.User.Id);
-				if(textviewComments.Buffer.Text != "")
-					cmd.Parameters.AddWithValue("@comments", textviewComments.Buffer.Text);
-				else
-					cmd.Parameters.AddWithValue("@comments", DBNull.Value);
-				cmd.Parameters.AddWithValue("@no_complete", AccrualItems.Any(x => x.Total == 0));
-				if(AccrualTotal - IncomeTotal > 0)
-					cmd.Parameters.AddWithValue("@paid", false);
-				else
-					cmd.Parameters.AddWithValue("@paid", true);
-				cmd.ExecuteNonQuery();
-				if(NewAccrual) {
-					AccrualId = (int)cmd.LastInsertedId;
-					entryNumber.Text = AccrualId.ToString();
-					NewAccrual = false;
-				}
-
-				//записываем таблицу услуг
-				var accrual = UoW.GetById<Accrual>(AccrualId);
-				foreach(var item in AccrualItems) {
-
-					item.Accrual = accrual;
-					UoW.Save(item);
-				}
-
-				//Удаляем удаленные строки из базы данных
-				foreach(var item in deletedRows) {
-					UoW.Delete(item);
-				}
-				UoW.Commit();
-				deletedRows.Clear();
-
-				foreach(var pair in allPendingMeterReadings) {
-					foreach(PendingMeterReading unsavedReading in pair.Value) {
-						unsavedReading.accrualPayId = pair.Key.Id;
-						unsavedReading.Save();
-					}
-				}
-				allPendingMeterReadings.Clear();
+			}
+			allPendingMeterReadings.Clear();
 
 			logger.Info("Ok");
-				return true;
-			} catch(Exception ex) {
-				QSMain.ErrorMessageWithLog(this, "Ошибка записи начисления!", logger, ex);
-				return false;
-			}
+			return true;
 		}
 
 		#endregion
@@ -291,7 +214,7 @@ namespace Bazar.Dialogs.Rental
 
 		protected void UpdateIncomes()
 		{
-			if(NewAccrual)
+			if(UoW.IsNew)
 				return;
 
 			logger.Info("Получаем таблицу приходных ордеров...");
@@ -364,8 +287,7 @@ namespace Bazar.Dialogs.Rental
 				return;
 			}
 
-			TreeIter iter;
-			comboContract.GetActiveIter(out iter);
+			comboContract.GetActiveIter(out TreeIter iter);
 			var contract = UoW.GetById<Contract>((int)comboContract.Model.GetValue(iter, 1));
 
 			labelLessee.LabelProp = contract.Lessee.Name;
@@ -390,8 +312,7 @@ namespace Bazar.Dialogs.Rental
 
 		protected void OnButtonOpenContractClicked(object sender, EventArgs e)
 		{
-			TreeIter iter;
-			comboContract.GetActiveIter(out iter);
+			comboContract.GetActiveIter(out TreeIter iter);
 			int itemid = (int)comboContract.Model.GetValue(iter, 1);
 
 			ContractDlg winContract = new ContractDlg();
@@ -409,8 +330,8 @@ namespace Bazar.Dialogs.Rental
 		{
 			bool Contractok = comboContract.Active >= 0;
 			bool Monthok = comboAccrualMonth.Active > 0 && comboAccuralYear.Active >= 0;
-			bool SumOk = AccrualTotal > 0;
-			bool ServicesOk = AccrualItems.All(x => x.Service != null && x.Cash != null);
+			bool SumOk = Entity.AccrualTotal > 0;
+			bool ServicesOk = Entity.Items.All(x => x.Service != null && x.Cash != null);
 			
 			buttonMakePayment.Sensitive = Contractok && Monthok && SumOk && ServicesOk;
 			buttonOk.Sensitive = Contractok && Monthok && ServicesOk;
@@ -439,13 +360,13 @@ namespace Bazar.Dialogs.Rental
 
 		protected void OnButtonAddServiceClicked(object sender, EventArgs e)
 		{
-			var newitem = new AccrualItem();
+			var newitem = new AccrualItem(Entity);
 			newitem.Amount = 1;
 			var cashes = CashRepository.GetActiveCashes(UoW);
 			if(cashes.Count == 1)
 				newitem.Cash = cashes.First();
 
-			ObservableAccrualItems.Add(newitem);
+			Entity.ObservableItems.Add(newitem);
 		}
 
 		protected void CalculateServiceSum()
@@ -453,7 +374,7 @@ namespace Bazar.Dialogs.Rental
 			Dictionary<Cash, decimal> cashSums = new Dictionary<Cash, decimal>();
 			decimal TotalSum = 0;
 
-			foreach(var item in AccrualItems) {
+			foreach(var item in Entity.Items) {
 				if(item.Cash != null) {
 					if(!cashSums.ContainsKey(item.Cash))
 						cashSums.Add(item.Cash, 0);
@@ -482,8 +403,8 @@ namespace Bazar.Dialogs.Rental
 
 			foreach(var item in deletedItems) {
 				if(item.Id > 0)
-					deletedRows.Add(item);
-				ObservableAccrualItems.Remove(item);
+					UoW.Delete(item);
+				Entity.ObservableItems.Remove(item);
 				allPendingMeterReadings.Remove(item);
 			}
 		}
@@ -562,12 +483,12 @@ namespace Bazar.Dialogs.Rental
 		protected void ShowStatus()
 		{
 			string CompleteStatus, BalanceStatus;
-			decimal Balance = AccrualTotal - IncomeTotal;
-			if(AccrualItems.Any(x => x.Total == 0))
+			decimal Balance = Entity.AccrualTotal - IncomeTotal;
+			if(Entity.Items.Any(x => x.Total == 0))
 				CompleteStatus = "<span background=\"Cyan\">Неполное</span>";
 			else
 				CompleteStatus = "";
-			if(AccrualTotal == 0)
+			if(Entity.AccrualTotal == 0)
 				CompleteStatus = "Незаполнено";
 			BalanceStatus = "";
 			if(Balance == 0)
@@ -582,7 +503,7 @@ namespace Bazar.Dialogs.Rental
 			if(Balance < 0)
 				BalanceStatus = String.Format ("<span background=\"red\">Переплата {0:C}</span>", Math.Abs (Balance));
 
-			if(AccrualTotal == 0 || (CompleteStatus != "" && Balance >= 0) )
+			if(Entity.AccrualTotal == 0 || (CompleteStatus != "" && Balance >= 0) )
 				labelStatus.LabelProp = CompleteStatus;
 			else if (Balance < 0)
 			{
@@ -659,7 +580,7 @@ namespace Bazar.Dialogs.Rental
 
 		private void UpdatePaid()
 		{
-			paids = PaymentRepository.GetPaymentItemsForAccrual(UoW, AccrualId);
+			paids = PaymentRepository.GetPaymentItemsForAccrual(UoW, Entity.Id);
 			labelIncomeSum.Text = string.Format("Сумма: {0:C} ", IncomeTotal);
 		}
 

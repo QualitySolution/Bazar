@@ -1,4 +1,4 @@
-using Bazar.Domain.Rental;
+﻿using Bazar.Domain.Rental;
 using FluentNHibernate.Mapping;
 
 namespace Bazar.HibernateMapping.Rental
@@ -21,6 +21,12 @@ namespace Bazar.HibernateMapping.Rental
 
 			References (x => x.Contract).Column ("contract_id");
 			References (x => x.User).Column ("user_id");
+
+			HasMany(x => x.Items)
+				.Inverse()
+				.KeyColumn("accrual_id").Not.KeyNullable()
+				.Cascade.AllDeleteOrphan().Inverse()
+				.LazyLoad();
 		}
 	}
 }

@@ -134,9 +134,8 @@ public partial class MainWindow : Gtk.Window
 				UpdateContract ();
 			break;
 		case 3:
-			itemid = Convert.ToInt32 (treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id);
-			AccrualDlg winAccrual = new AccrualDlg ();
-			winAccrual.AccrualFill (itemid);
+			itemid = treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id;
+			AccrualDlg winAccrual = new AccrualDlg (itemid);
 			winAccrual.Show ();
 			result = (ResponseType)winAccrual.Run ();
 			winAccrual.Destroy ();
@@ -229,7 +228,6 @@ public partial class MainWindow : Gtk.Window
 			break;
 		case 3:
 			AccrualDlg winAccrual = new AccrualDlg ();
-			winAccrual.NewAccrual = true;
 			winAccrual.Show ();
 			winAccrual.Run ();
 			winAccrual.Destroy ();

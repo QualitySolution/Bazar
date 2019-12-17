@@ -82,6 +82,14 @@ namespace Bazar.Domain.Rental
 
 		#endregion
 
+		public AccrualItem(Accrual accrual)
+		{
+			Accrual = accrual ?? throw new ArgumentNullException(nameof(accrual));
+		}
+
+		public AccrualItem()
+		{
+		}
 
 		#region Только для установки из Hibernate
 
