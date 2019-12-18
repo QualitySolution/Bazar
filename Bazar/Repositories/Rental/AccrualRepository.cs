@@ -10,5 +10,13 @@ namespace Bazar.Repositories.Rental
 		{
 			return uow.Session.QueryOver<AccrualItem>().Where(x => x.Accrual.Id == accrualId).List();
 		}
+
+		public static Accrual GetAcctualByInvoice(IUnitOfWork uow, uint invoiceNumber, uint year, int exludeId)
+		{
+			return uow.Session.QueryOver<Accrual>()
+				.Where(x => x.InvoiceNumber == invoiceNumber && x.Year == year)
+				.Where(x => x.Id != exludeId)
+				.SingleOrDefault();
+		}
 	}
 }

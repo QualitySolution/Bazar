@@ -34,16 +34,16 @@ namespace Bazar.Domain.Rental
 			set { SetField(ref contract, value); }
 		}
 
-		private DateTime date;
+		private DateTime? date;
 		[Display(Name = "Дата")]
-		public virtual DateTime Date {
+		public virtual DateTime? Date {
 			get => date;
 			set => SetField(ref date, value);
 		}
 
-		private string invoiceNumber;
+		private uint? invoiceNumber;
 		[Display(Name = "Номер счета")]
-		public virtual string InvoiceNumber {
+		public virtual uint? InvoiceNumber {
 			get => invoiceNumber;
 			set => SetField(ref invoiceNumber, value);
 		}

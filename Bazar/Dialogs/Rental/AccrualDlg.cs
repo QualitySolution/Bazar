@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Bindings.Collections.Generic;
 using System.Linq;
 using bazar;
 using Bazar.Dialogs.Payments;
@@ -11,6 +10,8 @@ using Bazar.JournalViewModels.Estate;
 using Bazar.Repositories.Estate;
 using Bazar.Repositories.Payments;
 using Bazar.Repositories.Rental;
+using Bazar.Services;
+using Gamma.Binding.Converters;
 using Gamma.GtkWidgets;
 using Gtk;
 using MySql.Data.MySqlClient;
@@ -48,6 +49,7 @@ namespace Bazar.Dialogs.Rental
 		{
 			UoW = UnitOfWorkFactory.CreateWithNewRoot<Accrual>();
 			Entity.User = UserRepository.GetCurrentUser(UoW);
+			ycheckInvoiceAuto.Active = true;
 			ConfigureDlg();
 		}
 
@@ -65,6 +67,10 @@ namespace Bazar.Dialogs.Rental
 			MainClass.ComboAccrualYearsFill(comboAccuralYear);
 
 			CachedMeters = new CachedMetersRepository(UoW);
+
+			dateAccrual.Binding.AddBinding(Entity, e => e.Date, w => w.DateOrNull).InitializeFromSource();
+			yentryInvoceNumber.Binding.AddBinding(Entity, e => e.InvoiceNumber, w => w.Text, new UintToStringConverter()).InitializeFromSource();
+			ycheckInvoiceAuto.Sensitive = Entity.InvoiceNumber == null;
 
 			treeviewServices.ColumnsConfig = ColumnsConfigFactory.Create<AccrualItem>()
 				.AddColumn("Наименованиe").MinWidth(180)
@@ -133,16 +139,13 @@ namespace Bazar.Dialogs.Rental
 
 		private void AccrualFill(int accrualId)
 		{
-			TreeIter iter;
-			
-			logger.Info("Запрос начисления №" + accrualId +"...");
+			logger.Info("Запрос начисления №" + accrualId + "...");
 
-			entryNumber.Text = Entity.Id.ToString();
 			entryUser.Text = Entity.User.Name;
 			textviewComments.Buffer.Text = Entity.Comments;
 
 			comboAccrualMonth.Active = (int)Entity.Month;
-			ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model, Entity.Year.ToString(), out iter);
+			ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model, Entity.Year.ToString(), out TreeIter iter);
 			comboAccuralYear.SetActiveIter (iter);
 			if(Entity.Contract != null)
 			{
@@ -152,7 +155,7 @@ namespace Bazar.Dialogs.Rental
 					comboContract.Sensitive = false;
 				}
 			}
-			this.Title = "Начисление №" + entryNumber.Text;
+			this.Title = "Начисление №" + Entity.Id;
 
 			//Получаем таблицу услуг
 			UpdatePaid();
@@ -173,10 +176,9 @@ namespace Bazar.Dialogs.Rental
 
 		bool SaveAccountable()
 		{
-			TreeIter iter;
 			logger.Info("Запись начисления...");
 
-			comboContract.GetActiveIter(out iter);
+			comboContract.GetActiveIter(out TreeIter iter);
 			var contract_id = (int)comboContract.Model.GetValue(iter, 1);
 			if(Entity.Contract?.Id != contract_id)
 				Entity.Contract = UoW.GetById<Contract>(contract_id);
@@ -187,14 +189,27 @@ namespace Bazar.Dialogs.Rental
 
 			Entity.Paid = Entity.AccrualTotal - IncomeTotal <= 0;
 
+			//Проверка на существование номера счета
+			if(Entity.InvoiceNumber != null && !UoW.IsNew) {
+				var exist = AccrualRepository.GetAcctualByInvoice(UoW, Entity.InvoiceNumber.Value, Entity.Year, Entity.Id);
+				if(exist != null) {
+					MessageDialogHelper.RunErrorDialog($"Счет с номером {Entity.InvoiceNumber} на {Entity.Year} год, " +
+						$"уже указан в начислении {exist.Id} от {exist.Date}");
+					return false;
+				}
+			}
+
+			if(ycheckInvoiceAuto.Active) {
+				Entity.InvoiceNumber = new AutoincrementDocNumberService()
+					.GetNewNumber(UoW, Domain.Application.DocumentType.Invoice, Entity.Year);
+			}
+
 			//записываем таблицу услуг
 			foreach(var item in Entity.Items) {
 				UoW.Save(item);
 			}
 
 			UoW.Commit();
-
-			entryNumber.Text = Entity.Id.ToString();
 
 			foreach(var pair in allPendingMeterReadings) {
 				foreach(PendingMeterReading unsavedReading in pair.Value) {
@@ -225,7 +240,7 @@ namespace Bazar.Dialogs.Rental
 					"WHERE credit_slips.accrual_id = @id";
 
 			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-			cmd.Parameters.AddWithValue("@id", entryNumber.Text);
+			cmd.Parameters.AddWithValue("@id", Entity.Id);
 			
 			MySqlDataReader rdr = cmd.ExecuteReader();
 			
@@ -251,14 +266,14 @@ namespace Bazar.Dialogs.Rental
 
 		void ItemAllCashPrint_Activated(object sender, EventArgs e)
 		{
-			string param = $"id={entryNumber.Text}&cash_id=-1";
+			string param = $"id={Entity.Id}&cash_id=-1";
 			ViewReportExt.Run("PayList", param);
 		}
 
 		void ItemSelectedCashPrint_Activated(object sender, EventArgs e)
 		{
 			var id = (sender as MenuItemId<int>).ID;
-			string param = $"id={entryNumber.Text}&cash_id={id}";
+			string param = $"id={Entity.Id}&cash_id={id}";
 			ViewReportExt.Run("PayList", param);
 		}
 
@@ -300,7 +315,7 @@ namespace Bazar.Dialogs.Rental
 		{
 			if(SaveAccountable()) {
 				PayAccrual winPay = new PayAccrual();
-				winPay.FillPayTable(Convert.ToInt32(entryNumber.Text));
+				winPay.FillPayTable(Entity.Id);
 				winPay.ShowAll();
 				if((ResponseType)winPay.Run() == ResponseType.Ok) {
 					UpdateIncomes();
@@ -528,11 +543,9 @@ namespace Bazar.Dialogs.Rental
 			int count = 0;
 			string DebtsText = "";
 			int year = Convert.ToInt32 (comboAccuralYear.ActiveText);
-			try
-			{
-				TreeIter iter;
+			try {
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
-				comboContract.GetActiveIter ( out iter);
+				comboContract.GetActiveIter ( out TreeIter iter);
 				cmd.Parameters.AddWithValue("@contract", comboContract.Model.GetValue (iter, 1));
 				MySqlDataReader rdr = cmd.ExecuteReader ();
 
@@ -586,8 +599,7 @@ namespace Bazar.Dialogs.Rental
 
 		protected void OnTreeviewIncomesRowActivated (object o, RowActivatedArgs args)
 		{
-			TreeIter iter;
-			treeviewIncomes.Selection.GetSelected(out iter);
+			treeviewIncomes.Selection.GetSelected(out TreeIter iter);
 			int itemid = Convert.ToInt32(IncomeListStore.GetValue(iter,0));
 			IncomeSlipDlg winIncome = new IncomeSlipDlg();
 			winIncome.SlipFill(itemid, false);

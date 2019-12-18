@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>False</ConsolePause>
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>none</DebugType>
@@ -36,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>False</ConsolePause>
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -239,6 +241,9 @@
     <Compile Include="Repositories\Estate\MetersRepository.cs" />
     <Compile Include="Repositories\Estate\CachedMetersRepository.cs" />
     <Compile Include="Repositories\Estate\PlaceRepository.cs" />
+    <Compile Include="Domain\Application\DocumentLastNumber.cs" />
+    <Compile Include="HibernateMapping\Application\DocumentLastNumberMap.cs" />
+    <Compile Include="Services\AutoincrementDocNumberService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -331,6 +336,8 @@
     <Folder Include="JournalViewModels\Estate\" />
     <Folder Include="HibernateMapping\Application\" />
     <Folder Include="Repositories\Estate\" />
+    <Folder Include="Domain\Application\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

@@ -16,21 +16,6 @@ public partial class MainWindow : Gtk.Window
 
 	private string NameOfAllOption = "Все";
 	private string NameOf2YearOption = String.Format ("{0:yyyy}-{1:yyyy}", DateTime.Today.AddYears (-1), DateTime.Today);
-	private enum AccrualCol{
-		id,
-		month_text,
-		month,
-		contract,
-		lessee_id,
-		lessee,
-		sum_text,
-		sum,
-		paidsum_text,
-		paidsum,
-		debt_text,
-		debt,
-		not_complete
-	};
 	
 	void PrepareAccrual()
 	{
@@ -42,39 +27,11 @@ public partial class MainWindow : Gtk.Window
 		comboAccrualMonth.Active = DateTime.Now.Month;
 		
 		//Создаем таблицу "Начислений"
-/*		AccrualListStore = new Gtk.ListStore (typeof (int), typeof (string), typeof (int), typeof (string), 
-		                                      typeof (int), typeof (string), typeof (string), typeof (decimal),
-		                                      typeof (string), typeof (decimal),typeof (string), typeof (decimal),
-		                                      typeof (bool));
-*/		/*
-		treeviewAccrual.AppendColumn("Номер", new Gtk.CellRendererText (), "text", (int)AccrualCol.id);
-		treeviewAccrual.AppendColumn("Месяц", new Gtk.CellRendererText (), "text", (int)AccrualCol.month_text);
-		treeviewAccrual.AppendColumn("Договор", new Gtk.CellRendererText (), "text", (int)AccrualCol.contract);
-		treeviewAccrual.AppendColumn("Арендатор", new Gtk.CellRendererText (), "text", (int)AccrualCol.lessee);
-		treeviewAccrual.AppendColumn("Начислено", new Gtk.CellRendererText (), "text", (int)AccrualCol.sum_text);
-		treeviewAccrual.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", (int)AccrualCol.paidsum_text);
-		treeviewAccrual.AppendColumn("Долг", new Gtk.CellRendererText (), new Gtk.TreeCellDataFunc (RenderDebtColumn));
-		treeviewAccrual.AppendColumn("Незаполнено", new Gtk.CellRendererToggle (), "active", (int)AccrualCol.not_complete);
-
-		Accrualfilter = new Gtk.TreeModelFilter (AccrualListStore, null);
-		Accrualfilter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc (FilterTreeAccrual);
-		AccrualSort = new TreeModelSort (Accrualfilter);
-		AccrualSort.SetSortFunc ((int)AccrualCol.sum , SumSortFunction);
-		AccrualSort.SetSortFunc ((int)AccrualCol.paidsum , PaidSumSortFunction);
-		AccrualSort.SetSortFunc ((int)AccrualCol.debt , DebtSortFunction);
-		treeviewAccrual.Model = AccrualSort;
-		treeviewAccrual.Columns [0].SortColumnId = (int)AccrualCol.id;
-		treeviewAccrual.Columns [1].SortColumnId = (int)AccrualCol.month;
-		treeviewAccrual.Columns [2].SortColumnId = (int)AccrualCol.contract;
-		treeviewAccrual.Columns [3].SortColumnId = (int)AccrualCol.lessee;
-		treeviewAccrual.Columns [4].SortColumnId = (int)AccrualCol.sum;
-		treeviewAccrual.Columns [5].SortColumnId = (int)AccrualCol.paidsum;
-		treeviewAccrual.Columns [6].SortColumnId = (int)AccrualCol.debt;
-		treeviewAccrual.ShowAll(); 
-		*/
 		treeviewAccrual.ColumnsConfig = ColumnsConfigFactory.Create<AccrualListEntryDTO> ()
 			.AddColumn ("Номер").AddTextRenderer (node => node.Id.ToString())
+			.AddColumn("Дата").AddTextRenderer(node => node.Date.HasValue ? node.Date.Value.ToShortDateString() : String.Empty)
 			.AddColumn ("Месяц").AddTextRenderer (node => node.MonthText)
+			.AddColumn("Счет").AddTextRenderer(node => node.InvoiceNumber != null ? node.InvoiceNumber.ToString() : String.Empty)
 			.AddColumn ("Договор").AddTextRenderer (node => node.ContractNumber)
 			.AddColumn ("Арендатор").AddTextRenderer (node => node.Lessee)
 			.AddColumn ("Начислено").AddTextRenderer (node => node.SumText)
@@ -115,7 +72,7 @@ public partial class MainWindow : Gtk.Window
 		string paymentsTableName = legacyPayments ? "credit_slips ": "accrual_pays LEFT JOIN payment_details ON accrual_pays.id=payment_details.accrual_pay_id ";
 
 		DBWorks.SQLHelper sql = new DBWorks.SQLHelper(
-			"SELECT accrual.id as id, month, year, contracts.number as contract_no, no_complete, contracts.lessee_id as lessee_id, " +
+			"SELECT accrual.id as id, `date`, invoice_number, month, year, contracts.number as contract_no, no_complete, contracts.lessee_id as lessee_id, " +
 			"lessees.name as lessee, sumtable.sum as sum, paidtable.sum as paidsum FROM accrual " +
 			"LEFT JOIN contracts ON contracts.id = accrual.contract_id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
@@ -150,6 +107,9 @@ public partial class MainWindow : Gtk.Window
 		{
 			sql.AddAsList("IFNULL(paidtable.sum, 0) < IFNULL(sumtable.sum,0)");
 		}
+
+		sql.Add(" ORDER BY accrual.id ");
+
 		MySqlCommand cmd = new MySqlCommand(sql.Text, QSMain.connectionDB);
 		MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -171,10 +131,12 @@ public partial class MainWindow : Gtk.Window
 			decimal rowsum, rowpaidsum;
 			rowsum = DBWorks.GetDecimal (rdr, Column.Sum, 0m);
 			rowpaidsum = DBWorks.GetDecimal (rdr, Column.Paidsum, 0m);
-			AccrualList.Add (new AccrualListEntryDTO {
-				Id = rdr.GetInt32 (Column.Id),
-				MonthText = String.Format ("{0:MMMM yyyy}", new DateTime (rdr.GetInt32 (Column.Year), rdr.GetInt32 (Column.Month), 1)),
-				Month = rdr.GetInt32 (Column.Month),
+			AccrualList.Add(new AccrualListEntryDTO {
+				Id = rdr.GetInt32(Column.Id),
+				Date = DBWorks.GetDateTime(rdr, "date"),
+				MonthText = String.Format("{0:MMMM yyyy}", new DateTime(rdr.GetInt32(Column.Year), rdr.GetInt32(Column.Month), 1)),
+				Month = rdr.GetInt32(Column.Month),
+				InvoiceNumber = (uint?)DBWorks.GetInt(rdr, "invoice_number"),
 				ContractNumber = rdr [Column.ContractNumber].ToString (),
 				LesseeId = rdr.GetInt32 (Column.LesseeId),
 				Lessee = rdr [Column.LesseeName].ToString (),
@@ -195,42 +157,6 @@ public partial class MainWindow : Gtk.Window
 		OnTreeviewAccrualCursorChanged (null, EventArgs.Empty);
 	}
 
-/*	private int SumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
-	{
-		object oa = model.GetValue(a, (int)AccrualCol.sum);
-		object ob = model.GetValue(b, (int)AccrualCol.sum);
-		if (ob == null)
-			return 1;
-		if (oa == null)
-			return -1;
-
-		return ((decimal)oa).CompareTo ((decimal)ob);
-	}
-
-	private int PaidSumSortFunction(TreeModel model, TreeIter a, TreeIter b) 
-	{
-		object oa = model.GetValue(a, (int)AccrualCol.paidsum);
-		object ob = model.GetValue(b, (int)AccrualCol.paidsum);
-		if (ob == null)
-			return 1;
-		if (oa == null)
-			return -1;
-
-		return ((decimal)oa).CompareTo ((decimal)ob);
-	}
-
-	private int DebtSortFunction(TreeModel model, TreeIter a, TreeIter b) 
-	{
-		object oa = model.GetValue(a, (int)AccrualCol.debt);
-		object ob = model.GetValue(b, (int)AccrualCol.debt);
-		if (ob == null)
-			return 1;
-		if (oa == null)
-			return -1;
-
-		return ((decimal)oa).CompareTo ((decimal)ob);
-	}
-*/
 	protected void OnComboAccrualOrgChanged (object sender, EventArgs e)
 	{
 		UpdateAccrual ();
@@ -343,9 +269,13 @@ public class AccrualListEntryDTO
 {
 	public int Id{ get; set; }
 
+	public DateTime? Date { get; set; }
+
 	public int Month{ get; set; }
 
 	public string MonthText{ get; set; }
+
+	public uint? InvoiceNumber { get; set; }
 
 	public int Year{ get; set; }
 

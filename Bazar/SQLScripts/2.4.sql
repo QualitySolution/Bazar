@@ -8,6 +8,18 @@ DROP FOREIGN KEY `fk_place_id`;
 ALTER TABLE `meters` 
 DROP FOREIGN KEY `fk_meters_place`;
 
+-- Создаем новые таблицы
+
+CREATE TABLE IF NOT EXISTS `document_last_numbers` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `doc_type` ENUM('Invoice') NULL DEFAULT NULL,
+  `year` INT(10) UNSIGNED NOT NULL,
+  `number` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `index2` (`doc_type` ASC, `year` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 -- Создаем новые поля
 
 ALTER TABLE `places` 
