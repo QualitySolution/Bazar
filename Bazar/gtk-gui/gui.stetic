@@ -10647,7 +10647,22 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder />
+                      <widget class="Gtk.Button" id="buttonFillService">
+                        <property name="MemberName" />
+                        <property name="Sensitive">False</property>
+                        <property name="CanFocus">True</property>
+                        <property name="Type">TextAndIcon</property>
+                        <property name="Icon">stock:gtk-go-down Menu</property>
+                        <property name="Label" translatable="yes">Заполнить услуги</property>
+                        <property name="UseUnderline">True</property>
+                        <signal name="Clicked" handler="OnButtonFillServiceClicked" />
+                      </widget>
+                      <packing>
+                        <property name="Position">1</property>
+                        <property name="AutoSize">True</property>
+                        <property name="Expand">False</property>
+                        <property name="Fill">False</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>

@@ -49,8 +49,8 @@ namespace Bazar.Dialogs.Rental
 		{
 			UoW = UnitOfWorkFactory.CreateWithNewRoot<Accrual>();
 			Entity.User = UserRepository.GetCurrentUser(UoW);
-			ycheckInvoiceAuto.Active = true;
 			ConfigureDlg();
+			ycheckInvoiceAuto.Active = true;
 		}
 
 		public AccrualDlg(int id)
@@ -179,9 +179,6 @@ namespace Bazar.Dialogs.Rental
 			logger.Info("Запись начисления...");
 
 			comboContract.GetActiveIter(out TreeIter iter);
-			var contract_id = (int)comboContract.Model.GetValue(iter, 1);
-			if(Entity.Contract?.Id != contract_id)
-				Entity.Contract = UoW.GetById<Contract>(contract_id);
 
 			Entity.Month = (uint)comboAccrualMonth.Active;
 			Entity.Year = uint.Parse(comboAccuralYear.ActiveText);
@@ -303,12 +300,12 @@ namespace Bazar.Dialogs.Rental
 			}
 
 			comboContract.GetActiveIter(out TreeIter iter);
-			var contract = UoW.GetById<Contract>((int)comboContract.Model.GetValue(iter, 1));
+			Entity.Contract = UoW.GetById<Contract>((int)comboContract.Model.GetValue(iter, 1));
 
-			labelLessee.LabelProp = contract.Lessee.Name;
-			labelOrg.LabelProp = contract.Organization.Name;
+			labelLessee.LabelProp = Entity.Contract.Lessee.Name;
+			labelOrg.LabelProp = Entity.Contract.Organization.Name;
 
-			buttonOpenContract.Sensitive = true;
+			buttonOpenContract.Sensitive = buttonFillService.Sensitive = true;
 		}
 
 		protected void OnButtonMakePaymentClicked(object sender, EventArgs e)
@@ -327,11 +324,8 @@ namespace Bazar.Dialogs.Rental
 
 		protected void OnButtonOpenContractClicked(object sender, EventArgs e)
 		{
-			comboContract.GetActiveIter(out TreeIter iter);
-			int itemid = (int)comboContract.Model.GetValue(iter, 1);
-
 			ContractDlg winContract = new ContractDlg();
-			winContract.ContractFill(itemid);
+			winContract.ContractFill(Entity.Contract.Id);
 			winContract.Show();
 			winContract.Run();
 			winContract.Destroy();
@@ -489,6 +483,12 @@ namespace Bazar.Dialogs.Rental
 			if(treeviewServices.ColumnsConfig.GetColumnsByTag("IsPlaceColumn").First() == args.Column) {
 				buttonPlaceSet.Click();
 			}
+		}
+
+		protected void OnButtonFillServiceClicked(object sender, EventArgs e)
+		{
+			var question = new GtkInteractiveService();
+			Entity.FillItemsFromContract(UoW, question);
 		}
 
 		#endregion
