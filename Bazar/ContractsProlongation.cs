@@ -100,6 +100,7 @@ namespace bazar
 			CheckPlaceDubSelected ();
 			CheckNumberDub ();
 			CalculateSelected ();
+			treeviewContracts.QueueDraw ();
 		}
 
 		private bool FilterTreeContracts (Gtk.TreeModel model, Gtk.TreeIter iter)
@@ -318,28 +319,37 @@ namespace bazar
 			{
 				BadContractChecks ContrChk = (BadContractChecks) ContractsListStore.GetValue (iter, 7);
 				ContrChk.NumberDub = false;
+				ContrChk.NumberDubToCreate = false;
 
 				progressbarMain.Adjustment.Value++;
 				QSMain.WaitRedraw ();
 
-				if(!checkSign.Active)
-					continue;
-
 				if((bool)ContractsListStore.GetValue(iter, 0))
 				{
 					DateTime SignDate = dateSign.Date;
-					string Number = (string) ContractsListStore.GetValue (iter, 2);
+					string number = (string) ContractsListStore.GetValue (iter, 2);
 
-					foreach(object[] row in Contracts)
-					{
-						if(radioChangeMode.Active && Convert.ToInt32 (row[0]) == (int)ContractsListStore.GetValue(iter, 1) )
-							continue;
-						if( Number == (string)row[1] && SignDate == ((DBNull.Value != row[2]) ? (DateTime)row[2] : new DateTime ()) )
+					if(checkSign.Active) {
+						//Ищем в сохраненных контрактах
+						foreach (object[] row in Contracts)
 						{
-							ContrChk.NumberDub = true;
-							break;
+							if(radioChangeMode.Active && Convert.ToInt32 (row[0]) == (int)ContractsListStore.GetValue(iter, 1) )
+								continue;
+							if( number == (string)row[1] && SignDate == ((DBNull.Value != row[2]) ? (DateTime)row[2] : new DateTime ()) )
+							{
+								ContrChk.NumberDub = true;
+								break;
+							}
 						}
 					}
+
+					//Ищем в создаваемых
+					int countSelectedNumber = 0;
+					foreach (object[] row in ContractsListStore) {
+						if ((bool)row [0] && (string)row [2] == number)
+							countSelectedNumber++;
+					}
+					ContrChk.NumberDubToCreate = countSelectedNumber > 1;
 				}
 			} while (ContractsListStore.IterNext (ref iter));
 
@@ -397,6 +407,7 @@ namespace bazar
 			CheckPlaceDubSelected ();
 			CheckNumberDub ();
 			CalculateSelected ();
+			treeviewContracts.QueueDraw ();
 		}
 
 		void UpdateContracts()
@@ -654,12 +665,15 @@ namespace bazar
 
 		class BadContractChecks
 		{
+			//Дублирование номеров в уже созданных договорах
 			public bool NumberDub = false;
+			//Дублирование номеров в создаваемых.
+			public bool NumberDubToCreate = false;
 			public bool RentDates = false;
 			public bool PlaceDub = false;
 
 			public bool Bad {
-				get{return NumberDub || RentDates || PlaceDub;}
+				get{return NumberDub || NumberDubToCreate || RentDates || PlaceDub;}
 			}
 		}
 	}
