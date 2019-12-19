@@ -5,15 +5,15 @@
   <Author>
   </Author>
   <PageHeight>11in</PageHeight>
-  <PageWidth>8.5in</PageWidth>
+  <PageWidth>210mm</PageWidth>
   <Width>7.5in</Width>
   <TopMargin>.25in</TopMargin>
-  <LeftMargin>.25in</LeftMargin>
-  <RightMargin>.25in</RightMargin>
+  <LeftMargin>.15in</LeftMargin>
+  <RightMargin>.15in</RightMargin>
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>SELECT contracts.*, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end, 
@@ -36,7 +36,7 @@ ORDER BY contracts.number;</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="number">
           <DataField>number</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -98,9 +98,9 @@ ORDER BY contracts.number;</CommandText>
     <PrintOnLastPage>true</PrintOnLastPage>
     <ReportItems>
       <Textbox Name="Textbox1" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-        <Top>5.1pt</Top>
-        <Left>0.0pt</Left>
-        <Width>578.21pt</Width>
+        <Top>5.10pt</Top>
+        <Left>0.00pt</Left>
+        <Width>575.21pt</Width>
         <Height>20.34pt</Height>
         <Value>="Реестр договоров на " + Format(Today(), "d")</Value>
         <Style>
@@ -145,7 +145,7 @@ ORDER BY contracts.number;</CommandText>
             <Width>135.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>1.5in</Width>
+            <Width>100.6pt</Width>
             <Visibility>
             </Visibility>
           </TableColumn>
