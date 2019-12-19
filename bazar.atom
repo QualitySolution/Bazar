@@ -3,7 +3,15 @@
   <subtitle type="text">Новости программы QS: База арендаторов</subtitle>
   <id>bazarnews</id>
   <rights type="text">Quality Solution 2015</rights>
-  <updated>2018-07-27T21:00:00+03:00</updated>
+  <updated>2019-09-18T13:00:00+03:00</updated>
+  <entry>
+    <id>urn:uuid:f39c253c-5ede-4dad-9638-af69f60bf0a3</id>
+    <title type="text">QS: База арендаторов 2.3.4</title>
+    <updated>2019-09-18T13:00:00+03:00</updated>
+    <published>2019-09-18T13:00:00+03:00</published>
+    <link rel="alternate" href="http://bazar.qsolution.ru/?p=494" />
+    <summary>Список изменение накопившихся с версии 2.3.1</summary>
+  </entry>
   <entry>
     <id>urn:uuid:09af9ca5-8af3-410e-a626-48295fb12f89</id>
     <title type="text">QS: База арендаторов 2.3.1</title>

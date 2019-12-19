@@ -481,11 +481,11 @@ namespace bazar
 						
 					if(rdr.Read() )
 					{
-						if(rdr["org_id"] != DBNull.Value)
+						if(rdr["org_id"] != DBNull.Value) {
 							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, int.Parse(rdr["org_id"].ToString()), out iter);
-						else
-							ListStoreWorks.SearchListStore((ListStore)comboOrg.Model, -1, out iter);
-						comboOrg.SetActiveIter (iter);
+							comboOrg.SetActiveIter (iter);
+						}
+
 						decimal old_area = PlaceArea;
 						if(rdr["area"] != DBNull.Value)
 							PlaceArea = rdr.GetDecimal("area");
