@@ -39,7 +39,7 @@ namespace Bazar.Domain.Rental
 			set { SetField(ref contract, value); }
 		}
 
-		private DateTime? date;
+		private DateTime? date = DateTime.Today;
 		[Display(Name = "Дата")]
 		public virtual DateTime? Date {
 			get => date;
