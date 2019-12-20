@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
@@ -16,9 +16,9 @@
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="875 590">
     <action-group name="Default">
-      <action id="ActionFileMenu">
+      <action id="ActionBaseMenu">
         <property name="Type">Action</property>
-        <property name="Label" translatable="yes">_Файл</property>
+        <property name="Label" translatable="yes">_База</property>
         <property name="ShortLabel" translatable="yes">Файл</property>
       </action>
       <action id="Action9">
@@ -265,7 +265,7 @@
           <widget class="Gtk.MenuBar" id="menubar1">
             <property name="MemberName" />
             <node name="menubar1" type="Menubar">
-              <node type="Menu" action="ActionFileMenu">
+              <node type="Menu" action="ActionBaseMenu">
                 <node type="Menuitem" action="dialogAuthenticationAction" />
                 <node type="Menuitem" action="UsersAction" />
                 <node type="Separator" />
@@ -2196,6 +2196,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2872,6 +2873,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>

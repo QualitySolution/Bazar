@@ -5,7 +5,7 @@ public partial class MainWindow
 {
 	private global::Gtk.UIManager UIManager;
 
-	private global::Gtk.Action ActionFileMenu;
+	private global::Gtk.Action ActionBaseMenu;
 
 	private global::Gtk.Action Action9;
 
@@ -479,9 +479,9 @@ public partial class MainWindow
 		// Widget MainWindow
 		this.UIManager = new global::Gtk.UIManager();
 		global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup("Default");
-		this.ActionFileMenu = new global::Gtk.Action("ActionFileMenu", global::Mono.Unix.Catalog.GetString("_Файл"), null, null);
-		this.ActionFileMenu.ShortLabel = global::Mono.Unix.Catalog.GetString("Файл");
-		w1.Add(this.ActionFileMenu, null);
+		this.ActionBaseMenu = new global::Gtk.Action("ActionBaseMenu", global::Mono.Unix.Catalog.GetString("_База"), null, null);
+		this.ActionBaseMenu.ShortLabel = global::Mono.Unix.Catalog.GetString("Файл");
+		w1.Add(this.ActionBaseMenu, null);
 		this.Action9 = new global::Gtk.Action("Action9", global::Mono.Unix.Catalog.GetString("_Справочники"), null, null);
 		this.Action9.ShortLabel = global::Mono.Unix.Catalog.GetString("_Справочники");
 		w1.Add(this.Action9, null);
@@ -607,7 +607,7 @@ public partial class MainWindow
 		this.vbox1.Name = "vbox1";
 		this.vbox1.Spacing = 6;
 		// Container child vbox1.Gtk.Box+BoxChild
-		this.UIManager.AddUiFromString("<ui><menubar name=\'menubar1\'><menu name=\'ActionFileMenu\' action=\'ActionFileMenu\'>" +
+		this.UIManager.AddUiFromString("<ui><menubar name=\'menubar1\'><menu name=\'ActionBaseMenu\' action=\'ActionBaseMenu\'>" +
 				"<menuitem name=\'dialogAuthenticationAction\' action=\'dialogAuthenticationAction\'/" +
 				"><menuitem name=\'UsersAction\' action=\'UsersAction\'/><separator/><menuitem name=\'" +
 				"quitAction\' action=\'quitAction\'/></menu><menu name=\'Action9\' action=\'Action9\'><m" +
