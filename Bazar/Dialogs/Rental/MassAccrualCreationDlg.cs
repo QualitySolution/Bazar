@@ -6,9 +6,9 @@ using NLog;
 using QS.Dialog.GtkUI;
 using QSProjectsLib;
 
-namespace bazar
+namespace Bazar.Dialogs.Rental
 {
-	public partial class MassAccrualCreation : Gtk.Dialog
+	public partial class MassAccrualCreationDlg : Gtk.Dialog
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger();
 		Gtk.ListStore ContractsListStore;
@@ -30,7 +30,7 @@ namespace bazar
 			active_days
 		};
 
-		public MassAccrualCreation ()
+		public MassAccrualCreationDlg ()
 		{
 			this.Build ();
 

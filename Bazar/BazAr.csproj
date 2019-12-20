@@ -140,8 +140,6 @@
     <Compile Include="MainWinAccrual.cs" />
     <Compile Include="PayAccrual.cs" />
     <Compile Include="gtk-gui\bazar.PayAccrual.cs" />
-    <Compile Include="MassAccrualCreation.cs" />
-    <Compile Include="gtk-gui\bazar.MassAccrualCreation.cs" />
     <Compile Include="gtk-gui\bazar.DocRegister.cs" />
     <Compile Include="SeparationPayment.cs" />
     <Compile Include="gtk-gui\bazar.SeparationPayment.cs" />
@@ -244,6 +242,8 @@
     <Compile Include="Domain\Application\DocumentLastNumber.cs" />
     <Compile Include="HibernateMapping\Application\DocumentLastNumberMap.cs" />
     <Compile Include="Services\AutoincrementDocNumberService.cs" />
+    <Compile Include="Dialogs\Rental\MassAccrualCreationDlg.cs" />
+    <Compile Include="gtk-gui\Bazar.Dialogs.Rental.MassAccrualCreationDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

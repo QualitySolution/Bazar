@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using bazar;
 using Bazar;
+using Bazar.Dialogs.Rental;
 using Gamma.GtkWidgets;
 using Gtk;
 using MySql.Data.MySqlClient;
@@ -216,7 +217,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnButtonAccrualMassClicked (object sender, EventArgs e)
 	{
-		MassAccrualCreation winMass = new MassAccrualCreation();
+		MassAccrualCreationDlg winMass = new MassAccrualCreationDlg();
 		winMass.Show();
 		winMass.Run();
 		winMass.Destroy();
