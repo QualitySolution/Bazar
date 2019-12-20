@@ -8,6 +8,94 @@ DROP FOREIGN KEY `fk_place_id`;
 ALTER TABLE `meters` 
 DROP FOREIGN KEY `fk_meters_place`;
 
+-- Модуль банков
+
+ALTER TABLE `organizations` 
+ADD COLUMN `print_name` VARCHAR(200) NULL DEFAULT NULL AFTER `name`,
+ADD COLUMN `INN` VARCHAR(12) NULL DEFAULT NULL AFTER `print_name`,
+ADD COLUMN `KPP` VARCHAR(10) NULL DEFAULT NULL AFTER `INN`,
+ADD COLUMN `jur_address` VARCHAR(200) NULL DEFAULT NULL AFTER `KPP`,
+ADD COLUMN `phone` VARCHAR(16) NULL DEFAULT NULL AFTER `jur_address`;
+
+CREATE TABLE IF NOT EXISTS `bank_accounts` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `number` VARCHAR(25) NULL DEFAULT NULL,
+  `bank_id` INT(10) UNSIGNED NOT NULL,
+  `organization_id` INT(10) UNSIGNED NULL DEFAULT NULL,
+  `inactive` TINYINT(1) NOT NULL DEFAULT 0,
+  `is_default` TINYINT(1) NOT NULL DEFAULT 0,
+  `bank_cor_account_id` INT(10) UNSIGNED NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_bank_accounts_1_idx` (`bank_id` ASC),
+  INDEX `fk_bank_accounts_2_idx` (`organization_id` ASC),
+  INDEX `fk_bank_accounts_3_idx` (`bank_cor_account_id` ASC),
+  CONSTRAINT `fk_bank_accounts_1`
+    FOREIGN KEY (`bank_id`)
+    REFERENCES `bazar_dev`.`banks` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_bank_accounts_2`
+    FOREIGN KEY (`organization_id`)
+    REFERENCES `bazar_dev`.`organizations` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_bank_accounts_3`
+    FOREIGN KEY (`bank_cor_account_id`)
+    REFERENCES `bazar_dev`.`bank_cor_accounts` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `bank_regions` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `region` VARCHAR(50) NULL DEFAULT NULL,
+  `city` VARCHAR(45) NULL DEFAULT NULL,
+  `region_num` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `bank_cor_accounts` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cor_account_number` VARCHAR(25) NOT NULL,
+  `bank_id` INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_bank_cor_accounts_1_idx` (`bank_id` ASC),
+  CONSTRAINT `fk_bank_cor_accounts_1`
+    FOREIGN KEY (`bank_id`)
+    REFERENCES `bazar_dev`.`banks` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `banks` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(200) NULL DEFAULT NULL,
+  `bik` VARCHAR(9) NULL DEFAULT NULL,
+  `cor_account` VARCHAR(25) NULL DEFAULT NULL,
+  `city` VARCHAR(45) NULL DEFAULT NULL,
+  `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `region_id` INT(10) UNSIGNED NULL DEFAULT NULL,
+  `default_cor_account_id` INT(10) UNSIGNED NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_banks_1_idx` (`region_id` ASC),
+  INDEX `fk_banks_2_idx` (`default_cor_account_id` ASC),
+  CONSTRAINT `fk_banks_1`
+    FOREIGN KEY (`region_id`)
+    REFERENCES `bazar_dev`.`bank_regions` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_banks_2`
+    FOREIGN KEY (`default_cor_account_id`)
+    REFERENCES `bazar_dev`.`bank_cor_accounts` (`id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 -- Создаем новые таблицы
 
 CREATE TABLE IF NOT EXISTS `document_last_numbers` (
