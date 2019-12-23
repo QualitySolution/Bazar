@@ -27,7 +27,7 @@ public partial class MainWindow
 
 	private global::Gtk.Action dialogAuthenticationAction;
 
-	private global::Gtk.Action Action15;
+	private global::Gtk.Action ActionOrg;
 
 	private global::Gtk.Action Action17;
 
@@ -512,9 +512,9 @@ public partial class MainWindow
 		this.dialogAuthenticationAction = new global::Gtk.Action("dialogAuthenticationAction", global::Mono.Unix.Catalog.GetString("Изменить пароль"), null, "gtk-dialog-authentication");
 		this.dialogAuthenticationAction.ShortLabel = global::Mono.Unix.Catalog.GetString("Изменить пароль");
 		w1.Add(this.dialogAuthenticationAction, null);
-		this.Action15 = new global::Gtk.Action("Action15", global::Mono.Unix.Catalog.GetString("Организации"), null, null);
-		this.Action15.ShortLabel = global::Mono.Unix.Catalog.GetString("Организации");
-		w1.Add(this.Action15, null);
+		this.ActionOrg = new global::Gtk.Action("ActionOrg", global::Mono.Unix.Catalog.GetString("Организации"), null, null);
+		this.ActionOrg.ShortLabel = global::Mono.Unix.Catalog.GetString("Организации");
+		w1.Add(this.ActionOrg, null);
 		this.Action17 = new global::Gtk.Action("Action17", global::Mono.Unix.Catalog.GetString("Услуги по договору"), null, null);
 		this.Action17.ShortLabel = global::Mono.Unix.Catalog.GetString("Услуги по договору");
 		w1.Add(this.Action17, null);
@@ -611,27 +611,27 @@ public partial class MainWindow
 				"<menuitem name=\'dialogAuthenticationAction\' action=\'dialogAuthenticationAction\'/" +
 				"><menuitem name=\'UsersAction\' action=\'UsersAction\'/><separator/><menuitem name=\'" +
 				"quitAction\' action=\'quitAction\'/></menu><menu name=\'Action9\' action=\'Action9\'><m" +
-				"enuitem name=\'Action15\' action=\'Action15\'/><menuitem name=\'Action27\' action=\'Act" +
-				"ion27\'/><separator/><menuitem name=\'Action10\' action=\'Action10\'/><menuitem name=" +
-				"\'Action21\' action=\'Action21\'/><menuitem name=\'Action3\' action=\'Action3\'/><separa" +
-				"tor/><menuitem name=\'Action7\' action=\'Action7\'/><menuitem name=\'Action6\' action=" +
-				"\'Action6\'/><menuitem name=\'Action5\' action=\'Action5\'/><separator/><menuitem name" +
-				"=\'Action17\' action=\'Action17\'/><menuitem name=\'Action18\' action=\'Action18\'/><men" +
-				"uitem name=\'Action41\' action=\'Action41\'/><menuitem name=\'Action44\' action=\'Actio" +
-				"n44\'/><separator/><menuitem name=\'Action19\' action=\'Action19\'/><menuitem name=\'A" +
-				"ction24\' action=\'Action24\'/><menuitem name=\'Action25\' action=\'Action25\'/></menu>" +
-				"<menu name=\'Action\' action=\'Action\'><menu name=\'Action29\' action=\'Action29\'><men" +
-				"uitem name=\'Action30\' action=\'Action30\'/><menuitem name=\'Action31\' action=\'Actio" +
-				"n31\'/><menuitem name=\'Action32\' action=\'Action32\'/><menuitem name=\'Action40\' act" +
-				"ion=\'Action40\'/></menu><menuitem name=\'Action43\' action=\'Action43\'/><menuitem na" +
-				"me=\'Action33\' action=\'Action33\'/><menuitem name=\'Action42\' action=\'Action42\'/><m" +
-				"enuitem name=\'Action45\' action=\'Action45\'/><separator/><menuitem name=\'Action38\'" +
-				" action=\'Action38\'/><menuitem name=\'Action39\' action=\'Action39\'/></menu><menu na" +
-				"me=\'Action34\' action=\'Action34\'><menuitem name=\'helpAction\' action=\'helpAction\'/" +
-				"><menuitem name=\'Action36\' action=\'Action36\'/><menuitem name=\'Action37\' action=\'" +
-				"Action37\'/><menuitem name=\'Action26\' action=\'Action26\'/><menuitem name=\'checkUpd" +
-				"ateAction\' action=\'checkUpdateAction\'/><separator/><menuitem name=\'aboutAction\' " +
-				"action=\'aboutAction\'/></menu></menubar></ui>");
+				"enuitem name=\'ActionOrg\' action=\'ActionOrg\'/><menuitem name=\'Action27\' action=\'A" +
+				"ction27\'/><separator/><menuitem name=\'Action10\' action=\'Action10\'/><menuitem nam" +
+				"e=\'Action21\' action=\'Action21\'/><menuitem name=\'Action3\' action=\'Action3\'/><sepa" +
+				"rator/><menuitem name=\'Action7\' action=\'Action7\'/><menuitem name=\'Action6\' actio" +
+				"n=\'Action6\'/><menuitem name=\'Action5\' action=\'Action5\'/><separator/><menuitem na" +
+				"me=\'Action17\' action=\'Action17\'/><menuitem name=\'Action18\' action=\'Action18\'/><m" +
+				"enuitem name=\'Action41\' action=\'Action41\'/><menuitem name=\'Action44\' action=\'Act" +
+				"ion44\'/><separator/><menuitem name=\'Action19\' action=\'Action19\'/><menuitem name=" +
+				"\'Action24\' action=\'Action24\'/><menuitem name=\'Action25\' action=\'Action25\'/></men" +
+				"u><menu name=\'Action\' action=\'Action\'><menu name=\'Action29\' action=\'Action29\'><m" +
+				"enuitem name=\'Action30\' action=\'Action30\'/><menuitem name=\'Action31\' action=\'Act" +
+				"ion31\'/><menuitem name=\'Action32\' action=\'Action32\'/><menuitem name=\'Action40\' a" +
+				"ction=\'Action40\'/></menu><menuitem name=\'Action43\' action=\'Action43\'/><menuitem " +
+				"name=\'Action33\' action=\'Action33\'/><menuitem name=\'Action42\' action=\'Action42\'/>" +
+				"<menuitem name=\'Action45\' action=\'Action45\'/><separator/><menuitem name=\'Action3" +
+				"8\' action=\'Action38\'/><menuitem name=\'Action39\' action=\'Action39\'/></menu><menu " +
+				"name=\'Action34\' action=\'Action34\'><menuitem name=\'helpAction\' action=\'helpAction" +
+				"\'/><menuitem name=\'Action36\' action=\'Action36\'/><menuitem name=\'Action37\' action" +
+				"=\'Action37\'/><menuitem name=\'Action26\' action=\'Action26\'/><menuitem name=\'checkU" +
+				"pdateAction\' action=\'checkUpdateAction\'/><separator/><menuitem name=\'aboutAction" +
+				"\' action=\'aboutAction\'/></menu></menubar></ui>");
 		this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget("/menubar1")));
 		this.menubar1.Name = "menubar1";
 		this.vbox1.Add(this.menubar1);
@@ -2593,7 +2593,7 @@ public partial class MainWindow
 		this.quitAction.Activated += new global::System.EventHandler(this.OnQuitActionActivated);
 		this.aboutAction.Activated += new global::System.EventHandler(this.OnAction12Activated);
 		this.dialogAuthenticationAction.Activated += new global::System.EventHandler(this.OnDialogAuthenticationActionActivated);
-		this.Action15.Activated += new global::System.EventHandler(this.OnAction15Activated);
+		this.ActionOrg.Activated += new global::System.EventHandler(this.OnActionOrgActivated);
 		this.Action17.Activated += new global::System.EventHandler(this.OnAction17Activated);
 		this.Action18.Activated += new global::System.EventHandler(this.OnAction18Activated);
 		this.Action19.Activated += new global::System.EventHandler(this.OnAction19Activated);

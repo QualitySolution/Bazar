@@ -34,6 +34,8 @@ namespace Bazar
 			}
 
 			CreateProjectParam ();
+			AutofacClassConfig();
+
 			// Создаем окно входа
 			Login LoginDialog = new QSProjectsLib.Login ();
 			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("Bazar.Icons.logo.png");
@@ -78,6 +80,10 @@ namespace Bazar
 			QSMain.ProjectPermission = new Dictionary<string, UserPermission> ();
 			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission ("edit_slips", "Изменение кассы задним числом",
 			                                                                "Пользователь может изменять или добавлять кассовые документы задним числом."));
+
+			//Пробросы в новую библиотеку
+			QS.Project.Repositories.UserRepository.GetCurrentUserId = () => QSMain.User.Id;
+
 			//Скрипты создания базы
 			DBCreator.AddBaseScript (
 				new Version(2,3),

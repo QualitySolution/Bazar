@@ -17,6 +17,15 @@ namespace Bazar.JournalViewModels
 					.AddColumn("Арендатор").AddTextRenderer(node => node.Lessee)
 					.Finish()
 			);
+
+			TreeViewColumnsConfigFactory.Register<OrganizationJournalViewModel>(
+				() => FluentColumnsConfig<OrganizationJournalNode>.Create()
+					.AddColumn("Код").AddTextRenderer(node => node.Id.ToString()).SearchHighlight()
+					.AddColumn("ИНН").AddTextRenderer(node => node.INN).SearchHighlight()
+					.AddColumn("Название").AddTextRenderer(node => node.Name).SearchHighlight()
+					.AddColumn("Адрес").AddTextRenderer(node => node.Address).SearchHighlight()
+					.Finish()
+			);
 		}
 	}
 }

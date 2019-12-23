@@ -1,67 +1,74 @@
 using System;
 using System.Collections.Generic;
+using Autofac;
 using bazar;
+using Bazar;
 using Bazar.Dialogs.Estate;
 using Bazar.Dialogs.Payments;
 using Bazar.Dialogs.Rental;
+using Bazar.JournalViewModels.Estate;
 using Gtk;
+using QS.Navigation;
 using QS.Updater;
 using QSProjectsLib;
 using QSSupportLib;
 
 public partial class MainWindow : Gtk.Window
 {
-	private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger ();
+	private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 	AccelGroup grup;
 
-	public MainWindow () : base (Gtk.WindowType.Toplevel)
+	private ILifetimeScope AutofacScope = MainClass.AppDIContainer.BeginLifetimeScope();
+	private GtkWindowsNavigationManager NavigationManager;
+
+	public MainWindow() : base(Gtk.WindowType.Toplevel)
 	{
-		Build ();
-		grup = new AccelGroup ();
-		this.AddAccelGroup (grup);
+		Build();
+		grup = new AccelGroup();
+		this.AddAccelGroup(grup);
 
 		//Передаем лебл
 		QSMain.StatusBarLabel = labelStatus;
-		this.Title = QSSupportLib.MainSupport.GetTitle ();
-		QSMain.MakeNewStatusTargetForNlog ();
+		this.Title = QSSupportLib.MainSupport.GetTitle();
+		QSMain.MakeNewStatusTargetForNlog();
 
-		QSMain.CheckServer (this); // Проверяем настройки сервера
+		QSMain.CheckServer(this); // Проверяем настройки сервера
 
-		MainSupport.LoadBaseParameters ();
+		MainSupport.LoadBaseParameters();
 
-		MainUpdater.RunCheckVersion (true, true, true);
+		MainUpdater.RunCheckVersion(true, true, true);
 
 		Reference.RunReferenceItemDlg += OnRunReferenceItemDialog;
 		QSMain.ReferenceUpdated += OnReferenceUpdate;
 
-		if (QSMain.User.Login == "root") {
+		if(QSMain.User.Login == "root") {
 			string Message = "Вы зашли в программу под администратором базы данных. У вас есть только возможность создавать других пользователей.";
-			MessageDialog md = new MessageDialog (this, DialogFlags.DestroyWithParent,
-			                                      MessageType.Info, 
-			                                      ButtonsType.Ok,
-			                                      Message);
-			md.Run ();
-			md.Destroy ();
-			Users WinUser = new Users ();
-			WinUser.Show ();
-			WinUser.Run ();
-			WinUser.Destroy ();
+			MessageDialog md = new MessageDialog(this, DialogFlags.DestroyWithParent,
+												  MessageType.Info,
+												  ButtonsType.Ok,
+												  Message);
+			md.Run();
+			md.Destroy();
+			Users WinUser = new Users();
+			WinUser.Show();
+			WinUser.Run();
+			WinUser.Destroy();
 			return;
 		}
 
-		if (QSMain.connectionDB.DataSource == "demo.qsolution.ru") {
+		if(QSMain.connectionDB.DataSource == "demo.qsolution.ru") {
 			string Message = "Вы подключились к демонстрационному серверу. Сервер предназначен для оценки " +
-			                 "возможностей программы, не используйте его для работы, так как ваши данные будут доступны " +
-			                 "любому пользователю через интернет.\n\nДля полноценного использования программы вам необходимо " +
-			                 "установить собственный сервер. Для его установки обратитесь к документации.\n\nЕсли у вас возникнут " +
-			                 "вопросы вы можете задать их на форуме программы: https://groups.google.com/forum/?fromgroups#!forum/bazarsoft " +
-			                 "или обратится в нашу тех. поддержку.";
-			MessageDialog md = new MessageDialog (this, DialogFlags.DestroyWithParent,
-			                                      MessageType.Info, 
-			                                      ButtonsType.Ok,
-			                                      Message);
-			md.Run ();
-			md.Destroy ();
+							 "возможностей программы, не используйте его для работы, так как ваши данные будут доступны " +
+							 "любому пользователю через интернет.\n\nДля полноценного использования программы вам необходимо " +
+							 "установить собственный сервер. Для его установки обратитесь к документации.\n\nЕсли у вас возникнут " +
+							 "вопросы вы можете задать их на форуме программы: https://groups.google.com/forum/?fromgroups#!forum/bazarsoft " +
+							 "или обратится в нашу тех. поддержку.";
+			MessageDialog md = new MessageDialog(this, DialogFlags.DestroyWithParent,
+												  MessageType.Info,
+												  ButtonsType.Ok,
+												  Message);
+			md.Run();
+			md.Destroy();
 			dialogAuthenticationAction.Sensitive = false;
 		}
 
@@ -69,130 +76,132 @@ public partial class MainWindow : Gtk.Window
 		labelUser.LabelProp = QSMain.User.Name;
 
 		//Настраиваем новости
-		MainNewsFeed.NewsFeeds = new List<NewsFeed> () {
+		MainNewsFeed.NewsFeeds = new List<NewsFeed>() {
 			new NewsFeed ("bazarnews", "Новости программы", "http://news.qsolution.ru/bazar.atom")
 		};
-		MainNewsFeed.LoadReadFeed ();
-		var newsmenu = new NewsMenuItem ();
-		menubar1.Add (newsmenu);
-		newsmenu.LoadFeed ();
+		MainNewsFeed.LoadReadFeed();
+		var newsmenu = new NewsMenuItem();
+		menubar1.Add(newsmenu);
+		newsmenu.LoadFeed();
 
-		PreparePlaces ();
-		PrepareLessee ();
-		PrepareContract ();
-		PrepareAccrual ();
-		PrepareEvent ();
-		PrepareCash ();
+		PreparePlaces();
+		PrepareLessee();
+		PrepareContract();
+		PrepareAccrual();
+		PrepareEvent();
+		PrepareCash();
 		notebookMain.CurrentPage = 0;
-		UpdatePlaces ();
+		UpdatePlaces();
+
+		NavigationManager = AutofacScope.Resolve<GtkWindowsNavigationManager>();
 	}
 
-	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
+	protected void OnDeleteEvent(object sender, DeleteEventArgs a)
 	{
-		Application.Quit ();
+		Application.Quit();
 		a.RetVal = true;
 	}
 
-	protected virtual void OnButtonViewClicked (object sender, System.EventArgs e)
+	protected virtual void OnButtonViewClicked(object sender, System.EventArgs e)
 	{
 		TreeIter iter;
 		int itemid;
 		ResponseType result;
-		
-		switch (notebookMain.CurrentPage) {
+
+		switch(notebookMain.CurrentPage) {
 		case 0:
-			treeviewPlaces.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (PlaceSort.GetValue (iter, (int)PlaceCol.place_id));
-			PlaceDlg winPlace = new PlaceDlg (false);
-			winPlace.PlaceFill (itemid);
-			winPlace.Show ();
-			result = (ResponseType)winPlace.Run ();
-			winPlace.Destroy ();
-			if (result == ResponseType.Ok)
-				UpdatePlaces ();
+			treeviewPlaces.Selection.GetSelected(out iter);
+			itemid = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.place_id));
+			PlaceDlg winPlace = new PlaceDlg(false);
+			winPlace.PlaceFill(itemid);
+			winPlace.Show();
+			result = (ResponseType)winPlace.Run();
+			winPlace.Destroy();
+			if(result == ResponseType.Ok)
+				UpdatePlaces();
 			break;
 		case 1:
-			treeviewLessees.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (LesseesSort.GetValue (iter, (int)LesseesCol.id));
-			LesseeDlg winLessee = new LesseeDlg ();
-			winLessee.LesseeFill (itemid);
-			winLessee.Show ();
-			result = (ResponseType)winLessee.Run ();
-			winLessee.Destroy ();
-			if (result == ResponseType.Ok)
-				UpdateLessees ();
+			treeviewLessees.Selection.GetSelected(out iter);
+			itemid = Convert.ToInt32(LesseesSort.GetValue(iter, (int)LesseesCol.id));
+			LesseeDlg winLessee = new LesseeDlg();
+			winLessee.LesseeFill(itemid);
+			winLessee.Show();
+			result = (ResponseType)winLessee.Run();
+			winLessee.Destroy();
+			if(result == ResponseType.Ok)
+				UpdateLessees();
 			break;
 		case 2:
-			treeviewContract.Selection.GetSelected (out iter);
-			itemid = (int)ContractSort.GetValue (iter, (int)ContractCol.id);
-			ContractDlg winContract = new ContractDlg ();
-			winContract.ContractFill (itemid);
-			winContract.Show ();
-			result = (ResponseType)winContract.Run ();
-			winContract.Destroy ();
-			if (result == ResponseType.Ok)
-				UpdateContract ();
+			treeviewContract.Selection.GetSelected(out iter);
+			itemid = (int)ContractSort.GetValue(iter, (int)ContractCol.id);
+			ContractDlg winContract = new ContractDlg();
+			winContract.ContractFill(itemid);
+			winContract.Show();
+			result = (ResponseType)winContract.Run();
+			winContract.Destroy();
+			if(result == ResponseType.Ok)
+				UpdateContract();
 			break;
 		case 3:
 			itemid = treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id;
-			AccrualDlg winAccrual = new AccrualDlg (itemid);
-			winAccrual.Show ();
-			result = (ResponseType)winAccrual.Run ();
-			winAccrual.Destroy ();
-			if (result == ResponseType.Ok)
-				UpdateAccrual ();
+			AccrualDlg winAccrual = new AccrualDlg(itemid);
+			winAccrual.Show();
+			result = (ResponseType)winAccrual.Run();
+			winAccrual.Destroy();
+			if(result == ResponseType.Ok)
+				UpdateAccrual();
 			break;
 		case 4:
-			switch (notebookCash.CurrentPage) {
+			switch(notebookCash.CurrentPage) {
 			case 0:
-				treeviewIncome.Selection.GetSelected (out iter);
-				itemid = Convert.ToInt32 (CashIncomeSort.GetValue (iter, (int)CashIncomeCol.id));
-				IncomeSlipDlg winIncome = new IncomeSlipDlg ();
-				winIncome.SlipFill (itemid, false);
-				winIncome.Show ();
-				result = (ResponseType)winIncome.Run ();
-				winIncome.Destroy ();
-				if (result == ResponseType.Ok) {
-					UpdateCashIncome ();
-					CalculateTotalCash ();
+				treeviewIncome.Selection.GetSelected(out iter);
+				itemid = Convert.ToInt32(CashIncomeSort.GetValue(iter, (int)CashIncomeCol.id));
+				IncomeSlipDlg winIncome = new IncomeSlipDlg();
+				winIncome.SlipFill(itemid, false);
+				winIncome.Show();
+				result = (ResponseType)winIncome.Run();
+				winIncome.Destroy();
+				if(result == ResponseType.Ok) {
+					UpdateCashIncome();
+					CalculateTotalCash();
 				}
 				break;
 			case 1:
-				treeviewExpense.Selection.GetSelected (out iter);
-				itemid = Convert.ToInt32 (CashExpenseSort.GetValue (iter, (int)CashExpenseCol.id));
-				ExpenseSlipDlg winExpense = new  ExpenseSlipDlg ();
-				winExpense.SlipFill (itemid, false);
-				winExpense.Show ();
-				result = (ResponseType)winExpense.Run ();
-				winExpense.Destroy ();
-				if (result == ResponseType.Ok) {
-					UpdateCashExpense ();
-					CalculateTotalCash ();
+				treeviewExpense.Selection.GetSelected(out iter);
+				itemid = Convert.ToInt32(CashExpenseSort.GetValue(iter, (int)CashExpenseCol.id));
+				ExpenseSlipDlg winExpense = new ExpenseSlipDlg();
+				winExpense.SlipFill(itemid, false);
+				winExpense.Show();
+				result = (ResponseType)winExpense.Run();
+				winExpense.Destroy();
+				if(result == ResponseType.Ok) {
+					UpdateCashExpense();
+					CalculateTotalCash();
 				}
 				break;
 			case 2:
-				treeviewAdvance.Selection.GetSelected (out iter);
-				itemid = Convert.ToInt32 (CashAdvanceSort.GetValue (iter, (int)CashAdvanceCol.id));
-				AdvanceStatement winAdvance = new AdvanceStatement ();
-				winAdvance.StatementFill (itemid, false);
-				winAdvance.Show ();
-				result = (ResponseType)winAdvance.Run ();
-				winAdvance.Destroy ();
-				if (result == ResponseType.Ok)
-					UpdateCashAdvance ();
+				treeviewAdvance.Selection.GetSelected(out iter);
+				itemid = Convert.ToInt32(CashAdvanceSort.GetValue(iter, (int)CashAdvanceCol.id));
+				AdvanceStatement winAdvance = new AdvanceStatement();
+				winAdvance.StatementFill(itemid, false);
+				winAdvance.Show();
+				result = (ResponseType)winAdvance.Run();
+				winAdvance.Destroy();
+				if(result == ResponseType.Ok)
+					UpdateCashAdvance();
 				break;
 			}
 			break;
 		case 5:
-			treeviewEvents.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (EventsListStore.GetValue (iter, 0));
-			Event winEvent = new Event ();
-			winEvent.EventFill (itemid);
-			winEvent.Show ();
-			result = (ResponseType)winEvent.Run ();
-			winEvent.Destroy ();
-			if (result == ResponseType.Ok)
-				UpdateEvents ();
+			treeviewEvents.Selection.GetSelected(out iter);
+			itemid = Convert.ToInt32(EventsListStore.GetValue(iter, 0));
+			Event winEvent = new Event();
+			winEvent.EventFill(itemid);
+			winEvent.Show();
+			result = (ResponseType)winEvent.Run();
+			winEvent.Destroy();
+			if(result == ResponseType.Ok)
+				UpdateEvents();
 			break;
 		default:
 			break;
@@ -200,192 +209,181 @@ public partial class MainWindow : Gtk.Window
 
 	}
 
-	protected virtual void OnButtonAddClicked (object sender, System.EventArgs e)
+	protected virtual void OnButtonAddClicked(object sender, System.EventArgs e)
 	{
-		switch (notebookMain.CurrentPage) {
+		switch(notebookMain.CurrentPage) {
 		case 0:
-			PlaceDlg winPlace = new PlaceDlg (true);
-			winPlace.Show ();
-			winPlace.Run ();
-			winPlace.Destroy ();
-			UpdatePlaces ();
+			PlaceDlg winPlace = new PlaceDlg(true);
+			winPlace.Show();
+			winPlace.Run();
+			winPlace.Destroy();
+			UpdatePlaces();
 			break;
 		case 1:
-			LesseeDlg winLessee = new LesseeDlg ();
+			LesseeDlg winLessee = new LesseeDlg();
 			winLessee.NewLessee = true;
-			winLessee.Show ();
-			winLessee.Run ();
-			winLessee.Destroy ();
-			UpdateLessees ();
+			winLessee.Show();
+			winLessee.Run();
+			winLessee.Destroy();
+			UpdateLessees();
 			break;
 		case 2:
-			ContractDlg winContract = new ContractDlg ();
+			ContractDlg winContract = new ContractDlg();
 			winContract.NewContract = true;
-			winContract.Show ();
-			winContract.Run ();
-			winContract.Destroy ();
-			UpdateContract ();
+			winContract.Show();
+			winContract.Run();
+			winContract.Destroy();
+			UpdateContract();
 			break;
 		case 3:
-			AccrualDlg winAccrual = new AccrualDlg ();
-			winAccrual.Show ();
-			winAccrual.Run ();
-			winAccrual.Destroy ();
-			UpdateAccrual ();
+			AccrualDlg winAccrual = new AccrualDlg();
+			winAccrual.Show();
+			winAccrual.Run();
+			winAccrual.Destroy();
+			UpdateAccrual();
 			break;
 		case 4:
-			switch (notebookCash.CurrentPage) {
+			switch(notebookCash.CurrentPage) {
 			case 0:
-				IncomeSlipDlg winIncomeSlip = new IncomeSlipDlg ();
+				IncomeSlipDlg winIncomeSlip = new IncomeSlipDlg();
 				winIncomeSlip.NewSlip = true;
-				winIncomeSlip.Show ();
-				winIncomeSlip.Run ();
-				winIncomeSlip.Destroy ();
-				UpdateCashIncome ();
-				CalculateTotalCash ();
+				winIncomeSlip.Show();
+				winIncomeSlip.Run();
+				winIncomeSlip.Destroy();
+				UpdateCashIncome();
+				CalculateTotalCash();
 				break;
 			case 1:
-				ExpenseSlipDlg winExpenseSlip = new ExpenseSlipDlg ();
+				ExpenseSlipDlg winExpenseSlip = new ExpenseSlipDlg();
 				winExpenseSlip.NewSlip = true;
-				winExpenseSlip.Show ();
-				winExpenseSlip.Run ();
-				winExpenseSlip.Destroy ();
-				UpdateCashExpense ();
-				CalculateTotalCash ();
+				winExpenseSlip.Show();
+				winExpenseSlip.Run();
+				winExpenseSlip.Destroy();
+				UpdateCashExpense();
+				CalculateTotalCash();
 				break;
 			case 2:
-				AdvanceStatement winAdvance = new AdvanceStatement ();
+				AdvanceStatement winAdvance = new AdvanceStatement();
 				winAdvance.NewStatement = true;
-				winAdvance.Show ();
-				winAdvance.Run ();
-				winAdvance.Destroy ();
-				UpdateCashAdvance ();
+				winAdvance.Show();
+				winAdvance.Run();
+				winAdvance.Destroy();
+				UpdateCashAdvance();
 				break;
 			}
 			break;
 		case 5:
-			Event winEvent = new Event ();
+			Event winEvent = new Event();
 			winEvent.NewEvent = true;
-			winEvent.Show ();
-			winEvent.Run ();
-			winEvent.Destroy ();
-			UpdateEvents ();
+			winEvent.Show();
+			winEvent.Run();
+			winEvent.Destroy();
+			UpdateEvents();
 			break;
 		default:
 			break;
 		}
 	}
 
-	protected virtual void OnAction7Activated (object sender, System.EventArgs e)
+	protected virtual void OnAction7Activated(object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference (true, orderBy: "name");
+		Reference winref = new Reference(true, orderBy: "name");
 		winref.NameMaxLength = 10;
 		winref.DiscriptionMaxLength = 100;
-		winref.SetMode (true, false, true, true, true);
-		winref.FillList ("place_types", "Тип места", "Типы мест");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
-		
+		winref.SetMode(true, false, true, true, true);
+		winref.FillList("place_types", "Тип места", "Типы мест");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
+
 	}
 
-	protected virtual void OnAction6Activated (object sender, System.EventArgs e)
+	protected virtual void OnAction6Activated(object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
+		Reference winref = new Reference(orderBy: "name");
 		winref.NameMaxLength = 45;
-		winref.SetMode (true, false, true, true, true);
-		winref.FillList ("goods", "Группа товаров", "Группы товаров");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		winref.SetMode(true, false, true, true, true);
+		winref.FillList("goods", "Группа товаров", "Группы товаров");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 
 	}
 
-	protected virtual void OnAction5Activated (object sender, System.EventArgs e)
+	protected virtual void OnAction5Activated(object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (true, false, true, true, true);
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(true, false, true, true, true);
 		winref.NameMaxLength = 45;
-		winref.FillList ("classes", "Тип события", "Типы событий");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		winref.FillList("classes", "Тип события", "Типы событий");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected virtual void OnAction10Activated (object sender, System.EventArgs e)
+	protected virtual void OnAction10Activated(object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (false, false, true, true, true);
-		winref.FillList ("lessees", "Арендатор", "Арендаторы");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
-
-	}
-
-	protected virtual void OnAction3Activated (object sender, System.EventArgs e)
-	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (false, false, true, true, true);
-		winref.FillList ("contact_persons", "Контактное лицо", "Контактные лица");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(false, false, true, true, true);
+		winref.FillList("lessees", "Арендатор", "Арендаторы");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 
 	}
 
-	protected void OnAction15Activated (object sender, EventArgs e)
+	protected virtual void OnAction3Activated(object sender, System.EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (true, false, true, true, true);
-		winref.NameMaxLength = 100;
-		winref.FillList ("organizations", "Организация", "Организации");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(false, false, true, true, true);
+		winref.FillList("contact_persons", "Контактное лицо", "Контактные лица");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
+
 	}
 
-	protected virtual void OnNotebookMainSwitchPage (object o, Gtk.SwitchPageArgs args)
+	protected virtual void OnNotebookMainSwitchPage(object o, Gtk.SwitchPageArgs args)
 	{
-		switch (notebookMain.CurrentPage) {
+		switch(notebookMain.CurrentPage) {
 		case 0:
-			UpdatePlaces ();
-			OnTreeviewPlacesCursorChanged (o, EventArgs.Empty);
+			UpdatePlaces();
+			OnTreeviewPlacesCursorChanged(o, EventArgs.Empty);
 			labelSum.Visible = true;
 			break;
 		case 1:
-			UpdateLessees ();
-			OnTreeviewLesseesCursorChanged (o, EventArgs.Empty);
+			UpdateLessees();
+			OnTreeviewLesseesCursorChanged(o, EventArgs.Empty);
 			labelSum.Visible = false;
 			break;
 		case 2:
-			UpdateContract ();
-			OnTreeviewContractCursorChanged (o, EventArgs.Empty);
+			UpdateContract();
+			OnTreeviewContractCursorChanged(o, EventArgs.Empty);
 			labelSum.Visible = false;
 			break;
 		case 3:
-			UpdateAccrual ();
-			OnTreeviewAccrualCursorChanged (o, EventArgs.Empty);
+			UpdateAccrual();
+			OnTreeviewAccrualCursorChanged(o, EventArgs.Empty);
 			labelSum.Visible = true;
 			break;
 		case 4:
-			switch (notebookCash.CurrentPage) {
+			switch(notebookCash.CurrentPage) {
 			case 0:
-				OnTreeviewIncomeCursorChanged (o, EventArgs.Empty);
+				OnTreeviewIncomeCursorChanged(o, EventArgs.Empty);
 				break;
 			case 1:
-				OnTreeviewExpenseCursorChanged (o, EventArgs.Empty);
+				OnTreeviewExpenseCursorChanged(o, EventArgs.Empty);
 				break;
 			case 2:
-				OnTreeviewAdvanceCursorChanged (o, EventArgs.Empty);
+				OnTreeviewAdvanceCursorChanged(o, EventArgs.Empty);
 				break;
 			}
-			UpdateCash ();
-			CalculateTotalCash ();
+			UpdateCash();
+			CalculateTotalCash();
 			labelSum.Visible = true;
 			break;
 		case 5:
-			OnTreeviewEventsCursorChanged (o, EventArgs.Empty);
+			OnTreeviewEventsCursorChanged(o, EventArgs.Empty);
 			labelSum.Visible = false;
 			break;
 		default:
@@ -394,222 +392,222 @@ public partial class MainWindow : Gtk.Window
 	}
 
 
-	protected virtual void OnAction12Activated (object sender, System.EventArgs e)
+	protected virtual void OnAction12Activated(object sender, System.EventArgs e)
 	{
-		QSMain.RunAboutDialog ();
+		QSMain.RunAboutDialog();
 	}
 
-	protected virtual void OnDialogAuthenticationActionActivated (object sender, System.EventArgs e)
+	protected virtual void OnDialogAuthenticationActionActivated(object sender, System.EventArgs e)
 	{
-		QSMain.User.ChangeUserPassword (this);
+		QSMain.User.ChangeUserPassword(this);
 	}
 
-	protected virtual void OnQuitActionActivated (object sender, System.EventArgs e)
+	protected virtual void OnQuitActionActivated(object sender, System.EventArgs e)
 	{
-		Application.Quit ();
+		Application.Quit();
 	}
 
-	protected void OnButtonDelClicked (object sender, System.EventArgs e)
+	protected void OnButtonDelClicked(object sender, System.EventArgs e)
 	{
 		// Удаление
 		TreeIter iter;
 		int type, itemid;
-		Delete winDelete = new Delete ();
+		Delete winDelete = new Delete();
 		string place;
-		
-		switch (notebookMain.CurrentPage) {
+
+		switch(notebookMain.CurrentPage) {
 		case 0:
-			treeviewPlaces.Selection.GetSelected (out iter);
-			place = PlaceSort.GetValue (iter, (int)PlaceCol.place_no).ToString ();
-			type = Convert.ToInt32 (PlaceSort.GetValue (iter, (int)PlaceCol.type_place_id));
-			winDelete.RunDeletion ("places", type, place);
-			UpdatePlaces ();
+			treeviewPlaces.Selection.GetSelected(out iter);
+			place = PlaceSort.GetValue(iter, (int)PlaceCol.place_no).ToString();
+			type = Convert.ToInt32(PlaceSort.GetValue(iter, (int)PlaceCol.type_place_id));
+			winDelete.RunDeletion("places", type, place);
+			UpdatePlaces();
 			break;
 		case 1:
-			treeviewLessees.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (LesseesSort.GetValue (iter, (int)LesseesCol.id));
-			winDelete.RunDeletion ("lessees", itemid);
-			UpdateLessees ();
+			treeviewLessees.Selection.GetSelected(out iter);
+			itemid = Convert.ToInt32(LesseesSort.GetValue(iter, (int)LesseesCol.id));
+			winDelete.RunDeletion("lessees", itemid);
+			UpdateLessees();
 			break;
 		case 2:
-			treeviewContract.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (ContractSort.GetValue (iter, (int)ContractCol.id));
-			winDelete.RunDeletion ("contracts", itemid);
-			UpdateContract ();
+			treeviewContract.Selection.GetSelected(out iter);
+			itemid = Convert.ToInt32(ContractSort.GetValue(iter, (int)ContractCol.id));
+			winDelete.RunDeletion("contracts", itemid);
+			UpdateContract();
 			break;
 		case 3:
-			itemid = Convert.ToInt32 (treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id);
-			winDelete.RunDeletion ("accrual", itemid);
-			UpdateAccrual ();
+			itemid = Convert.ToInt32(treeviewAccrual.GetSelectedObject<AccrualListEntryDTO>().Id);
+			winDelete.RunDeletion("accrual", itemid);
+			UpdateAccrual();
 			break;
 		case 4:
-			switch (notebookCash.CurrentPage) {
+			switch(notebookCash.CurrentPage) {
 			case 0:
-				treeviewIncome.Selection.GetSelected (out iter);
-				itemid = Convert.ToInt32 (CashIncomeSort.GetValue (iter, (int)CashIncomeCol.id));
-				winDelete.RunDeletion ("credit_slips", itemid);
-				CalculateTotalCash ();
+				treeviewIncome.Selection.GetSelected(out iter);
+				itemid = Convert.ToInt32(CashIncomeSort.GetValue(iter, (int)CashIncomeCol.id));
+				winDelete.RunDeletion("credit_slips", itemid);
+				CalculateTotalCash();
 				break;
 			case 1:
-				treeviewExpense.Selection.GetSelected (out iter);
-				itemid = Convert.ToInt32 (CashExpenseSort.GetValue (iter, (int)CashExpenseCol.id));
-				winDelete.RunDeletion ("debit_slips", itemid);
-				CalculateTotalCash ();
+				treeviewExpense.Selection.GetSelected(out iter);
+				itemid = Convert.ToInt32(CashExpenseSort.GetValue(iter, (int)CashExpenseCol.id));
+				winDelete.RunDeletion("debit_slips", itemid);
+				CalculateTotalCash();
 				break;
 			case 2:
-				treeviewAdvance.Selection.GetSelected (out iter);
-				itemid = Convert.ToInt32 (CashAdvanceSort.GetValue (iter, (int)CashAdvanceCol.id));
-				winDelete.RunDeletion ("advance", itemid);
+				treeviewAdvance.Selection.GetSelected(out iter);
+				itemid = Convert.ToInt32(CashAdvanceSort.GetValue(iter, (int)CashAdvanceCol.id));
+				winDelete.RunDeletion("advance", itemid);
 				break;
 			}
-			UpdateCash ();
+			UpdateCash();
 			break;
 		case 5:
-			treeviewEvents.Selection.GetSelected (out iter);
-			itemid = Convert.ToInt32 (EventsListStore.GetValue (iter, 0));
-			winDelete.RunDeletion ("events", itemid);
-			UpdateEvents ();
+			treeviewEvents.Selection.GetSelected(out iter);
+			itemid = Convert.ToInt32(EventsListStore.GetValue(iter, 0));
+			winDelete.RunDeletion("events", itemid);
+			UpdateEvents();
 			break;
 		default:
 			break;
 		}
-		winDelete.Destroy ();
+		winDelete.Destroy();
 	}
 
-	protected void OnAction17Activated (object sender, EventArgs e)
+	protected void OnAction17Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (false, false, true, true, true);
-		winref.FillList ("services", "Услуга", "Услуги");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(false, false, true, true, true);
+		winref.FillList("services", "Услуга", "Услуги");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnAction18Activated (object sender, EventArgs e)
+	protected void OnAction18Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
-		winref.SetMode (true, false, true, true, true);
+		Reference winref = new Reference();
+		winref.SetMode(true, false, true, true, true);
 		winref.NameMaxLength = 10;
-		winref.FillList ("units", "Единица", "Единицы измерения");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		winref.FillList("units", "Единица", "Единицы измерения");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnAction19Activated (object sender, EventArgs e)
+	protected void OnAction19Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference ();
-		winref.SetMode (false, false, true, true, true);
-		winref.FillList ("cash", "Касса", "Кассы");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		Reference winref = new Reference();
+		winref.SetMode(false, false, true, true, true);
+		winref.FillList("cash", "Касса", "Кассы");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnAction20Activated (object sender, EventArgs e)
+	protected void OnAction20Activated(object sender, EventArgs e)
 	{
-		QSMain.RunChangeLogDlg (this);
+		QSMain.RunChangeLogDlg(this);
 	}
 
-	protected void OnAction24Activated (object sender, EventArgs e)
+	protected void OnAction24Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (true, false, true, true, true);
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(true, false, true, true, true);
 		winref.NameMaxLength = 45;
-		winref.FillList ("expense_items", "Статья расхода", "Статьи расходов");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		winref.FillList("expense_items", "Статья расхода", "Статьи расходов");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnAction25Activated (object sender, EventArgs e)
+	protected void OnAction25Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (true, false, true, true, true);
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(true, false, true, true, true);
 		winref.NameMaxLength = 45;
-		winref.FillList ("income_items", "Статья дохода", "Статьи доходов");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		winref.FillList("income_items", "Статья дохода", "Статьи доходов");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnAction21Activated (object sender, EventArgs e)
+	protected void OnAction21Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (true, false, true, true, true);
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(true, false, true, true, true);
 		winref.NameMaxLength = 45;
-		winref.FillList ("contractors", "Контрагент", "Контрагенты");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		winref.FillList("contractors", "Контрагент", "Контрагенты");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnUsersActionActivated (object sender, EventArgs e)
+	protected void OnUsersActionActivated(object sender, EventArgs e)
 	{
-		Users winUsers = new Users ();
-		winUsers.Show ();
-		winUsers.Run ();
-		winUsers.Destroy ();
+		Users winUsers = new Users();
+		winUsers.Show();
+		winUsers.Run();
+		winUsers.Destroy();
 	}
 
-	protected void OnAction27Activated (object sender, EventArgs e)
+	protected void OnAction27Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (true, false, true, true, true);
-		winref.FillList ("employees", "Сотрудник", "Сотрудники");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(true, false, true, true, true);
+		winref.FillList("employees", "Сотрудник", "Сотрудники");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnRunReferenceItemDialog (object sender, Reference.RunReferenceItemDlgEventArgs e)
+	protected void OnRunReferenceItemDialog(object sender, Reference.RunReferenceItemDlgEventArgs e)
 	{
 		ResponseType Result;
-		switch (e.TableName) {
+		switch(e.TableName) {
 		case "meter_types":
-			MeterTypeDlg MeterTypeEdit = new MeterTypeDlg (e.NewItem);
-			if (!e.NewItem)
-				MeterTypeEdit.Fill (e.ItemId);
-			MeterTypeEdit.Show ();
-			Result = (ResponseType)MeterTypeEdit.Run ();
-			MeterTypeEdit.Destroy ();
+			MeterTypeDlg MeterTypeEdit = new MeterTypeDlg(e.NewItem);
+			if(!e.NewItem)
+				MeterTypeEdit.Fill(e.ItemId);
+			MeterTypeEdit.Show();
+			Result = (ResponseType)MeterTypeEdit.Run();
+			MeterTypeEdit.Destroy();
 			break;
 		case "contact_persons":
-			Contact ContactEdit = new Contact ();
+			Contact ContactEdit = new Contact();
 			ContactEdit.NewContact = e.NewItem;
-			if (!e.NewItem)
-				ContactEdit.ContactFill (e.ItemId);
-			ContactEdit.Show ();
-			Result = (ResponseType)ContactEdit.Run ();
-			ContactEdit.Destroy ();
+			if(!e.NewItem)
+				ContactEdit.ContactFill(e.ItemId);
+			ContactEdit.Show();
+			Result = (ResponseType)ContactEdit.Run();
+			ContactEdit.Destroy();
 			break;
 		case "lessees":
-			LesseeDlg LesseeEdit = new LesseeDlg ();
+			LesseeDlg LesseeEdit = new LesseeDlg();
 			LesseeEdit.NewLessee = e.NewItem;
-			if (!e.NewItem)
-				LesseeEdit.LesseeFill (e.ItemId);
-			LesseeEdit.Show ();
-			Result = (ResponseType)LesseeEdit.Run ();
-			LesseeEdit.Destroy ();
+			if(!e.NewItem)
+				LesseeEdit.LesseeFill(e.ItemId);
+			LesseeEdit.Show();
+			Result = (ResponseType)LesseeEdit.Run();
+			LesseeEdit.Destroy();
 			break;
 		case "services":
-			ServiceDlg ServiceEdit = new ServiceDlg ();
+			ServiceDlg ServiceEdit = new ServiceDlg();
 			ServiceEdit.NewService = e.NewItem;
-			if (!e.NewItem)
-				ServiceEdit.ServiceFill (e.ItemId);
-			ServiceEdit.Show ();
-			Result = (ResponseType)ServiceEdit.Run ();
-			ServiceEdit.Destroy ();
+			if(!e.NewItem)
+				ServiceEdit.ServiceFill(e.ItemId);
+			ServiceEdit.Show();
+			Result = (ResponseType)ServiceEdit.Run();
+			ServiceEdit.Destroy();
 			break;
 		case "cash":
-			CashDlg CashEdit = new CashDlg ();
+			CashDlg CashEdit = new CashDlg();
 			CashEdit.NewItem = e.NewItem;
-			if (!e.NewItem)
-				CashEdit.Fill (e.ItemId);
-			CashEdit.Show ();
-			Result = (ResponseType)CashEdit.Run ();
-			CashEdit.Destroy ();
+			if(!e.NewItem)
+				CashEdit.Fill(e.ItemId);
+			CashEdit.Show();
+			Result = (ResponseType)CashEdit.Run();
+			CashEdit.Destroy();
 			break;
 
 		default:
@@ -619,186 +617,189 @@ public partial class MainWindow : Gtk.Window
 		e.Result = Result;
 	}
 
-	protected void OnReferenceUpdate (object sender, QSMain.ReferenceUpdatedEventArgs e)
+	protected void OnReferenceUpdate(object sender, QSMain.ReferenceUpdatedEventArgs e)
 	{
-		switch (e.ReferenceTable) {
+		switch(e.ReferenceTable) {
 		case "place_types":
-			ComboWorks.ComboFillReference (comboPlaceType, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
-			ComboWorks.ComboFillReference (comboContractPlaceT, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
-			ComboWorks.ComboFillReference (comboEventPlaceT, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboPlaceType, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboContractPlaceT, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboEventPlaceT, "place_types", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "organizations":
-			ComboWorks.ComboFillReference (comboPlaceOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
-			ComboWorks.ComboFillReference (comboContractOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
-			ComboWorks.ComboFillReference (comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
-			ComboWorks.ComboFillReference (comboCashOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboPlaceOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboContractOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboAccrualOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboCashOrg, "organizations", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "cash":
-			ComboWorks.ComboFillReference (comboCashCash, "cash", ComboWorks.ListMode.WithAll);
-			ComboWorks.ComboFillReference (comboAccrualCash, "cash", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboCashCash, "cash", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboAccrualCash, "cash", ComboWorks.ListMode.WithAll);
 			break;
 		case "income_items":
-			if (notebookCash.CurrentPage == 0)
-				ComboWorks.ComboFillReference (comboCashItem, "income_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
-			ComboWorks.ComboFillReference (comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			if(notebookCash.CurrentPage == 0)
+				ComboWorks.ComboFillReference(comboCashItem, "income_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
+			ComboWorks.ComboFillReference(comboAccrualItem, "income_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
-		case "expense_items": 
-			if (notebookCash.CurrentPage >= 1)
-				ComboWorks.ComboFillReference (comboCashItem, "expense_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
+		case "expense_items":
+			if(notebookCash.CurrentPage >= 1)
+				ComboWorks.ComboFillReference(comboCashItem, "expense_items", ComboWorks.ListMode.WithAll, OrderBy: "name");
 			break;
 		case "classes":
-			ComboWorks.ComboFillReference (comboEventType, "classes", ComboWorks.ListMode.WithAll);
+			ComboWorks.ComboFillReference(comboEventType, "classes", ComboWorks.ListMode.WithAll);
 			break;
-		} 
+		}
 	}
 
-	protected void OnAction31Activated (object sender, EventArgs e)
+	protected void OnAction31Activated(object sender, EventArgs e)
 	{
-		AccountableDebts WinDebts = new AccountableDebts ();
-		WinDebts.ShowAll ();
-		WinDebts.Run ();
-		WinDebts.Destroy ();
+		AccountableDebts WinDebts = new AccountableDebts();
+		WinDebts.ShowAll();
+		WinDebts.Run();
+		WinDebts.Destroy();
 	}
 
-	protected void OnAction32Activated (object sender, EventArgs e)
+	protected void OnAction32Activated(object sender, EventArgs e)
 	{
-		AccountableSlips winSlips = new AccountableSlips ();
-		winSlips.Show ();
-		winSlips.Run ();
-		winSlips.Destroy ();
+		AccountableSlips winSlips = new AccountableSlips();
+		winSlips.Show();
+		winSlips.Run();
+		winSlips.Destroy();
 	}
 
-	protected void OnAction30Activated (object sender, EventArgs e)
+	protected void OnAction30Activated(object sender, EventArgs e)
 	{
-		CashBalance winBalance = new CashBalance ();
-		winBalance.Show ();
-		winBalance.Run ();
-		winBalance.Destroy ();
+		CashBalance winBalance = new CashBalance();
+		winBalance.Show();
+		winBalance.Run();
+		winBalance.Destroy();
 	}
 
-	protected void OnHelpActionActivated (object sender, EventArgs e)
+	protected void OnHelpActionActivated(object sender, EventArgs e)
 	{
-		System.Diagnostics.Process.Start ("bazar_ru.pdf");
+		System.Diagnostics.Process.Start("bazar_ru.pdf");
 	}
 
-	protected void OnAction33Activated (object sender, EventArgs e)
+	protected void OnAction33Activated(object sender, EventArgs e)
 	{
-		LesseeDebtsReport WinReport = new LesseeDebtsReport ();
-		WinReport.Show ();
-		WinReport.Run ();
-		WinReport.Destroy ();
+		LesseeDebtsReport WinReport = new LesseeDebtsReport();
+		WinReport.Show();
+		WinReport.Run();
+		WinReport.Destroy();
 	}
 
-	protected void OnAction36Activated (object sender, EventArgs e)
+	protected void OnAction36Activated(object sender, EventArgs e)
 	{
-		System.Diagnostics.Process.Start ("http://bazar.qsolution.ru");
+		System.Diagnostics.Process.Start("http://bazar.qsolution.ru");
 	}
 
-	protected void OnAction37Activated (object sender, EventArgs e)
+	protected void OnAction37Activated(object sender, EventArgs e)
 	{
-		System.Diagnostics.Process.Start ("https://groups.google.com/forum/?fromgroups#!forum/bazarsoft");
+		System.Diagnostics.Process.Start("https://groups.google.com/forum/?fromgroups#!forum/bazarsoft");
 	}
 
-	protected void OnAction38Activated (object sender, EventArgs e)
+	protected void OnAction38Activated(object sender, EventArgs e)
 	{
-		DocRegister win = new DocRegister ();
-		win.Show ();
-		win.Run ();
-		win.Destroy ();
+		DocRegister win = new DocRegister();
+		win.Show();
+		win.Run();
+		win.Destroy();
 	}
 
-	protected void OnButtonRefreshTableClicked (object sender, EventArgs e)
+	protected void OnButtonRefreshTableClicked(object sender, EventArgs e)
 	{
-		switch (notebookMain.CurrentPage) {
+		switch(notebookMain.CurrentPage) {
 		case 0:
-			UpdatePlaces ();
+			UpdatePlaces();
 			break;
 		case 1:
-			UpdateLessees ();
+			UpdateLessees();
 			break;
 		case 2:
-			UpdateContract ();
+			UpdateContract();
 			break;
 		case 3:
-			UpdateAccrual ();
+			UpdateAccrual();
 			break;
 		case 4:
-			UpdateCash ();
-			CalculateTotalCash ();
+			UpdateCash();
+			CalculateTotalCash();
 			break;
 		case 5:
-			UpdateEvents ();
+			UpdateEvents();
 			break;
 		default:
 			break;
 		}
 	}
 
-	protected void OnAction39Activated (object sender, EventArgs e)
+	protected void OnAction39Activated(object sender, EventArgs e)
 	{
-		ContractsReportDlg dlg = new ContractsReportDlg ();
-		dlg.Show ();
-		dlg.Run ();
-		dlg.Destroy ();
+		ContractsReportDlg dlg = new ContractsReportDlg();
+		dlg.Show();
+		dlg.Run();
+		dlg.Destroy();
 	}
 
-	protected void OnAction40Activated (object sender, EventArgs e)
+	protected void OnAction40Activated(object sender, EventArgs e)
 	{
-		DailyCashReport WinReport = new DailyCashReport ();
-		WinReport.Show ();
-		WinReport.Run ();
-		WinReport.Destroy ();
+		DailyCashReport WinReport = new DailyCashReport();
+		WinReport.Show();
+		WinReport.Run();
+		WinReport.Destroy();
 	}
 
-	protected void OnAction41Activated (object sender, EventArgs e)
+	protected void OnAction41Activated(object sender, EventArgs e)
 	{
-		Reference winref = new Reference (orderBy: "name");
-		winref.SetMode (false, false, true, true, true);
-		winref.FillList ("meter_types", "Тип счётчика", "Типы счётчиков");
-		winref.Show ();
-		winref.Run ();
-		winref.Destroy ();
+		Reference winref = new Reference(orderBy: "name");
+		winref.SetMode(false, false, true, true, true);
+		winref.FillList("meter_types", "Тип счётчика", "Типы счётчиков");
+		winref.Show();
+		winref.Run();
+		winref.Destroy();
 	}
 
-	protected void OnAction42Activated (object sender, EventArgs e)
+	protected void OnAction42Activated(object sender, EventArgs e)
 	{
-		MetersReport WinMeters = new MetersReport ();
-		WinMeters.Show ();
-		WinMeters.Run ();
-		WinMeters.Destroy ();
+		MetersReport WinMeters = new MetersReport();
+		WinMeters.Show();
+		WinMeters.Run();
+		WinMeters.Destroy();
 	}
 
-	protected void OnActionLesseeRentReportActivated (object sender, EventArgs e)
+	protected void OnActionLesseeRentReportActivated(object sender, EventArgs e)
 	{
-		LesseeRentReport RentReport = new LesseeRentReport ();
-		RentReport.Show ();
-		RentReport.Run ();
-		RentReport.Destroy ();
+		LesseeRentReport RentReport = new LesseeRentReport();
+		RentReport.Show();
+		RentReport.Run();
+		RentReport.Destroy();
 	}
 
-	protected void OnCheckUpdateActionActivated (object sender, EventArgs e)
+	protected void OnCheckUpdateActionActivated(object sender, EventArgs e)
 	{
-		MainUpdater.CheckAppVersionShowAnyway ();
+		MainUpdater.CheckAppVersionShowAnyway();
 	}
 
-	protected void OnProvidersActionActivated (object sender, EventArgs e)
+	protected void OnProvidersActionActivated(object sender, EventArgs e)
 	{
-		Reference winProviders = new Reference (orderBy: "name");
-		winProviders.SetMode (true, false, true, true, true);
+		Reference winProviders = new Reference(orderBy: "name");
+		winProviders.SetMode(true, false, true, true, true);
 		winProviders.NameMaxLength = 45;
-		winProviders.FillList ("service_providers", "Поставщик", "Поставщики услуг");
-		winProviders.Show ();
-		winProviders.Run ();
-		winProviders.Destroy ();
+		winProviders.FillList("service_providers", "Поставщик", "Поставщики услуг");
+		winProviders.Show();
+		winProviders.Run();
+		winProviders.Destroy();
 	}
 
-	protected void OnServiceProviderPaymentReport (object sender, EventArgs e)
+	protected void OnServiceProviderPaymentReport(object sender, EventArgs e)
 	{
-		ServiceProvidersPaymentReport paymentReport = new ServiceProvidersPaymentReport ();
-		paymentReport.Show ();
-		paymentReport.Run ();
-		paymentReport.Destroy ();
+		ServiceProvidersPaymentReport paymentReport = new ServiceProvidersPaymentReport();
+		paymentReport.Show();
+		paymentReport.Run();
+		paymentReport.Destroy();
 	}
 
-
+	protected void OnActionOrgActivated(object sender, EventArgs e)
+	{
+		NavigationManager.OpenViewModel<OrganizationJournalViewModel>(null);
+	}
 }

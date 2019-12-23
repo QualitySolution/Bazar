@@ -98,6 +98,9 @@
     <Reference Include="FluentNHibernate">
       <HintPath>..\packages\FluentNHibernate.2.1.2\lib\net461\FluentNHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -244,6 +247,10 @@
     <Compile Include="Services\AutoincrementDocNumberService.cs" />
     <Compile Include="Dialogs\Rental\MassAccrualCreationDlg.cs" />
     <Compile Include="gtk-gui\Bazar.Dialogs.Rental.MassAccrualCreationDlg.cs" />
+    <Compile Include="ViewModels\Estate\OrganizationViewModel.cs" />
+    <Compile Include="Views\Estate\OrganizationView.cs" />
+    <Compile Include="gtk-gui\Bazar.Views.Estate.OrganizationView.cs" />
+    <Compile Include="JournalViewModels\Estate\OrganizationJournalViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -338,6 +345,11 @@
     <Folder Include="Repositories\Estate\" />
     <Folder Include="Domain\Application\" />
     <Folder Include="Services\" />
+    <Folder Include="Reports\Accrual\" />
+    <Folder Include="Views\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="ViewModels\Estate\" />
+    <Folder Include="Views\Estate\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">
