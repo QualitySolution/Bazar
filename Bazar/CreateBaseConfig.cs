@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Bazar.Domain.Estate;
 using Bazar.JournalViewModels;
 using QS.Banks.Domain;
@@ -24,7 +24,6 @@ namespace Bazar
 			OrmConfig.ConfigureOrm(db, new System.Reflection.Assembly[] {
 				System.Reflection.Assembly.GetAssembly (typeof(Place)),
 				System.Reflection.Assembly.GetAssembly (typeof(MeasurementUnits)),
-				System.Reflection.Assembly.GetAssembly(typeof(Bank)),
 			});
 
 			NotifyConfiguration.Enable();
