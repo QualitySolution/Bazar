@@ -361,6 +361,7 @@ namespace Bazar.Views.Estate
 			this.yentryBuhgalterSign.CanFocus = true;
 			this.yentryBuhgalterSign.Name = "yentryBuhgalterSign";
 			this.yentryBuhgalterSign.IsEditable = true;
+			this.yentryBuhgalterSign.MaxLength = 60;
 			this.yentryBuhgalterSign.InvisibleChar = '●';
 			this.datatableMain.Add(this.yentryBuhgalterSign);
 			global::Gtk.Table.TableChild w25 = ((global::Gtk.Table.TableChild)(this.datatableMain[this.yentryBuhgalterSign]));
@@ -375,6 +376,7 @@ namespace Bazar.Views.Estate
 			this.yentryLeaderSign.CanFocus = true;
 			this.yentryLeaderSign.Name = "yentryLeaderSign";
 			this.yentryLeaderSign.IsEditable = true;
+			this.yentryLeaderSign.MaxLength = 60;
 			this.yentryLeaderSign.InvisibleChar = '●';
 			this.datatableMain.Add(this.yentryLeaderSign);
 			global::Gtk.Table.TableChild w26 = ((global::Gtk.Table.TableChild)(this.datatableMain[this.yentryLeaderSign]));

@@ -1,8 +1,9 @@
 using System;
+using Bazar.Domain.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
-using QSProjectsLib;
 using NLog;
+using QSProjectsLib;
 
 namespace Bazar.Dialogs.Rental
 {
@@ -20,6 +21,9 @@ namespace Bazar.Dialogs.Rental
 			ComboWorks.ComboFillReference(serviceProviderComboBox,"service_providers",ComboWorks.ListMode.WithNo, OrderBy: "name");
 			ComboWorks.ComboFillReference(comboUnits, "units", ComboWorks.ListMode.OnlyItems);
 			ComboWorks.ComboFillReference(comboIncomeItem, "income_items", ComboWorks.ListMode.WithNo, OrderBy: "name");
+
+			yenumcomboPlaceSet.ItemsEnum = typeof(PlaceSetForService);
+			yenumcomboPlaceSet.SelectedItem = PlaceSetForService.Allowed;
 		}
 
 		public void ServiceFill(int id)
@@ -55,6 +59,8 @@ namespace Bazar.Dialogs.Rental
 					ComboWorks.SetActiveItem(serviceProviderComboBox, itemID);
 					checkArea.Active= Boolean.Parse(rdr["by_area"].ToString());
 					checkIncomplete.Active= Boolean.Parse(rdr["incomplete_month"].ToString());
+					ycheckPlaceOccupy.Active = rdr.GetBoolean("place_occupy");
+					yenumcomboPlaceSet.SelectedItem = Enum.Parse(typeof(PlaceSetForService), rdr.GetString("place_set"));
 				}
 				logger.Info("Ok");
 				this.Title = entryName.Text;
@@ -78,13 +84,15 @@ namespace Bazar.Dialogs.Rental
 			string sql;
 			if(NewService)
 			{
-				sql = "INSERT INTO services (name, units_id, income_id, by_area, incomplete_month, service_provider_id) " +
-					"VALUES (@name, @units_id, @income_id, @by_area, @incomplete_month, @providerID)";
+				sql = "INSERT INTO services (name, units_id, income_id, by_area, incomplete_month, service_provider_id, place_set, place_occupy) " +
+					"VALUES (@name, @units_id, @income_id, @by_area, @incomplete_month, @providerID, @place_set, @place_occupy)";
 			}
 			else
 			{
 				sql = "UPDATE services SET name = @name, units_id = @units_id, income_id = @income_id, " +
-					"by_area = @by_area, incomplete_month = @incomplete_month, service_provider_id = @providerID WHERE id = @id";
+					"by_area = @by_area, incomplete_month = @incomplete_month, service_provider_id = @providerID, " +
+					"place_set = @place_set, place_occupy = @place_occupy " +
+					"WHERE id = @id";
 			}
 			logger.Info("Запись услуги...");
 			try 
@@ -102,7 +110,10 @@ namespace Bazar.Dialogs.Rental
 				cmd.Parameters.AddWithValue("by_area", checkArea.Active);
 				cmd.Parameters.AddWithValue("incomplete_month", checkIncomplete.Active);
 				var id = ComboWorks.GetActiveIdOrNull(serviceProviderComboBox);
-				cmd.Parameters.AddWithValue("@providerID",id); 
+				cmd.Parameters.AddWithValue("@providerID",id);
+				cmd.Parameters.AddWithValue("@place_occupy", ycheckPlaceOccupy.Active);
+				cmd.Parameters.AddWithValue("@place_set", yenumcomboPlaceSet.SelectedItem.ToString());
+
 				cmd.ExecuteNonQuery();
 				logger.Info("Ok");
 				Respond (ResponseType.Ok);
@@ -121,6 +132,17 @@ namespace Bazar.Dialogs.Rental
 		protected void OnComboUtitsChanged (object sender, EventArgs e)
 		{
 			TestCanSave();
+		}
+
+		protected void OnYenumcomboPlaceSetChanged(object sender, EventArgs e)
+		{
+			ycheckPlaceOccupy.Sensitive = checkArea.Sensitive 
+				= !PlaceSetForService.Prohibited.Equals(yenumcomboPlaceSet.SelectedItem);
+
+			if(PlaceSetForService.Prohibited.Equals(yenumcomboPlaceSet.SelectedItem)) {
+				ycheckPlaceOccupy.Active = false;
+				checkArea.Active = false;
+			}
 		}
 	}
 }
