@@ -52,6 +52,28 @@ namespace Bazar.Views.Estate
 
 		private global::Gtk.Label label1;
 
+		private global::Gtk.VBox vbox2;
+
+		private global::Gtk.Table table1;
+
+		private global::Gtk.ScrolledWindow GtkScrolledWindow;
+
+		private global::Gamma.GtkWidgets.yTextView ytextviewBankName;
+
+		private global::QS.Widgets.ValidatedEntry validatedentryBankAccount;
+
+		private global::QS.Widgets.ValidatedEntry validatedentryBankBik;
+
+		private global::QS.Widgets.ValidatedEntry validatedentryBankCorAccount;
+
+		private global::Gamma.GtkWidgets.yLabel ylabel1;
+
+		private global::Gamma.GtkWidgets.yLabel ylabel2;
+
+		private global::Gamma.GtkWidgets.yLabel ylabel3;
+
+		private global::Gamma.GtkWidgets.yLabel ylabel4;
+
 		private global::Gtk.Label label12;
 
 		protected virtual void Build()
@@ -133,7 +155,7 @@ namespace Bazar.Views.Estate
 			this.notebookMain = new global::Gtk.Notebook();
 			this.notebookMain.CanFocus = true;
 			this.notebookMain.Name = "notebookMain";
-			this.notebookMain.CurrentPage = 0;
+			this.notebookMain.CurrentPage = 1;
 			// Container child notebookMain.Gtk.Notebook+NotebookChild
 			this.scrolledwindow1 = new global::Gtk.ScrolledWindow();
 			this.scrolledwindow1.CanFocus = true;
@@ -313,24 +335,142 @@ namespace Bazar.Views.Estate
 			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString("Информация");
 			this.notebookMain.SetTabLabel(this.scrolledwindow1, this.label1);
 			this.label1.ShowAll();
+			// Container child notebookMain.Gtk.Notebook+NotebookChild
+			this.vbox2 = new global::Gtk.VBox();
+			this.vbox2.Name = "vbox2";
+			this.vbox2.Spacing = 6;
+			// Container child vbox2.Gtk.Box+BoxChild
+			this.table1 = new global::Gtk.Table(((uint)(4)), ((uint)(2)), false);
+			this.table1.Name = "table1";
+			this.table1.RowSpacing = ((uint)(6));
+			this.table1.ColumnSpacing = ((uint)(6));
+			// Container child table1.Gtk.Table+TableChild
+			this.GtkScrolledWindow = new global::Gtk.ScrolledWindow();
+			this.GtkScrolledWindow.Name = "GtkScrolledWindow";
+			this.GtkScrolledWindow.ShadowType = ((global::Gtk.ShadowType)(1));
+			// Container child GtkScrolledWindow.Gtk.Container+ContainerChild
+			this.ytextviewBankName = new global::Gamma.GtkWidgets.yTextView();
+			this.ytextviewBankName.CanFocus = true;
+			this.ytextviewBankName.Name = "ytextviewBankName";
+			this.GtkScrolledWindow.Add(this.ytextviewBankName);
+			this.table1.Add(this.GtkScrolledWindow);
+			global::Gtk.Table.TableChild w27 = ((global::Gtk.Table.TableChild)(this.table1[this.GtkScrolledWindow]));
+			w27.TopAttach = ((uint)(1));
+			w27.BottomAttach = ((uint)(2));
+			w27.LeftAttach = ((uint)(1));
+			w27.RightAttach = ((uint)(2));
+			w27.XOptions = ((global::Gtk.AttachOptions)(4));
+			w27.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.validatedentryBankAccount = new global::QS.Widgets.ValidatedEntry();
+			this.validatedentryBankAccount.CanFocus = true;
+			this.validatedentryBankAccount.Name = "validatedentryBankAccount";
+			this.validatedentryBankAccount.IsEditable = true;
+			this.validatedentryBankAccount.MaxLength = 25;
+			this.validatedentryBankAccount.InvisibleChar = '●';
+			this.table1.Add(this.validatedentryBankAccount);
+			global::Gtk.Table.TableChild w28 = ((global::Gtk.Table.TableChild)(this.table1[this.validatedentryBankAccount]));
+			w28.TopAttach = ((uint)(3));
+			w28.BottomAttach = ((uint)(4));
+			w28.LeftAttach = ((uint)(1));
+			w28.RightAttach = ((uint)(2));
+			w28.XOptions = ((global::Gtk.AttachOptions)(4));
+			w28.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.validatedentryBankBik = new global::QS.Widgets.ValidatedEntry();
+			this.validatedentryBankBik.CanFocus = true;
+			this.validatedentryBankBik.Name = "validatedentryBankBik";
+			this.validatedentryBankBik.IsEditable = true;
+			this.validatedentryBankBik.MaxLength = 9;
+			this.validatedentryBankBik.InvisibleChar = '●';
+			this.table1.Add(this.validatedentryBankBik);
+			global::Gtk.Table.TableChild w29 = ((global::Gtk.Table.TableChild)(this.table1[this.validatedentryBankBik]));
+			w29.LeftAttach = ((uint)(1));
+			w29.RightAttach = ((uint)(2));
+			w29.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.validatedentryBankCorAccount = new global::QS.Widgets.ValidatedEntry();
+			this.validatedentryBankCorAccount.CanFocus = true;
+			this.validatedentryBankCorAccount.Name = "validatedentryBankCorAccount";
+			this.validatedentryBankCorAccount.IsEditable = true;
+			this.validatedentryBankCorAccount.MaxLength = 25;
+			this.validatedentryBankCorAccount.InvisibleChar = '●';
+			this.table1.Add(this.validatedentryBankCorAccount);
+			global::Gtk.Table.TableChild w30 = ((global::Gtk.Table.TableChild)(this.table1[this.validatedentryBankCorAccount]));
+			w30.TopAttach = ((uint)(2));
+			w30.BottomAttach = ((uint)(3));
+			w30.LeftAttach = ((uint)(1));
+			w30.RightAttach = ((uint)(2));
+			w30.XOptions = ((global::Gtk.AttachOptions)(4));
+			w30.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.ylabel1 = new global::Gamma.GtkWidgets.yLabel();
+			this.ylabel1.Name = "ylabel1";
+			this.ylabel1.Xalign = 1F;
+			this.ylabel1.LabelProp = global::Mono.Unix.Catalog.GetString("БИК банка:");
+			this.table1.Add(this.ylabel1);
+			global::Gtk.Table.TableChild w31 = ((global::Gtk.Table.TableChild)(this.table1[this.ylabel1]));
+			w31.XOptions = ((global::Gtk.AttachOptions)(4));
+			w31.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.ylabel2 = new global::Gamma.GtkWidgets.yLabel();
+			this.ylabel2.Name = "ylabel2";
+			this.ylabel2.Xalign = 1F;
+			this.ylabel2.Yalign = 0F;
+			this.ylabel2.LabelProp = global::Mono.Unix.Catalog.GetString("Название банка:");
+			this.table1.Add(this.ylabel2);
+			global::Gtk.Table.TableChild w32 = ((global::Gtk.Table.TableChild)(this.table1[this.ylabel2]));
+			w32.TopAttach = ((uint)(1));
+			w32.BottomAttach = ((uint)(2));
+			w32.XOptions = ((global::Gtk.AttachOptions)(4));
+			w32.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.ylabel3 = new global::Gamma.GtkWidgets.yLabel();
+			this.ylabel3.Name = "ylabel3";
+			this.ylabel3.Xalign = 1F;
+			this.ylabel3.LabelProp = global::Mono.Unix.Catalog.GetString("Корреспондентский счёт:");
+			this.table1.Add(this.ylabel3);
+			global::Gtk.Table.TableChild w33 = ((global::Gtk.Table.TableChild)(this.table1[this.ylabel3]));
+			w33.TopAttach = ((uint)(2));
+			w33.BottomAttach = ((uint)(3));
+			w33.XOptions = ((global::Gtk.AttachOptions)(4));
+			w33.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child table1.Gtk.Table+TableChild
+			this.ylabel4 = new global::Gamma.GtkWidgets.yLabel();
+			this.ylabel4.Name = "ylabel4";
+			this.ylabel4.Xalign = 1F;
+			this.ylabel4.LabelProp = global::Mono.Unix.Catalog.GetString("Расчётный счёт:");
+			this.table1.Add(this.ylabel4);
+			global::Gtk.Table.TableChild w34 = ((global::Gtk.Table.TableChild)(this.table1[this.ylabel4]));
+			w34.TopAttach = ((uint)(3));
+			w34.BottomAttach = ((uint)(4));
+			w34.XOptions = ((global::Gtk.AttachOptions)(4));
+			w34.YOptions = ((global::Gtk.AttachOptions)(4));
+			this.vbox2.Add(this.table1);
+			global::Gtk.Box.BoxChild w35 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.table1]));
+			w35.Position = 0;
+			w35.Expand = false;
+			w35.Fill = false;
+			this.notebookMain.Add(this.vbox2);
+			global::Gtk.Notebook.NotebookChild w36 = ((global::Gtk.Notebook.NotebookChild)(this.notebookMain[this.vbox2]));
+			w36.Position = 1;
 			// Notebook tab
-			global::Gtk.Label w26 = new global::Gtk.Label();
-			w26.Visible = true;
-			this.notebookMain.Add(w26);
 			this.label12 = new global::Gtk.Label();
 			this.label12.Name = "label12";
 			this.label12.LabelProp = global::Mono.Unix.Catalog.GetString("Счет");
-			this.notebookMain.SetTabLabel(w26, this.label12);
+			this.notebookMain.SetTabLabel(this.vbox2, this.label12);
 			this.label12.ShowAll();
 			this.vbox1.Add(this.notebookMain);
-			global::Gtk.Box.BoxChild w27 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.notebookMain]));
-			w27.Position = 1;
+			global::Gtk.Box.BoxChild w37 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.notebookMain]));
+			w37.Position = 1;
 			this.Add(this.vbox1);
 			if ((this.Child != null))
 			{
 				this.Child.ShowAll();
 			}
 			this.Hide();
+			this.radioTabInfo.Toggled += new global::System.EventHandler(this.OnRadioTabInfoToggled);
+			this.radioTabAccounts.Toggled += new global::System.EventHandler(this.OnRadioTabAccountsToggled);
 		}
 	}
 }

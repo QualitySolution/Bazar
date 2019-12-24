@@ -24,11 +24,31 @@ namespace Bazar.Views.Estate
 
 			datatextviewJurAddress.Binding.AddBinding(Entity, e => e.JurAddress, w => w.Buffer.Text).InitializeFromSource();
 
+			//Банковские реквизиты
+			validatedentryBankBik.ValidationMode = ValidationType.Numeric;
+			validatedentryBankBik.Binding.AddBinding(Entity, e => e.BankBik, w => w.Text).InitializeFromSource();
+			validatedentryBankCorAccount.ValidationMode = ValidationType.Numeric;
+			validatedentryBankCorAccount.Binding.AddBinding(Entity, e => e.BankCorAccount, w => w.Text).InitializeFromSource();
+			validatedentryBankAccount.ValidationMode = ValidationType.Numeric;
+			validatedentryBankAccount.Binding.AddBinding(Entity, e => e.BankAccount, w => w.Text).InitializeFromSource();
+			ytextviewBankName.Binding.AddBinding(Entity, e => e.BankName, w => w.Buffer.Text).InitializeFromSource();
+
 			notebookMain.Page = 0;
 			notebookMain.ShowTabs = false;
-			//accountsview1.ParentReference = new ParentReferenceGeneric<Organization, Account>(UoWGeneric, o => o.Accounts);
 
 			CommonButtonSubscription();
+		}
+
+		protected void OnRadioTabInfoToggled(object sender, EventArgs e)
+		{
+			if(radioTabInfo.Active)
+				notebookMain.CurrentPage = 0;
+		}
+
+		protected void OnRadioTabAccountsToggled(object sender, EventArgs e)
+		{
+			if(radioTabAccounts.Active)
+				notebookMain.CurrentPage = 1;
 		}
 	}
 }

@@ -72,14 +72,14 @@ namespace Bazar.Domain.Estate
 		}
 
 		private string bankAccount;
-		[Display(Name = "Расчетный счёт")]
+		[Display(Name = "Расчётный счёт")]
 		public virtual string BankAccount {
 			get => bankAccount;
 			set => SetField(ref bankAccount, value);
 		}
 
 		private string bankCorAccount;
-		[Display(Name = "Кореспондентский счет")]
+		[Display(Name = "Корреспондентский счёт")]
 		public virtual string BankCorAccount {
 			get => bankCorAccount;
 			set => SetField(ref bankCorAccount, value);
