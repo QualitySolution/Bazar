@@ -85,6 +85,20 @@ namespace Bazar.Domain.Estate
 			set => SetField(ref bankCorAccount, value);
 		}
 
+		private string leaderSing;
+		[Display(Name = "ФИО руководителя")]
+		public virtual string LeaderSign {
+			get => leaderSing;
+			set => SetField(ref leaderSing, value);
+		}
+
+		private string buhgalterSing;
+		[Display(Name = "ФИО бухгалтера")]
+		public virtual string BuhgalterSign {
+			get => buhgalterSing;
+			set => SetField(ref buhgalterSing, value);
+		}
+
 
 		#endregion
 	}

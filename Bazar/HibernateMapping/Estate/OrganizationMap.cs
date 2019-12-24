@@ -22,6 +22,8 @@ namespace Bazar.HibernateMapping.Estate
 			Map(x => x.BankName).Column("bank_name");
 			Map(x => x.BankAccount).Column("bank_account");
 			Map(x => x.BankCorAccount).Column("bank_cor_account");
+			Map(x => x.LeaderSign).Column("leader_sign");
+			Map(x => x.BuhgalterSign).Column("buhgalter_sign");
 		}
 	}
 }

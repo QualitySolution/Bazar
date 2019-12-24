@@ -24,6 +24,9 @@ namespace Bazar.Views.Estate
 
 			datatextviewJurAddress.Binding.AddBinding(Entity, e => e.JurAddress, w => w.Buffer.Text).InitializeFromSource();
 
+			yentryLeaderSign.Binding.AddBinding(Entity, e => e.LeaderSign, w => w.Text).InitializeFromSource();
+			yentryBuhgalterSign.Binding.AddBinding(Entity, e => e.BuhgalterSign, w => w.Text).InitializeFromSource();
+
 			//Банковские реквизиты
 			validatedentryBankBik.ValidationMode = ValidationType.Numeric;
 			validatedentryBankBik.Binding.AddBinding(Entity, e => e.BankBik, w => w.Text).InitializeFromSource();
