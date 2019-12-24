@@ -83,8 +83,7 @@ public partial class MainWindow : Gtk.Window
 	void UpdatePlaces()
 	{
 		logger.Info("Получаем таблицу c местами...");
-		TreeIter iter;
-		
+
 		string sql = "SELECT places.*, place_types.name as type, contact_persons.name as contact, cur_contract.lessee_id, lessees.name as lessee, " +
 				"contact_persons.telephones as telephones, organizations.name as organization " +
 				"FROM places " +
@@ -93,14 +92,15 @@ public partial class MainWindow : Gtk.Window
 				"LEFT JOIN organizations ON places.org_id = organizations.id " +
 				"LEFT JOIN " +
 					"(SELECT contract_pays.place_id, contracts.lessee_id as lessee_id " +
-					"FROM contract_pays, contracts " +
+					"FROM contract_pays, contracts, services " +
 					"WHERE contracts.id = contract_pays.contract_id AND " +
 					"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
 					"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) " +
+					"AND services.id = contract_pays.service_id AND services.place_occupy = 1 " +
 				") as cur_contract ON cur_contract.place_id = places.id " +
 				"LEFT JOIN lessees ON cur_contract.lessee_id = lessees.id";
 		bool WhereExist = false;
-		if(comboPlaceType.GetActiveIter(out iter) && comboPlaceType.Active != 0)
+		if(comboPlaceType.GetActiveIter(out TreeIter iter) && comboPlaceType.Active != 0)
 		{
 			sql += " WHERE places.type_id = '" + comboPlaceType.Model.GetValue(iter,1) + "' ";
 			WhereExist = true;

@@ -120,9 +120,11 @@ namespace Bazar.Dialogs.Estate
 			 	"FROM contract_pays " +
 				"LEFT JOIN contracts ON contract_pays.contract_id = contracts.id " +
 				"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
+				"LEFT JOIN services ON services.id = contract_pays.service_id " +
 				"WHERE contract_pays.place_id = @place_id AND " +
 				"((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) " +
-				"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date))";
+				"OR (contracts.cancel_date IS NOT NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.cancel_date)) " +
+				"AND services.place_occupy = 1 ";
 			MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@place_id", place_id);
 			MySqlDataReader rdr = cmd.ExecuteReader();
@@ -281,7 +283,8 @@ namespace Bazar.Dialogs.Estate
 			string sql = "SELECT contracts.*, lessees.name as lessee FROM contracts " +
 			 	"LEFT JOIN lessees ON contracts.lessee_id = lessees.id " +
 			 	"LEFT JOIN contract_pays ON contract_pays.contract_id = contracts.id " +
-			 	"WHERE contract_pays.place_id = @place_id " +
+			 	"LEFT JOIN services ON services.id = contract_pays.service_id " +
+			 	"WHERE contract_pays.place_id = @place_id AND services.place_occupy = 1 " +
 			 	"GROUP BY contracts.id";
 	        MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 			cmd.Parameters.AddWithValue("@place_id", place_id);

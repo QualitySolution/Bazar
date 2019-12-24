@@ -179,6 +179,7 @@ namespace Bazar.Dialogs.Rental
 
 				foreach(var place in allPlaces) {
 					var conflicted = ContractRepository.GetContractItemsOnPlace(UoW, place.Id, datepickerStart.Date, (datepickerCancel.IsEmpty ? datepickerEnd.Date : datepickerCancel.Date))
+						.Where(x => x.Service.PlaceOccupy)
 						.Select(x => x.Contract).Distinct().Where(x => x.Id != ContractId).ToList();
 					if(conflicted.Count > 0) {
 						var validity = String.Join(", ", conflicted.Select(x => $"№{x.Number} ({x.ValidityText})"));
