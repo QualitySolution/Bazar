@@ -22,6 +22,7 @@ using QS.DomainModel.UoW;
 using QS.Journal.GtkUI;
 using QS.Project.Repositories;
 using QS.Project.Services.GtkUI;
+using QS.Validation.GtkUI;
 using QSProjectsLib;
 using QSWidgetLib;
 
@@ -162,13 +163,15 @@ namespace Bazar.Dialogs.Rental
 		{
 			logger.Info("Запись начисления...");
 
-			comboContract.GetActiveIter(out TreeIter iter);
-
 			Entity.Month = (uint)comboAccrualMonth.Active;
 			Entity.Year = uint.Parse(comboAccuralYear.ActiveText);
 			Entity.Comments = textviewComments.Buffer.Text;
 
 			Entity.Paid = Entity.AccrualTotal - IncomeTotal <= 0;
+
+			var valid = new QSValidator<Accrual>(Entity);
+			if(valid.RunDlgIfNotValid((Gtk.Window)this.Toplevel))
+				return false;
 
 			//Проверка на существование номера счета
 			if(Entity.InvoiceNumber != null && !UoW.IsNew) {
@@ -324,12 +327,15 @@ namespace Bazar.Dialogs.Rental
 		void Selection_Changed(object sender, EventArgs e)
 		{
 			bool isSelect = treeviewServices.Selection.CountSelectedRows() >= 1;
-			buttonDelService.Sensitive = buttonPlaceSet.Sensitive = buttonPlaceClean.Sensitive = isSelect;
+			buttonDelService.Sensitive = isSelect;
 			var rows = treeviewServices.GetSelectedObjects<AccrualItem>();
 			buttonFromMeter.Sensitive = rows.Count() == 1 
 				&& rows[0].Service != null
 				&& rows[0].Place != null
 				&& CachedMeters.MeterCount(rows[0].Service.Id, rows[0].Place.Id) > 0;
+
+			buttonPlaceClean.Sensitive = rows.Any(x => x.Place != null);
+			buttonPlaceSet.Sensitive = isSelect && rows.Any(x => x.Service != null && x.Service.PlaceSet != PlaceSetForService.Prohibited);
 		}
 
 		void ObservableAccrualItems_ListContentChanged(object sender, EventArgs e)
@@ -422,7 +428,8 @@ namespace Bazar.Dialogs.Rental
 		{
 			var place = UoW.GetById<Place>(DomainHelper.GetId(e.SelectedObjects.First()));
 			foreach(var item in SetPlaceItems) {
-				item.Place = place;
+				if(item.Service != null && item.Service.PlaceSet != PlaceSetForService.Prohibited)
+					item.Place = place;
 			}
 			SelectWindow.Respond(ResponseType.Ok);
 		}

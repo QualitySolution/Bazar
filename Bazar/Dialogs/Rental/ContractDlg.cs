@@ -189,6 +189,14 @@ namespace Bazar.Dialogs.Rental
 					}
 				}
 
+				//Проверяем таблицу услуг
+				var results = Contract.Validate(ContractItems);
+				if(results.Any()) {
+					var text = String.Join("\n", results.Select(x => "* " + x.ErrorMessage));
+					MessageDialogHelper.RunErrorDialog("Список услуг договора не может быть сохранен. Исправьте:\n" + text, "Не верные данные");
+					return;
+				}
+
 				// записываем
 				if(NewContract) {
 					sql = "INSERT INTO contracts (number, lessee_id, org_id, sign_date, " +
@@ -414,7 +422,11 @@ namespace Bazar.Dialogs.Rental
 		void Selection_Changed(object sender, EventArgs e)
 		{
 			bool isSelect = treeviewServices.Selection.CountSelectedRows() >= 1;
-			buttonDelService.Sensitive = buttonPlaceSet.Sensitive = buttonPlaceClean.Sensitive = isSelect;
+			buttonDelService.Sensitive = isSelect;
+
+			var selected = treeviewServices.GetSelectedObjects<ContractItem>();
+			buttonPlaceClean.Sensitive = selected.Any(x => x.Place != null);
+			buttonPlaceSet.Sensitive = isSelect && selected.Any(x => x.Service != null && x.Service.PlaceSet != PlaceSetForService.Prohibited);
 		}
 
 		void ObservableContractItems_ListContentChanged(object sender, EventArgs e)
@@ -498,7 +510,8 @@ namespace Bazar.Dialogs.Rental
 		{
 			var place = UoW.GetById<Place>(DomainHelper.GetId(e.SelectedObjects.First()));
 			foreach(var item in SetPlaceItems) {
-				item.Place = place;
+				if(item.Service != null && item.Service.PlaceSet != PlaceSetForService.Prohibited)
+					item.Place = place;
 			}
 			SelectWindow.Respond(ResponseType.Ok);
 		}

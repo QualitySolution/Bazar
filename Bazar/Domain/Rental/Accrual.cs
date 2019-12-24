@@ -17,7 +17,7 @@ namespace Bazar.Domain.Rental
 		NominativePlural = "начисления",
 		Nominative = "начисление"
 	)]
-	public class Accrual : PropertyChangedBase, IDomainObject
+	public class Accrual : PropertyChangedBase, IDomainObject, IValidatableObject
 	{
 		#region Свойства
 
@@ -140,6 +140,19 @@ namespace Bazar.Domain.Rental
 					Service = contractItem.Service
 				};
 				ObservableItems.Add(accrualItem);
+			}
+		}
+
+		public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			if(Items.Any(x => x.Service == null))
+				yield return new ValidationResult($"Для некоторых строк начисления не указана услуга.", new[] { nameof(Items) });
+
+			foreach(var item in Items) {
+				if(item.Service?.PlaceSet == PlaceSetForService.Required && item.Place == null)
+					yield return new ValidationResult($"Для услуги {item.Service.Name} необходимо заполнить место.", new[] { nameof(Items) });
+				if(item.Service?.PlaceSet == PlaceSetForService.Prohibited && item.Place != null)
+					yield return new ValidationResult($"Для услуги {item.Service.Name} запрещено указывать место.", new[] { nameof(Items) });
 			}
 		}
 

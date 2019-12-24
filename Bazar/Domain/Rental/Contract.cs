@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Bazar.Domain.Estate;
 using QS.DomainModel.Entity;
 
@@ -94,5 +96,18 @@ namespace Bazar.Domain.Rental
 		public virtual string ValidityText => BeginDate.ToShortDateString() + "—" + (CancelDate ?? EndDate).ToShortDateString();
 
 		#endregion
+
+		public static IEnumerable<ValidationResult> Validate(IList<ContractItem> Items)
+		{
+			if(Items.Any(x => x.Service == null))
+				yield return new ValidationResult($"Для некоторых строк начисления не указана услуга.", new[] { nameof(Items) });
+
+			foreach(var item in Items) {
+				if(item.Service?.PlaceSet == PlaceSetForService.Required && item.Place == null)
+					yield return new ValidationResult($"Для услуги {item.Service.Name} необходимо заполнить место.", new[] { nameof(Items) });
+				if(item.Service?.PlaceSet == PlaceSetForService.Prohibited && item.Place != null)
+					yield return new ValidationResult($"Для услуги {item.Service.Name} запрещено указывать место.", new[] { nameof(Items) });
+			}
+		}
 	}
 }
