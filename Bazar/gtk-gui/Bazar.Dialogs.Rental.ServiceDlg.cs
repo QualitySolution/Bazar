@@ -232,7 +232,7 @@ namespace Bazar.Dialogs.Rental
 			this.label9 = new global::Gtk.Label();
 			this.label9.Name = "label9";
 			this.label9.Xalign = 1F;
-			this.label9.LabelProp = global::Mono.Unix.Catalog.GetString("Указанное место занимается:");
+			this.label9.LabelProp = global::Mono.Unix.Catalog.GetString("Занимает привязанное место:");
 			this.table1.Add(this.label9);
 			global::Gtk.Table.TableChild w16 = ((global::Gtk.Table.TableChild)(this.table1[this.label9]));
 			w16.TopAttach = ((uint)(8));
@@ -262,10 +262,12 @@ namespace Bazar.Dialogs.Rental
 			w18.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table1.Gtk.Table+TableChild
 			this.ycheckPlaceOccupy = new global::Gamma.GtkWidgets.yCheckButton();
-			this.ycheckPlaceOccupy.TooltipMarkup = "Счить ли место занятым если оно привязано к этой услуге в договоре.";
+			this.ycheckPlaceOccupy.TooltipMarkup = "Счить ли место занятым для других арендаторов, если оно привязано к этой услуге в" +
+				" договоре.";
 			this.ycheckPlaceOccupy.CanFocus = true;
 			this.ycheckPlaceOccupy.Name = "ycheckPlaceOccupy";
 			this.ycheckPlaceOccupy.Label = "";
+			this.ycheckPlaceOccupy.Active = true;
 			this.ycheckPlaceOccupy.DrawIndicator = true;
 			this.ycheckPlaceOccupy.UseUnderline = true;
 			this.table1.Add(this.ycheckPlaceOccupy);

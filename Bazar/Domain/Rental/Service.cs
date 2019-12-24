@@ -71,7 +71,7 @@ namespace Bazar.Domain.Rental
 			set => SetField(ref placeSet, value);
 		}
 
-		private bool placeOccupy;
+		private bool placeOccupy = true;
 		[Display(Name = "Услуга занимает место")]
 		public virtual bool PlaceOccupy {
 			get => placeOccupy;

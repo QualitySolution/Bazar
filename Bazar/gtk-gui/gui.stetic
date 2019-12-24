@@ -6197,7 +6197,7 @@
               <widget class="Gtk.Label" id="label9">
                 <property name="MemberName" />
                 <property name="Xalign">1</property>
-                <property name="LabelProp" translatable="yes">Указанное место занимается:</property>
+                <property name="LabelProp" translatable="yes">Занимает привязанное место:</property>
               </widget>
               <packing>
                 <property name="TopAttach">8</property>
@@ -6257,9 +6257,10 @@
             <child>
               <widget class="Gamma.GtkWidgets.yCheckButton" id="ycheckPlaceOccupy">
                 <property name="MemberName" />
-                <property name="Tooltip" translatable="yes">Счить ли место занятым если оно привязано к этой услуге в договоре.</property>
+                <property name="Tooltip" translatable="yes">Счить ли место занятым для других арендаторов, если оно привязано к этой услуге в договоре.</property>
                 <property name="CanFocus">True</property>
                 <property name="Label" translatable="yes" />
+                <property name="Active">True</property>
                 <property name="DrawIndicator">True</property>
                 <property name="HasLabel">True</property>
                 <property name="UseUnderline">True</property>
