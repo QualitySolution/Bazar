@@ -64,6 +64,38 @@ namespace Bazar.Domain.Rental
 			set { SetField (ref incompleteMonth, value); }
 		}
 
+		private PlaceSetForService placeSet;
+		[Display(Name = "Привязка к месту")]
+		public virtual PlaceSetForService PlaceSet {
+			get => placeSet;
+			set => SetField(ref placeSet, value);
+		}
+
+		private bool placeOccupy;
+		[Display(Name = "Услуга занимает место")]
+		public virtual bool PlaceOccupy {
+			get => placeOccupy;
+			set => SetField(ref placeOccupy, value);
+		}
+
+
 		#endregion
+	}
+
+	public enum PlaceSetForService
+	{
+		[Display(Name = "Обязательна")]
+		Required,
+		[Display(Name = "Позволена")]
+		Allowed,
+		[Display(Name = "Запрещена")]
+		Prohibited
+	}
+
+	public class PlaceSetForServiceStringType : NHibernate.Type.EnumStringType
+	{
+		public PlaceSetForServiceStringType() : base(typeof(PlaceSetForService))
+		{
+		}
 	}
 }

@@ -15,6 +15,8 @@ namespace Bazar.HibernateMapping.Rental
 			Map (x => x.Name).Column ("name").Not.Nullable ();
 			Map (x => x.DependOnArea).Column ("by_area");
 			Map (x => x.IncompleteMonth).Column ("incomplete_month");
+			Map(x => x.PlaceSet).Column("place_set").CustomType<PlaceSetForService>();
+			Map(x => x.PlaceOccupy).Column("place_occupy");
 
 			References (x => x.Units).Column ("units_id");
 			References (x => x.IncomeCategory).Column ("income_id");

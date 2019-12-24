@@ -35,6 +35,10 @@ ADD COLUMN `bank_name` VARCHAR(200) NULL DEFAULT NULL AFTER `bank_cor_account`,
 ADD COLUMN `leader_sign` VARCHAR(60) NULL DEFAULT NULL AFTER `bank_name`,
 ADD COLUMN `buhgalter_sign` VARCHAR(60) NULL DEFAULT NULL AFTER `leader_sign`;
 
+ALTER TABLE `services` 
+ADD COLUMN `place_set` ENUM('Required', 'Allowed', 'Prohibited') NOT NULL DEFAULT 'Allowed' AFTER `service_provider_id`,
+ADD COLUMN `place_occupy` TINYINT(1) NOT NULL DEFAULT 1 AFTER `place_set`;
+
 ALTER TABLE `places` 
 ADD COLUMN `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST,
 DROP PRIMARY KEY,
