@@ -345,7 +345,6 @@
     <Folder Include="Repositories\Estate\" />
     <Folder Include="Domain\Application\" />
     <Folder Include="Services\" />
-    <Folder Include="Reports\Accrual\" />
     <Folder Include="Views\" />
     <Folder Include="ViewModels\" />
     <Folder Include="ViewModels\Estate\" />
@@ -420,5 +419,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Reports\Invoice.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

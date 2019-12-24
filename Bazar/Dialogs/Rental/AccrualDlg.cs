@@ -116,23 +116,7 @@ namespace Bazar.Dialogs.Rental
 			treeviewIncomes.Model = IncomeListStore;
 			treeviewIncomes.ShowAll();
 
-			var menu = new Menu();
-			var itemAllCashPrint = new MenuItem("По всем кассам");
-			itemAllCashPrint.Activated += ItemAllCashPrint_Activated; ;
-			menu.Add(itemAllCashPrint);
-			var separator = new SeparatorMenuItem();
-			menu.Add(separator);
-
-			foreach(var cash in CashRepository.GetActiveCashes(UoW)) {
-				var itemSelectedCashPrint = new MenuItemId<Cash>(cash.Name);
-				itemSelectedCashPrint.ID = cash;
-				itemSelectedCashPrint.Activated += ItemSelectedCashPrint_Activated; ;
-				menu.Add(itemSelectedCashPrint);
-			}
-
-			menu.ShowAll();
-			buttonPrint.Menu = menu;
-
+			MakePrintMenu();
 		}
 
 		#region Загрука\сохранение
@@ -261,19 +245,6 @@ namespace Bazar.Dialogs.Rental
 
 		#region Обработка событий
 
-		void ItemAllCashPrint_Activated(object sender, EventArgs e)
-		{
-			string param = $"id={Entity.Id}&cash_id=-1";
-			ViewReportExt.Run("PayList", param);
-		}
-
-		void ItemSelectedCashPrint_Activated(object sender, EventArgs e)
-		{
-			var id = (sender as MenuItemId<int>).ID;
-			string param = $"id={Entity.Id}&cash_id={id}";
-			ViewReportExt.Run("PayList", param);
-		}
-
 		protected void OnComboAccrualMonthChanged(object sender, EventArgs e)
 		{
 			if(comboAccrualMonth.Active > 0 && comboAccuralYear.Active >= 0)
@@ -365,6 +336,7 @@ namespace Bazar.Dialogs.Rental
 		{
 			TestCanSave();
 			CalculateServiceSum();
+			MakePrintMenu();
 		}
 
 		protected void OnButtonAddServiceClicked(object sender, EventArgs e)
@@ -623,6 +595,107 @@ namespace Bazar.Dialogs.Rental
 			decimal Debt = item.Total - paid;
 			string color = (Debt <= 0 && item.Total != 0) ? "darkgreen" : "black";
 			return String.Format("<span foreground=\"{1}\">{0:0.00}</span>", paid, color);
+		}
+
+		#endregion
+
+		#region Печать
+
+		private void MakePrintMenu()
+		{
+			var cashes = Entity.Items.Where(x => x.Cash != null).Select(x => x.Cash).Distinct().ToList();
+
+			buttonPrint.Sensitive = cashes.Count > 0;
+
+			if(cashes.Count == 0)
+				return;
+
+			var menu = new Menu();
+
+			if(cashes.Count > 1) {
+				var payListMenu = new Menu();
+				var paylistItem = new MenuItem("Расчётный лист");
+				paylistItem.Submenu = payListMenu;
+
+				var itemAllCashPrint = new MenuItem("По всем кассам");
+				itemAllCashPrint.Activated += ItemAllCashPrint_Activated;
+				payListMenu.Add(itemAllCashPrint);
+				var separator = new SeparatorMenuItem();
+				payListMenu.Add(separator);
+
+				foreach(var cash in cashes) {
+					var itemSelectedCashPrint = new MenuItemId<Cash>(cash.Name);
+					itemSelectedCashPrint.ID = cash;
+					itemSelectedCashPrint.Activated += ItemSelectedCashPrint_Activated;
+					payListMenu.Add(itemSelectedCashPrint);
+				}
+
+				menu.Add(paylistItem);
+
+				var invoiceMenu = new Menu();
+				var invoiceItem = new MenuItem("Счёт на оплату");
+				invoiceItem.Submenu = invoiceMenu;
+
+				var invoiceAllCashPrint = new MenuItem("По всем кассам");
+				invoiceAllCashPrint.Activated += InvoiceAllCashPrint_Activated;
+				invoiceMenu.Add(invoiceAllCashPrint);
+				separator = new SeparatorMenuItem();
+				invoiceMenu.Add(separator);
+
+				foreach(var cash in cashes) {
+					var itemSelectedCashPrint = new MenuItemId<Cash>(cash.Name);
+					itemSelectedCashPrint.ID = cash;
+					itemSelectedCashPrint.Activated += InvoiceSelectedCashPrint_Activated;
+					invoiceMenu.Add(itemSelectedCashPrint);
+				}
+
+				menu.Add(invoiceItem);
+			} else {
+				var itemAllCashPrint = new MenuItem("Расчётный лист");
+				itemAllCashPrint.Activated += ItemAllCashPrint_Activated;
+				menu.Add(itemAllCashPrint);
+
+				var invoiceAllCashPrint = new MenuItem("Счёт на оплату");
+				invoiceAllCashPrint.Activated += InvoiceAllCashPrint_Activated;
+				menu.Add(invoiceAllCashPrint);
+			}
+
+			menu.ShowAll();
+			buttonPrint.Menu = menu;
+		}
+
+		void ItemAllCashPrint_Activated(object sender, EventArgs e)
+		{
+			if(SaveAccountable()) {
+				string param = $"id={Entity.Id}&cash_id=-1";
+				ViewReportExt.Run("PayList", param);
+			}
+		}
+
+		void ItemSelectedCashPrint_Activated(object sender, EventArgs e)
+		{
+			if(SaveAccountable()) {
+				var id = (sender as MenuItemId<Cash>).ID.Id;
+				string param = $"id={Entity.Id}&cash_id={id}";
+				ViewReportExt.Run("PayList", param);
+			}
+		}
+
+		void InvoiceAllCashPrint_Activated(object sender, EventArgs e)
+		{
+			if(SaveAccountable()) {
+				string param = $"accrual_id={Entity.Id}&cash_id=-1";
+				ViewReportExt.Run("Invoice", param);
+			}
+		}
+
+		void InvoiceSelectedCashPrint_Activated(object sender, EventArgs e)
+		{
+			if(SaveAccountable()) {
+				var id = (sender as MenuItemId<Cash>).ID.Id;
+				string param = $"accrual_id={Entity.Id}&cash_id={id}";
+				ViewReportExt.Run("Invoice", param);
+			}
 		}
 
 		#endregion
