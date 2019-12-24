@@ -10199,7 +10199,6 @@
                   <widget class="QS.Widgets.GtkUI.DatePicker" id="dateAccrual">
                     <property name="MemberName" />
                     <property name="Events">ButtonPressMask</property>
-                    <property name="DefaultWidthRequest">0</property>
                     <property name="WithTime">False</property>
                     <property name="HideCalendarButton">False</property>
                     <property name="Date">0</property>
@@ -11309,7 +11308,6 @@
               <widget class="QS.Widgets.GtkUI.DatePicker" id="dateAccrual">
                 <property name="MemberName" />
                 <property name="Events">ButtonPressMask</property>
-                <property name="DefaultWidthRequest">0</property>
                 <property name="WithTime">False</property>
                 <property name="HideCalendarButton">False</property>
                 <property name="Date">0</property>
