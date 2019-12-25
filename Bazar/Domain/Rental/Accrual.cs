@@ -120,12 +120,12 @@ namespace Bazar.Domain.Rental
 
 		public virtual void FillItemsFromContract(IUnitOfWork uow, IInteractiveService interactive)
 		{
-			if(Items.Count > 0 && !interactive.InteractiveQuestion.Question("Список услуг не пустой. При заполнени с услугами из договора, текущий услуги будут удалены. Продолжить?"))
+			if(Items.Count > 0 && !interactive.Question("Список услуг не пустой. При заполнени с услугами из договора, текущий услуги будут удалены. Продолжить?"))
 				return;
 
 			var savedIds = Items.Select(x => x.Id).Where(x => x > 0).ToArray();
 			if(savedIds.Length > 0 && PaymentRepository.GetPaymentItemsByAccrualItems(uow, savedIds).Count > 0) {
-				interactive.InteractiveMessage.ShowMessage(ImportanceLevel.Error, "По некоторым услугам уже были проведены оплаты, их нельзя очистить.");
+				interactive.ShowMessage(ImportanceLevel.Error, "По некоторым услугам уже были проведены оплаты, их нельзя очистить.");
 				return;
 			}
 
