@@ -16,11 +16,12 @@
       <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT contracts.*, place_types.name as type, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end,
+        <CommandText>SELECT contracts.*, place_types.name as type, places.area, lessees.name as lessee, organizations.name as organization, IFNULL(contracts.cancel_date, contracts.end_date) as end,
 substring_index(SUBSTRING_INDEX(contracts.place_no,'\\',1), '/', 1) as sort_col,
 substring_index(SUBSTRING_INDEX(contracts.place_no,'\\',-1), '/', -1) as sort_col_2
 FROM contracts
 LEFT JOIN place_types ON contracts.place_type_id = place_types.id 
+LEFT JOIN places ON places.type_id = contracts.place_type_id AND places.place_no = contracts.place_no
 LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
 LEFT JOIN organizations ON contracts.org_id = organizations.id
 WHERE ((contracts.cancel_date IS NULL AND CURDATE() BETWEEN contracts.start_date AND contracts.end_date) 
@@ -82,6 +83,10 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
           <DataField>type</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="area">
+          <DataField>area</DataField>
+          <rd:TypeName>System.Single</rd:TypeName>
+        </Field>
         <Field Name="lessee">
           <DataField>lessee</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -138,19 +143,22 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
             <Width>47.3pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>52.5pt</Width>
+            <Width>48.5pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>68.1pt</Width>
+            <Width>36.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>63.7pt</Width>
+            <Width>57.0pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>58.2pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>127.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>1.5in</Width>
+            <Width>91.3pt</Width>
             <Visibility>
             </Visibility>
           </TableColumn>
@@ -161,7 +169,7 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
         <Header>
           <TableRows>
             <TableRow>
-              <Height>12pt</Height>
+              <Height>22.7pt</Height>
               <TableCells>
                 <TableCell>
                   <ReportItems>
@@ -197,6 +205,24 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox3">
+                      <Value>Пло-
+щадь</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <FontSize>9pt</FontSize>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox8">
                       <Value>Начало</Value>
                       <Style>
@@ -223,6 +249,7 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
                         <FontWeight>Bold</FontWeight>
                         <BorderColor />
                         <BorderWidth />
+                        <FontSize>9pt</FontSize>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -309,6 +336,21 @@ ORDER BY type, CAST(sort_col as unsigned), CAST(sort_col_2 as unsigned), place_n
                       <Value>=Fields!type.Value + "-" + Fields!place_no.Value</Value>
                       <CanGrow>true</CanGrow>
                       <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox4">
+                      <Value>= {area} + " м²"</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
