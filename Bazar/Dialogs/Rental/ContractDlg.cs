@@ -496,6 +496,8 @@ namespace Bazar.Dialogs.Rental
 		protected void OnButtonPlaceSetClicked(object sender, EventArgs e)
 		{
 			SetPlaceItems = treeviewServices.GetSelectedObjects<ContractItem>();
+			if(!SetPlaceItems.Any(x => x.Service?.PlaceSet == PlaceSetForService.Allowed || x.Service?.PlaceSet == PlaceSetForService.Required))
+				return;
 
 			var viewModel = new PlacesJournalViewModel(UnitOfWorkFactory.GetDefaultFactory, new GtkInteractiveService());
 			viewModel.SelectionMode = QS.Project.Journal.JournalSelectionMode.Single;
