@@ -175,7 +175,11 @@ namespace Bazar.Dialogs.Rental
 					return;
 				}
 
-				var allPlaces = ContractItems.Select(x => x.Place).Where(x => x != null).Distinct().ToList();
+				var allPlaces = ContractItems
+					.Where(x => x.Service?.PlaceOccupy == true)
+					.Select(x => x.Place)
+					.Where(x => x != null)
+					.Distinct().ToList();
 
 				foreach(var place in allPlaces) {
 					var conflicted = ContractRepository.GetContractItemsOnPlace(UoW, place.Id, datepickerStart.Date, (datepickerCancel.IsEmpty ? datepickerEnd.Date : datepickerCancel.Date))
