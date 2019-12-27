@@ -13,7 +13,7 @@
   <BottomMargin>0mm</BottomMargin>
   <DataSets>
     <DataSet Name="Order">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT
     IFNULL(accrual.invoice_number, accrual.id) AS invoice_number,
@@ -22,7 +22,11 @@
     lessees.INN AS customer_inn,
     lessees.KPP AS customer_kpp,
     lessees.address AS customer_address,
-    users.name AS author
+    users.name AS author,
+    contracts.number as contract_number,
+    DATE_FORMAT(contracts.sign_date, '%d.%m.%y') as contract_date,
+    accrual.month,
+    accrual.year
 FROM
     accrual
 LEFT JOIN contracts ON accrual.contract_id = contracts.id
@@ -36,7 +40,7 @@ WHERE
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="invoice_number">
           <DataField>invoice_number</DataField>
           <TypeName>System.UInt32</TypeName>
@@ -65,6 +69,22 @@ WHERE
           <DataField>author</DataField>
           <TypeName>System.String</TypeName>
         </Field>
+        <Field Name="contract_number">
+          <DataField>contract_number</DataField>
+          <TypeName>System.String</TypeName>
+        </Field>
+        <Field Name="contract_date">
+          <DataField>contract_date</DataField>
+          <TypeName>System.DateTime</TypeName>
+        </Field>
+        <Field Name="month">
+          <DataField>month</DataField>
+          <TypeName>System.UInt16</TypeName>
+        </Field>
+        <Field Name="year">
+          <DataField>year</DataField>
+          <TypeName>System.UInt32</TypeName>
+        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Goods">
@@ -77,11 +97,14 @@ WHERE
     accrual_pays.count,
     accrual_pays.price,
     accrual_pays.count * accrual_pays.price AS total,
-    units.name as unit_name
+    units.name as unit_name,
+    CONCAT(place_types.name, "-", places.place_no) as place
 FROM
     accrual_pays
 LEFT JOIN services ON services.id = accrual_pays.service_id
 LEFT JOIN units ON units.id = services.units_id
+LEFT JOIN places ON places.id = accrual_pays.place_id
+LEFT JOIN place_types ON place_types.id = places.type_id
 WHERE
     accrual_pays.accrual_id = @accrual_id 
 AND (@cash_id = -1 OR accrual_pays.cash_id = @cash_id);</CommandText>
@@ -117,6 +140,10 @@ AND (@cash_id = -1 OR accrual_pays.cash_id = @cash_id);</CommandText>
         </Field>
         <Field Name="unit_name">
           <DataField>unit_name</DataField>
+          <TypeName>System.String</TypeName>
+        </Field>
+        <Field Name="place">
+          <DataField>place</DataField>
           <TypeName>System.String</TypeName>
         </Field>
       </Fields>
@@ -204,7 +231,7 @@ WHERE
     <PrintOnLastPage>false</PrintOnLastPage>
   </PageHeader>
   <Body>
-    <Height>569.1pt</Height>
+    <Height>628.8pt</Height>
     <Columns>1</Columns>
     <ReportItems>
       <Textbox Name="Textbox1">
@@ -227,8 +254,8 @@ WHERE
         <Width>504.25pt</Width>
         <Value>Внимание! Оплата данного счета означает согласие с условиями поставки товара. Уведомление об оплате обязательно, в противном случае не гарантируется наличие товара на складе. Товар отпускается по факту прихода денег на р/с Поставщика.</Value>
         <ZIndex>1</ZIndex>
-        <Left>29.1pt</Left>
-        <Top>418.6pt</Top>
+        <Left>29.8pt</Left>
+        <Top>454.0pt</Top>
         <Style>
           <BorderStyle>
             <Bottom>Solid</Bottom>
@@ -531,7 +558,10 @@ WHERE
             <Width>28.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>269.3pt</Width>
+            <Width>230.8pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>45.5pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>44.8pt</Width>
@@ -573,7 +603,7 @@ WHERE
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox35">
-                      <Value>Товар</Value>
+                      <Value>Товары (работы, услуги)</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>
@@ -586,6 +616,24 @@ WHERE
                         <VerticalAlign>Middle</VerticalAlign>
                       </Style>
                       <ZIndex>2</ZIndex>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox21">
+                      <Value>Место</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <FontFamily>Calibri</FontFamily>
+                        <VerticalAlign>Middle</VerticalAlign>
+                      </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -718,6 +766,26 @@ WHERE
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox23">
+                      <Value>=Fields!place.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <FontFamily>Calibri</FontFamily>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>5pt</PaddingLeft>
+                        <PaddingRight>5pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox52">
                       <Value>=Fields!count.Value</Value>
                       <CanGrow>true</CanGrow>
@@ -826,7 +894,7 @@ WHERE
                       <ZIndex>2</ZIndex>
                     </Textbox>
                   </ReportItems>
-                  <ColSpan>5</ColSpan>
+                  <ColSpan>6</ColSpan>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
@@ -880,7 +948,7 @@ WHERE
                       </Visibility>
                     </Textbox>
                   </ReportItems>
-                  <ColSpan>5</ColSpan>
+                  <ColSpan>6</ColSpan>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
@@ -932,7 +1000,7 @@ WHERE
                       <ZIndex>2</ZIndex>
                     </Textbox>
                   </ReportItems>
-                  <ColSpan>6</ColSpan>
+                  <ColSpan>7</ColSpan>
                 </TableCell>
               </TableCells>
             </TableRow>
@@ -962,29 +1030,29 @@ WHERE
                       <ZIndex>2</ZIndex>
                     </Textbox>
                   </ReportItems>
-                  <ColSpan>6</ColSpan>
+                  <ColSpan>7</ColSpan>
                 </TableCell>
               </TableCells>
             </TableRow>
           </TableRows>
         </Footer>
-        <Left>31.0pt</Left>
-        <Top>317.7pt</Top>
+        <Left>30.1pt</Left>
+        <Top>353.1pt</Top>
         <ZIndex>1</ZIndex>
       </Table>
       <List Name="List3">
         <Height>122.72pt</Height>
         <Width>535.30pt</Width>
-        <Left>24.8pt</Left>
-        <Top>467.6pt</Top>
+        <Left>24.0pt</Left>
+        <Top>502.8pt</Top>
         <ReportItems>
           <Textbox Name="Textbox24">
             <Height>16.50pt</Height>
             <Width>173.52pt</Width>
             <Value>Руководитель________________</Value>
             <ZIndex>1</ZIndex>
-            <Left>0.0pt</Left>
-            <Top>47.7pt</Top>
+            <Left>4.6pt</Left>
+            <Top>47.9pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -998,8 +1066,8 @@ WHERE
             <Width>121.77pt</Width>
             <Value>='(' + {leader_sign} + ')'</Value>
             <ZIndex>1</ZIndex>
-            <Left>156.8pt</Left>
-            <Top>47.7pt</Top>
+            <Left>158.3pt</Left>
+            <Top>47.9pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -1014,8 +1082,8 @@ WHERE
             <Width>118.77pt</Width>
             <Value>='(' + {buhgalter_sign} + ')'</Value>
             <ZIndex>2</ZIndex>
-            <Left>407.8pt</Left>
-            <Top>48.5pt</Top>
+            <Left>409.3pt</Left>
+            <Top>48.7pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -1030,8 +1098,8 @@ WHERE
             <Width>154.77pt</Width>
             <Value>Бухгалтер______________</Value>
             <ZIndex>2</ZIndex>
-            <Left>283.4pt</Left>
-            <Top>47.0pt</Top>
+            <Left>284.9pt</Left>
+            <Top>47.2pt</Top>
             <Style>
               <BorderStyle />
               <BorderColor />
@@ -1109,6 +1177,8 @@ WHERE
           <BorderStyle>
             <Default>Solid</Default>
           </BorderStyle>
+          <BorderColor />
+          <BorderWidth />
         </Style>
         <TableColumns>
           <TableColumn>
@@ -1204,6 +1274,84 @@ Iif(First({phone}, 'Organization') = null, '', '\nтел. ') + First({phone}, 'O
                         <FontFamily>Calibri</FontFamily>
                       </Style>
                       <CanGrow>true</CanGrow>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+            <TableRow>
+              <Height>14.9pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox16">
+                      <Value>Основание:</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>General</TextAlign>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <FontFamily>Calibri</FontFamily>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox17">
+                      <Value>="Договор №" + {contract_number} + " от " + {contract_date}</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>Left</TextAlign>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <FontFamily>Calibri</FontFamily>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+            <TableRow>
+              <Height>14.9pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox18">
+                      <Value>Период расчёта:</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>General</TextAlign>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <FontFamily>Calibri</FontFamily>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox19">
+                      <Value>=MonthName({month}) + " " + {year}</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                        <TextAlign>Left</TextAlign>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <FontFamily>Calibri</FontFamily>
+                      </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -1648,7 +1796,7 @@ Iif(First({phone}, 'Organization') = null, '', '\nтел. ') + First({phone}, 'O
       </ConnectionProperties>
     </DataSource>
   </DataSources>
-  <ReportParameters >
+  <ReportParameters>
     <ReportParameter Name="accrual_id">
       <DataType>Integer</DataType>
       <DefaultValue>
