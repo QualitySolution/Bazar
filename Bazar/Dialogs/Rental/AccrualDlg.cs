@@ -188,12 +188,7 @@ namespace Bazar.Dialogs.Rental
 					.GetNewNumber(UoW, Domain.Application.DocumentType.Invoice, Entity.Year);
 			}
 
-			//записываем таблицу услуг
-			foreach(var item in Entity.Items) {
-				UoW.Save(item);
-			}
-
-			UoW.Commit();
+			UoW.Save();
 
 			foreach(var pair in allPendingMeterReadings) {
 				foreach(PendingMeterReading unsavedReading in pair.Value) {
