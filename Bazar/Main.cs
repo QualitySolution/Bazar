@@ -86,9 +86,9 @@ namespace Bazar
 
 			//Скрипты создания базы
 			DBCreator.AddBaseScript (
-				new Version(2,3),
+				new Version(2,4),
 				"Чистая база",
-				"Bazar.SQLScripts.new-2.3.sql"
+				"Bazar.SQLScripts.new.sql"
 			);
 
 			//Настраиваем обновления
