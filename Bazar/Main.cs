@@ -123,11 +123,13 @@ namespace Bazar
 			PrepareTable.SqlSelect = "SELECT place_types.name as type, place_no, area , type_id FROM places " +
 			"LEFT JOIN place_types ON places.type_id = place_types.id ";
 			PrepareTable.DisplayString = "Место {0}-{1} с площадью {2} кв.м.";
-			PrepareTable.PrimaryKey = new  TableInfo.PrimaryKeys ("type_id", "place_no");
-			PrepareTable.DeleteItems.Add ("contracts", 
-			                              new TableInfo.DeleteDependenceItem ("WHERE contracts.place_type_id = @type_id AND contracts.place_no = @place_no", "@place_no", "@type_id"));
+			PrepareTable.PrimaryKey = new  TableInfo.PrimaryKeys ("id");
+			PrepareTable.DeleteItems.Add("accrual_pays",
+										  new TableInfo.DeleteDependenceItem("WHERE accrual_pays.place_id = @place_id ", "", "@place_id"));
+			PrepareTable.DeleteItems.Add ("contract_pays", 
+			                              new TableInfo.DeleteDependenceItem ("WHERE contract_pays.place_id = @place_id ", "", "@place_id"));
 			PrepareTable.DeleteItems.Add ("meters", 
-			                              new TableInfo.DeleteDependenceItem ("WHERE meters.place_type_id = @type_id AND meters.place_no = @place_no ", "@place_no", "@type_id"));
+			                              new TableInfo.DeleteDependenceItem ("WHERE meters.place_id = @place_id ", "", "@place_id"));
 			PrepareTable.DeleteItems.Add ("events", 
 			                              new TableInfo.DeleteDependenceItem ("WHERE place_type_id = @type_id AND place_no = @place_no AND lessee_id IS NULL", "@place_no", "@type_id"));
 			PrepareTable.ClearItems.Add ("events", 
