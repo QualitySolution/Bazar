@@ -3,7 +3,15 @@
   <subtitle type="text">Новости программы QS: База арендаторов</subtitle>
   <id>bazarnews</id>
   <rights type="text">Quality Solution 2015</rights>
-  <updated>2019-09-18T13:00:00+03:00</updated>
+  <updated>2020-01-01T13:00:00+03:00</updated>
+  <entry>
+    <id>urn:uuid:ba23548e-591d-4b39-b289-9a8d83c15d17</id>
+    <title type="text">QS: База арендаторов 2.4</title>
+    <updated>2020-01-01T13:00:00+03:00</updated>
+    <published>2020-01-01T13:00:00+03:00</published>
+    <link rel="alternate" href="http://bazar.qsolution.ru/?p=505" />
+    <summary>Долгожданный значительный релиз</summary>
+  </entry>
   <entry>
     <id>urn:uuid:f39c253c-5ede-4dad-9638-af69f60bf0a3</id>
     <title type="text">QS: База арендаторов 2.3.4</title>
