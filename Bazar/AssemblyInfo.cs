@@ -10,7 +10,7 @@ using QSProjectsLib;
 [assembly: AssemblyDescription("Программа позволяет вести учет арендаторов, кассы и т.п.")]
 [assembly: AssemblyCompany("Quality Solution")]
 [assembly: AssemblyProduct("QS: База арендаторов")]
-[assembly: AssemblyCopyright("Quality Solution 2019")]
+[assembly: AssemblyCopyright("Quality Solution 2020")]
 [assembly: AssemblyLogoIcon("Bazar.Icons.logo.png")]
 [assembly: AssemblySupport("", true, "MySQL")]
 [assembly: AssemblyAppWebsite("http://bazar.qsolution.ru/")]
