@@ -15,8 +15,6 @@ using NLog;
 using QS.Dialog.GtkUI;
 using QS.DomainModel.Entity;
 using QS.DomainModel.UoW;
-using QS.Journal.GtkUI;
-using QS.Project.Services.GtkUI;
 using QSProjectsLib;
 
 namespace Bazar.Dialogs.Rental
@@ -491,7 +489,6 @@ namespace Bazar.Dialogs.Rental
 		}
 
 		ContractItem[] SetPlaceItems;
-		Dialog SelectWindow;
 
 		protected void OnButtonPlaceSetClicked(object sender, EventArgs e)
 		{
@@ -499,18 +496,10 @@ namespace Bazar.Dialogs.Rental
 			if(!SetPlaceItems.Any(x => x.Service?.PlaceSet == PlaceSetForService.Allowed || x.Service?.PlaceSet == PlaceSetForService.Required))
 				return;
 
-			var viewModel = new PlacesJournalViewModel(UnitOfWorkFactory.GetDefaultFactory, new GtkInteractiveService());
+			var viewModel = MainClass.MainWin.NavigationManager.OpenViewModel<PlacesJournalViewModel>(null).ViewModel;
 			viewModel.SelectionMode = QS.Project.Journal.JournalSelectionMode.Single;
 			viewModel.OnSelectResult += ViewModel_OnSelectResult;
-
-			var view = new JournalView(viewModel);
-			SelectWindow = new Gtk.Dialog("Выберите место", this, DialogFlags.Modal);
-			SelectWindow.SetDefaultSize(800, 500);
-			SelectWindow.VBox.Add(view);
-			view.Show();
-			SelectWindow.Show();
-			SelectWindow.Run();
-			SelectWindow.Destroy();
+			viewModel.Title = "Выберите место";
 		}
 
 		void ViewModel_OnSelectResult(object sender, QS.Project.Journal.JournalSelectedEventArgs e)
@@ -520,7 +509,6 @@ namespace Bazar.Dialogs.Rental
 				if(item.Service != null && item.Service.PlaceSet != PlaceSetForService.Prohibited)
 					item.Place = place;
 			}
-			SelectWindow.Respond(ResponseType.Ok);
 		}
 
 		protected void OnTreeviewServicesRowActivated(object o, RowActivatedArgs args)

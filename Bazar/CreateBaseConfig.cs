@@ -93,6 +93,7 @@ namespace Bazar
 			#region JournalViewModels
 			//Estate
 			builder.RegisterType<OrganizationJournalViewModel>().AsSelf();
+			builder.RegisterType<PlacesJournalViewModel>().AsSelf();
 			#endregion
 
 			AppDIContainer = builder.Build();

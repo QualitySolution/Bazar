@@ -6,6 +6,7 @@ using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Transform;
 using QS.DomainModel.UoW;
+using QS.Navigation;
 using QS.Project.Journal;
 using QS.Project.Journal.DataLoader;
 using QS.Project.Journal.Search;
@@ -15,7 +16,7 @@ namespace Bazar.JournalViewModels.Estate
 {
 	public class PlacesJournalViewModel : JournalViewModelBase
 	{
-		public PlacesJournalViewModel(IUnitOfWorkFactory unitOfWorkFactory, IInteractiveService interactiveService) : base(unitOfWorkFactory, interactiveService)
+		public PlacesJournalViewModel(IUnitOfWorkFactory unitOfWorkFactory, IInteractiveService interactiveService, INavigationManager navigation) : base(unitOfWorkFactory, interactiveService, navigation)
 		{
 
 			var dataLoader = new ThreadDataLoader<PlaceJournalNode>(unitOfWorkFactory);

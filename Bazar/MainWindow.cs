@@ -19,7 +19,7 @@ public partial class MainWindow : Gtk.Window
 	AccelGroup grup;
 
 	private ILifetimeScope AutofacScope = MainClass.AppDIContainer.BeginLifetimeScope();
-	private GtkWindowsNavigationManager NavigationManager;
+	public GtkWindowsNavigationManager NavigationManager;
 
 	public MainWindow() : base(Gtk.WindowType.Toplevel)
 	{
