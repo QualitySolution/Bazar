@@ -17,7 +17,7 @@ namespace Bazar.Domain.Rental
 		NominativePlural = "начисления",
 		Nominative = "начисление"
 	)]
-	public class Accrual : PropertyChangedBase, IDomainObject, IValidatableObject
+	public class Accrual : BusinessObjectBase<Accrual>, IDomainObject, IValidatableObject
 	{
 		#region Свойства
 
@@ -154,6 +154,13 @@ namespace Bazar.Domain.Rental
 				if(item.Service?.PlaceSet == PlaceSetForService.Prohibited && item.Place != null)
 					yield return new ValidationResult($"Для услуги {item.Service.Name} запрещено указывать место.", new[] { nameof(Items) });
 			}
+
+			if(Date.HasValue) {
+				var existAccrual = AccrualRepository.GetAccrual(UoW, Contract.Id, Date.Value);
+				if(existAccrual != null && existAccrual.Id != Id)
+					yield return new ValidationResult($"На дату {Date:d} для договора {Contract.Number} уже есть начисление.", new[] { nameof(Date) });
+			}
+
 		}
 
 		#endregion

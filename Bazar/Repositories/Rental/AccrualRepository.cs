@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bazar.Domain.Rental;
 using QS.DomainModel.UoW;
 
@@ -16,6 +17,13 @@ namespace Bazar.Repositories.Rental
 			return uow.Session.QueryOver<Accrual>()
 				.Where(x => x.InvoiceNumber == invoiceNumber && x.Year == year)
 				.Where(x => x.Id != exludeId)
+				.SingleOrDefault();
+		}
+
+		public static Accrual GetAccrual(IUnitOfWork uow, int contractId, DateTime date)
+		{
+			return uow.Session.QueryOver<Accrual>()
+				.Where(x => x.Date == date && x.Contract.Id == contractId)
 				.SingleOrDefault();
 		}
 	}
