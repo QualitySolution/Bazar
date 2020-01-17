@@ -424,6 +424,11 @@ namespace Bazar.Dialogs.Rental
 
 		void Selection_Changed(object sender, EventArgs e)
 		{
+			TableButtonsSensetive();
+		}
+
+		private void TableButtonsSensetive()
+		{
 			bool isSelect = treeviewServices.Selection.CountSelectedRows() >= 1;
 			buttonDelService.Sensitive = isSelect;
 
@@ -436,6 +441,7 @@ namespace Bazar.Dialogs.Rental
 		{
 			TestCanSave();
 			CalculateServiceSum();
+			TableButtonsSensetive();
 		}
 
 		protected void OnButtonAddServiceClicked(object sender, EventArgs e)
