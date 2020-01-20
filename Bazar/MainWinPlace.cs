@@ -4,6 +4,7 @@ using Bazar.Dialogs.Estate;
 using Bazar.Dialogs.Rental;
 using Gtk;
 using MySql.Data.MySqlClient;
+using QS.Utilities.Text;
 using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
@@ -193,7 +194,7 @@ public partial class MainWindow : Gtk.Window
 		if (oa == null)
 			return -1;
 
-		return StringWorks.NaturalStringComparer.Compare (oa, ob);
+		return NaturalStringComparer.CompareStrings (oa, ob);
 	}
 
 	protected virtual void OnEntryPlaceNumChanged (object sender, System.EventArgs e)
