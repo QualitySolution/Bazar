@@ -61,7 +61,7 @@ namespace Bazar.Domain.Rental
 			set { SetField(ref month, value); }
 		}
 
-		private uint year;
+		private uint year = (uint)DateTime.Today.Year;
 
 		[Display(Name = "Год")]
 		public virtual uint Year {
@@ -133,11 +133,11 @@ namespace Bazar.Domain.Rental
 			foreach(var contractItem in ContractRepository.GetContractItems(uow, Contract.Id)) {
 				var accrualItem = new AccrualItem() {
 					Accrual = this,
-					Amount = contractItem.Amount,
+					Amount = contractItem.Service.CalculateIncompleteAmount(contractItem.Amount, Month, Year, contractItem.Contract),
 					Cash = contractItem.Cash,
-					Place = contractItem.Place,
+					Place_NhOnly = contractItem.Place, //Чтобы не пресчитывало количество
 					Price = contractItem.Price,
-					Service = contractItem.Service
+					Service_NhOnly = contractItem.Service //Чтобы не пресчитывало количество
 				};
 				ObservableItems.Add(accrualItem);
 			}

@@ -95,6 +95,11 @@ namespace Bazar.Domain.Rental
 
 		public virtual string ValidityText => BeginDate.ToShortDateString() + "—" + (CancelDate ?? EndDate).ToShortDateString();
 
+		/// <summary>
+		/// Дата закрытия договора, если договор досрочно расторгнут то вернется дата расторжения, если нет окончания.
+		/// </summary>
+		public virtual DateTime CloseDate => CancelDate ?? EndDate;
+
 		#endregion
 
 		public static IEnumerable<ValidationResult> Validate(IList<ContractItem> Items)

@@ -32,7 +32,7 @@ namespace Bazar.Domain.Rental
 			set {
 				if(SetField(ref service, value)) {
 					if(Service != null && Service.DependOnArea && Place != null)
-						Amount = Place.Area;
+						Amount = Service.CalculateIncompleteAmount(Place.Area, Accrual.Month, Accrual.Year, Accrual.Contract);
 				}
 			}
 		}
@@ -45,7 +45,7 @@ namespace Bazar.Domain.Rental
 			set {
 				if(SetField(ref place, value)) {
 					if(Service != null && Service.DependOnArea && Place != null)
-						Amount = Place.Area;
+						Amount = Service.CalculateIncompleteAmount(Place.Area, Accrual.Month, Accrual.Year, Accrual.Contract);
 				}
 			}
 		}

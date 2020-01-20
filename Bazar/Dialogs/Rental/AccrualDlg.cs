@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using bazar;
 using Bazar.Dialogs.Payments;
@@ -19,9 +20,9 @@ using NLog;
 using QS.Dialog.GtkUI;
 using QS.DomainModel.Entity;
 using QS.DomainModel.UoW;
-using QS.Journal.GtkUI;
 using QS.Project.Repositories;
 using QS.Project.Services.GtkUI;
+using QS.Utilities.Text;
 using QS.Validation.GtkUI;
 using QSProjectsLib;
 using QSWidgetLib;
@@ -65,13 +66,19 @@ namespace Bazar.Dialogs.Rental
 		void ConfigureDlg()
 		{
 			this.Build();
-			MainClass.ComboAccrualYearsFill(comboAccuralYear);
 
 			CachedMeters = new CachedMetersRepository(UoW);
 
 			dateAccrual.Binding.AddBinding(Entity, e => e.Date, w => w.DateOrNull).InitializeFromSource();
 			yentryInvoceNumber.Binding.AddBinding(Entity, e => e.InvoiceNumber, w => w.Text, new UintToStringConverter()).InitializeFromSource();
 			ycheckInvoiceAuto.Sensitive = Entity.InvoiceNumber == null;
+
+			var df = CultureInfo.CurrentUICulture.DateTimeFormat;
+			comboAccrualMonth.SetRenderTextFunc<uint>(x => df.MonthNames[x-1].StringToTitleCase());
+			comboAccrualMonth.ItemsList = Enumerable.Range(1, 12).Select(x => (uint)x).ToList();
+			comboAccrualMonth.Binding.AddBinding(Entity, e => e.Month, w => w.SelectedItem).InitializeFromSource();
+
+			yspinYear.Binding.AddBinding(Entity, e => e.Year, w => w.ValueAsUint).InitializeFromSource();
 
 			treeviewServices.ColumnsConfig = ColumnsConfigFactory.Create<AccrualItem>()
 				.AddColumn("Наименованиe").MinWidth(180)
@@ -129,12 +136,9 @@ namespace Bazar.Dialogs.Rental
 			entryUser.Text = Entity.User.Name;
 			textviewComments.Buffer.Text = Entity.Comments;
 
-			comboAccrualMonth.Active = (int)Entity.Month;
-			ListStoreWorks.SearchListStore ((ListStore)comboAccuralYear.Model, Entity.Year.ToString(), out TreeIter iter);
-			comboAccuralYear.SetActiveIter (iter);
 			if(Entity.Contract != null)
 			{
-				if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, Entity.Contract.Id, out iter))
+				if(ListStoreWorks.SearchListStore((ListStore)comboContract.Model, Entity.Contract.Id, out TreeIter iter))
 				{
 					comboContract.SetActiveIter (iter);
 					comboContract.Sensitive = false;
@@ -163,8 +167,6 @@ namespace Bazar.Dialogs.Rental
 		{
 			logger.Info("Запись начисления...");
 
-			Entity.Month = (uint)comboAccrualMonth.Active;
-			Entity.Year = uint.Parse(comboAccuralYear.ActiveText);
 			Entity.Comments = textviewComments.Buffer.Text;
 
 			Entity.Paid = Entity.AccrualTotal - IncomeTotal <= 0;
@@ -245,15 +247,15 @@ namespace Bazar.Dialogs.Rental
 
 		protected void OnComboAccrualMonthChanged(object sender, EventArgs e)
 		{
-			if(comboAccrualMonth.Active > 0 && comboAccuralYear.Active >= 0)
-				MainClass.ComboContractFill(comboContract, comboAccrualMonth.Active, Convert.ToInt32(comboAccuralYear.ActiveText));
+			if(Entity.Month > 0)
+				MainClass.ComboContractFill(comboContract, (int)Entity.Month, (int)Entity.Year);
 			TestCanSave();
 		}
 
-		protected void OnComboAccuralYearChanged(object sender, EventArgs e)
+		protected void OnYspinYearValueChanged(object sender, EventArgs e)
 		{
-			if(comboAccrualMonth.Active > 0 && comboAccuralYear.Active >= 0)
-				MainClass.ComboContractFill(comboContract, comboAccrualMonth.Active, Convert.ToInt32(comboAccuralYear.ActiveText));
+			if(Entity.Month > 0)
+				MainClass.ComboContractFill(comboContract, (int)Entity.Month, (int)Entity.Year);
 			TestCanSave();
 		}
 
@@ -307,7 +309,7 @@ namespace Bazar.Dialogs.Rental
 		protected void TestCanSave ()
 		{
 			bool Contractok = comboContract.Active >= 0;
-			bool Monthok = comboAccrualMonth.Active > 0 && comboAccuralYear.Active >= 0;
+			bool Monthok = Entity.Month > 0;
 			bool SumOk = Entity.AccrualTotal > 0;
 			bool ServicesOk = Entity.Items.All(x => x.Service != null && x.Cash != null);
 			
@@ -511,7 +513,6 @@ namespace Bazar.Dialogs.Rental
 			decimal TotalDebt = 0;
 			int count = 0;
 			string DebtsText = "";
-			int year = Convert.ToInt32 (comboAccuralYear.ActiveText);
 			try {
 				MySqlCommand cmd = new MySqlCommand(sql, QSMain.connectionDB);
 				comboContract.GetActiveIter ( out TreeIter iter);
@@ -522,12 +523,12 @@ namespace Bazar.Dialogs.Rental
 				{
 					if(rdr.GetDecimal ("debt") <= 0)
 						continue;
-					if( rdr.GetInt32 ("year") > year  || ( rdr.GetInt32 ("year") == year && rdr.GetInt32 ("month") >= comboAccrualMonth.Active))
+					if( rdr.GetInt32 ("year") > Entity.Year  || ( rdr.GetInt32 ("year") == Entity.Year && rdr.GetInt32 ("month") >= Entity.Month))
 						continue;
 					if(DebtsText != "")
 						DebtsText += "\n";
 					DateTime Month = new DateTime(rdr.GetInt32 ("year"), rdr.GetInt32("month"), 1);
-					if(rdr.GetInt32 ("year") == year)
+					if(rdr.GetInt32 ("year") == Entity.Year)
 					{
 						DebtsText += String.Format ("{0:MMMM} = <span foreground=\"red\">{1:C}</span>", Month, rdr.GetDecimal ("debt"));
 					}

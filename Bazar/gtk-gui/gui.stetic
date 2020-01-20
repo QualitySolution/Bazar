@@ -1517,7 +1517,7 @@
                             <property name="MemberName" />
                             <property name="Spacing">6</property>
                             <child>
-                              <widget class="Gtk.ComboBox" id="comboAccrualMonth">
+                              <widget class="Gamma.GtkWidgets.yComboBox" id="comboAccrualMonth">
                                 <property name="MemberName" />
                                 <property name="IsTextCombo">True</property>
                                 <property name="Items" translatable="yes">Все
@@ -10227,9 +10227,9 @@
                     <property name="MemberName" />
                     <property name="Spacing">6</property>
                     <child>
-                      <widget class="Gtk.ComboBox" id="comboAccrualMonth">
+                      <widget class="Gamma.Widgets.yListComboBox" id="comboAccrualMonth">
                         <property name="MemberName" />
-                        <property name="IsTextCombo">True</property>
+                        <property name="IsTextCombo">False</property>
                         <property name="Items" translatable="yes">Нет
 Январь
 Февраль
@@ -10243,6 +10243,8 @@
 Октябрь
 Ноябрь
 Декабрь</property>
+                        <property name="AddIfNotExist">False</property>
+                        <property name="DefaultFirst">False</property>
                         <signal name="Changed" handler="OnComboAccrualMonthChanged" />
                       </widget>
                       <packing>
@@ -10251,15 +10253,23 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Gtk.ComboBox" id="comboAccuralYear">
+                      <widget class="Gamma.GtkWidgets.ySpinButton" id="yspinYear">
                         <property name="MemberName" />
-                        <property name="IsTextCombo">True</property>
-                        <property name="Items" translatable="yes" />
-                        <signal name="Changed" handler="OnComboAccuralYearChanged" />
+                        <property name="CanFocus">True</property>
+                        <property name="Lower">2000</property>
+                        <property name="Upper">2100</property>
+                        <property name="PageIncrement">10</property>
+                        <property name="StepIncrement">1</property>
+                        <property name="ClimbRate">1</property>
+                        <property name="Numeric">True</property>
+                        <property name="Value">2000</property>
+                        <property name="ValueAsDecimal">0</property>
+                        <property name="ValueAsInt">0</property>
+                        <signal name="ValueChanged" handler="OnYspinYearValueChanged" />
                       </widget>
                       <packing>
                         <property name="Position">1</property>
-                        <property name="AutoSize">True</property>
+                        <property name="AutoSize">False</property>
                         <property name="Expand">False</property>
                         <property name="Fill">False</property>
                       </packing>

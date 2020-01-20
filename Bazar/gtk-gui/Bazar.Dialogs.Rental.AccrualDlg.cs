@@ -12,9 +12,9 @@ namespace Bazar.Dialogs.Rental
 
 		private global::Gtk.HBox hbox23;
 
-		private global::Gtk.ComboBox comboAccrualMonth;
+		private global::Gamma.Widgets.yListComboBox comboAccrualMonth;
 
-		private global::Gtk.ComboBox comboAccuralYear;
+		private global::Gamma.GtkWidgets.ySpinButton yspinYear;
 
 		private global::Gtk.HBox hbox5;
 
@@ -163,29 +163,25 @@ namespace Bazar.Dialogs.Rental
 			this.hbox23.Name = "hbox23";
 			this.hbox23.Spacing = 6;
 			// Container child hbox23.Gtk.Box+BoxChild
-			this.comboAccrualMonth = global::Gtk.ComboBox.NewText();
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Нет"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Январь"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Февраль"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Март"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Апрель"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Май"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Июнь"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Июль"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Август"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Сентябрь"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Октябрь"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Ноябрь"));
-			this.comboAccrualMonth.AppendText(global::Mono.Unix.Catalog.GetString("Декабрь"));
+			this.comboAccrualMonth = new global::Gamma.Widgets.yListComboBox();
 			this.comboAccrualMonth.Name = "comboAccrualMonth";
+			this.comboAccrualMonth.AddIfNotExist = false;
+			this.comboAccrualMonth.DefaultFirst = false;
 			this.hbox23.Add(this.comboAccrualMonth);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox23[this.comboAccrualMonth]));
 			w3.Position = 0;
 			// Container child hbox23.Gtk.Box+BoxChild
-			this.comboAccuralYear = global::Gtk.ComboBox.NewText();
-			this.comboAccuralYear.Name = "comboAccuralYear";
-			this.hbox23.Add(this.comboAccuralYear);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox23[this.comboAccuralYear]));
+			this.yspinYear = new global::Gamma.GtkWidgets.ySpinButton(2000D, 2100D, 1D);
+			this.yspinYear.CanFocus = true;
+			this.yspinYear.Name = "yspinYear";
+			this.yspinYear.Adjustment.PageIncrement = 10D;
+			this.yspinYear.ClimbRate = 1D;
+			this.yspinYear.Numeric = true;
+			this.yspinYear.Value = 2000D;
+			this.yspinYear.ValueAsDecimal = 0m;
+			this.yspinYear.ValueAsInt = 0;
+			this.hbox23.Add(this.yspinYear);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox23[this.yspinYear]));
 			w4.Position = 1;
 			w4.Expand = false;
 			w4.Fill = false;
@@ -761,7 +757,7 @@ namespace Bazar.Dialogs.Rental
 			this.comboContract.Changed += new global::System.EventHandler(this.OnComboContractChanged);
 			this.buttonOpenContract.Clicked += new global::System.EventHandler(this.OnButtonOpenContractClicked);
 			this.comboAccrualMonth.Changed += new global::System.EventHandler(this.OnComboAccrualMonthChanged);
-			this.comboAccuralYear.Changed += new global::System.EventHandler(this.OnComboAccuralYearChanged);
+			this.yspinYear.ValueChanged += new global::System.EventHandler(this.OnYspinYearValueChanged);
 			this.buttonMakePayment.Clicked += new global::System.EventHandler(this.OnButtonMakePaymentClicked);
 			this.buttonFillService.Clicked += new global::System.EventHandler(this.OnButtonFillServiceClicked);
 			this.treeviewServices.RowActivated += new global::Gtk.RowActivatedHandler(this.OnTreeviewServicesRowActivated);

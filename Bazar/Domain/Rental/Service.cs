@@ -78,6 +78,23 @@ namespace Bazar.Domain.Rental
 			set => SetField(ref placeOccupy, value);
 		}
 
+		#endregion
+
+		#region Методы
+
+		public virtual decimal CalculateIncompleteAmount(decimal amount, uint month, uint year, Contract contract)
+		{
+			if(!IncompleteMonth)
+				return amount;
+
+			DateTime BeginOfMonth = new DateTime((int)year, (int)month, 1);
+			DateTime EndOfMonth = new DateTime((int)year, (int)month, DateTime.DaysInMonth((int)year, (int)month));
+			int activeDays = (EndOfMonth > contract.CloseDate ? contract.CloseDate : EndOfMonth).Subtract
+						(BeginOfMonth > contract.BeginDate ? BeginOfMonth : contract.BeginDate).Days + 1;
+
+			var factor = (decimal)activeDays / DateTime.DaysInMonth((int)year, (int)month);
+			return amount * factor;
+		}
 
 		#endregion
 	}
