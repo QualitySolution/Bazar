@@ -1517,7 +1517,7 @@
                             <property name="MemberName" />
                             <property name="Spacing">6</property>
                             <child>
-                              <widget class="Gamma.GtkWidgets.yComboBox" id="comboAccrualMonth">
+                              <widget class="Gtk.ComboBox" id="comboAccrualMonth">
                                 <property name="MemberName" />
                                 <property name="IsTextCombo">True</property>
                                 <property name="Items" translatable="yes">Все
