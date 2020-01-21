@@ -106,16 +106,16 @@ namespace Bazar.Dialogs.Estate
 			w6.XOptions = ((global::Gtk.AttachOptions)(4));
 			w6.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table1.Gtk.Table+TableChild
-			this.yspinKilowattFactor = new global::Gamma.GtkWidgets.ySpinButton(0D, 100D, 1D);
+			this.yspinKilowattFactor = new global::Gamma.GtkWidgets.ySpinButton(0D, 100D, 0.1D);
 			this.yspinKilowattFactor.CanFocus = true;
 			this.yspinKilowattFactor.Name = "yspinKilowattFactor";
-			this.yspinKilowattFactor.Adjustment.PageIncrement = 10D;
+			this.yspinKilowattFactor.Adjustment.PageIncrement = 1D;
 			this.yspinKilowattFactor.ClimbRate = 1D;
 			this.yspinKilowattFactor.Digits = ((uint)(3));
 			this.yspinKilowattFactor.Numeric = true;
 			this.yspinKilowattFactor.Value = 1D;
 			this.yspinKilowattFactor.ValueAsDecimal = 0m;
-			this.yspinKilowattFactor.ValueAsInt = 0;
+			this.yspinKilowattFactor.ValueAsInt = 1;
 			this.table1.Add(this.yspinKilowattFactor);
 			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.table1[this.yspinKilowattFactor]));
 			w7.TopAttach = ((uint)(2));
