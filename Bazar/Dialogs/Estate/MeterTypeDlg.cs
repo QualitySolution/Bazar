@@ -126,7 +126,7 @@ namespace Bazar.Dialogs.Estate
 			if(NewItem)
 			{
 				sql = "INSERT INTO meter_types (name, reading_ratio) " +
-					"VALUES (@name)";
+					"VALUES (@name, @reading_ratio)";
 			}
 			else
 			{
