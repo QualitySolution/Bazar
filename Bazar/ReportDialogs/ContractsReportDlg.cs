@@ -18,7 +18,7 @@ namespace bazar
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
 		{
-			string param = "org_id=" + ComboWorks.GetActiveId (comboOrg);
+			string param = "org_id=" + ComboWorks.GetActiveId(comboOrg) + "&active=" + (radiobuttonActive.Active ? "1" : "0");
 			ViewReportExt.Run ("Contracts", param);
 		}
 	}
