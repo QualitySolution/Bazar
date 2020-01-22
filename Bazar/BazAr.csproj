@@ -114,6 +114,7 @@
     <EmbeddedResource Include="SQLScripts\Update 2.3.1.sql" />
     <EmbeddedResource Include="SQLScripts\2.3.4.sql" />
     <EmbeddedResource Include="SQLScripts\2.4.sql" />
+    <EmbeddedResource Include="SQLScripts\2.4.2.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
