@@ -247,7 +247,7 @@ namespace bazar
 				                               AccrualRowsFilter.GetValue (iter, 6),
 				                               IncomeName,
 				                               AccrualRowsFilter.GetValue (iter, 2),
-				                               0,
+				                               0m,
 				                               AccrualRowsFilter.GetValue (iter, 4));
 				AccrualRowsFilter.Refilter ();
 			}
