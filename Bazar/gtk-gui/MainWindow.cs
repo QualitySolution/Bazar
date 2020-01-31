@@ -465,6 +465,8 @@ public partial class MainWindow
 
 	private global::Gtk.Button buttonRefreshTable;
 
+	private global::Gtk.Button buttonPrint;
+
 	private global::Gtk.Statusbar statusbar1;
 
 	private global::Gtk.Label labelUser;
@@ -2533,11 +2535,26 @@ public partial class MainWindow
 		w204.Position = 4;
 		w204.Expand = false;
 		w204.Fill = false;
+		// Container child hbox17.Gtk.Box+BoxChild
+		this.buttonPrint = new global::Gtk.Button();
+		this.buttonPrint.CanFocus = true;
+		this.buttonPrint.Name = "buttonPrint";
+		this.buttonPrint.UseUnderline = true;
+		this.buttonPrint.Label = global::Mono.Unix.Catalog.GetString("Печать реестра");
+		global::Gtk.Image w205 = new global::Gtk.Image();
+		w205.Pixbuf = global::Stetic.IconLoader.LoadIcon(this, "gtk-print", global::Gtk.IconSize.Menu);
+		this.buttonPrint.Image = w205;
+		this.hbox17.Add(this.buttonPrint);
+		global::Gtk.Box.BoxChild w206 = ((global::Gtk.Box.BoxChild)(this.hbox17[this.buttonPrint]));
+		w206.PackType = ((global::Gtk.PackType)(1));
+		w206.Position = 5;
+		w206.Expand = false;
+		w206.Fill = false;
 		this.vbox1.Add(this.hbox17);
-		global::Gtk.Box.BoxChild w205 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.hbox17]));
-		w205.Position = 2;
-		w205.Expand = false;
-		w205.Fill = false;
+		global::Gtk.Box.BoxChild w207 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.hbox17]));
+		w207.Position = 2;
+		w207.Expand = false;
+		w207.Fill = false;
 		// Container child vbox1.Gtk.Box+BoxChild
 		this.statusbar1 = new global::Gtk.Statusbar();
 		this.statusbar1.Name = "statusbar1";
@@ -2548,34 +2565,34 @@ public partial class MainWindow
 		this.labelUser.Name = "labelUser";
 		this.labelUser.LabelProp = global::Mono.Unix.Catalog.GetString("Пользователь");
 		this.statusbar1.Add(this.labelUser);
-		global::Gtk.Box.BoxChild w206 = ((global::Gtk.Box.BoxChild)(this.statusbar1[this.labelUser]));
-		w206.Position = 0;
-		w206.Expand = false;
-		w206.Fill = false;
+		global::Gtk.Box.BoxChild w208 = ((global::Gtk.Box.BoxChild)(this.statusbar1[this.labelUser]));
+		w208.Position = 0;
+		w208.Expand = false;
+		w208.Fill = false;
 		// Container child statusbar1.Gtk.Box+BoxChild
 		this.labelStatus = new global::Gtk.Label();
 		this.labelStatus.Name = "labelStatus";
 		this.labelStatus.LabelProp = global::Mono.Unix.Catalog.GetString("Ок");
 		this.statusbar1.Add(this.labelStatus);
-		global::Gtk.Box.BoxChild w207 = ((global::Gtk.Box.BoxChild)(this.statusbar1[this.labelStatus]));
-		w207.Position = 2;
-		w207.Expand = false;
-		w207.Fill = false;
+		global::Gtk.Box.BoxChild w209 = ((global::Gtk.Box.BoxChild)(this.statusbar1[this.labelStatus]));
+		w209.Position = 2;
+		w209.Expand = false;
+		w209.Fill = false;
 		// Container child statusbar1.Gtk.Box+BoxChild
 		this.labelSum = new global::Gtk.Label();
 		this.labelSum.Name = "labelSum";
 		this.labelSum.LabelProp = global::Mono.Unix.Catalog.GetString("Суммарная площадь: 0 м<sup>2</sup>");
 		this.labelSum.UseMarkup = true;
 		this.statusbar1.Add(this.labelSum);
-		global::Gtk.Box.BoxChild w208 = ((global::Gtk.Box.BoxChild)(this.statusbar1[this.labelSum]));
-		w208.Position = 3;
-		w208.Expand = false;
-		w208.Fill = false;
+		global::Gtk.Box.BoxChild w210 = ((global::Gtk.Box.BoxChild)(this.statusbar1[this.labelSum]));
+		w210.Position = 3;
+		w210.Expand = false;
+		w210.Fill = false;
 		this.vbox1.Add(this.statusbar1);
-		global::Gtk.Box.BoxChild w209 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.statusbar1]));
-		w209.Position = 3;
-		w209.Expand = false;
-		w209.Fill = false;
+		global::Gtk.Box.BoxChild w211 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.statusbar1]));
+		w211.Position = 3;
+		w211.Expand = false;
+		w211.Fill = false;
 		this.Add(this.vbox1);
 		if ((this.Child != null))
 		{
@@ -2583,6 +2600,7 @@ public partial class MainWindow
 		}
 		this.DefaultWidth = 875;
 		this.DefaultHeight = 590;
+		this.buttonPrint.Hide();
 		this.Show();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
 		this.Action10.Activated += new global::System.EventHandler(this.OnAction10Activated);
@@ -2708,6 +2726,7 @@ public partial class MainWindow
 		this.buttonOpen.Clicked += new global::System.EventHandler(this.OnButtonViewClicked);
 		this.buttonAdd.Clicked += new global::System.EventHandler(this.OnButtonAddClicked);
 		this.buttonDel.Clicked += new global::System.EventHandler(this.OnButtonDelClicked);
+		this.buttonPrint.Clicked += new global::System.EventHandler(this.OnButtonPrintClicked);
 		this.buttonRefreshTable.Clicked += new global::System.EventHandler(this.OnButtonRefreshTableClicked);
 	}
 }

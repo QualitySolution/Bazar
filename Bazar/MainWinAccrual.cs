@@ -264,6 +264,28 @@ public partial class MainWindow : Gtk.Window
 	{
 		UpdateAccrual ();
 	}
+
+	protected void OnButtonPrintClicked(object sender, EventArgs e)
+	{
+		int month = comboAccrualMonth.Active > 0 ? comboAccrualMonth.Active : -1;
+		string year;
+		if(comboAccuralYear.ActiveText == NameOf2YearOption)
+			year = String.Format("{0:yyyy},{1:yyyy}", DateTime.Today, DateTime.Today.AddYears(-1));
+		else if(comboAccuralYear.ActiveText != NameOfAllOption)
+			year = comboAccuralYear.ActiveText;
+		else year = "-1";
+
+		int cash_id = comboAccrualCash.Active > 0 ? ComboWorks.GetActiveId(comboAccrualCash) : -1;
+		int income_id = comboAccrualItem.Active > 0 ? ComboWorks.GetActiveId(comboAccrualItem) : -1;
+		int org_id;
+		if(comboAccrualOrg.GetActiveIter(out TreeIter iter) && comboAccrualOrg.Active > 0)
+			org_id = (int)comboAccrualOrg.Model.GetValue(iter, 1);
+		else
+			org_id = -1;
+
+		string param = $"year={year}&month={month}&cash_id={cash_id}&income_id={income_id}&org_id={org_id}";
+		ViewReportExt.Run("Accruals", param);
+	}
 }
 
 public class AccrualListEntryDTO

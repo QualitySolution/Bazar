@@ -389,6 +389,8 @@ public partial class MainWindow : Gtk.Window
 		default:
 			break;
 		}
+
+		buttonPrint.Visible = notebookMain.CurrentPage == 3;
 	}
 
 
