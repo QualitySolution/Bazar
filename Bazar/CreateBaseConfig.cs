@@ -20,6 +20,7 @@ using QS.Project.Services.GtkUI;
 using QS.Services;
 using QS.Validation;
 using QS.Validation.GtkUI;
+using QS.ViewModels;
 using QS.Views.Resolve;
 using QSProjectsLib;
 
@@ -84,16 +85,14 @@ namespace Bazar
 				).As<IGtkViewResolver>();
 			#endregion
 
-			#region ViewModels
-			//Estate
-			builder.RegisterType<OrganizationViewModel>().AsSelf();
+			#region Журналы
+			builder.RegisterType<OneEntrySearchView>().Named<Gtk.Widget>("GtkJournalSearchView");
 			#endregion
 
-			builder.RegisterType<OneEntrySearchView>().Named<Gtk.Widget>("GtkJournalSearchView");
-			#region JournalViewModels
-			//Estate
-			builder.RegisterType<OrganizationJournalViewModel>().AsSelf();
-			builder.RegisterType<PlacesJournalViewModel>().AsSelf();
+			#region ViewModelsЫ
+			builder.RegisterAssemblyTypes(System.Reflection.Assembly.GetAssembly(typeof(OrganizationViewModel)))
+				.Where(t => t.IsAssignableTo<ViewModelBase>() && t.Name.EndsWith("ViewModel"))
+				.AsSelf();
 			#endregion
 
 			AppDIContainer = builder.Build();
