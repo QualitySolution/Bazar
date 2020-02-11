@@ -268,12 +268,13 @@ public partial class MainWindow : Gtk.Window
 	protected void OnButtonPrintClicked(object sender, EventArgs e)
 	{
 		int month = comboAccrualMonth.Active > 0 ? comboAccrualMonth.Active : -1;
-		string year;
-		if(comboAccuralYear.ActiveText == NameOf2YearOption)
-			year = String.Format("{0:yyyy},{1:yyyy}", DateTime.Today, DateTime.Today.AddYears(-1));
+		int year = -1, year2 =-1;
+		if(comboAccuralYear.ActiveText == NameOf2YearOption) {
+			year = DateTime.Today.Year;
+			year2 = DateTime.Today.Year - 1;
+		}
 		else if(comboAccuralYear.ActiveText != NameOfAllOption)
-			year = comboAccuralYear.ActiveText;
-		else year = "-1";
+			year = int.Parse(comboAccuralYear.ActiveText);
 
 		int cash_id = comboAccrualCash.Active > 0 ? ComboWorks.GetActiveId(comboAccrualCash) : -1;
 		int income_id = comboAccrualItem.Active > 0 ? ComboWorks.GetActiveId(comboAccrualItem) : -1;
@@ -283,7 +284,7 @@ public partial class MainWindow : Gtk.Window
 		else
 			org_id = -1;
 
-		string param = $"year={year}&month={month}&cash_id={cash_id}&income_id={income_id}&org_id={org_id}";
+		string param = $"year={year}&year2={year2}&month={month}&cash_id={cash_id}&income_id={income_id}&org_id={org_id}";
 		ViewReportExt.Run("Accruals", param);
 	}
 }
