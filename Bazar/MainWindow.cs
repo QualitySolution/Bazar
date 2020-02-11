@@ -7,6 +7,7 @@ using Bazar.Dialogs.Estate;
 using Bazar.Dialogs.Payments;
 using Bazar.Dialogs.Rental;
 using Bazar.JournalViewModels.Estate;
+using Bazar.ViewModels.ReportParameters;
 using Gtk;
 using QS.Navigation;
 using QS.Updater;
@@ -683,10 +684,7 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnAction33Activated(object sender, EventArgs e)
 	{
-		LesseeDebtsReport WinReport = new LesseeDebtsReport();
-		WinReport.Show();
-		WinReport.Run();
-		WinReport.Destroy();
+		NavigationManager.OpenViewModel<LesseeDebtsViewModel>(null);
 	}
 
 	protected void OnAction36Activated(object sender, EventArgs e)

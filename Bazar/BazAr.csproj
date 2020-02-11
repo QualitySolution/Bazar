@@ -149,8 +149,6 @@
     <Compile Include="gtk-gui\bazar.SeparationPayment.cs" />
     <Compile Include="SelectAccrualRow.cs" />
     <Compile Include="gtk-gui\bazar.SelectAccrualRow.cs" />
-    <Compile Include="ReportDialogs\LesseeDebtsReport.cs" />
-    <Compile Include="gtk-gui\bazar.LesseeDebtsReport.cs" />
     <Compile Include="ReportDialogs\DailyCashReport.cs" />
     <Compile Include="gtk-gui\bazar.DailyCashReport.cs" />
     <Compile Include="ReportDialogs\DocRegister.cs" />
@@ -252,6 +250,10 @@
     <Compile Include="Views\Estate\OrganizationView.cs" />
     <Compile Include="gtk-gui\Bazar.Views.Estate.OrganizationView.cs" />
     <Compile Include="JournalViewModels\Estate\OrganizationJournalViewModel.cs" />
+    <Compile Include="JournalViewModels\Rental\LesseeJournalViewModel.cs" />
+    <Compile Include="Views\ReportParameters\LesseeDebtsView.cs" />
+    <Compile Include="gtk-gui\Bazar.Views.ReportParameters.LesseeDebtsView.cs" />
+    <Compile Include="ViewModels\ReportParameters\LesseeDebtsViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -354,6 +356,9 @@
     <Folder Include="ViewModels\" />
     <Folder Include="ViewModels\Estate\" />
     <Folder Include="Views\Estate\" />
+    <Folder Include="JournalViewModels\Rental\" />
+    <Folder Include="ViewModels\ReportParameters\" />
+    <Folder Include="Views\ReportParameters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">

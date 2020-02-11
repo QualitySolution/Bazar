@@ -13,10 +13,13 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
+        <CommandText>SELECT accrual.id as id, accrual.month,
+    accrual.year,
+    accrual.date,
+ contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
  lessees.name as lessee, services.name as service, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
  (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt 
 FROM accrual 
@@ -40,7 +43,11 @@ WHERE sumtable.pay_id IS NOT NULL AND
 (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
 OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day)) 
 AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0 AND accrual_debt.debt &gt; 0
-AND (@org = 0 OR contracts.org_id = @org)</CommandText>
+AND (@org = 0 OR contracts.org_id = @org)
+AND (@lessee = -1 OR contracts.lessee_id = @lessee)
+    AND ((@month_from = -1 AND @year_from = -1) OR (accrual.month + accrual.year *12 &gt;= @month_from + @year_from * 12))
+    AND ((@month_to = -1 AND @year_to = -1) OR (accrual.month + accrual.year *12 &lt;= @month_to + @year_to * 12))    
+    ORDER BY lessees.name, accrual.year, accrual.month, accrual.date</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!Month</Value>
@@ -60,9 +67,24 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
           <QueryParameter Name="org">
             <Value>=Parameters!Org</Value>
           </QueryParameter>
+          <QueryParameter Name="lessee">
+            <Value>={?Lessee}</Value>
+          </QueryParameter>
+          <QueryParameter Name="month_from">
+            <Value>={?MonthFrom}</Value>
+          </QueryParameter>
+          <QueryParameter Name="month_to">
+            <Value>={?MonthTo}</Value>
+          </QueryParameter>
+          <QueryParameter Name="year_from">
+            <Value>={?YearFrom}</Value>
+          </QueryParameter>
+          <QueryParameter Name="year_to">
+            <Value>={?YearTo}</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
@@ -74,6 +96,10 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         <Field Name="year">
           <DataField>year</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
+        </Field>
+        <Field Name="date">
+          <DataField>date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="contract_no">
           <DataField>contract_no</DataField>
@@ -154,16 +180,16 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         </Style>
         <TableColumns>
           <TableColumn>
-            <Width>1.125in</Width>
+            <Width>60.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>54.7pt</Width>
+            <Width>98.2pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>1in</Width>
+            <Width>60.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>45.7pt</Width>
+            <Width>38.8pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>1.375in</Width>
@@ -533,8 +559,10 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                               <Default>Solid</Default>
                             </BorderStyle>
                             <PaddingLeft>2pt</PaddingLeft>
+                            <BorderColor  />
+                            <BorderWidth  />
                           </Style>
-                          <Value>=Fields!id.Value</Value>
+                          <Value>=Fields!id.Value + " от " + Format({date}, "d")</Value>
                         </Textbox>
                       </ReportItems>
                     </TableCell>
@@ -546,6 +574,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                               <Default>Solid</Default>
                             </BorderStyle>
                             <PaddingLeft>2pt</PaddingLeft>
+                            <BorderColor  />
+                            <BorderWidth  />
+                            <TextAlign >Center</TextAlign>
                           </Style>
                           <Value>=MonthName(Fields!month.Value)</Value>
                         </Textbox>
@@ -560,6 +591,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                             </BorderStyle>
                             <PaddingBottom>0pt</PaddingBottom>
                             <PaddingLeft>2pt</PaddingLeft>
+                            <TextAlign >Center</TextAlign>
+                            <BorderColor  />
+                            <BorderWidth  />
                           </Style>
                           <Value>=Fields!year.Value</Value>
                         </Textbox>
@@ -943,8 +977,8 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         <Width>182.74pt</Width>
         <Value>= "Напечатано: " + Globals!ExecutionTime</Value>
         <ZIndex>1</ZIndex>
-        <Left>399.60pt</Left>
-        <Top>2.25pt</Top>
+        <Left>394.8pt</Left>
+        <Top>2.3pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -1029,6 +1063,66 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
       <DefaultValue>
         <Values>
           <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="Lessee">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="MonthFrom">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="MonthTo">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="YearFrom">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="YearTo">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
         </Values>
       </DefaultValue>
       <Nullable>false</Nullable>

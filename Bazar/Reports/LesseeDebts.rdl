@@ -16,22 +16,57 @@
       <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-		<CommandText>SELECT accrual.id as id, month, year, contracts.number as contract_no, contracts.lessee_id as lessee_id, contracts.pay_day, 
- lessees.name as lessee, IFNULL(sumtable.sum, 0) as sum, IFNULL(paidtable.sum, 0) as paidsum,
- (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) as debt 
-FROM accrual 
-LEFT JOIN contracts ON contracts.id = contract_id 
-LEFT JOIN lessees ON contracts.lessee_id = lessees.id 
-LEFT JOIN (
-SELECT accrual_id, SUM(count * price) as sum FROM accrual_pays WHERE (@cash = 0 OR cash_id = @cash) GROUP BY accrual_id) as sumtable 
-ON sumtable.accrual_id = accrual.id 
-LEFT JOIN (
-SELECT accrual_id, SUM(sum) as sum FROM credit_slips WHERE (@cash = 0 OR cash_id = @cash) GROUP BY accrual_id) as paidtable 
-ON paidtable.accrual_id = accrual.id 
-WHERE (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month) 
-OR (accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day)) 
-AND (IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)) &gt; 0
-AND (@org = 0 OR contracts.org_id = @org)</CommandText>
+        <CommandText>SELECT
+    accrual.id AS id,
+    accrual.month,
+    accrual.year,
+    accrual.date,
+    contracts.number AS contract_no,
+    contracts.lessee_id AS lessee_id,
+    contracts.pay_day,
+    lessees.name AS lessee,
+    IFNULL(sumtable.sum, 0) AS sum,
+    IFNULL(paidtable.sum, 0) AS paidsum,
+    (
+        IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)
+    ) AS debt
+FROM
+    accrual
+LEFT JOIN contracts ON contracts.id = contract_id
+LEFT JOIN lessees ON contracts.lessee_id = lessees.id
+LEFT JOIN(
+    SELECT accrual_id,
+        SUM(accrual_pays.count * price) AS sum
+    FROM
+        accrual_pays
+    WHERE
+        (@cash = 0 OR cash_id = @cash)
+    GROUP BY
+        accrual_id
+) AS sumtable
+ON
+    sumtable.accrual_id = accrual.id
+LEFT JOIN(
+    SELECT accrual_id,
+        SUM(sum) AS sum
+    FROM
+        credit_slips
+    WHERE
+        (@cash = 0 OR cash_id = @cash)
+    GROUP BY
+        accrual_id
+) AS paidtable
+ON
+    paidtable.accrual_id = accrual.id
+WHERE
+    (accrual.year &lt; @year OR (accrual.year = @year AND accrual.month &lt; @month ) OR ( accrual.year = @year AND accrual.month = @month AND IFNULL(contracts.pay_day, 0) &lt; @day)
+    ) AND(
+        IFNULL(sumtable.sum, 0) - IFNULL(paidtable.sum, 0)
+    ) &gt; 0 AND( @org = 0 OR contracts.org_id = @org)
+    AND (@lessee = -1 OR contracts.lessee_id = @lessee)
+    AND ((@month_from = -1 AND @year_from = -1) OR (accrual.month + accrual.year *12 &gt;= @month_from + @year_from * 12))
+    AND ((@month_to = -1 AND @year_to = -1) OR (accrual.month + accrual.year *12 &lt;= @month_to + @year_to * 12))    
+    ORDER BY lessees.name, accrual.year, accrual.month, accrual.date</CommandText>
         <QueryParameters>
           <QueryParameter Name="month">
             <Value>=Parameters!Month</Value>
@@ -48,6 +83,21 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
           <QueryParameter Name="org">
             <Value>=Parameters!Org</Value>
           </QueryParameter>
+          <QueryParameter Name="lessee">
+            <Value>={?Lessee}</Value>
+          </QueryParameter>
+          <QueryParameter Name="month_from">
+            <Value>={?MonthFrom}</Value>
+          </QueryParameter>
+          <QueryParameter Name="month_to">
+            <Value>={?MonthTo}</Value>
+          </QueryParameter>
+          <QueryParameter Name="year_from">
+            <Value>={?YearFrom}</Value>
+          </QueryParameter>
+          <QueryParameter Name="year_to">
+            <Value>={?YearTo}</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
       <Fields >
@@ -63,6 +113,10 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
           <DataField>year</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
         </Field>
+        <Field Name="date">
+          <DataField>date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
         <Field Name="contract_no">
           <DataField>contract_no</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -70,6 +124,10 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         <Field Name="lessee_id">
           <DataField>lessee_id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
+        </Field>
+        <Field Name="pay_day">
+          <DataField>pay_day</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="lessee">
           <DataField>lessee</DataField>
@@ -138,19 +196,19 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         </Style>
         <TableColumns>
           <TableColumn>
-            <Width>1.125in</Width>
+            <Width>62.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>54.7pt</Width>
+            <Width>92.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>1in</Width>
+            <Width>63.7pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>45.7pt</Width>
+            <Width>41.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>1.375in</Width>
+            <Width>97.8pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>1in</Width>
@@ -519,13 +577,15 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="id">
-                      <Value>=Fields!id.Value</Value>
+                      <Value>=Fields!id.Value + " от " + Format({date}, "d")</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -542,6 +602,7 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                         <PaddingLeft>2pt</PaddingLeft>
                         <BorderColor />
                         <BorderWidth />
+                        <TextAlign>Center</TextAlign>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -556,6 +617,9 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -570,6 +634,8 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -822,8 +888,8 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
         <Width>182.74pt</Width>
         <Value>= "Напечатано: " + Globals!ExecutionTime</Value>
         <ZIndex>1</ZIndex>
-        <Left>399.60pt</Left>
-        <Top>2.25pt</Top>
+        <Left>394.0pt</Left>
+        <Top>2.3pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -834,16 +900,7 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
-  <DataSources>
-    <DataSource Name="DS1">
-      <ConnectionProperties>
-        <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>server=demo.qsolution.ru;user=demo;database=bazar;port=3306;password=demo;</ConnectString>
-        <IntegratedSecurity>false</IntegratedSecurity>
-      </ConnectionProperties>
-    </DataSource>
-  </DataSources>
-  <ReportParameters >
+  <ReportParameters>
     <ReportParameter Name="Day">
       <DataType>Integer</DataType>
       <Nullable>false</Nullable>
@@ -901,7 +958,77 @@ AND (@org = 0 OR contracts.org_id = @org)</CommandText>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Lessee">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="MonthFrom">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="MonthTo">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="YearFrom">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt />
+    </ReportParameter>
+    <ReportParameter Name="YearTo">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-1</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
       <Prompt />
     </ReportParameter>
   </ReportParameters>
+  <DataSources>
+    <DataSource Name="DS1">
+      <ConnectionProperties>
+        <DataProvider>MySQL.NET</DataProvider>
+        <ConnectString>server=demo.qsolution.ru;user=demo;database=bazar;port=3306;password=demo;</ConnectString>
+        <IntegratedSecurity>false</IntegratedSecurity>
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
 </Report>
