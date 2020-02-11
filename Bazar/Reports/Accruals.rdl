@@ -21,7 +21,7 @@
   <BottomMargin>5mm</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT
     accrual.id AS id,
@@ -91,7 +91,7 @@ ORDER BY
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="id">
           <DataField>id</DataField>
           <rd:TypeName>System.UInt32</rd:TypeName>
@@ -522,8 +522,14 @@ ORDER BY
                       </Value>
                       <Style>
                         <BorderStyle>
-                          <Default>Solid</Default>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
                         </BorderStyle>
+                        <BorderColor  />
+                        <BorderWidth  />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -535,8 +541,14 @@ ORDER BY
                       </Value>
                       <Style>
                         <BorderStyle>
-                          <Default>Solid</Default>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
                         </BorderStyle>
+                        <BorderColor  />
+                        <BorderWidth  />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -548,8 +560,14 @@ ORDER BY
                       </Value>
                       <Style>
                         <BorderStyle>
-                          <Default>Solid</Default>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
                         </BorderStyle>
+                        <BorderColor  />
+                        <BorderWidth  />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -561,8 +579,14 @@ ORDER BY
                       </Value>
                       <Style>
                         <BorderStyle>
-                          <Default>Solid</Default>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
                         </BorderStyle>
+                        <BorderColor  />
+                        <BorderWidth  />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -574,8 +598,14 @@ ORDER BY
                       </Value>
                       <Style>
                         <BorderStyle>
-                          <Default>Solid</Default>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
                         </BorderStyle>
+                        <BorderColor  />
+                        <BorderWidth  />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -583,12 +613,18 @@ ORDER BY
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox19">
-                      <Value>
-                      </Value>
+                      <Value>Итого:</Value>
                       <Style>
                         <BorderStyle>
-                          <Default>Solid</Default>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
                         </BorderStyle>
+                        <BorderColor  />
+                        <BorderWidth  />
+                        <TextAlign >Right</TextAlign>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -676,7 +712,7 @@ ORDER BY
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
-  <ReportParameters >
+  <ReportParameters>
     <ReportParameter Name="year">
       <DataType>Integer</DataType>
       <Nullable>false</Nullable>
