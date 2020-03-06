@@ -12209,6 +12209,7 @@
                 <property name="MemberName" />
                 <property name="CanFocus">True</property>
                 <property name="IsEditable">True</property>
+                <property name="MaxLength">45</property>
                 <property name="InvisibleChar">●</property>
                 <signal name="Changed" handler="OnEntryNameChanged" />
               </widget>
@@ -12316,7 +12317,7 @@
                 <property name="Numeric">True</property>
                 <property name="Value">1</property>
                 <property name="ValueAsDecimal">0</property>
-                <property name="ValueAsInt">0</property>
+                <property name="ValueAsInt">1</property>
               </widget>
               <packing>
                 <property name="TopAttach">2</property>
@@ -13647,6 +13648,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">Книжная</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
@@ -15062,7 +15064,6 @@
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Label" translatable="yes">Месяц</property>
-                    <property name="Active">True</property>
                     <property name="DrawIndicator">True</property>
                     <property name="HasLabel">True</property>
                     <property name="UseUnderline">True</property>

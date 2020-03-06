@@ -56,6 +56,7 @@ namespace bazar
 			this.entryName.CanFocus = true;
 			this.entryName.Name = "entryName";
 			this.entryName.IsEditable = true;
+			this.entryName.MaxLength = 45;
 			this.entryName.InvisibleChar = '●';
 			this.table1.Add(this.entryName);
 			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.table1[this.entryName]));
@@ -115,7 +116,7 @@ namespace bazar
 			this.yspinKilowattFactor.Numeric = true;
 			this.yspinKilowattFactor.Value = 1D;
 			this.yspinKilowattFactor.ValueAsDecimal = 0m;
-			this.yspinKilowattFactor.ValueAsInt = 0;
+			this.yspinKilowattFactor.ValueAsInt = 1;
 			this.table1.Add(this.yspinKilowattFactor);
 			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.table1[this.yspinKilowattFactor]));
 			w7.TopAttach = ((uint)(2));
