@@ -16,6 +16,10 @@ namespace bazar
 
 		private global::Gtk.TreeView treeviewMeters;
 
+		private global::Gtk.HBox hbox1;
+
+		private global::Gtk.CheckButton checkbuttonSaveZeroData;
+
 		private global::Gtk.HBox hbox2;
 
 		private global::Gtk.VBox vboxChilds;
@@ -91,8 +95,8 @@ namespace bazar
 			this.label9 = new global::Gtk.Label();
 			this.label9.Name = "label9";
 			this.label9.Xalign = 0F;
-			this.label9.LabelProp = global::Mono.Unix.Catalog.GetString("Вы не можете именять предыдущие значения счетчиков. Расчет доступен только\nдля пр" +
-					"осмотра. В этом режиме подключенные счетчики не учитываются.");
+			this.label9.LabelProp = global::Mono.Unix.Catalog.GetString("Вы не можете изменять предыдущие значения счетчиков. Расчет доступен только\nдля п" +
+					"росмотра. В этом режиме подключенные счетчики не учитываются.");
 			this.hboxMessage.Add(this.label9);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hboxMessage[this.label9]));
 			w3.Position = 1;
@@ -124,6 +128,25 @@ namespace bazar
 			w1.Add(this.GtkScrolledWindow);
 			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(w1[this.GtkScrolledWindow]));
 			w7.Position = 2;
+			// Container child dialog1_VBox.Gtk.Box+BoxChild
+			this.hbox1 = new global::Gtk.HBox();
+			this.hbox1.Name = "hbox1";
+			this.hbox1.Spacing = 6;
+			// Container child hbox1.Gtk.Box+BoxChild
+			this.checkbuttonSaveZeroData = new global::Gtk.CheckButton();
+			this.checkbuttonSaveZeroData.CanFocus = true;
+			this.checkbuttonSaveZeroData.Name = "checkbuttonSaveZeroData";
+			this.checkbuttonSaveZeroData.Label = global::Mono.Unix.Catalog.GetString("Сохранить данные с нулевым текущим показателем");
+			this.checkbuttonSaveZeroData.DrawIndicator = true;
+			this.checkbuttonSaveZeroData.UseUnderline = true;
+			this.hbox1.Add(this.checkbuttonSaveZeroData);
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.checkbuttonSaveZeroData]));
+			w8.Position = 0;
+			w1.Add(this.hbox1);
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(w1[this.hbox1]));
+			w9.Position = 3;
+			w9.Expand = false;
+			w9.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.hbox2 = new global::Gtk.HBox();
 			this.hbox2.Name = "hbox2";
