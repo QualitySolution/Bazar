@@ -357,7 +357,7 @@ namespace bazar
 				{
 					if(!ReadingListStore.IterIsValid (iter))
 						break;
-					if((int)ReadingListStore.GetValue(iter, 7) < 0)
+					if((int)ReadingListStore.GetValue(iter, 7) < 0 && (int)ReadingListStore.GetValue (iter, 3) != 0 && !checkbuttonSaveZeroData.Active)
 						continue; // Не записывать если дельта отрицательная
 					if((int)ReadingListStore.GetValue(iter, 7) == 0 && (int)ReadingListStore.GetValue(iter, 3) <= 0)
 						continue; // Не записывать если показания не введены
