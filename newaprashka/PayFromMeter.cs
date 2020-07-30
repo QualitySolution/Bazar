@@ -356,13 +356,15 @@ namespace bazar
 
 				do
 				{
-					if(!ReadingListStore.IterIsValid (iter))
+					if (!ReadingListStore.IterIsValid (iter))
 						break;
-					if((int)ReadingListStore.GetValue(iter, 7) < 0 && (int)ReadingListStore.GetValue (iter, 3) != 0 && !checkbuttonSaveZeroData.Active)
-						continue; // Не записывать если дельта отрицательная
-					if((int)ReadingListStore.GetValue(iter, 7) == 0 && (int)ReadingListStore.GetValue(iter, 3) <= 0)
-						continue; // Не записывать если показания не введены
-					
+
+					if(int.Parse(ReadingListStore.GetValue (iter, 2).ToString()) < 0)
+						continue; //Не записываем если текущие показатели меньше нуля
+
+					if (int.Parse (ReadingListStore.GetValue (iter, 2).ToString ()) == 0 && !checkbuttonSaveZeroData.Active)
+						continue; //Не записываем если введены нулевые текущие показатели и не поставлена галка
+
 					bool isNewReading = !((int)ReadingListStore.GetValue(iter, 3) > 0);
 					PendingMeterReading pendingReading = new PendingMeterReading(){
 						isNew=isNewReading,
