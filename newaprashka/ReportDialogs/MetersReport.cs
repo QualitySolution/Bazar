@@ -9,6 +9,7 @@ namespace bazar
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore MetersList;
+		ListStore ProvidersList;
 		ListStore monthModel;
 		ListStore quarterModel;
 
@@ -16,6 +17,7 @@ namespace bazar
 		{
 			this.Build ();
 			FillMeter();
+			FillProviders();
 			FillComboBox();
 		}
 
@@ -53,8 +55,35 @@ namespace bazar
 
 		void FillProviders()
         {
+			ProvidersList = new ListStore (typeof (int), typeof (bool), typeof (string));
 
-        }
+			CellRendererToggle CellSelect = new CellRendererToggle ();
+			CellSelect.Activatable = true;
+			CellSelect.Toggled += onCellSelectToggled_Providers;
+
+			treeviewProviders.AppendColumn ("Выб.", CellSelect, "active", 1);
+			treeviewProviders.AppendColumn ("Поставщик", new CellRendererText (), "text", 2);
+
+			treeviewProviders.Model = ProvidersList;
+
+			logger.Info ("Запрос поставщиков...");
+			string sql = "SELECT id, name FROM service_providers";
+			try {
+				MySqlCommand cmd = new MySqlCommand (sql, QSMain.connectionDB);
+
+				using (MySqlDataReader rdr = cmd.ExecuteReader ()) {
+					while (rdr.Read ()) {
+						ProvidersList.AppendValues (rdr.GetInt32 ("id"),
+													 false,
+													 rdr.GetString ("name")
+													 );
+					}
+				}
+				logger.Info ("Ok");
+			} catch (Exception ex) {
+				QSMain.ErrorMessageWithLog (this, "Ошибка получения поставщиков!", logger, ex);
+			}
+		}
 
 		void FillComboBox()
         {
@@ -80,12 +109,21 @@ namespace bazar
 
 		void onCellSelectToggled(object o, ToggledArgs args) 
 		{
+			SetToggled (o, args, MetersList);
+		}
+
+		void onCellSelectToggled_Providers (object o, ToggledArgs args)
+		{
+			SetToggled (o, args, ProvidersList);
+		}
+
+		void SetToggled(object o, ToggledArgs args, ListStore list)
+		{
 			TreeIter iter;
 
-			if (MetersList.GetIter (out iter, new TreePath(args.Path))) 
-			{
-				bool old = (bool) MetersList.GetValue(iter,1);
-				MetersList.SetValue(iter, 1, !old);
+			if (list.GetIter (out iter, new TreePath (args.Path))) {
+				bool old = (bool)list.GetValue (iter, 1);
+				list.SetValue (iter, 1, !old);
 			}
 		}
 
