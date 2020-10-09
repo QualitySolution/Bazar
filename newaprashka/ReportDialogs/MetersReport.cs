@@ -138,7 +138,7 @@ namespace bazar
 
 			param = param.TrimEnd (',');
 
-			param += "$providers=";
+			param += "&providers=";
 			foreach (object [] row in ProvidersList) {
 				if ((bool)row [1])
 					param += String.Format ("{0},", row [0]);
