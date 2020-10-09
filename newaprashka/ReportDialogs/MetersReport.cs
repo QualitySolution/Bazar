@@ -144,6 +144,9 @@ namespace bazar
 					param += String.Format ("{0},", row [0]);
 			}
 
+			param = param.TrimEnd (',');
+			param += GetPeriod ();
+
 			if (checkHandmade.Active)
 				if (radioLetter.Active)
 					ViewReportExt.Run ("MetersFill_vertical", param.TrimEnd (','));
@@ -174,19 +177,25 @@ namespace bazar
 			if (radioButtonMonth.Active) {
 				int month = comboPeriod.Active + 1;
 				int year = Convert.ToInt32 (comboYear.ActiveText);
-				args = "month=" + (comboPeriod.Active + 1).ToString () + "&year=" + comboYear.ActiveText;
-				int paymentMonth = month + 1;
-				int paymentYear = year;
-				if (paymentMonth > 12) {
-					paymentMonth %= 12;
-					paymentYear = year + 1;
-				}
-				args += "&paymentMonth=" + paymentMonth + "&paymentYear=" + paymentYear;
+				args = "&month=" + (comboPeriod.Active + 1).ToString () + "&year=" + comboYear.ActiveText;
 			} else if (radioButtonQuarter.Active) {
 				int quarter = comboPeriod.Active + 1;
+				switch (quarter) {
+				case 2:
+					quarter += 2;
+					break;
+				case 3:
+					quarter += 4;
+					break;
+				case 4:
+					quarter += 6;
+					break;
+				default:
+					break;
+				}
+				string period = $"{quarter}, {++quarter}, {++quarter}";
 				int year = Convert.ToInt32 (comboYear.ActiveText);
-				args = "quarter=" + quarter + "&year=" + year;
-				
+				args = "&month=" + period + "&year=" + year;
 			}
 			return args;
 		}
