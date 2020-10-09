@@ -135,6 +135,15 @@ namespace bazar
 				if ((bool) row [1])
 					param += String.Format ("{0},", row [0]);
 			}
+
+			param = param.TrimEnd (',');
+
+			param += "$providers=";
+			foreach (object [] row in ProvidersList) {
+				if ((bool)row [1])
+					param += String.Format ("{0},", row [0]);
+			}
+
 			if (checkHandmade.Active)
 				if (radioLetter.Active)
 					ViewReportExt.Run ("MetersFill_vertical", param.TrimEnd (','));
