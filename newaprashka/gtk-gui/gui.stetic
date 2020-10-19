@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
@@ -13777,6 +13777,7 @@
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
                         <property name="Group">group1</property>
+                        <signal name="Toggled" handler="OnRadiobuttonQuarterToggled" />
                       </widget>
                       <packing>
                         <property name="Position">0</property>
@@ -13955,7 +13956,7 @@
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
-                        <property name="Group">group1</property>
+                        <property name="Group">group2</property>
                       </widget>
                       <packing>
                         <property name="Position">0</property>
@@ -13972,7 +13973,7 @@
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
-                        <property name="Group">group1</property>
+                        <property name="Group">group2</property>
                       </widget>
                       <packing>
                         <property name="Position">1</property>
