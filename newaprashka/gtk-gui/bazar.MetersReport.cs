@@ -119,6 +119,7 @@ namespace bazar
 			this.hbox2.BorderWidth = ((uint)(3));
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.table1 = new global::Gtk.Table(((uint)(2)), ((uint)(3)), false);
+			this.table1.Name = "table1";
 			this.table1.RowSpacing = ((uint)(6));
 			this.table1.ColumnSpacing = ((uint)(6));
 			// Container child table1.Gtk.Table+TableChild
@@ -236,6 +237,7 @@ namespace bazar
 			w1.Add(this.hbox2);
 			global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(w1[this.hbox2]));
 			w19.Position = 4;
+			w19.Expand = false;
 			w19.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.vbox2 = new global::Gtk.VBox();
@@ -277,7 +279,7 @@ namespace bazar
 			this.radioLetter.Name = "radioLetter";
 			this.radioLetter.DrawIndicator = true;
 			this.radioLetter.UseUnderline = true;
-			this.radioLetter.Group = this.radioButtonMonth.Group;
+			this.radioLetter.Group = new global::GLib.SList(global::System.IntPtr.Zero);
 			this.vbox3.Add(this.radioLetter);
 			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.vbox3[this.radioLetter]));
 			w22.Position = 0;
@@ -289,7 +291,7 @@ namespace bazar
 			this.radioAlbum.Name = "radioAlbum";
 			this.radioAlbum.DrawIndicator = true;
 			this.radioAlbum.UseUnderline = true;
-			this.radioAlbum.Group = this.radioButtonMonth.Group;
+			this.radioAlbum.Group = this.radioLetter.Group;
 			this.vbox3.Add(this.radioAlbum);
 			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.vbox3[this.radioAlbum]));
 			w23.Position = 1;
@@ -347,6 +349,7 @@ namespace bazar
 			this.DefaultWidth = 558;
 			this.DefaultHeight = 651;
 			this.Show();
+			this.radioButtonMonth.Toggled += new global::System.EventHandler(this.OnRadiobuttonQuarterToggled);
 			this.radioButtonQuarter.Toggled += new global::System.EventHandler(this.OnRadiobuttonQuarterToggled);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);
 		}
