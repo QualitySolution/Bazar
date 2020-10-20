@@ -125,27 +125,12 @@ namespace bazar
 				bool old = (bool)list.GetValue (iter, 1);
 				list.SetValue (iter, 1, !old);
 			}
+
 		}
 
 		protected void OnButtonOkClicked(object sender, EventArgs e)
 		{
-			string param = "types=";
-			foreach(object[] row in MetersList)
-			{
-				if ((bool) row [1])
-					param += String.Format ("{0},", row [0]);
-			}
-
-			param = param.TrimEnd (',');
-
-			param += "&providers=";
-			foreach (object [] row in ProvidersList) {
-				if ((bool)row [1])
-					param += String.Format ("{0},", row [0]);
-			}
-
-			param = param.TrimEnd (',');
-			param += GetPeriod ();
+			string param = BuildParams();
 
 			if (checkHandmade.Active)
 				if (radioLetter.Active)
@@ -158,6 +143,38 @@ namespace bazar
 				else	
 					ViewReportExt.Run ("Meters_horizontal", param.TrimEnd (','));
 
+		}
+
+		protected string BuildParams()
+		{
+			bool isEmptyTypesList = true;
+			string param = "types=";
+			foreach (object [] row in MetersList) 
+				if ((bool)row [1]) {
+					param += String.Format ("{0},", row [0]);
+					isEmptyTypesList = false;
+				}
+
+			if (isEmptyTypesList)
+				param += String.Format ("{0},", -1);
+			param = param.TrimEnd (',');
+
+			param += "&providers=";
+
+			bool isEmptyProvidersList = true;
+			foreach (object [] row in ProvidersList) 
+				if ((bool)row [1]) {
+					param += String.Format ("{0},", row [0]);
+					isEmptyProvidersList = true;
+				}
+
+			if (isEmptyProvidersList)
+				param += String.Format ("{0},", -1);
+
+			param = param.TrimEnd (',');
+			param += GetPeriod ();
+
+			return param;
 		}
 
 		protected void OnRadiobuttonQuarterToggled (object sender, EventArgs e)
