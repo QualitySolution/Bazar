@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>SELECT lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
@@ -25,7 +25,8 @@ SELECT  selectedmeters.*,
 (SELECT accrual_pay_id FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid, 
 (SELECT date FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastdate, 
 (SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue, 
-(SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1, 1) as prevalue 
+(SELECT value FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1, 1) as prevalue,
+(SELECT date FROM meter_reading WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id ORDER BY meter_reading.date DESC, value DESC LIMIT 1, 1) as prevdate  
 FROM ( select meters.id as meter_id,meter_tariffs.id as meter_tariff_id from meters join meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id) as selectedmeters
 ) as reading ON meters.id = reading.meter_id 
 LEFT JOIN place_types ON place_types.id = meters.place_type_id
@@ -39,6 +40,7 @@ LEFT JOIN service_providers on service_providers.id = services.service_provider_
 LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
 ON paysum.accrual_pay_id = accrual_pays.id
 WHERE meters.disabled = 'FALSE'  AND meters.meter_type_id IN (@types) AND service_providers.id IN (@providers)
+AND MONTH(reading.lastdate) in (@month) AND YEAR(reading.lastdate) = @year
 GROUP BY  service_provider_name, name
  ORDER BY service_provider_name, name, meter_id</CommandText>
         <QueryParameters>
@@ -56,7 +58,7 @@ GROUP BY  service_provider_name, name
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -128,6 +130,10 @@ GROUP BY  service_provider_name, name
         <Field Name="service_provider_name">
           <DataField>service_provider_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="prevdate">
+          <DataField>prevdate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -206,7 +212,7 @@ GROUP BY  service_provider_name, name
         <Details>
           <TableRows>
             <TableRow>
-              <Height>12pt</Height>
+              <Height>23.0pt</Height>
               <TableCells>
                 <TableCell>
                   <ReportItems>
@@ -296,7 +302,7 @@ GROUP BY  service_provider_name, name
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="prevalue">
-                      <Value>=Fields!lastdate.Value</Value>
+                      <Value>= Format({prevdate}, "dd/MM/yyyy") + "\n" +  Format({lastdate}, "dd/MM/yyyy")</Value>
                       <CanGrow>false</CanGrow>
                       <Style>
                         <BorderStyle>
@@ -1009,7 +1015,7 @@ GROUP BY  service_provider_name, name
     <Columns>1</Columns>
   </Body>
   <PageFooter>
-    <Height>14pt</Height>
+    <Height>15.5pt</Height>
     <ReportItems>
       <Textbox Name="Textbox15">
         <Top>1pt</Top>
