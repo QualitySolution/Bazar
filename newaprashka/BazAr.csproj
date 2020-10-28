@@ -166,6 +166,8 @@
     <Compile Include="ReportDialogs\ContractsReportDlg.cs" />
     <Compile Include="gtk-gui\bazar.ContractsReportDlg.cs" />
     <Compile Include="Tools\BaseParameters.cs" />
+    <Compile Include="ReportDialogs\MetersStatisticsDlg.cs" />
+    <Compile Include="gtk-gui\bazar.ReportDialogs.MetersStatisticsDlg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -294,6 +296,9 @@
     </None>
     <None Include="packages.config" />
     <None Include="Reports\PaymentTicket_Simple.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Reports\Meters_statistic.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

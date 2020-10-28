@@ -13,52 +13,56 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT service_providers.name as service_provider_name, lessees.name, active_contracts.number as contract, place_types.name as place_type, meters.place_no, 
-meter_types.name type, meter_types.reading_ratio, meter_tariffs.name as tariff, 
- reading.*, accrual_pays.count, accrual_pays.price, IFNULL(paysum.sum, 0) as paid, IFNULL(reading.lastpayid, -1) as lastpayid0
+        <CommandText>SELECT reading.meter_month_1, reading.meter_month_2, reading.meter_month_3, service_providers.name as service_provider_name, lessees.name,  place_types.name as place_type, meters.place_no, 
+meter_types.name type, 
+  IFNULL(accrual_pays_1.count, 0) as count_1, IFNULL(accrual_pays_2.count, 0) as count_2, IFNULL(accrual_pays_3.count, 0) as count_3,  IFNULL(paysum_1.sum, 0) as paid_1, IFNULL(paysum_2.sum, 0) as paid_2, IFNULL(paysum_3.sum, 0) as paid_3, IFNULL(reading.lastpayid_1, -1) as lastpayid0_1,
+ IFNULL(reading.lastpayid_2, -1) as lastpayid0_2, IFNULL(reading.lastpayid_3, -1) as lastpayid0_3, 
+IFNULL(accrual_pays_1.price,0) as price_1, IFNULL(accrual_pays_2.price, 0) as price_2, 
+ IFNULL(accrual_pays_3.price, 0) as price_3
  FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
 (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month AND YEAR(meter_reading.date) = @year  
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid, 
-(SELECT date
+	AND MONTH(meter_reading.date) = (SELECT * FROM
+        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+    WHERE t.mon IN (@month) LIMIT 1)# for 1 month 
+    AND YEAR(meter_reading.date) = @year 
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_1,
+    (SELECT  * FROM
+        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+    WHERE t.mon IN (@month) LIMIT 1) meter_month_1,
+    
+    (SELECT accrual_pay_id 
 	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month AND YEAR(meter_reading.date) = @year  
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastdate, 
-(SELECT value 
+    WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
+	AND MONTH(meter_reading.date) = (SELECT * FROM
+        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+    WHERE t.mon IN (@month) LIMIT 1, 1)# for 2 month 
+    AND YEAR(meter_reading.date) = @year 
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_2,
+    (SELECT  * FROM
+        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+    WHERE t.mon IN (@month) LIMIT 1, 1) meter_month_2,
+    
+        (SELECT accrual_pay_id 
 	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month  AND YEAR(meter_reading.date) = @year  
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue, 
-(SELECT value
-	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id
-	AND meter_reading.date &lt; (SELECT date
-								FROM meter_reading 
-								WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-								AND MONTH(meter_reading.date) = meter_month AND YEAR(meter_reading.date) = @year  
-								ORDER BY meter_reading.date DESC, value DESC LIMIT 1) 
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as prevalue,
-(SELECT date
-	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND meter_reading.date &lt; (SELECT date
-								FROM meter_reading 
-								WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-								AND MONTH(meter_reading.date) = meter_month AND YEAR(meter_reading.date) = @year  
-								ORDER BY meter_reading.date DESC, value DESC LIMIT 1)
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as prevdate  
+    WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
+	AND MONTH(meter_reading.date) = (SELECT * FROM
+        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+    WHERE t.mon IN (@month) LIMIT 2, 1)# for 2 month 
+    AND YEAR(meter_reading.date) = @year 
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_3,
+    (SELECT  * FROM
+        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+    WHERE t.mon IN (@month) LIMIT 2, 1) meter_month_3
+    
+FROM ( SELECT meters.id as meter_id,meter_tariffs.id as meter_tariff_id FROM meters JOIN meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id
 
-FROM ( SELECT meter_month.mon as meter_month, meters.id as meter_id,meter_tariffs.id as meter_tariff_id FROM meters JOIN meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id
-LEFT JOIN (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-WHERE t.mon IN (@month)) meter_month ON 1 
 ) as selectedmeters
 ) as reading ON meters.id = reading.meter_id 
 LEFT JOIN place_types ON place_types.id = meters.place_type_id
@@ -66,20 +70,24 @@ LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id
 LEFT JOIN meter_tariffs ON meter_tariffs.id = reading.meter_tariff_id
 LEFT JOIN active_contracts ON meters.place_type_id = active_contracts.place_type_id AND meters.place_no = active_contracts.place_no
 LEFT JOIN lessees ON active_contracts.lessee_id = lessees.id
-LEFT JOIN accrual_pays ON accrual_pays.id = reading.lastpayid
-LEFT JOIN services on services.id = accrual_pays.service_id
+LEFT JOIN accrual_pays as accrual_pays_1 ON accrual_pays_1.id = reading.lastpayid_1 
+LEFT JOIN accrual_pays as accrual_pays_2 ON accrual_pays_2.id = reading.lastpayid_2 
+LEFT JOIN accrual_pays as accrual_pays_3 ON accrual_pays_3.id = reading.lastpayid_3 
+LEFT JOIN services on services.id = accrual_pays_1.service_id
 LEFT JOIN service_providers on service_providers.id = services.service_provider_id
-LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
-ON paysum.accrual_pay_id = accrual_pays.id
+LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum_1 ON paysum_1.accrual_pay_id = accrual_pays_1.id
+LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum_2 ON paysum_2.accrual_pay_id = accrual_pays_2.id
+LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum_3 ON paysum_3.accrual_pay_id = accrual_pays_3.id
+
 WHERE meters.disabled = 'FALSE' 
-AND (-1 IN (@types) OR meters.meter_type_id IN (@types))
-AND (-1 IN (@providers) OR service_providers.id IN (@providers))
-GROUP BY service_provider_name, name, meter_month
+AND (@onlyAccruals = 0 OR (@onlyAccruals = 1 AND 
+reading.lastpayid_1 is not null
+AND reading.lastpayid_2 is not null
+AND reading.lastpayid_3 is not null))
+AND (-1 IN (@providers) OR service_providers.id IN (@providers) )
+GROUP BY service_provider_name, name
 ORDER BY service_provider_name, name, meter_id</CommandText>
         <QueryParameters>
-          <QueryParameter Name="types">
-            <Value>=Parameters!types</Value>
-          </QueryParameter>
           <QueryParameter Name="providers">
             <Value>=Parameters!providers</Value>
           </QueryParameter>
@@ -89,15 +97,14 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
           <QueryParameter Name="year">
             <Value>=Parameters!year</Value>
           </QueryParameter>
+          <QueryParameter Name="onlyAccruals">
+            <Value>=Parameters!onlyAccruals</Value>
+          </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="name">
           <DataField>name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="contract">
-          <DataField>contract</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="place_type">
@@ -112,61 +119,69 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
           <DataField>type</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="reading_ratio">
-          <DataField>reading_ratio</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="tariff">
-          <DataField>tariff</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="meter_id">
-          <DataField>meter_id</DataField>
-          <rd:TypeName>System.UInt32</rd:TypeName>
-        </Field>
-        <Field Name="meter_tariff_id">
-          <DataField>meter_tariff_id</DataField>
-          <rd:TypeName>System.UInt32</rd:TypeName>
-        </Field>
-        <Field Name="lastpayid">
-          <DataField>lastpayid</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="lastdate">
-          <DataField>lastdate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="lastvalue">
-          <DataField>lastvalue</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="prevalue">
-          <DataField>prevalue</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="count">
-          <DataField>count</DataField>
+        <Field Name="count_1">
+          <DataField>count_1</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="price">
-          <DataField>price</DataField>
+        <Field Name="paid_1">
+          <DataField>paid_1</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="paid">
-          <DataField>paid</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="lastpayid0">
-          <DataField>lastpayid0</DataField>
+        <Field Name="lastpayid0_1">
+          <DataField>lastpayid0_1</DataField>
           <rd:TypeName>System.Int64</rd:TypeName>
         </Field>
         <Field Name="service_provider_name">
           <DataField>service_provider_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="prevdate">
-          <DataField>prevdate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+        <Field Name="count_2">
+          <DataField>count_2</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="count_3">
+          <DataField>count_3</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="paid_2">
+          <DataField>paid_2</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="paid_3">
+          <DataField>paid_3</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="lastpayid0_2">
+          <DataField>lastpayid0_2</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="lastpayid0_3">
+          <DataField>lastpayid0_3</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="meter_month_1">
+          <DataField>meter_month_1</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="meter_month_2">
+          <DataField>meter_month_2</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="meter_month_3">
+          <DataField>meter_month_3</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="price_1">
+          <DataField>price_1</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="price_2">
+          <DataField>price_2</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="price_3">
+          <DataField>price_3</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -175,17 +190,18 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
     <Height>32.2pt</Height>
     <ReportItems>
       <Textbox Name="Textbox1">
-        <Top>8.0pt</Top>
-        <Left>26.9pt</Left>
+        <Top>7.3pt</Top>
+        <Left>149.7pt</Left>
         <Width>6in</Width>
         <Height>.25in</Height>
-        <Value>Счетчики</Value>
+        <Value>Статистика по счетчикам</Value>
         <Style>
           <FontSize>15pt</FontSize>
           <FontWeight>Bold</FontWeight>
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
+          <TextAlign>Center</TextAlign>
         </Style>
       </Textbox>
     </ReportItems>
@@ -206,40 +222,28 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
         </Style>
         <TableColumns>
           <TableColumn>
-            <Width>46.8pt</Width>
+            <Width>83.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>52.3pt</Width>
+            <Width>128.2pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>96.8pt</Width>
+            <Width>97.5pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>59.7pt</Width>
+            <Width>85.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>57.2pt</Width>
+            <Width>91.1pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>65.9pt</Width>
+            <Width>86.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>50.7pt</Width>
+            <Width>92.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>62.7pt</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>48.3pt</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>1in</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>72.3pt</Width>
-          </TableColumn>
-          <TableColumn>
-            <Width>1in</Width>
+            <Width>88.1pt</Width>
           </TableColumn>
         </TableColumns>
         <Details>
@@ -247,6 +251,22 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
             <TableRow>
               <Height>23.0pt</Height>
               <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox3">
+                      <Value>=Fields!place_type.Value + "-" + Fields!place_no.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="contract">
@@ -266,211 +286,96 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="place_type">
-                      <Value>=Fields!place_type.Value + "-" + Fields!place_no.Value</Value>
-                      <CanGrow>true</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor />
-                        <BorderWidth />
-                        <TextAlign>Center</TextAlign>
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox31">
-                      <Value>=Fields!tariff.Value</Value>
-                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor />
-                        <BorderWidth />
-                        <TextAlign>Center</TextAlign>
-                      </Style>
-                      <CanGrow>true</CanGrow>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="lastpayid">
-                      <Value>=Fields!prevalue.Value</Value>
-                      <CanGrow>false</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor />
-                        <BorderWidth />
-                        <TextAlign>Right</TextAlign>
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="lastvalue">
-                      <Value>=Fields!lastvalue.Value</Value>
-                      <CanGrow>false</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor />
-                        <BorderWidth />
-                        <TextAlign>Right</TextAlign>
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="prevalue">
-                      <Value>= Format({prevdate}, "dd/MM/yyyy") + "\n" +  Format({lastdate}, "dd/MM/yyyy")</Value>
-                      <CanGrow>false</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                        </BorderStyle>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <BorderColor />
-                        <BorderWidth />
-                        <Format>d</Format>
-                        <TextAlign>Center</TextAlign>
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
                     <Textbox Name="Textbox6">
-                      <Value>=(Fields!lastvalue.Value-Fields!prevalue.Value) * {reading_ratio}</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!count_1.Value*Fields!price_1.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
-                        <TextAlign>Right</TextAlign>
                       </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="count">
-                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!count.Value, null)</Value>
-                      <CanGrow>false</CanGrow>
-                      <Style>
+                    <Textbox Name="Textbox32">
+                      <Value>=Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!paid_1.Value, "")</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
-                          <Bottom>None</Bottom>
-                          <Left>Solid</Left>
-                          <Right>Solid</Right>
-                          <Top>Solid</Top>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
                         <BorderColor />
-                        <BorderWidth>
-                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
-                        </BorderWidth>
-                        <TextAlign>Right</TextAlign>
-                      </Style>
-                      <Visibility>
-                        <Hidden>
-                        </Hidden>
-                      </Visibility>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="price">
-                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!price.Value, "")</Value>
-                      <CanGrow>false</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
-                        <TextAlign>Right</TextAlign>
-                        <BorderColor />
-                        <BorderWidth>
-                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
-                        </BorderWidth>
-                        <Format>C</Format>
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="Textbox16">
-                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!count.Value*Fields!price.Value, "")</Value>
+                    <Textbox Name="Textbox13">
+                      <Value>=Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!count_2.Value*Fields!price_2.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
-                          <Bottom>None</Bottom>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
-                        <TextAlign>Right</TextAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
                         <BorderColor />
-                        <BorderWidth>
-                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
-                        </BorderWidth>
-                        <Format>C</Format>
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="paid">
-                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!paid.Value, "")</Value>
-                      <CanGrow>false</CanGrow>
-                      <Style>
-                        <BorderStyle>
-                          <Default>Solid</Default>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
-                        <TextAlign>Right</TextAlign>
-                        <BorderColor />
-                        <BorderWidth>
-                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
-                        </BorderWidth>
-                        <Format>C</Format>
-                      </Style>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox18">
-                      <Value>=Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), (Fields!count.Value*Fields!price.Value)-Fields!paid.Value, "")</Value>
+                    <Textbox Name="Textbox38">
+                      <Value>=Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!paid_2.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
-                          <Bottom>None</Bottom>
                         </BorderStyle>
-                        <PaddingRight>2pt</PaddingRight>
-                        <TextAlign>Right</TextAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
                         <BorderColor />
-                        <BorderWidth>
-                          <Top>=Iif((Previous(Fields!lastpayid0.Value) = Fields!lastpayid0.Value), "0pt", "1pt")</Top>
-                        </BorderWidth>
-                        <Format>C</Format>
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox21">
+                      <Value>=Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, "")</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox35">
+                      <Value>=Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!paid_3.Value, "")</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -489,7 +394,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
             </SortBy>
           </Sorting>
         </Details>
-        <Left>1.3pt</Left>
+        <Left>2.1pt</Left>
         <Top>0.0pt</Top>
         <TableGroups>
           <TableGroup>
@@ -508,19 +413,22 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox19">
-                          <Style>
+                        <Textbox Name="Textbox5">
+                          <Value>=Fields!service_provider_name.Value</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
+                              <Top>None</Top>
+                              <Left>None</Left>
+                              <Right>None</Right>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                           </Style>
-                          <Value>=Fields!service_provider_name.Value</Value>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>12</ColSpan>
+                      <ColSpan>8</ColSpan>
                     </TableCell>
                   </TableCells>
                 </TableRow>
@@ -529,16 +437,36 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox20">
-                          <Value>Аренд.</Value>
+                        <Textbox Name="Textbox7">
+                          <Value>Места</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
+                              <Bottom>None</Bottom>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox20">
+                          <Value>Аренд.</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Bottom>None</Bottom>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Bottom</VerticalAlign>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -546,11 +474,72 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox48">
-                          <Value>Место</Value>
+                        <Textbox Name="Textbox11">
+                          <Value>=Fields!meter_month_1.Value</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                      <ColSpan>2</ColSpan>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox17">
+                          <Value>=Fields!meter_month_2.Value</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                      <ColSpan>2</ColSpan>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox25">
+                          <Value>=Fields!meter_month_3.Value</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                      <ColSpan>2</ColSpan>
+                    </TableCell>
+                  </TableCells>
+                </TableRow>
+                <TableRow>
+                  <Height>14.4pt</Height>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox27">
+                          <Value>
+                          </Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Top>None</Top>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
@@ -562,11 +551,13 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox47">
-                          <Value>Счётчик/Тариф</Value>
+                        <Textbox Name="Textbox28">
+                          <Value>
+                          </Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
+                              <Top>None</Top>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
@@ -578,72 +569,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox46">
-                          <Value>Пред. пок.</Value>
-                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                            <BorderStyle>
-                              <Default>Solid</Default>
-                            </BorderStyle>
-                            <BorderColor />
-                            <BorderWidth />
-                            <FontWeight>Bold</FontWeight>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                    </TableCell>
-                    <TableCell>
-                      <ReportItems>
-                        <Textbox Name="Textbox45">
-                          <Value>Посл. пок.</Value>
-                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                            <BorderStyle>
-                              <Default>Solid</Default>
-                            </BorderStyle>
-                            <BorderColor />
-                            <BorderWidth />
-                            <FontWeight>Bold</FontWeight>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                    </TableCell>
-                    <TableCell>
-                      <ReportItems>
-                        <Textbox Name="Textbox44">
-                          <Value>Дата пред./
-Дата посл.</Value>
-                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                            <BorderStyle>
-                              <Default>Solid</Default>
-                            </BorderStyle>
-                            <BorderColor />
-                            <BorderWidth />
-                            <FontWeight>Bold</FontWeight>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                    </TableCell>
-                    <TableCell>
-                      <ReportItems>
-                        <Textbox Name="Textbox40">
-                          <Value>Расход</Value>
-                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                            <BorderStyle>
-                              <Default>Solid</Default>
-                            </BorderStyle>
-                            <BorderColor />
-                            <BorderWidth />
-                            <FontWeight>Bold</FontWeight>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                    </TableCell>
-                    <TableCell>
-                      <ReportItems>
-                        <Textbox Name="Textbox39">
+                        <Textbox Name="Textbox29">
                           <Value>Начислено</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
@@ -653,38 +579,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                    </TableCell>
-                    <TableCell>
-                      <ReportItems>
-                        <Textbox Name="Textbox38">
-                          <Value>Цена</Value>
-                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                            <BorderStyle>
-                              <Default>Solid</Default>
-                            </BorderStyle>
-                            <BorderColor />
-                            <BorderWidth />
-                            <FontWeight>Bold</FontWeight>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                    </TableCell>
-                    <TableCell>
-                      <ReportItems>
-                        <Textbox Name="Textbox37">
-                          <Value>Сумма</Value>
-                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
-                            <BorderStyle>
-                              <Default>Solid</Default>
-                            </BorderStyle>
-                            <BorderColor />
-                            <BorderWidth />
-                            <FontWeight>Bold</FontWeight>
-                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -701,14 +596,63 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                           </Style>
                         </Textbox>
                       </ReportItems>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox21">
-                          <Value>Долг</Value>
+                        <Textbox Name="Textbox30">
+                          <Value>Начислено</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox42">
+                          <Value>Оплачено</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox31">
+                          <Value>Начислено</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox46">
+                          <Value>Оплачено</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -733,6 +677,26 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
+                        <Textbox Name="Textbox8">
+                          <Value>
+                          </Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
                         <Textbox Name="Textbox2">
                           <Style>
                             <BorderStyle>
@@ -749,52 +713,119 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                           <Value>Сумма:</Value>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>9</ColSpan>
+                      <ColSpan>1</ColSpan>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox41">
-                          <Style>
+                        <Textbox Name="Textbox12">
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!count_1.Value*Fields!price_1.Value, ""))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
-                              <Bottom>None</Bottom>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
                           </Style>
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!count.Value*Fields!price.Value, 0))</Value>
                         </Textbox>
                       </ReportItems>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox42">
-                          <Style>
+                        <Textbox Name="Textbox37">
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!paid_1.Value, 0))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
-                              <Bottom>None</Bottom>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
                           </Style>
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), Fields!paid.Value, 0))</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox18">
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, ""))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Textbox>
                       </ReportItems>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox43">
-                          <Style>
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!paid_2.Value, 0))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
                             </BorderStyle>
                             <BorderColor />
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
                           </Style>
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0.Value) != Fields!lastpayid0.Value), (Fields!count.Value*Fields!price.Value)-Fields!paid.Value, 0))</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox26">
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, ""))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox47">
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!paid_3.Value, ""))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Textbox>
                       </ReportItems>
                     </TableCell>
@@ -809,6 +840,25 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
             <TableRow>
               <Height>8.1pt</Height>
               <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox4">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox22">
@@ -830,8 +880,10 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="Textbox23">
-                      <Style>
+                    <Textbox Name="Textbox9">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>None</Default>
                           <Left>None</Left>
@@ -842,148 +894,15 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox24">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox25">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox26">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox27">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox28">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox29">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
-                    </Textbox>
-                  </ReportItems>
-                </TableCell>
-                <TableCell>
-                  <ReportItems>
-                    <Textbox Name="Textbox32">
-                      <Style>
-                        <BorderStyle>
-                          <Default>None</Default>
-                          <Left>None</Left>
-                          <Right>None</Right>
-                          <Top>Solid</Top>
-                          <Bottom>None</Bottom>
-                        </BorderStyle>
-                        <BorderColor />
-                        <BorderWidth />
-                      </Style>
-                      <Value>
-                      </Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox33">
-                      <Style>
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>None</Default>
                           <Left>None</Left>
@@ -994,15 +913,15 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <Value>
-                      </Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="Textbox34">
-                      <Style>
+                    <Textbox Name="Textbox14">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>None</Default>
                           <Left>None</Left>
@@ -1013,15 +932,15 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <BorderColor />
                         <BorderWidth />
                       </Style>
-                      <Value>
-                      </Value>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
-                    <Textbox Name="Textbox35">
-                      <Style>
+                    <Textbox Name="Textbox39">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>None</Default>
                           <Left>None</Left>
@@ -1032,8 +951,44 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <BorderColor />
                         <BorderWidth />
                       </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox23">
                       <Value>
                       </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox41">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
                     </Textbox>
                   </ReportItems>
                 </TableCell>
@@ -1044,7 +999,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
         </Footer>
       </Table>
     </ReportItems>
-    <Height>99.6pt</Height>
+    <Height>111.1pt</Height>
     <Columns>1</Columns>
   </Body>
   <PageFooter>
@@ -1068,22 +1023,23 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
     <PrintOnFirstPage>true</PrintOnFirstPage>
     <PrintOnLastPage>true</PrintOnLastPage>
   </PageFooter>
+  <DataElementName>Report</DataElementName>
+  <DataElementStyle>AttributeNormal</DataElementStyle>
   <DataSources>
     <DataSource Name="DS1">
       <ConnectionProperties>
         <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>server=demo.qsolution.ru;user=demo;database=bazar;port=3306;password=demo;</ConnectString>
+        <ConnectString>server=sql.salova.qsolution.ru;user=admin;database=bazar;port=3306;password=qsolution;</ConnectString>
         <IntegratedSecurity>false</IntegratedSecurity>
       </ConnectionProperties>
     </DataSource>
   </DataSources>
-  <DataElementName>Report</DataElementName>
-  <DataElementStyle>AttributeNormal</DataElementStyle>
-  <ReportParameters >
-    <ReportParameter Name="types">
+  <ReportParameters>
+    <ReportParameter Name="providers">
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
+          <Value>1</Value>
           <Value>2</Value>
         </Values>
       </DefaultValue>
@@ -1093,16 +1049,15 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
       <Prompt>
       </Prompt>
     </ReportParameter>
-    <ReportParameter Name="providers">
-      <DataType>Integer</DataType>
-      <Nullable>false</Nullable>
-      <AllowBlank>false</AllowBlank>
-      <MultiValue>true</MultiValue>
-      <Prompt>
-      </Prompt>
-    </ReportParameter>
     <ReportParameter Name="month">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+          <Value>3</Value>
+        </Values>
+      </DefaultValue>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>true</MultiValue>
@@ -1111,6 +1066,24 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
     </ReportParameter>
     <ReportParameter Name="year">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2020</Value>
+        </Values>
+      </DefaultValue>
+      <Nullable>false</Nullable>
+      <AllowBlank>false</AllowBlank>
+      <MultiValue>false</MultiValue>
+      <Prompt>
+      </Prompt>
+    </ReportParameter>
+    <ReportParameter Name="onlyAccruals">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>false</MultiValue>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using bazar;
+using bazar.ReportDialogs;
 using Gtk;
 using QS.Updater;
 using QSProjectsLib;
@@ -792,5 +793,11 @@ public partial class MainWindow : Gtk.Window
 		paymentReport.Destroy ();
 	}
 
-
+	protected void OnAction46Activated (object sender, EventArgs e)
+	{
+		MetersStatisticsDlg MetersStatistics = new MetersStatisticsDlg ();
+		MetersStatistics.Show ();
+		MetersStatistics.Run ();
+		MetersStatistics.Destroy ();
+	}
 }
