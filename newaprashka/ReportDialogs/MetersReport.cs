@@ -125,7 +125,6 @@ namespace bazar
 				bool old = (bool)list.GetValue (iter, 1);
 				list.SetValue (iter, 1, !old);
 			}
-
 		}
 
 		protected void OnButtonOkClicked(object sender, EventArgs e)
@@ -165,7 +164,7 @@ namespace bazar
 			foreach (object [] row in ProvidersList) 
 				if ((bool)row [1]) {
 					param += String.Format ("{0},", row [0]);
-					isEmptyProvidersList = true;
+					isEmptyProvidersList = false;
 				}
 
 			if (isEmptyProvidersList)
