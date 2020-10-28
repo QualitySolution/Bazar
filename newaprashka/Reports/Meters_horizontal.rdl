@@ -72,8 +72,8 @@ LEFT JOIN service_providers on service_providers.id = services.service_provider_
 LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum 
 ON paysum.accrual_pay_id = accrual_pays.id
 WHERE meters.disabled = 'FALSE' 
-AND (meters.meter_type_id IN (@types) OR @types = -1)
-AND (service_providers.id IN (@providers) OR @providers = -1)
+AND (-1 IN (@types) OR meters.meter_type_id IN (@types))
+AND (-1 IN (@providers) OR service_providers.id IN (@providers))
 GROUP BY service_provider_name, name, meter_month
 ORDER BY service_provider_name, name, meter_id</CommandText>
         <QueryParameters>
