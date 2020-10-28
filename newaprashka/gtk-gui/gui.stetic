@@ -250,7 +250,7 @@
         <property name="ShortLabel" translatable="yes">Отчет по поставщикам</property>
         <signal name="Activated" handler="OnServiceProviderPaymentReport" />
       </action>
-      <action id="Action46">
+      <action id="Action48">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Статистика по счетчикам</property>
         <property name="ShortLabel" translatable="yes">Статистика по счетчикам</property>
@@ -307,7 +307,7 @@
                 <node type="Menuitem" action="Action43" />
                 <node type="Menuitem" action="Action33" />
                 <node type="Menuitem" action="Action47" />
-                <node type="Menuitem" action="Action46" />
+                <node type="Menuitem" action="Action48" />
                 <node type="Menuitem" action="Action45" />
                 <node type="Separator" />
                 <node type="Menuitem" action="Action38" />
