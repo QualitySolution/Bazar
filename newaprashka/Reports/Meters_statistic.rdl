@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>SELECT reading.meter_month_1, reading.meter_month_2, reading.meter_month_3, service_providers.name as service_provider_name, lessees.name,  place_types.name as place_type, meters.place_no, 
@@ -80,12 +80,11 @@ LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY 
 LEFT JOIN (SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum_3 ON paysum_3.accrual_pay_id = accrual_pays_3.id
 
 WHERE meters.disabled = 'FALSE' 
-AND (@onlyAccruals = 1 AND 
+AND (@onlyAccruals = 0 OR (@onlyAccruals = 1 AND 
 reading.lastpayid_1 is not null
 AND reading.lastpayid_2 is not null
-AND reading.lastpayid_3 is not null)
-OR (@onlyAccruals = 0)
-AND (service_providers.id IN (@providers) OR @providers = -1)
+AND reading.lastpayid_3 is not null))
+AND (-1 IN (@providers) OR service_providers.id IN (@providers) )
 GROUP BY service_provider_name, name
 ORDER BY service_provider_name, name, meter_id</CommandText>
         <QueryParameters>
@@ -103,7 +102,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -320,7 +319,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox13">
-                      <Value>=Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!count_2.Value, null)</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!count_2.Value*Fields!price_2.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -352,7 +351,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox21">
-                      <Value>=Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value, null)</Value>
+                      <Value>=Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -719,8 +718,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox12">
-                          <Value>
-                          </Value>
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!count_1.Value*Fields!price_1.Value, ""))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -758,8 +756,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox18">
-                          <Value>
-                          </Value>
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, ""))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -797,8 +794,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox26">
-                          <Value>
-                          </Value>
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, ""))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -817,8 +813,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox47">
-                          <Value>
-                          </Value>
+                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!paid_3.Value, ""))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -1030,9 +1025,24 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
   </PageFooter>
   <DataElementName>Report</DataElementName>
   <DataElementStyle>AttributeNormal</DataElementStyle>
+  <DataSources>
+    <DataSource Name="DS1">
+      <ConnectionProperties>
+        <DataProvider>MySQL.NET</DataProvider>
+        <ConnectString>server=sql.salova.qsolution.ru;user=admin;database=bazar;port=3306;password=qsolution;</ConnectString>
+        <IntegratedSecurity>false</IntegratedSecurity>
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
   <ReportParameters>
     <ReportParameter Name="providers">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>true</MultiValue>
@@ -1041,6 +1051,13 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
     </ReportParameter>
     <ReportParameter Name="month">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+          <Value>3</Value>
+        </Values>
+      </DefaultValue>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>true</MultiValue>
@@ -1049,6 +1066,11 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
     </ReportParameter>
     <ReportParameter Name="year">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2020</Value>
+        </Values>
+      </DefaultValue>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>false</MultiValue>
@@ -1057,19 +1079,16 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
     </ReportParameter>
     <ReportParameter Name="onlyAccruals">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Nullable>false</Nullable>
       <AllowBlank>false</AllowBlank>
       <MultiValue>false</MultiValue>
-      <Prompt />
+      <Prompt>
+      </Prompt>
     </ReportParameter>
   </ReportParameters>
-  <DataSources>
-    <DataSource Name="DS1">
-      <ConnectionProperties>
-        <DataProvider>MySQL.NET</DataProvider>
-        <ConnectString>server=dsql.salova.qsolution.ru;user=admin;database=bazar;port=3306;password=qsolution;</ConnectString>
-        <IntegratedSecurity>false</IntegratedSecurity>
-      </ConnectionProperties>
-    </DataSource>
-  </DataSources>
 </Report>
