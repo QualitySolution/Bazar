@@ -16,54 +16,77 @@
       <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT reading.meter_month_1, reading.meter_month_2, reading.meter_month_3, service_providers.name as service_provider_name, lessees.name,  place_types.name as place_type, meters.place_no, 
+        <CommandText>SELECT reading.meter_month_1, reading.meter_month_2, reading.meter_month_3, service_providers.name as service_provider_name, lessees.name,  place_types.name as place_type, meters.place_no, meter_types.reading_ratio,
 meter_types.name type, 
   IFNULL(accrual_pays_1.count, 0) as count_1, IFNULL(accrual_pays_2.count, 0) as count_2, IFNULL(accrual_pays_3.count, 0) as count_3,  IFNULL(paysum_1.sum, 0) as paid_1, IFNULL(paysum_2.sum, 0) as paid_2, IFNULL(paysum_3.sum, 0) as paid_3, IFNULL(reading.lastpayid_1, -1) as lastpayid0_1,
  IFNULL(reading.lastpayid_2, -1) as lastpayid0_2, IFNULL(reading.lastpayid_3, -1) as lastpayid0_3, 
 IFNULL(accrual_pays_1.price,0) as price_1, IFNULL(accrual_pays_2.price, 0) as price_2, 
- IFNULL(accrual_pays_3.price, 0) as price_3
+ IFNULL(accrual_pays_3.price, 0) as price_3,
+ reading.lastvalue_1, reading.lastvalue_2, reading.lastvalue_3, 
+ reading.prevalue_1, reading.lastvalue_1 as prevalue_2, reading.lastvalue_2 as prevalue_3 
  FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
+
 (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = (SELECT * FROM
-        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-    WHERE t.mon IN (@month) LIMIT 1)# for 1 month 
+	AND MONTH(meter_reading.date) = meter_month_1
     AND YEAR(meter_reading.date) = @year 
 	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_1,
-    (SELECT  * FROM
-        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-    WHERE t.mon IN (@month) LIMIT 1) meter_month_1,
-    
+
     (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = (SELECT * FROM
-        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-    WHERE t.mon IN (@month) LIMIT 1, 1)# for 2 month 
+	AND MONTH(meter_reading.date) = meter_month_2
     AND YEAR(meter_reading.date) = @year 
 	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_2,
-    (SELECT  * FROM
-        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-    WHERE t.mon IN (@month) LIMIT 1, 1) meter_month_2,
     
         (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = (SELECT * FROM
-        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-    WHERE t.mon IN (@month) LIMIT 2, 1)# for 2 month 
+	AND MONTH(meter_reading.date) = meter_month_3
     AND YEAR(meter_reading.date) = @year 
 	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_3,
-    (SELECT  * FROM
-        (SELECT 1 AS mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-    WHERE t.mon IN (@month) LIMIT 2, 1) meter_month_3
-    
-FROM ( SELECT meters.id as meter_id,meter_tariffs.id as meter_tariff_id FROM meters JOIN meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id
 
+    (SELECT value 
+	FROM meter_reading 
+	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
+	AND MONTH(meter_reading.date) = meter_month_1  AND YEAR(meter_reading.date) = @year  
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue_1,
+    
+        (SELECT value 
+	FROM meter_reading 
+	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
+	AND MONTH(meter_reading.date) = meter_month_2  AND YEAR(meter_reading.date) = @year  
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue_2,
+    
+        (SELECT value 
+	FROM meter_reading 
+	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
+	AND MONTH(meter_reading.date) = meter_month_3  AND YEAR(meter_reading.date) = @year  
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue_3,
+    
+    (SELECT value
+	FROM meter_reading 
+	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id
+	AND meter_reading.date  &lt; (SELECT date
+								FROM meter_reading 
+								WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
+								AND MONTH(meter_reading.date) = meter_month_1 AND YEAR(meter_reading.date) = @year  
+								ORDER BY meter_reading.date DESC, value DESC LIMIT 1) 
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as prevalue_1
+    
+FROM ( SELECT meter_month_1, meter_month_2, meter_month_3, meters.id as meter_id,meter_tariffs.id as meter_tariff_id FROM meters JOIN meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id
+left join (SELECT meter_month_1.mon as meter_month_1, meter_month_2.mon as meter_month_2, meter_month_3.mon as meter_month_3 from
+ (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+WHERE t.mon IN (1, 2, 3) limit 1) meter_month_1 
+left join (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+WHERE t.mon IN (1, 2, 3) limit 1,1) meter_month_2 ON 1 
+left join (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
+WHERE t.mon IN (1, 2, 3) limit 2,1) meter_month_3 ON 1 ) m on 1
 ) as selectedmeters
+
 ) as reading ON meters.id = reading.meter_id 
 LEFT JOIN place_types ON place_types.id = meters.place_type_id
 LEFT JOIN meter_types ON meters.meter_type_id = meter_types.id
@@ -183,6 +206,34 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
           <DataField>price_3</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="reading_ratio">
+          <DataField>reading_ratio</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="lastvalue_1">
+          <DataField>lastvalue_1</DataField>
+          <rd:TypeName>System.UInt64</rd:TypeName>
+        </Field>
+        <Field Name="lastvalue_2">
+          <DataField>lastvalue_2</DataField>
+          <rd:TypeName>System.UInt64</rd:TypeName>
+        </Field>
+        <Field Name="lastvalue_3">
+          <DataField>lastvalue_3</DataField>
+          <rd:TypeName>System.UInt64</rd:TypeName>
+        </Field>
+        <Field Name="prevalue_1">
+          <DataField>prevalue_1</DataField>
+          <rd:TypeName>System.UInt64</rd:TypeName>
+        </Field>
+        <Field Name="prevalue_2">
+          <DataField>prevalue_2</DataField>
+          <rd:TypeName>System.UInt64</rd:TypeName>
+        </Field>
+        <Field Name="prevalue_3">
+          <DataField>prevalue_3</DataField>
+          <rd:TypeName>System.UInt64</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
   </DataSets>
@@ -222,28 +273,37 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
         </Style>
         <TableColumns>
           <TableColumn>
-            <Width>83.8pt</Width>
+            <Width>44.1pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>128.2pt</Width>
+            <Width>103.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>97.5pt</Width>
+            <Width>45.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>85.4pt</Width>
+            <Width>87.2pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>91.1pt</Width>
+            <Width>83.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>86.0pt</Width>
+            <Width>47.4pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>92.4pt</Width>
+            <Width>74.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>88.1pt</Width>
+            <Width>72.9pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>46.1pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>73.7pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>74.7pt</Width>
           </TableColumn>
         </TableColumns>
         <Details>
@@ -286,6 +346,23 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox10">
+                      <Value>=(Fields!lastvalue_1.Value-Fields!prevalue_1.Value) * {reading_ratio}</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox6">
                       <Value>=Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!count_1.Value*Fields!price_1.Value, "")</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
@@ -296,6 +373,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format>C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -312,6 +390,24 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format>C</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox44">
+                      <Value>=(Fields!lastvalue_2.Value-Fields!prevalue_2.Value) * {reading_ratio}</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -328,6 +424,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format>C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -344,6 +441,24 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format>C</Format>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox52">
+                      <Value>=(Fields!lastvalue_3.Value-Fields!prevalue_3.Value) * {reading_ratio}</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <TextAlign>Center</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                        <FontWeight>Bold</FontWeight>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -360,6 +475,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format>C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -376,6 +492,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                         <TextAlign>Center</TextAlign>
                         <BorderColor />
                         <BorderWidth />
+                        <Format>C</Format>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -428,7 +545,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                           </Style>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>8</ColSpan>
+                      <ColSpan>11</ColSpan>
                     </TableCell>
                   </TableCells>
                 </TableRow>
@@ -474,8 +591,8 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox11">
-                          <Value>=Fields!meter_month_1.Value</Value>
+                        <Textbox Name="Textbox19">
+                          <Value>=MonthName(CInt(Fields!meter_month_1.Value))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -488,12 +605,12 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                           </Style>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>2</ColSpan>
+                      <ColSpan>3</ColSpan>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox17">
-                          <Value>=Fields!meter_month_2.Value</Value>
+                        <Textbox Name="Textbox48">
+                          <Value>=MonthName(CInt(Fields!meter_month_2.Value))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -506,12 +623,12 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                           </Style>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>2</ColSpan>
+                      <ColSpan>3</ColSpan>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox25">
-                          <Value>=Fields!meter_month_3.Value</Value>
+                        <Textbox Name="Textbox54">
+                          <Value>=MonthName(CInt(Fields!meter_month_3.Value))</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -524,12 +641,12 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                           </Style>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>2</ColSpan>
+                      <ColSpan>3</ColSpan>
                     </TableCell>
                   </TableCells>
                 </TableRow>
                 <TableRow>
-                  <Height>14.4pt</Height>
+                  <Height>15.3pt</Height>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
@@ -563,6 +680,23 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox24">
+                          <Value>Расход</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -603,6 +737,22 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
+                        <Textbox Name="Textbox49">
+                          <Value>Расход</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
                         <Textbox Name="Textbox30">
                           <Value>Начислено</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
@@ -621,6 +771,22 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                       <ReportItems>
                         <Textbox Name="Textbox42">
                           <Value>Оплачено</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox55">
+                          <Value>Расход</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -678,8 +844,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox8">
-                          <Value>
-                          </Value>
+                          <Value>Сумма:</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -694,11 +859,13 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                           </Style>
                         </Textbox>
                       </ReportItems>
+                      <ColSpan>2</ColSpan>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
-                        <Textbox Name="Textbox2">
-                          <Style>
+                        <Textbox Name="Textbox34">
+                          <Value>=Sum((Fields!lastvalue_1.Value-Fields!prevalue_1.Value) * {reading_ratio})</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
                               <Left>Solid</Left>
@@ -710,10 +877,8 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Right</TextAlign>
                           </Style>
-                          <Value>Сумма:</Value>
                         </Textbox>
                       </ReportItems>
-                      <ColSpan>1</ColSpan>
                     </TableCell>
                     <TableCell>
                       <ReportItems>
@@ -730,6 +895,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Right</TextAlign>
+                            <Format>C</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -738,6 +904,26 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                       <ReportItems>
                         <Textbox Name="Textbox37">
                           <Value>=Sum(Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!paid_1.Value, 0))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <Format>C</Format>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox50">
+                          <Value>=Sum((Fields!lastvalue_2.Value-Fields!prevalue_2.Value) * {reading_ratio})</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -768,6 +954,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Right</TextAlign>
+                            <Format>C</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -776,6 +963,26 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                       <ReportItems>
                         <Textbox Name="Textbox43">
                           <Value>=Sum(Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!paid_2.Value, 0))</Value>
+                          <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                            <BorderStyle>
+                              <Default>Solid</Default>
+                              <Left>Solid</Left>
+                              <Bottom>Solid</Bottom>
+                              <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderColor />
+                            <BorderWidth />
+                            <FontWeight>Bold</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <Format>C</Format>
+                          </Style>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Textbox56">
+                          <Value>=Sum((Fields!lastvalue_3.Value-Fields!prevalue_3.Value) * {reading_ratio})</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -806,6 +1013,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Right</TextAlign>
+                            <Format>C</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -825,6 +1033,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                             <BorderWidth />
                             <FontWeight>Bold</FontWeight>
                             <TextAlign>Right</TextAlign>
+                            <Format>C</Format>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -880,6 +1089,25 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox16">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox9">
                       <Value>
                       </Value>
@@ -918,6 +1146,25 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 </TableCell>
                 <TableCell>
                   <ReportItems>
+                    <Textbox Name="Textbox45">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
                     <Textbox Name="Textbox14">
                       <Value>
                       </Value>
@@ -938,6 +1185,25 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox39">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left>None</Left>
+                          <Right>None</Right>
+                          <Top>Solid</Top>
+                          <Bottom>None</Bottom>
+                        </BorderStyle>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox53">
                       <Value>
                       </Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
