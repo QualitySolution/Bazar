@@ -17,7 +17,6 @@ namespace bazar
 		{
 			this.Build ();
 			FillMeter();
-			FillProviders();
 			FillComboBox();
 		}
 
@@ -50,38 +49,6 @@ namespace bazar
 				logger.Info ("Ok");
 			} catch (Exception ex) {
 				QSMain.ErrorMessageWithLog (this, "Ошибка получения информации о типах счетчиков!", logger, ex);
-			}
-		}
-
-		void FillProviders()
-        {
-			ProvidersList = new ListStore (typeof (int), typeof (bool), typeof (string));
-
-			CellRendererToggle CellSelect = new CellRendererToggle ();
-			CellSelect.Activatable = true;
-			CellSelect.Toggled += onCellSelectToggled_Providers;
-
-			treeviewProviders.AppendColumn ("Выб.", CellSelect, "active", 1);
-			treeviewProviders.AppendColumn ("Поставщик", new CellRendererText (), "text", 2);
-
-			treeviewProviders.Model = ProvidersList;
-
-			logger.Info ("Запрос поставщиков...");
-			string sql = "SELECT id, name FROM service_providers";
-			try {
-				MySqlCommand cmd = new MySqlCommand (sql, QSMain.connectionDB);
-
-				using (MySqlDataReader rdr = cmd.ExecuteReader ()) {
-					while (rdr.Read ()) {
-						ProvidersList.AppendValues (rdr.GetInt32 ("id"),
-													 false,
-													 rdr.GetString ("name")
-													 );
-					}
-				}
-				logger.Info ("Ok");
-			} catch (Exception ex) {
-				QSMain.ErrorMessageWithLog (this, "Ошибка получения поставщиков!", logger, ex);
 			}
 		}
 
@@ -141,7 +108,6 @@ namespace bazar
 					ViewReportExt.Run ("Meters_vertical", param.TrimEnd (','));
 				else	
 					ViewReportExt.Run ("Meters_horizontal", param.TrimEnd (','));
-
 		}
 
 		protected string BuildParams()
@@ -158,19 +124,6 @@ namespace bazar
 				param += String.Format ("{0},", -1);
 			param = param.TrimEnd (',');
 
-			param += "&providers=";
-
-			bool isEmptyProvidersList = true;
-			foreach (object [] row in ProvidersList) 
-				if ((bool)row [1]) {
-					param += String.Format ("{0},", row [0]);
-					isEmptyProvidersList = false;
-				}
-
-			if (isEmptyProvidersList)
-				param += String.Format ("{0},", -1);
-
-			param = param.TrimEnd (',');
 			param += GetPeriod ();
 
 			return param;
