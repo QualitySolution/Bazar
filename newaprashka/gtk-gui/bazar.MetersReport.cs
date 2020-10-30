@@ -14,25 +14,9 @@ namespace bazar
 
 		private global::Gtk.Table table1;
 
-		private global::Gtk.HBox hbox3;
-
-		private global::Gtk.Label label6;
-
-		private global::Gtk.VBox vbox4;
-
-		private global::Gtk.RadioButton radioButtonMonth;
-
-		private global::Gtk.RadioButton radioButtonQuarter;
-
 		private global::Gtk.VBox vbox5;
 
 		private global::Gtk.HBox hbox4;
-
-		private global::Gtk.Label label5;
-
-		private global::Gtk.ComboBox comboPeriod;
-
-		private global::Gtk.ComboBox comboYear;
 
 		private global::Gtk.VBox vbox2;
 
@@ -91,66 +75,13 @@ namespace bazar
 			this.hbox2.Spacing = 6;
 			this.hbox2.BorderWidth = ((uint)(3));
 			// Container child hbox2.Gtk.Box+BoxChild
-			this.table1 = new global::Gtk.Table(((uint)(2)), ((uint)(3)), false);
+			this.table1 = new global::Gtk.Table(((uint)(1)), ((uint)(3)), false);
 			this.table1.Name = "table1";
 			this.table1.RowSpacing = ((uint)(6));
 			this.table1.ColumnSpacing = ((uint)(6));
-			// Container child table1.Gtk.Table+TableChild
-			this.hbox3 = new global::Gtk.HBox();
-			this.hbox3.Name = "hbox3";
-			this.hbox3.Spacing = 6;
-			this.table1.Add(this.hbox3);
-			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table1[this.hbox3]));
-			w5.TopAttach = ((uint)(1));
-			w5.BottomAttach = ((uint)(2));
-			w5.LeftAttach = ((uint)(2));
-			w5.RightAttach = ((uint)(3));
-			w5.XOptions = ((global::Gtk.AttachOptions)(4));
-			// Container child table1.Gtk.Table+TableChild
-			this.label6 = new global::Gtk.Label();
-			this.label6.Name = "label6";
-			this.label6.LabelProp = global::Mono.Unix.Catalog.GetString("Отчет за:");
-			this.table1.Add(this.label6);
-			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1[this.label6]));
-			w6.LeftAttach = ((uint)(1));
-			w6.RightAttach = ((uint)(2));
-			w6.YOptions = ((global::Gtk.AttachOptions)(4));
-			// Container child table1.Gtk.Table+TableChild
-			this.vbox4 = new global::Gtk.VBox();
-			this.vbox4.Name = "vbox4";
-			this.vbox4.Spacing = 6;
-			// Container child vbox4.Gtk.Box+BoxChild
-			this.radioButtonMonth = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Месяц"));
-			this.radioButtonMonth.CanFocus = true;
-			this.radioButtonMonth.Name = "radioButtonMonth";
-			this.radioButtonMonth.DrawIndicator = true;
-			this.radioButtonMonth.UseUnderline = true;
-			this.radioButtonMonth.Group = new global::GLib.SList(global::System.IntPtr.Zero);
-			this.vbox4.Add(this.radioButtonMonth);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.radioButtonMonth]));
-			w7.Position = 0;
-			w7.Expand = false;
-			w7.Fill = false;
-			// Container child vbox4.Gtk.Box+BoxChild
-			this.radioButtonQuarter = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Квартал"));
-			this.radioButtonQuarter.CanFocus = true;
-			this.radioButtonQuarter.Name = "radioButtonQuarter";
-			this.radioButtonQuarter.DrawIndicator = true;
-			this.radioButtonQuarter.UseUnderline = true;
-			this.radioButtonQuarter.Group = this.radioButtonMonth.Group;
-			this.vbox4.Add(this.radioButtonQuarter);
-			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.radioButtonQuarter]));
-			w8.Position = 1;
-			w8.Expand = false;
-			w8.Fill = false;
-			this.table1.Add(this.vbox4);
-			global::Gtk.Table.TableChild w9 = ((global::Gtk.Table.TableChild)(this.table1[this.vbox4]));
-			w9.LeftAttach = ((uint)(2));
-			w9.RightAttach = ((uint)(3));
-			w9.YOptions = ((global::Gtk.AttachOptions)(4));
 			this.hbox2.Add(this.table1);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.table1]));
-			w10.Position = 0;
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.table1]));
+			w5.Position = 0;
 			// Container child hbox2.Gtk.Box+BoxChild
 			this.vbox5 = new global::Gtk.VBox();
 			this.vbox5.Name = "vbox5";
@@ -159,59 +90,17 @@ namespace bazar
 			this.hbox4 = new global::Gtk.HBox();
 			this.hbox4.Name = "hbox4";
 			this.hbox4.Spacing = 6;
-			// Container child hbox4.Gtk.Box+BoxChild
-			this.label5 = new global::Gtk.Label();
-			this.label5.Name = "label5";
-			this.label5.Xalign = 1F;
-			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString("Период:");
-			this.hbox4.Add(this.label5);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.hbox4[this.label5]));
-			w11.Position = 0;
-			w11.Expand = false;
-			w11.Fill = false;
-			// Container child hbox4.Gtk.Box+BoxChild
-			this.comboPeriod = global::Gtk.ComboBox.NewText();
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Январь"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Февраль"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Март"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Апрель"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Май"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Июнь"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Июль"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Август"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Сентябрь"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Октябрь"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Ноябрь"));
-			this.comboPeriod.AppendText(global::Mono.Unix.Catalog.GetString("Декабрь"));
-			this.comboPeriod.Name = "comboPeriod";
-			this.hbox4.Add(this.comboPeriod);
-			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox4[this.comboPeriod]));
-			w12.Position = 1;
-			w12.Expand = false;
-			w12.Fill = false;
-			// Container child hbox4.Gtk.Box+BoxChild
-			this.comboYear = global::Gtk.ComboBox.NewText();
-			this.comboYear.Name = "comboYear";
-			this.hbox4.Add(this.comboYear);
-			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox4[this.comboYear]));
-			w13.Position = 2;
-			w13.Expand = false;
-			w13.Fill = false;
 			this.vbox5.Add(this.hbox4);
-			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox5[this.hbox4]));
-			w14.Position = 0;
-			w14.Expand = false;
-			w14.Fill = false;
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox5[this.hbox4]));
+			w6.Position = 0;
 			this.hbox2.Add(this.vbox5);
-			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.vbox5]));
-			w15.Position = 1;
-			w15.Expand = false;
-			w15.Fill = false;
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.vbox5]));
+			w7.Position = 1;
 			w1.Add(this.hbox2);
-			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(w1[this.hbox2]));
-			w16.Position = 2;
-			w16.Expand = false;
-			w16.Fill = false;
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(w1[this.hbox2]));
+			w8.Position = 2;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child dialog1_VBox.Gtk.Box+BoxChild
 			this.vbox2 = new global::Gtk.VBox();
 			this.vbox2.Name = "vbox2";
@@ -224,10 +113,10 @@ namespace bazar
 			this.checkHandmade.DrawIndicator = true;
 			this.checkHandmade.UseUnderline = true;
 			this.vbox2.Add(this.checkHandmade);
-			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.checkHandmade]));
-			w17.Position = 0;
-			w17.Expand = false;
-			w17.Fill = false;
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.checkHandmade]));
+			w9.Position = 0;
+			w9.Expand = false;
+			w9.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.hbox1 = new global::Gtk.HBox();
 			this.hbox1.Name = "hbox1";
@@ -238,10 +127,10 @@ namespace bazar
 			this.label2.Xalign = 1F;
 			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString("Ориентация страницы:");
 			this.hbox1.Add(this.label2);
-			global::Gtk.Box.BoxChild w18 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.label2]));
-			w18.Position = 0;
-			w18.Expand = false;
-			w18.Fill = false;
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.label2]));
+			w10.Position = 0;
+			w10.Expand = false;
+			w10.Fill = false;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.vbox3 = new global::Gtk.VBox();
 			this.vbox3.Name = "vbox3";
@@ -254,10 +143,10 @@ namespace bazar
 			this.radioLetter.UseUnderline = true;
 			this.radioLetter.Group = new global::GLib.SList(global::System.IntPtr.Zero);
 			this.vbox3.Add(this.radioLetter);
-			global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.vbox3[this.radioLetter]));
-			w19.Position = 0;
-			w19.Expand = false;
-			w19.Fill = false;
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox3[this.radioLetter]));
+			w11.Position = 0;
+			w11.Expand = false;
+			w11.Fill = false;
 			// Container child vbox3.Gtk.Box+BoxChild
 			this.radioAlbum = new global::Gtk.RadioButton(global::Mono.Unix.Catalog.GetString("Альбомная"));
 			this.radioAlbum.CanFocus = true;
@@ -266,30 +155,30 @@ namespace bazar
 			this.radioAlbum.UseUnderline = true;
 			this.radioAlbum.Group = this.radioLetter.Group;
 			this.vbox3.Add(this.radioAlbum);
-			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.vbox3[this.radioAlbum]));
-			w20.Position = 1;
-			w20.Expand = false;
-			w20.Fill = false;
+			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox3[this.radioAlbum]));
+			w12.Position = 1;
+			w12.Expand = false;
+			w12.Fill = false;
 			this.hbox1.Add(this.vbox3);
-			global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox3]));
-			w21.Position = 1;
+			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox3]));
+			w13.Position = 1;
 			this.vbox2.Add(this.hbox1);
-			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.hbox1]));
-			w22.Position = 1;
-			w22.Expand = false;
-			w22.Fill = false;
+			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.hbox1]));
+			w14.Position = 1;
+			w14.Expand = false;
+			w14.Fill = false;
 			w1.Add(this.vbox2);
-			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(w1[this.vbox2]));
-			w23.PackType = ((global::Gtk.PackType)(1));
-			w23.Position = 4;
-			w23.Expand = false;
-			w23.Fill = false;
+			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(w1[this.vbox2]));
+			w15.PackType = ((global::Gtk.PackType)(1));
+			w15.Position = 4;
+			w15.Expand = false;
+			w15.Fill = false;
 			// Internal child bazar.MetersReport.ActionArea
-			global::Gtk.HButtonBox w24 = this.ActionArea;
-			w24.Name = "dialog1_ActionArea";
-			w24.Spacing = 10;
-			w24.BorderWidth = ((uint)(5));
-			w24.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w16 = this.ActionArea;
+			w16.Name = "dialog1_ActionArea";
+			w16.Spacing = 10;
+			w16.BorderWidth = ((uint)(5));
+			w16.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button();
 			this.buttonCancel.CanDefault = true;
@@ -299,9 +188,9 @@ namespace bazar
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget(this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w25 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w24[this.buttonCancel]));
-			w25.Expand = false;
-			w25.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w17 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w16[this.buttonCancel]));
+			w17.Expand = false;
+			w17.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button();
 			this.buttonOk.CanDefault = true;
@@ -311,10 +200,10 @@ namespace bazar
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget(this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w26 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w24[this.buttonOk]));
-			w26.Position = 1;
-			w26.Expand = false;
-			w26.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w18 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w16[this.buttonOk]));
+			w18.Position = 1;
+			w18.Expand = false;
+			w18.Fill = false;
 			if ((this.Child != null))
 			{
 				this.Child.ShowAll();
@@ -322,8 +211,6 @@ namespace bazar
 			this.DefaultWidth = 558;
 			this.DefaultHeight = 514;
 			this.Show();
-			this.radioButtonMonth.Toggled += new global::System.EventHandler(this.OnRadiobuttonQuarterToggled);
-			this.radioButtonQuarter.Toggled += new global::System.EventHandler(this.OnRadiobuttonQuarterToggled);
 			this.buttonOk.Clicked += new global::System.EventHandler(this.OnButtonOkClicked);
 		}
 	}

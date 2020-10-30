@@ -9,15 +9,11 @@ namespace bazar
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		ListStore MetersList;
-		ListStore ProvidersList;
-		ListStore monthModel;
-		ListStore quarterModel;
 
 		public MetersReport ()
 		{
 			this.Build ();
 			FillMeter();
-			FillComboBox();
 		}
 
 		void FillMeter()
@@ -52,36 +48,9 @@ namespace bazar
 			}
 		}
 
-		void FillComboBox()
-        {
-			string [] months ={
-			"Январь","Февраль",
-			"Март","Апрель","Май",
-			"Июнь","Июль","Август",
-			"Сентябрь","Октябрь","Ноябрь",
-			"Декабрь"};
-			string [] quarters = { "I", "II", "III", "IV" };
-
-			MainClass.ComboAccrualYearsFill (comboYear);
-			comboPeriod.Active = DateTime.Now.Month - 1;
-			monthModel = new ListStore (typeof (string));
-			quarterModel = new ListStore (typeof (string));
-			foreach (string month in months) {
-				monthModel.AppendValues (month);
-			}
-			foreach (string quarter in quarters) {
-				quarterModel.AppendValues (quarter);
-			}
-		}
-
 		void onCellSelectToggled(object o, ToggledArgs args) 
 		{
 			SetToggled (o, args, MetersList);
-		}
-
-		void onCellSelectToggled_Providers (object o, ToggledArgs args)
-		{
-			SetToggled (o, args, ProvidersList);
 		}
 
 		void SetToggled(object o, ToggledArgs args, ListStore list)
@@ -124,49 +93,7 @@ namespace bazar
 				param += String.Format ("{0},", -1);
 			param = param.TrimEnd (',');
 
-			param += GetPeriod ();
-
 			return param;
-		}
-
-		protected void OnRadiobuttonQuarterToggled (object sender, EventArgs e)
-		{
-			if (radioButtonMonth.Active) {
-				comboPeriod.Model = monthModel;
-				comboPeriod.Active = 0;
-			} else if (radioButtonQuarter.Active) {
-				comboPeriod.Model = quarterModel;
-				comboPeriod.Active = 0;
-			}
-		}
-
-		string GetPeriod()
-        {
-			string args = "";
-			if (radioButtonMonth.Active) {
-				int month = comboPeriod.Active + 1;
-				int year = Convert.ToInt32 (comboYear.ActiveText);
-				args = "&month=" + (comboPeriod.Active + 1).ToString () + "&year=" + comboYear.ActiveText;
-			} else if (radioButtonQuarter.Active) {
-				int quarter = comboPeriod.Active + 1;
-				switch (quarter) {
-				case 2:
-					quarter += 2;
-					break;
-				case 3:
-					quarter += 4;
-					break;
-				case 4:
-					quarter += 6;
-					break;
-				default:
-					break;
-				}
-				string period = $"{quarter}, {++quarter}, {++quarter}";
-				int year = Convert.ToInt32 (comboYear.ActiveText);
-				args = "&month=" + period + "&year=" + year;
-			}
-			return args;
 		}
 	}
 }
