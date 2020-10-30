@@ -80,11 +80,11 @@ SELECT  selectedmeters.*,
 FROM ( SELECT meter_month_1, meter_month_2, meter_month_3, meters.id as meter_id,meter_tariffs.id as meter_tariff_id FROM meters JOIN meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id
 left join (SELECT meter_month_1.mon as meter_month_1, meter_month_2.mon as meter_month_2, meter_month_3.mon as meter_month_3 from
  (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-WHERE t.mon IN (1, 2, 3) limit 1) meter_month_1 
+WHERE t.mon IN (@month) limit 1) meter_month_1 
 left join (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-WHERE t.mon IN (1, 2, 3) limit 1,1) meter_month_2 ON 1 
+WHERE t.mon IN (@month) limit 1,1) meter_month_2 ON 1 
 left join (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
-WHERE t.mon IN (1, 2, 3) limit 2,1) meter_month_3 ON 1 ) m on 1
+WHERE t.mon IN (@month) limit 2,1) meter_month_3 ON 1 ) m on 1
 ) as selectedmeters
 
 ) as reading ON meters.id = reading.meter_id 
