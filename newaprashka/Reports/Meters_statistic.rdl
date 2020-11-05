@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>SELECT reading.meter_month_1, reading.meter_month_2, reading.meter_month_3, service_providers.name as service_provider_name, lessees.name,  place_types.name as place_type, meters.place_no, meter_types.reading_ratio,
@@ -21,9 +21,7 @@ meter_types.name type,
   IFNULL(accrual_pays_1.count, 0) as count_1, IFNULL(accrual_pays_2.count, 0) as count_2, IFNULL(accrual_pays_3.count, 0) as count_3,  IFNULL(paysum_1.sum, 0) as paid_1, IFNULL(paysum_2.sum, 0) as paid_2, IFNULL(paysum_3.sum, 0) as paid_3, IFNULL(reading.lastpayid_1, -1) as lastpayid0_1,
  IFNULL(reading.lastpayid_2, -1) as lastpayid0_2, IFNULL(reading.lastpayid_3, -1) as lastpayid0_3, 
 IFNULL(accrual_pays_1.price,0) as price_1, IFNULL(accrual_pays_2.price, 0) as price_2, 
- IFNULL(accrual_pays_3.price, 0) as price_3,
- reading.lastvalue_1, reading.lastvalue_2, reading.lastvalue_3, 
- reading.prevalue_1, reading.lastvalue_1 as prevalue_2, reading.lastvalue_2 as prevalue_3 
+ IFNULL(accrual_pays_3.price, 0) as price_3
  FROM meters 
 LEFT JOIN (
 SELECT  selectedmeters.*, 
@@ -31,52 +29,24 @@ SELECT  selectedmeters.*,
 (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month_1
-    AND YEAR(meter_reading.date) = @year 
+	AND meter_reading.date &gt;= DATE(CONCAT_WS('-', @year, meter_month_1 , 20))
+    	AND meter_reading.date &lt; DATE_ADD(DATE(CONCAT_WS('-', @year, meter_month_1, 20)), INTERVAL 1 MONTH)
 	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_1,
 
     (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month_2
-    AND YEAR(meter_reading.date) = @year 
+	AND meter_reading.date &gt;= DATE(CONCAT_WS('-', @year, meter_month_2 , 20))
+    	AND meter_reading.date &lt; DATE_ADD(DATE(CONCAT_WS('-', @year, meter_month_2, 20)), INTERVAL 1 MONTH)
 	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_2,
     
         (SELECT accrual_pay_id 
 	FROM meter_reading 
     WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month_3
-    AND YEAR(meter_reading.date) = @year 
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_3,
+	AND meter_reading.date &gt;= DATE(CONCAT_WS('-', @year, meter_month_3 , 20))
+    	AND meter_reading.date &lt; DATE_ADD(DATE(CONCAT_WS('-', @year, meter_month_3, 20)), INTERVAL 1 MONTH)
+	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastpayid_3
 
-    (SELECT value 
-	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month_1  AND YEAR(meter_reading.date) = @year  
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue_1,
-    
-        (SELECT value 
-	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month_2  AND YEAR(meter_reading.date) = @year  
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue_2,
-    
-        (SELECT value 
-	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-	AND MONTH(meter_reading.date) = meter_month_3  AND YEAR(meter_reading.date) = @year  
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as lastvalue_3,
-    
-    (SELECT value
-	FROM meter_reading 
-	WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id
-	AND meter_reading.date  &lt; (SELECT date
-								FROM meter_reading 
-								WHERE selectedmeters.meter_id = meter_reading.meter_id AND selectedmeters.meter_tariff_id = meter_reading.meter_tariff_id 
-								AND MONTH(meter_reading.date) = meter_month_1 AND YEAR(meter_reading.date) = @year  
-								ORDER BY meter_reading.date DESC, value DESC LIMIT 1) 
-	ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as prevalue_1
-    
 FROM ( SELECT meter_month_1, meter_month_2, meter_month_3, meters.id as meter_id,meter_tariffs.id as meter_tariff_id FROM meters JOIN meter_tariffs on meters.meter_type_id=meter_tariffs.meter_type_id
 left join (SELECT meter_month_1.mon as meter_month_1, meter_month_2.mon as meter_month_2, meter_month_3.mon as meter_month_3 from
  (SELECT * FROM (SELECT 1 as mon UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) t
@@ -125,7 +95,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="name">
           <DataField>name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -209,30 +179,6 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
         <Field Name="reading_ratio">
           <DataField>reading_ratio</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="lastvalue_1">
-          <DataField>lastvalue_1</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="lastvalue_2">
-          <DataField>lastvalue_2</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="lastvalue_3">
-          <DataField>lastvalue_3</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="prevalue_1">
-          <DataField>prevalue_1</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="prevalue_2">
-          <DataField>prevalue_2</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
-        </Field>
-        <Field Name="prevalue_3">
-          <DataField>prevalue_3</DataField>
-          <rd:TypeName>System.UInt64</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -347,7 +293,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox10">
-                      <Value>=(Fields!lastvalue_1.Value-Fields!prevalue_1.Value) * {reading_ratio}</Value>
+                      <Value>=Fields!count_1.Value * {reading_ratio}</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -364,7 +310,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox6">
-                      <Value>=Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!count_1.Value*Fields!price_1.Value, "")</Value>
+                      <Value>=Fields!count_1.Value*Fields!price_1.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -381,7 +327,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox32">
-                      <Value>=Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!paid_1.Value, "")</Value>
+                      <Value>=Fields!paid_1.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -398,7 +344,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox44">
-                      <Value>=(Fields!lastvalue_2.Value-Fields!prevalue_2.Value) * {reading_ratio}</Value>
+                      <Value>=(Fields!count_2.Value) * {reading_ratio}</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -415,7 +361,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox13">
-                      <Value>=Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!count_2.Value*Fields!price_2.Value, "")</Value>
+                      <Value>=Fields!count_2.Value*Fields!price_2.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -432,7 +378,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox38">
-                      <Value>=Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!paid_2.Value, "")</Value>
+                      <Value>=Fields!paid_2.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -449,7 +395,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox52">
-                      <Value>=(Fields!lastvalue_3.Value-Fields!prevalue_3.Value) * {reading_ratio}</Value>
+                      <Value>=(Fields!count_3.Value) * {reading_ratio}</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -466,7 +412,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox21">
-                      <Value>=Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, "")</Value>
+                      <Value>=Fields!count_3.Value*Fields!price_3.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -483,7 +429,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox35">
-                      <Value>=Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!paid_3.Value, "")</Value>
+                      <Value>=Fields!paid_3.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -864,7 +810,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox34">
-                          <Value>=Sum((Fields!lastvalue_1.Value-Fields!prevalue_1.Value) * {reading_ratio})</Value>
+                          <Value>=Sum(Fields!count_1.Value * {reading_ratio})</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -883,7 +829,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox12">
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!count_1.Value*Fields!price_1.Value, ""))</Value>
+                          <Value>=Sum(Fields!count_1.Value*Fields!price_1.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -903,7 +849,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox37">
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_1.Value) != Fields!lastpayid0_1.Value), Fields!paid_1.Value, 0))</Value>
+                          <Value>=Sum(Fields!paid_1.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -923,7 +869,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox50">
-                          <Value>=Sum((Fields!lastvalue_2.Value-Fields!prevalue_2.Value) * {reading_ratio})</Value>
+                          <Value>=Sum(Fields!count_2.Value * {reading_ratio})</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -942,7 +888,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox18">
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, ""))</Value>
+                          <Value>=Sum(Fields!count_2.Value*Fields!price_2.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -962,7 +908,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox43">
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_2.Value) != Fields!lastpayid0_2.Value), Fields!paid_2.Value, 0))</Value>
+                          <Value>=Sum(Fields!paid_2.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -982,7 +928,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox56">
-                          <Value>=Sum((Fields!lastvalue_3.Value-Fields!prevalue_3.Value) * {reading_ratio})</Value>
+                          <Value>=Sum(Fields!count_3.Value * {reading_ratio})</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -1001,7 +947,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox26">
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!count_3.Value*Fields!price_3.Value, ""))</Value>
+                          <Value>=Sum(Fields!count_3.Value*Fields!price_3.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -1021,7 +967,7 @@ ORDER BY service_provider_name, name, meter_id</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox47">
-                          <Value>=Sum(Iif((Previous(Fields!lastpayid0_3.Value) != Fields!lastpayid0_3.Value), Fields!paid_3.Value, ""))</Value>
+                          <Value>=Sum(Fields!paid_3.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
