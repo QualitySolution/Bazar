@@ -114,9 +114,8 @@ namespace bazar.ReportDialogs
 				default:
 					break;
 				}
-				string period = $"{quarter}, {++quarter}, {++quarter}";
 				int year = Convert.ToInt32 (comboYear.ActiveText);
-				args = "&month=" + period + "&year=" + year;
+				args = "&month_1=" + quarter + "&month_2=" + ++quarter + "&month_3=" + ++quarter + "&year=" + year;
 				args += "&onlyAccruals=" + (checkbuttonOnlyAccruals.Active? 1: 0);
 
 				return args;
