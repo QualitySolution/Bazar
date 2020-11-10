@@ -13,12 +13,12 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>select 
 service_provider_id,
-service_providers_name as server_provider_name,
+service_providers_name as service_provider_name,
 lessees.name as lessee_name,
 contracts.place_no as place,
 contracts.place_type_id,
@@ -127,7 +127,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="lessee_name">
           <DataField>lessee_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -142,15 +142,15 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
         </Field>
         <Field Name="count_1">
           <DataField>count_1</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Int64</rd:TypeName>
         </Field>
         <Field Name="count_2">
           <DataField>count_2</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Int64</rd:TypeName>
         </Field>
         <Field Name="count_3">
           <DataField>count_3</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Int64</rd:TypeName>
         </Field>
         <Field Name="service_provider_name">
           <DataField>service_provider_name</DataField>
@@ -243,31 +243,31 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
         </Style>
         <TableColumns>
           <TableColumn>
-            <Width>44.1pt</Width>
+            <Width>38.6pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>92.8pt</Width>
+            <Width>94.5pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>54.6pt</Width>
+            <Width>57.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>87.2pt</Width>
+            <Width>76.0pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>83.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>56.8pt</Width>
+            <Width>60.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>74.9pt</Width>
+            <Width>73.3pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>72.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>48.5pt</Width>
+            <Width>56.5pt</Width>
           </TableColumn>
           <TableColumn>
             <Width>73.7pt</Width>
@@ -453,7 +453,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox35">
-                      <Value>=Fields!paidsum_1.Value</Value>
+                      <Value>=Fields!paidsum_3.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
@@ -809,7 +809,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
               <RepeatOnNewPage>true</RepeatOnNewPage>
               <TableRows>
                 <TableRow>
-                  <Height>.2in</Height>
+                  <Height>28.0pt</Height>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
@@ -853,7 +853,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox12">
-                          <Value>=Sum(Fields!sum_1)</Value>
+                          <Value>=Sum(Fields!sum_1.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -873,7 +873,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox37">
-                          <Value>=Fields!paidsum_1.Value</Value>
+                          <Value>=Sum(Fields!paidsum_1.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -912,7 +912,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox18">
-                          <Value>=Sum(Fields!sum_2)</Value>
+                          <Value>=Sum(Fields!sum_2.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -932,7 +932,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox43">
-                          <Value>=Fields!paidsum_2.Value</Value>
+                          <Value>=Sum(Fields!paidsum_2.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -971,7 +971,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox26">
-                          <Value>=Sum(Fields!sum_3)</Value>
+                          <Value>=Sum(Fields!sum_3.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
@@ -991,7 +991,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                     <TableCell>
                       <ReportItems>
                         <Textbox Name="Textbox47">
-                          <Value>=Fields!paidsum_3.Value</Value>
+                          <Value>=Sum(Fields!paidsum_3.Value)</Value>
                           <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                             <BorderStyle>
                               <Default>Solid</Default>
