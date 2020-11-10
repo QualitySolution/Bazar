@@ -25,9 +25,9 @@ contracts.place_type_id,
 contracts.lessee_id,
 place_types.name as place_type_name,
 ifnull(sum_1, 0) as sum_1, ifnull(paidsum_1, 0) as paidsum_1, ifnull(count_1, 0) as count_1, ifnull(sum_2, 0) as sum_2, ifnull(paidsum_2, 0) as paidsum_2, ifnull(count_2, 0) as count_2, ifnull(sum_3, 0) as sum_3, ifnull(paidsum_3, 0) as paidsum_3, ifnull(count_3, 0) as count_3,
-@month1 as month_1,
-@month2 as month_2,
-@month3 as month_3
+@month_1 as month_1,
+@month_2 as month_2,
+@month_3 as month_3
 ,price_1
 ,price_2
 ,price_3
@@ -37,7 +37,7 @@ FROM accrual
 LEFT JOIN accrual_pays ON accrual_pays.accrual_id = accrual.id
 LEFT JOIN services ON accrual_pays.service_id = services.id
 LEFT JOIN service_providers on service_providers.id = services.service_provider_id 
-WHERE year = @year AND (accrual.month = @month1 OR accrual.month = @month2 OR accrual.month = @month3) 
+WHERE year = @year AND (accrual.month = @month_1 OR accrual.month = @month_2 OR accrual.month = @month_3) 
     AND (-1 IN (@providers) OR service_providers.id IN (@providers))
 GROUP BY accrual.contract_id) as t0
     
@@ -60,7 +60,7 @@ LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM accrual_pays
             LEFT JOIN service_providers on service_providers.id = services.service_provider_id
 			where (-1 IN (@providers) OR service_providers.id IN (@providers))
             GROUP BY accrual_id) as paidtable ON paidtable.accrual_id = accrual.id 
-WHERE year = @year AND accrual.month = @month1
+WHERE year = @year AND accrual.month = @month_1
 																		) t1 on t1.contract_id = t0.contract_id
 
 LEFT join (SELECT accrual_2.contract_id, no_complete, sumtable_2.sum as sum_2, paidtable_2.sum as paidsum_2 
@@ -79,7 +79,7 @@ LEFT JOIN (SELECT accrual_id, SUM(sum) as sum
             LEFT JOIN service_providers on service_providers.id = services.service_provider_id
 			where (-1 IN (@providers) OR service_providers.id IN (@providers))
             GROUP BY accrual_id) as paidtable_2 ON paidtable_2.accrual_id = accrual_2.id 
-WHERE accrual_2.year = @year AND accrual_2.month = @month2
+WHERE accrual_2.year = @year AND accrual_2.month = @month_2
 												) as t2 on t2.contract_id = t0.contract_id
 
 LEFT join (SELECT accrual.contract_id, accrual.id as id, month, year, no_complete, sumtable.sum as sum_3, 
@@ -98,7 +98,7 @@ LEFT JOIN (SELECT accrual_id, SUM(sum) as sum FROM accrual_pays
             LEFT JOIN service_providers on service_providers.id = services.service_provider_id
 			where (-1 IN (@providers) OR service_providers.id IN (@providers))
             GROUP BY accrual_id) as paidtable ON paidtable.accrual_id = accrual.id 
-WHERE year = @year AND accrual.month = @month3
+WHERE year = @year AND accrual.month = @month_3
           ) as t3 on t3.contract_id = t0.contract_id
 WHERE
 (@onlyAccruals = 0 OR (@onlyAccruals = 1 AND 
