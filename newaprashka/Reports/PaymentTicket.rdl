@@ -33,10 +33,10 @@
   </ReportParameters>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
-        <CommandText>SELECT services.name as service, payment_details.sum as sum 
+        <CommandText>SELECT services.name as service, payment_details.sum as sum
 FROM payment_details
 LEFT JOIN payments ON payments.id = payment_details.payment_id
 LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id 
@@ -49,7 +49,7 @@ WHERE credit_slips.id = @id</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="service">
           <DataField>service</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -105,6 +105,56 @@ WHERE credit_slips.id = @id</CommandText>
         <Field Name="user">
           <DataField>user</DataField>
           <TypeName>System.String</TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="meter_reading" >
+      <Query>
+        <DataSourceName>DS1</DataSourceName>
+        <CommandText> select t.*,
+ (select value from meter_reading where meter_id = mt_id and meter_tariff_id = mt_tar_id and date &lt; lastdate ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as prevalue,
+  (select date from meter_reading where meter_id = mt_id and meter_tariff_id = mt_tar_id and date &lt; lastdate ORDER BY meter_reading.date DESC, value DESC LIMIT 1) as predate
+ from( 
+ SELECT credit_slips.id as credit, accrual_pays.id as accrual, services.name as service_name,
+ meter.value as lastvalue, meter.date as lastdate, meter.meter_id as mt_id, meter.meter_tariff_id as mt_tar_id
+FROM payment_details
+LEFT JOIN payments ON payments.id = payment_details.payment_id
+LEFT JOIN credit_slips ON credit_slips.id = payments.credit_slip_id 
+LEFT JOIN accrual_pays ON accrual_pays.id = payment_details.accrual_pay_id 
+LEFT JOIN services ON services.id = accrual_pays.service_id 
+LEFT JOIN (select meter_id, meter_tariff_id, accrual_pay_id, date, value from  meter_reading) as meter on meter.accrual_pay_id = payment_details.accrual_pay_id
+WHERE credit_slips.id = @id
+and meter.accrual_pay_id is not null) as t</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="id">
+            <Value>=Parameters!id</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+      <Fields>
+        <Field Name="service_name">
+          <DataField>service_name</DataField>
+          <TypeName>System.String</TypeName>
+        </Field>
+        <Field Name="predate">
+          <DataField>predate</DataField>
+          <TypeName>System.DateTime</TypeName>
+        </Field>
+        <Field Name="lastdate">
+          <DataField>lastdate</DataField>
+          <TypeName>System.DateTime</TypeName>
+        </Field>
+        <Field Name="lastvalue">
+          <DataField>lastvalue</DataField>
+          <TypeName>System.Int64</TypeName>
+        </Field>
+        <Field Name="prevalue">
+          <DataField>prevalue</DataField>
+          <TypeName>System.Int64</TypeName>
+        </Field>
+        <Field Name="credit">
+          <DataField>credit</DataField>
+          <TypeName>System.Int64</TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -300,8 +350,8 @@ WHERE credit_slips.id = @id</CommandText>
       <List Name="List1">
         <Height>84.43pt</Height>
         <Width>280.04pt</Width>
-        <Left>8.5pt</Left>
-        <Top>3.1pt</Top>
+        <Left>8.50pt</Left>
+        <Top>3.10pt</Top>
         <ReportItems>
           <Textbox Name="Textbox5">
             <Height>12.73pt</Height>
@@ -384,8 +434,8 @@ WHERE credit_slips.id = @id</CommandText>
         <DataSetName>credit_slip</DataSetName>
       </List>
       <Line Name="Line1">
-        <Height>239.74pt</Height>
-        <Width>-0.73pt</Width>
+        <Height>295.37pt</Height>
+        <Width>0.03pt</Width>
         <Style>
           <BorderStyle>
             <Default>Dashed</Default>
@@ -395,8 +445,8 @@ WHERE credit_slips.id = @id</CommandText>
             <Default>2pt</Default>
           </BorderWidth>
         </Style>
-        <Left>292.9pt</Left>
-        <Top>0.0pt</Top>
+        <Left>292.90pt</Left>
+        <Top>0.00pt</Top>
       </Line>
       <List Name="List3">
         <Height>84.43pt</Height>
@@ -633,8 +683,486 @@ WHERE credit_slips.id = @id</CommandText>
         </ReportItems>
         <DataSetName>credit_slip</DataSetName>
       </List>
+      <Table Name="Table3" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <DataSetName>meter_reading</DataSetName>
+        <NoRows>
+        </NoRows>
+        <Style>
+          <BorderStyle>
+            <Default>None</Default>
+            <Left >None</Left>
+            <Right >None</Right>
+            <Top >None</Top>
+            <Bottom >None</Bottom>
+          </BorderStyle>
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+        <TableColumns>
+          <TableColumn>
+            <Width>105.2pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>73.4pt</Width>
+          </TableColumn>
+          <TableColumn >
+            <Width>73.0pt</Width>
+          </TableColumn>
+        </TableColumns>
+        <Header>
+          <TableRows>
+            <TableRow >
+              <Height>22.2pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox27">
+                      <Value>Показания:</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Left</TextAlign>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <VerticalAlign >Top</VerticalAlign>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox28">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox32">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+            <TableRow>
+              <Height>13.6pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox12">
+                      <Value>Услуга</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox24">
+                      <Value>Предыдущие</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox30">
+                      <Value>Последние</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+          <RepeatOnNewPage>true</RepeatOnNewPage>
+        </Header>
+        <Details>
+          <TableRows>
+            <TableRow>
+              <Height>30.4pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox25">
+                      <Value>=Fields!service_name.Value</Value>
+                      <CanGrow>true</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox26">
+                      <Value>=Format(Fields!predate.Value, "dd/MM/yyyy") + "
+ " + Fields!prevalue.Value</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox31">
+                      <Value>=Format(Fields!lastdate.Value, "dd/MM/yyyy") + "
+ " + Fields!lastvalue.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+        </Details>
+        <Left>15.4pt</Left>
+        <Top>190.0pt</Top>
+      </Table>
+      <Table Name="Table4" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+        <DataSetName>meter_reading</DataSetName>
+        <NoRows>
+        </NoRows>
+        <Style>
+          <BorderStyle>
+            <Default>None</Default>
+            <Left >None</Left>
+            <Right >None</Right>
+            <Top >None</Top>
+            <Bottom >None</Bottom>
+          </BorderStyle>
+          <BorderColor />
+          <BorderWidth />
+        </Style>
+        <TableColumns>
+          <TableColumn>
+            <Width>105.2pt</Width>
+          </TableColumn>
+          <TableColumn>
+            <Width>73.4pt</Width>
+          </TableColumn>
+          <TableColumn >
+            <Width>73.0pt</Width>
+          </TableColumn>
+        </TableColumns>
+        <Header>
+          <TableRows>
+            <TableRow >
+              <Height>22.2pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox29">
+                      <Value>Показания:</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Left</TextAlign>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                        <VerticalAlign >Top</VerticalAlign>
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox33">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox34">
+                      <Value>
+                      </Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>None</Default>
+                          <Left >None</Left>
+                          <Right >None</Right>
+                          <Top >None</Top>
+                          <Bottom >None</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+            <TableRow>
+              <Height>13.6pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox35">
+                      <Value>Услуга</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox36">
+                      <Value>Предыдущие</Value>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox37">
+                      <Value>Последние</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <TextAlign>Center</TextAlign>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <FontWeight>Bold</FontWeight>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+          <RepeatOnNewPage>true</RepeatOnNewPage>
+        </Header>
+        <Details>
+          <TableRows>
+            <TableRow>
+              <Height>28.8pt</Height>
+              <TableCells>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox38">
+                      <Value>=Fields!service_name.Value</Value>
+                      <CanGrow>true</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell>
+                  <ReportItems>
+                    <Textbox Name="Textbox39">
+                      <Value>=Format(Fields!predate.Value, "dd/MM/yyyy") + "
+ " + Fields!prevalue.Value</Value>
+                      <CanGrow>false</CanGrow>
+                      <Style>
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+                <TableCell >
+                  <ReportItems>
+                    <Textbox Name="Textbox40">
+                      <Value>=Format(Fields!lastdate.Value, "dd/MM/yyyy") + "
+ " + Fields!lastvalue.Value</Value>
+                      <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+                        <BorderStyle>
+                          <Default>Solid</Default>
+                          <Left >Solid</Left>
+                          <Right >Solid</Right>
+                          <Top >Solid</Top>
+                          <Bottom >Solid</Bottom>
+                        </BorderStyle>
+                        <PaddingRight>2pt</PaddingRight>
+                        <TextAlign>Right</TextAlign>
+                        <BorderColor />
+                        <BorderWidth />
+                      </Style>
+                    </Textbox>
+                  </ReportItems>
+                </TableCell>
+              </TableCells>
+            </TableRow>
+          </TableRows>
+        </Details>
+        <Left>316.9pt</Left>
+        <Top>191.8pt</Top>
+      </Table>
     </ReportItems>
-    <Height>246.4pt</Height>
+    <Height>271.6pt</Height>
   </Body>
   <PageFooter>
     <Height>0.0pt</Height>
