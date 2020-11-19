@@ -48,7 +48,7 @@ LEFT JOIN place_types ON place_types.id = contracts.place_type_id
 LEFT JOIN (SELECT accrual.contract_id, accrual.id as id, month, year, no_complete, sumtable.sum as sum_1, paidtable.sum as paidsum_1 
 , sumtable.count as count_1, sumtable.price as price_1
 FROM accrual 
-LEFT JOIN (SELECT accrual_id, count, price, SUM(count * price) as sum
+LEFT JOIN (SELECT accrual_id, SUM(count) as count, price, SUM(count * price) as sum
 			FROM accrual_pays 
 			LEFT JOIN services ON accrual_pays.service_id = services.id
             LEFT JOIN service_providers on service_providers.id = services.service_provider_id
@@ -66,7 +66,7 @@ WHERE year = @year AND accrual.month = @month_1
 LEFT join (SELECT accrual_2.contract_id, no_complete, sumtable_2.sum as sum_2, paidtable_2.sum as paidsum_2 
 , sumtable_2.count as count_2, sumtable_2.price as price_2
 FROM accrual as accrual_2
-LEFT JOIN (SELECT accrual_id, count, price, SUM(count * price) as sum 
+LEFT JOIN (SELECT accrual_id, SUM(count) as count, price, SUM(count * price) as sum 
 			FROM accrual_pays 
 			LEFT JOIN services ON accrual_pays.service_id = services.id
             LEFT JOIN service_providers on service_providers.id = services.service_provider_id
@@ -86,7 +86,7 @@ LEFT join (SELECT accrual.contract_id, accrual.id as id, month, year, no_complet
 paidtable.sum as paidsum_3 
 , sumtable.count as count_3, sumtable.price as price_3
 FROM accrual 
-LEFT JOIN (SELECT accrual_id, count, price, SUM(count * price) as sum 
+LEFT JOIN (SELECT accrual_id, SUM(count) as count, price, SUM(count * price) as sum 
 			FROM accrual_pays 
 			LEFT JOIN services ON accrual_pays.service_id = services.id
             LEFT JOIN service_providers on service_providers.id = services.service_provider_id
