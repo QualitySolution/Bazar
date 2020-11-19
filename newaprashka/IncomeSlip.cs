@@ -39,6 +39,9 @@ namespace bazar
 			var itemDetailPaymentPrint = new MenuItem ("Подробная квитанция");
 			itemDetailPaymentPrint.Activated += ItemDetailPaymentPrint_Activated;
 			menu.Add (itemDetailPaymentPrint);
+			var itemDetailPaymentPrintWithMeter = new MenuItem ("Квитанция со показаниями");
+			itemDetailPaymentPrintWithMeter.Activated += ItemDetailPaymentWithMetersPrint_Activated;
+			menu.Add (itemDetailPaymentPrintWithMeter);
 			menu.ShowAll ();
 			buttonPrintPayment.Menu = menu;
 		}
@@ -550,6 +553,12 @@ namespace bazar
 		{
 			string param = "id=" + entryNumber.Text;
 			ViewReportExt.Run ("PaymentTicket", param);
+		}
+
+		void ItemDetailPaymentWithMetersPrint_Activated (object sender, EventArgs e)
+		{
+			string param = "id=" + entryNumber.Text;
+			ViewReportExt.Run ("PaymentTicketWithMeters", param);
 		}
 
 		#endregion

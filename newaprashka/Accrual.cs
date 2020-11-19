@@ -169,6 +169,9 @@ namespace bazar
 			var itemAllCashPrint = new MenuItem ("По всем кассам");
 			itemAllCashPrint.Activated += ItemAllCashPrint_Activated;;
 			menu.Add (itemAllCashPrint);
+			var itemAllCashPrintWithMeters = new MenuItem ("По всем кассам с показаниями");
+			itemAllCashPrintWithMeters.Activated += ItemAllCashWithMetersPrint_Activated; ;
+			menu.Add (itemAllCashPrintWithMeters);
 			var separator = new SeparatorMenuItem ();
 			menu.Add (separator);
 
@@ -190,6 +193,12 @@ namespace bazar
 		{
 			string param = $"id={entryNumber.Text}&cash_id=-1";
 			ViewReportExt.Run ("PayList", param);
+		}
+
+		void ItemAllCashWithMetersPrint_Activated (object sender, EventArgs e)
+		{
+			string param = $"id={entryNumber.Text}&cash_id=-1";
+			ViewReportExt.Run ("PayListWithMeters", param);
 		}
 
 		void ItemSelectedCashPrint_Activated (object sender, EventArgs e)
