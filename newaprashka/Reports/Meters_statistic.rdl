@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>select 
@@ -127,7 +127,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="lessee_name">
           <DataField>lessee_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -402,7 +402,7 @@ order by lessees.name, place_types.name, contracts.place_no;</CommandText>
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox38">
-                      <Value>=Fields!paidsum_1.Value</Value>
+                      <Value>=Fields!paidsum_2.Value</Value>
                       <Style xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
                         <BorderStyle>
                           <Default>Solid</Default>
