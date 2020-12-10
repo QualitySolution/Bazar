@@ -105,7 +105,7 @@ WHERE
 count_1 is not null
 AND count_2 is not null
 AND count_3 is not null))
-order by place_types.name, 
+order by service_provider_name, place_types.name, 
 CAST(substring_index(SUBSTRING_INDEX(place,'\\',1), '/', 1) as unsigned), 
 CAST(substring_index(SUBSTRING_INDEX(place,'\\',-1), '/', -1) as unsigned), 
 place;</CommandText>
@@ -473,16 +473,6 @@ place;</CommandText>
               </TableCells>
             </TableRow>
           </TableRows>
-          <Sorting>
-            <SortBy>
-              <SortExpression>=Fields!lessee_name.Value</SortExpression>
-              <Direction>Ascending</Direction>
-            </SortBy>
-            <SortBy>
-              <SortExpression>=Fields!place_type_name.Value + "-" + Fields!place.Value</SortExpression>
-              <Direction>Ascending</Direction>
-            </SortBy>
-          </Sorting>
         </Details>
         <Left>2.1pt</Left>
         <Top>0.0pt</Top>
