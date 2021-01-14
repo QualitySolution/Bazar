@@ -5,7 +5,7 @@
   <Author>
   </Author>
   <PageHeight>297mm</PageHeight>
-  <PageWidth>230mm</PageWidth>
+  <PageWidth>210mm</PageWidth>
   <Width>210mm</Width>
   <TopMargin>.25in</TopMargin>
   <LeftMargin>.25in</LeftMargin>
@@ -13,7 +13,7 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query >
+      <Query>
         <DataSourceName>DS1</DataSourceName>
         <Timeout>300</Timeout>
         <CommandText>SELECT services.name as service, cash.name as cash, units.name as units, count, price, (count * price) as sum, IFNULL(paysum.sum, 0) as paid FROM accrual_pays 
@@ -33,7 +33,7 @@ WHERE accrual_pays.accrual_id = @id AND (@cash_id = -1 OR accrual_pays.cash_id =
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields >
+      <Fields>
         <Field Name="service">
           <DataField>service</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -102,7 +102,7 @@ WHERE accrual.id = @id</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="meters" >
+    <DataSet Name="meters">
       <Query>
         <DataSourceName>DS1</DataSourceName>
         <CommandText>select t.*,
@@ -186,25 +186,25 @@ WHERE t. mt_id is not null
             <Width>155.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>89.2pt</Width>
+            <Width>73.8pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>85.9pt</Width>
+            <Width>73.7pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>90.4pt</Width>
+            <Width>80.9pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>104.6pt</Width>
+            <Width>90.0pt</Width>
           </TableColumn>
           <TableColumn>
-            <Width>90.6pt</Width>
+            <Width>85.3pt</Width>
           </TableColumn>
         </TableColumns>
         <Details>
           <TableRows>
             <TableRow>
-              <Height>17.0pt</Height>
+              <Height>.2in</Height>
               <TableCells>
                 <TableCell>
                   <ReportItems>
@@ -313,7 +313,7 @@ WHERE t. mt_id is not null
           </TableRows>
         </Details>
         <Left>0.0pt</Left>
-        <Top>70.5pt</Top>
+        <Top>48.1pt</Top>
         <TableGroups>
           <TableGroup>
             <Grouping Name="cash">
@@ -327,7 +327,7 @@ WHERE t. mt_id is not null
               <RepeatOnNewPage>true</RepeatOnNewPage>
               <TableRows>
                 <TableRow>
-                  <Height>24.0pt</Height>
+                  <Height>15.5pt</Height>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
@@ -459,7 +459,7 @@ WHERE t. mt_id is not null
               <RepeatOnNewPage>false</RepeatOnNewPage>
               <TableRows>
                 <TableRow>
-                  <Height>.2in</Height>
+                  <Height>12.9pt</Height>
                   <TableCells>
                     <TableCell>
                       <ReportItems>
@@ -594,8 +594,8 @@ WHERE t. mt_id is not null
         <Width>551.66pt</Width>
         <Value>=First(Fields!lessee.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>5.00pt</Left>
-        <Top>38.00pt</Top>
+        <Left>5.0pt</Left>
+        <Top>20.4pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -608,8 +608,8 @@ WHERE t. mt_id is not null
         <Width>550.91pt</Width>
         <Value>=First(Fields!contract_no.Value, "Accrual")</Value>
         <ZIndex>1</ZIndex>
-        <Left>5.00pt</Left>
-        <Top>54.40pt</Top>
+        <Left>5.0pt</Left>
+        <Top>34.4pt</Top>
         <Style>
           <BorderStyle />
           <BorderColor />
@@ -642,7 +642,7 @@ WHERE t. mt_id is not null
         <Details>
           <TableRows>
             <TableRow>
-              <Height>33.3pt</Height>
+              <Height>24.7pt</Height>
               <TableCells>
                 <TableCell>
                   <ReportItems>
@@ -672,7 +672,7 @@ WHERE t. mt_id is not null
                         <PaddingLeft>2pt</PaddingLeft>
                         <BorderColor />
                         <BorderWidth />
-                        <TextAlign >Right</TextAlign>
+                        <TextAlign>Right</TextAlign>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -689,7 +689,7 @@ WHERE t. mt_id is not null
                         <PaddingLeft>2pt</PaddingLeft>
                         <BorderColor />
                         <BorderWidth />
-                        <TextAlign >Right</TextAlign>
+                        <TextAlign>Right</TextAlign>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -699,8 +699,8 @@ WHERE t. mt_id is not null
           </TableRows>
         </Details>
         <Left>1.6pt</Left>
-        <Top>168.7pt</Top>
-        <Header >
+        <Top>114.3pt</Top>
+        <Header>
           <TableRows>
             <TableRow>
               <Height>.2in</Height>
@@ -822,7 +822,7 @@ WHERE t. mt_id is not null
         </Header>
       </Table>
     </ReportItems>
-    <Height>258.6pt</Height>
+    <Height>175.8pt</Height>
     <Columns>1</Columns>
   </Body>
   <PageFooter>
