@@ -5,35 +5,35 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BazAr", "newaprashka\BazAr.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QSLibs", "QSLibs", "{3E32171D-7CBA-42A7-BA47-986C7E9D90D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSProjectsLib", "..\QSProjects\QSProjectsLib\QSProjectsLib.csproj", "{A6C1914F-7732-49F5-BABA-8BBBA521FAAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSProjectsLib", "QSProjects\QSProjectsLib\QSProjectsLib.csproj", "{A6C1914F-7732-49F5-BABA-8BBBA521FAAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSaaS", "..\QSProjects\QSSaaS\QSSaaS.csproj", "{4B502FE5-D419-4B5C-9276-0A25EF2F508A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSaaS", "QSProjects\QSSaaS\QSSaaS.csproj", "{4B502FE5-D419-4B5C-9276-0A25EF2F508A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSupportLib", "..\QSProjects\QSSupportLib\QSSupportLib.csproj", "{9DF71899-3CE4-48F4-B3C3-0B21B15037B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSSupportLib", "QSProjects\QSSupportLib\QSSupportLib.csproj", "{9DF71899-3CE4-48F4-B3C3-0B21B15037B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSWidgetLib", "..\QSProjects\QSWidgetLib\QSWidgetLib.csproj", "{5A2BB01E-E124-432E-8099-D1343D3897B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSWidgetLib", "QSProjects\QSWidgetLib\QSWidgetLib.csproj", "{5A2BB01E-E124-432E-8099-D1343D3897B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSMachineConfig", "..\QSProjects\QSMachineConfig\QSMachineConfig.csproj", "{769710D2-BF98-4120-9E07-67BD740CFA1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QSMachineConfig", "QSProjects\QSMachineConfig\QSMachineConfig.csproj", "{769710D2-BF98-4120-9E07-67BD740CFA1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{AFFCA6F8-CCF9-4B04-86ED-EDC547F64E0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GammaBinding", "GammaBinding", "{39AA77A8-620A-490E-81B1-F7526E9C1AE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaBinding", "..\GammaBinding\GammaBinding\GammaBinding.csproj", "{190CEA0D-EA23-4C91-8030-203A5AFED7B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaBinding", "GammaBinding\GammaBinding\GammaBinding.csproj", "{190CEA0D-EA23-4C91-8030-203A5AFED7B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaUtil", "..\GammaBinding\GammaUtil\GammaUtil.csproj", "{1BF2A638-420D-456C-96A7-36873A0FB894}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaUtil", "GammaBinding\GammaUtil\GammaUtil.csproj", "{1BF2A638-420D-456C-96A7-36873A0FB894}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Bindings", "..\Gtk.DataBindings\System.Data.Bindings\System.Data.Bindings.csproj", "{54F958F5-7E58-4C89-9A04-8835E63B97C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Bindings", "Gtk.DataBindings\System.Data.Bindings\System.Data.Bindings.csproj", "{54F958F5-7E58-4C89-9A04-8835E63B97C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater.Gtk", "..\QSProjects\QS.Updater.Gtk\QS.Updater.Gtk.csproj", "{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater.Gtk", "QSProjects\QS.Updater.Gtk\QS.Updater.Gtk.csproj", "{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Project.Gtk", "..\QSProjects\QS.Project.Gtk\QS.Project.Gtk.csproj", "{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Project.Gtk", "QSProjects\QS.Project.Gtk\QS.Project.Gtk.csproj", "{3C0F3944-CBD5-4BD6-83D4-CF33AD6FC68C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Project", "..\QSProjects\QS.Project\QS.Project.csproj", "{28A78143-42E3-40E7-86F5-DD7E1679BE86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Project", "QSProjects\QS.Project\QS.Project.csproj", "{28A78143-42E3-40E7-86F5-DD7E1679BE86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater", "..\QSProjects\QS.Updater\QS.Updater.csproj", "{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Updater", "QSProjects\QS.Updater\QS.Updater.csproj", "{0F2A9FD4-6FC1-4912-9C8A-72028305A37E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Utilities", "..\QSProjects\QS.Utilities\QS.Utilities.csproj", "{E2228A2B-4883-4DD8-8A05-23501F7B8A33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QS.Utilities", "QSProjects\QS.Utilities\QS.Utilities.csproj", "{E2228A2B-4883-4DD8-8A05-23501F7B8A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
