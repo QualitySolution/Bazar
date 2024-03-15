@@ -18,7 +18,6 @@ node {
   stage('Build') {
         sh 'rm -f WinInstall/bazar-*.exe'
         sh 'WinInstall/makeWinInstall.sh'
-        recordIssues enabledForFailure: true, tool: msBuild()
         archiveArtifacts artifacts: 'WinInstall/bazar-*.exe', onlyIfSuccessful: true
   }
   if (params.Publish) {
