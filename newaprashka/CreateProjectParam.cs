@@ -14,6 +14,7 @@ using QS.Navigation;
 using QS.Permissions;
 using QS.Project.DB;
 using QS.Project.Dialogs.GtkUI.ServiceDlg;
+using QS.Project.Domain;
 using QS.Project.Search.GtkUI;
 using QS.Project.Services.GtkUI;
 using QS.Project.Services;
@@ -26,7 +27,7 @@ using QS.Updater.DB.Views;
 using QS.Updater;
 using QS.Validation;
 using QS.Views.Resolve;
-using Connection = QS.Project.DB.Connection;
+using QSProjectsLib;
 
 namespace bazar
 {
@@ -34,6 +35,28 @@ namespace bazar
 	{
 		public static Autofac.IContainer AppDIContainer;
 
+		static void CreateBaseConfig ()
+		{
+			logger.Info ("Настройка параметров базы...");
+
+			// Настройка ORM
+			var db = FluentNHibernate.Cfg.Db.MySQLConfiguration.Standard
+				.Dialect<MySQL57ExtendedDialect>()
+				.ConnectionString (QSMain.ConnectionString)
+				.AdoNetBatchSize(100)
+				.ShowSql ()
+				.FormatSql ();
+
+			OrmConfig.ConfigureOrm (db, new System.Reflection.Assembly[] {
+				System.Reflection.Assembly.GetAssembly (typeof(MainClass)),
+				System.Reflection.Assembly.GetAssembly (typeof(UserBase)),
+			});
+
+#if DEBUG
+			NLog.LogManager.Configuration.RemoveRuleByName("HideNhibernate");
+#endif
+		}
+		
 		static void AutofacClassConfig()
 		{
 			var builder = new ContainerBuilder();
@@ -41,12 +64,13 @@ namespace bazar
 			#region База
 			builder.RegisterType<DefaultUnitOfWorkFactory>().As<IUnitOfWorkFactory>();
 			builder.RegisterType<DefaultSessionProvider>().As<ISessionProvider>();
-			builder.Register(c => new MySqlConnectionFactory(Connection.ConnectionString)).As<IConnectionFactory>();
+			builder.Register(c => new MySqlConnectionFactory(QSMain.ConnectionString)).As<IConnectionFactory>();
 			builder.Register<DbConnection>(c => c.Resolve<IConnectionFactory>().OpenConnection()).AsSelf().InstancePerLifetimeScope();
 			builder.RegisterType<ParametersService>().AsSelf();
 			builder.Register(c => QSProjectsLib.QSMain.ConnectionStringBuilder).AsSelf().ExternallyOwned();
 			builder.RegisterType<NhDataBaseInfo>().As<IDataBaseInfo>();
 			builder.RegisterType<MySQLProvider>().As<IMySQLProvider>();
+			builder.RegisterType<UserService>().As<IUserService>();
 			#endregion
 
 			#region Сервисы
@@ -76,7 +100,7 @@ namespace bazar
 			builder.Register((ctx) => new AutofacViewModelsTdiPageFactory(AppDIContainer)).As<IViewModelsPageFactory>();
 			builder.Register((ctx) => new AutofacTdiPageFactory(AppDIContainer)).As<ITdiPageFactory>();
 			builder.Register((ctx) => new AutofacViewModelsGtkPageFactory(AppDIContainer)).AsSelf();
-			builder.RegisterType<TdiNavigationManager>().AsSelf().As<INavigationManager>().As<ITdiCompatibilityNavigation>().SingleInstance();
+			builder.RegisterType<GtkWindowsNavigationManager>().AsSelf().As<INavigationManager>().SingleInstance();
 			builder.RegisterType<BasedOnNameTDIResolver>().As<ITDIWidgetResolver>();
 			builder.Register(cc => new ClassNamesBaseGtkViewResolver(
 				typeof(DeletionView), 

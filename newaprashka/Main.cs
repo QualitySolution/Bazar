@@ -1,9 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Autofac;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
+using QS.DBScripts.Controllers;
+using QS.Dialog;
+using QS.Dialog.GtkUI;
+using QS.ErrorReporting;
+using QS.Navigation;
+using QS.Project.DB;
+using QS.Project.Repositories;
+using QS.Project.Versioning;
 using QSProjectsLib;
 
 namespace bazar
@@ -18,8 +27,20 @@ namespace bazar
 			try {
 				WindowStartupFix.WindowsCheck ();
 				Application.Init ();
-				QSMain.SubscribeToUnhadledExceptions ();
 				QSMain.GuiThread = Thread.CurrentThread;
+#if DEBUG
+				var errorSettings = new ErrorReportingSettings(false, true, false, null);
+#else
+				var errorSettings = new ErrorReportingSettings(true, false, true, 300);
+#endif
+				UnhandledExceptionHandler.SubscribeToUnhadledExceptions(errorSettings);
+				GtkGuiDispatcher.GuiThread = System.Threading.Thread.CurrentThread;
+				UnhandledExceptionHandler.ApplicationInfo = new ApplicationVersionInfo();
+				UnhandledExceptionHandler.InteractiveMessage = new GtkMessageDialogsInteractive();
+				//Настройка обычных обработчиков ошибок.
+				UnhandledExceptionHandler.CustomErrorHandlers.Add(CommonErrorHandlers.MySqlException1055OnlyFullGroupBy);
+				UnhandledExceptionHandler.CustomErrorHandlers.Add(CommonErrorHandlers.MySqlException1366IncorrectStringValue);
+				UnhandledExceptionHandler.CustomErrorHandlers.Add(CommonErrorHandlers.NHibernateFlushAfterException);
 			} catch (Exception falalEx) {
 				if (WindowStartupFix.IsWindows)
 					WindowStartupFix.DisplayWindowsOkMessage (falalEx.ToString (), "Критическая ошибка");
@@ -31,8 +52,19 @@ namespace bazar
 			}
 
 			CreateProjectParam ();
+			try {
+            	AutofacClassConfig();
+            }catch(MissingMethodException ex) when (ex.Message.Contains("System.String System.String.Format"))
+            {
+            	WindowStartupFix.DisplayWindowsOkMessage("Версия .Net Framework должна быть не ниже 4.6.1. Установите более новую платформу.", "Старая версия .Net");
+            }
+			ILifetimeScope scopeLoginTime = null;
+			scopeLoginTime = AppDIContainer.BeginLifetimeScope(builder => {
+				builder.RegisterType<GtkWindowsNavigationManager>().AsSelf().As<INavigationManager>().SingleInstance();
+				builder.Register((ctx) => new AutofacViewModelsGtkPageFactory(scopeLoginTime)).As<IViewModelsPageFactory>();
+			});
 			// Создаем окно входа
-			Login LoginDialog = new QSProjectsLib.Login ();
+			Login LoginDialog = new Login ();
 			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
 			LoginDialog.SetDefaultNames ("bazar");
 			LoginDialog.DefaultLogin = "demo";
@@ -46,6 +78,7 @@ namespace bazar
 			"<b>Пароль:</b> demo\n" +
 			"\n" +
 			"Для установки собственного сервера обратитесь к документации.";
+			LoginDialog.GetDBCreator = scopeLoginTime.Resolve<IDBCreator>;
 			LoginDialog.UpdateFromGConf ();
 
 			ResponseType LoginResult;
@@ -54,9 +87,18 @@ namespace bazar
 				return;
 
 			LoginDialog.Destroy ();
+			scopeLoginTime.Dispose();
 			//Проверка на предмет использования SaaS и запуск обновления сессии.
 			QSSaaS.Session.StartSessionRefresh ();
 
+			//Настройка базы
+			CreateBaseConfig ();
+			UnhandledExceptionHandler.DataBaseInfo = new NhDataBaseInfo();
+			using(var uow = QS.DomainModel.UoW.UnitOfWorkFactory.CreateWithoutRoot()) {
+				UserRepository.GetCurrentUserId = () => QSMain.User.Id;
+				UnhandledExceptionHandler.User = UserRepository.GetCurrentUser(uow);
+			}
+			
 			//Запускаем программу
 			MainWin = new MainWindow ();
 			if (QSMain.User.Login == "root")
@@ -65,6 +107,7 @@ namespace bazar
 			Application.Run ();
 			//Остановка таймера обновления сессии.
 			QSSaaS.Session.StopSessionRefresh ();
+			MainClass.AppDIContainer.Dispose();
 		}
 
 		static void CreateProjectParam ()
