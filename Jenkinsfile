@@ -12,7 +12,7 @@ node {
       ])
   }
   stage('Nuget') {
-     sh 'nuget restore QSProjects/QSProjectsLib.sln'
+     sh 'cd QSProjects; nuget restore QSProjectsLib.sln'
      sh 'nuget restore bazar.sln'
   }
   stage('Build') {
