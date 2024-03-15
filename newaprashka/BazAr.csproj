@@ -49,15 +49,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="Mono.Posix" />
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Protobuf">
-      <HintPath>..\packages\Google.Protobuf.3.9.1\lib\net45\Google.Protobuf.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\packages\MySql.Data.8.0.17\lib\net452\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -67,16 +58,10 @@
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
     <Reference Include="System.Transactions" />
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.4.6.7\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="Renci.SshNet">
-      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -206,10 +191,6 @@
       <Project>{4B502FE5-D419-4B5C-9276-0A25EF2F508A}</Project>
       <Name>QSSaaS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\QSProjects\QSUpdater\QSUpdater.csproj">
-      <Project>{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}</Project>
-      <Name>QS.Updater.Gtk</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GammaBinding\GammaUtil\GammaUtil.csproj">
       <Project>{1BF2A638-420D-456C-96A7-36873A0FB894}</Project>
       <Name>GammaUtil</Name>
@@ -298,7 +279,6 @@
     <None Include="Reports\ServiceProviderQuarterlyReport.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
     <None Include="Reports\PaymentTicket_Simple.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -311,5 +291,9 @@
     <None Include="Reports\PaymentTicketWithMeters.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="NLog" Version="4.7.0" />
   </ItemGroup>
 </Project>
