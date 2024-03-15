@@ -1,8 +1,7 @@
 ﻿using System;
-using bazar.Tools;
 using Gtk;
+using QS.BaseParameters;
 using QSProjectsLib;
-using QSSupportLib;
 
 namespace bazar
 {
@@ -18,7 +17,7 @@ namespace bazar
 		private string[] quarters={"I","II","III","IV"};
 		private ListStore monthModel;
 		private ListStore quarterModel;
-
+		private ParametersService parameters;
 		public ServiceProvidersPaymentReport ()
 		{
 			this.Build ();
@@ -33,7 +32,8 @@ namespace bazar
 				quarterModel.AppendValues (quarter);
 			}
 
-			yspinLastReadingDay.ValueAsInt = BaseParameters.ReportLastReadingDay;
+			parameters = new ParametersService(QSMain.ConnectionDB);
+			yspinLastReadingDay.ValueAsInt = parameters.Dynamic.ReportLastReadingDay(typeof(int));
 		}
 
 		protected void OnButtonOkClicked (object sender, EventArgs e)
@@ -71,7 +71,7 @@ namespace bazar
 
 		protected void OnYspinLastReadingDayValueChanged (object sender, EventArgs e)
 		{
-			MainSupport.BaseParameters.UpdateParameter (QSMain.ConnectionDB, BaseParameterNames.ReportLastReadingDay.ToString(), yspinLastReadingDay.Text);
+			parameters.Dynamic.ReportLastReadingDay = yspinLastReadingDay.Text;
 		}
 	}
 

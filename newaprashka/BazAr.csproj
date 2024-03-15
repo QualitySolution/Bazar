@@ -76,6 +76,7 @@
     <EmbeddedResource Include="SQLScripts\2.3.4.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateProjectParam.cs" />
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="MainWindow.cs">
       <CustomToolNamespace>bazar</CustomToolNamespace>
@@ -87,6 +88,7 @@
     <Compile Include="Contact.cs" />
     <Compile Include="Lessee.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="ScriptsConfiguration.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="gtk-gui\bazar.Service.cs" />
     <Compile Include="gtk-gui\bazar.Place.cs" />
@@ -150,7 +152,6 @@
     <Compile Include="PendingMeterReading.cs" />
     <Compile Include="ReportDialogs\ContractsReportDlg.cs" />
     <Compile Include="gtk-gui\bazar.ContractsReportDlg.cs" />
-    <Compile Include="Tools\BaseParameters.cs" />
     <Compile Include="ReportDialogs\MetersStatisticsDlg.cs" />
     <Compile Include="gtk-gui\bazar.ReportDialogs.MetersStatisticsDlg.cs" />
   </ItemGroup>
@@ -171,6 +172,30 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QSProjects\QS.MachineConfig\QS.MachineConfig.csproj">
+      <Project>{769710d2-bf98-4120-9e07-67bd740cfa1d}</Project>
+      <Name>QS.MachineConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QSProjects\QS.Project.Core\QS.Project.Core.csproj">
+      <Project>{c01ae5a4-3cff-4c7b-884d-45b07acde761}</Project>
+      <Name>QS.Project.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QSProjects\QS.Project.Gtk\QS.Project.Gtk.csproj">
+      <Project>{3c0f3944-cbd5-4bd6-83d4-cf33ad6fc68c}</Project>
+      <Name>QS.Project.Gtk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QSProjects\QS.Project\QS.Project.csproj">
+      <Project>{28a78143-42e3-40e7-86f5-dd7e1679be86}</Project>
+      <Name>QS.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QSProjects\QS.Updater.Core\QS.Updater.Core.csproj">
+      <Project>{bc159ba7-ef22-4800-ac34-de4b2b386aae}</Project>
+      <Name>QS.Updater.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QSProjects\QS.Updater\QS.Updater.csproj">
+      <Project>{0f2a9fd4-6fc1-4912-9c8a-72028305a37e}</Project>
+      <Name>QS.Updater</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QSProjects\QS.Utilities\QS.Utilities.csproj">
       <Project>{e2228a2b-4883-4dd8-8a05-23501f7b8a33}</Project>
       <Name>QS.Utilities</Name>
@@ -182,10 +207,6 @@
     <ProjectReference Include="..\QSProjects\QSWidgetLib\QSWidgetLib.csproj">
       <Project>{5A2BB01E-E124-432E-8099-D1343D3897B9}</Project>
       <Name>QSWidgetLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QSProjects\QSSupportLib\QSSupportLib.csproj">
-      <Project>{9DF71899-3CE4-48F4-B3C3-0B21B15037B1}</Project>
-      <Name>QSSupportLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\QSProjects\QSSaaS\QSSaaS.csproj">
       <Project>{4B502FE5-D419-4B5C-9276-0A25EF2F508A}</Project>
@@ -209,7 +230,6 @@
     <Folder Include="Reports\" />
     <Folder Include="icons\" />
     <Folder Include="SQLScripts\" />
-    <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Reports\CommonTicket.rdl">
@@ -293,7 +313,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="MySql.Data" Version="8.0.25" />
     <PackageReference Include="NLog" Version="4.7.0" />
   </ItemGroup>
 </Project>

@@ -4,13 +4,11 @@ using System.Threading;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
-using QS.Updater.DB;
 using QSProjectsLib;
-using QSSupportLib;
 
 namespace bazar
 {
-	class MainClass
+	static partial class MainClass
 	{
 		private static Logger logger = LogManager.GetCurrentClassLogger ();
 		public static MainWindow MainWin;
@@ -22,7 +20,6 @@ namespace bazar
 				Application.Init ();
 				QSMain.SubscribeToUnhadledExceptions ();
 				QSMain.GuiThread = Thread.CurrentThread;
-				MainSupport.Init ();
 			} catch (Exception falalEx) {
 				if (WindowStartupFix.IsWindows)
 					WindowStartupFix.DisplayWindowsOkMessage (falalEx.ToString (), "Критическая ошибка");
@@ -75,29 +72,6 @@ namespace bazar
 			QSMain.ProjectPermission = new Dictionary<string, UserPermission> ();
 			QSMain.ProjectPermission.Add ("edit_slips", new UserPermission ("edit_slips", "Изменение кассы задним числом",
 			                                                                "Пользователь может изменять или добавлять кассовые документы задним числом."));
-			//Скрипты создания базы
-			DBCreator.AddBaseScript (
-				new Version(2,3),
-				"Чистая база",
-				"bazar.SQLScripts.new-2.3.sql"
-			);
-
-			//Настраиваем обновления
-			DBUpdater.AddUpdate (
-				new Version (2, 2),
-				new Version (2, 3),
-				"bazar.SQLScripts.Update 2.2 to 2.3.sql");
-
-			DBUpdater.AddMicroUpdate (
-				new Version (2, 3),
-				new Version (2, 3, 1),
-				"bazar.SQLScripts.Update 2.3.1.sql");
-
-			DBUpdater.AddMicroUpdate (
-				new Version (2, 3, 1),
-				new Version (2, 3, 4),
-				"bazar.SQLScripts.2.3.4.sql");
-
 			//Параметры удаления
 			Dictionary<string, TableInfo> Tables = new Dictionary<string, TableInfo> ();
 			QSMain.ProjectTables = Tables;

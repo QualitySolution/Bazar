@@ -1,16 +1,18 @@
 using System;
-using System.Collections.Generic;
+using Autofac;
 using bazar;
 using bazar.ReportDialogs;
 using Gtk;
+using QS.Project.Versioning;
+using QS.Project.Views;
 using QS.Updater;
 using QSProjectsLib;
-using QSSupportLib;
 
 public partial class MainWindow : Gtk.Window
 {
 	private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger ();
 	AccelGroup grup;
+	private ILifetimeScope AutofacScope = MainClass.AppDIContainer.BeginLifetimeScope();
 
 	public MainWindow () : base (Gtk.WindowType.Toplevel)
 	{
@@ -20,14 +22,13 @@ public partial class MainWindow : Gtk.Window
 
 		//Передаем лебл
 		QSMain.StatusBarLabel = labelStatus;
-		this.Title = QSSupportLib.MainSupport.GetTitle ();
+		this.Title = AutofacScope.Resolve<IApplicationInfo>().ProductTitle;
 		QSMain.MakeNewStatusTargetForNlog ();
 
 		QSMain.CheckServer (this); // Проверяем настройки сервера
 
-		MainSupport.LoadBaseParameters ();
-
-		MainUpdater.RunCheckVersion (true, true, true);
+		var checker = new VersionCheckerService(MainClass.AppDIContainer);
+		checker.RunUpdate();
 
 		Reference.RunReferenceItemDlg += OnRunReferenceItemDialog;
 		QSMain.ReferenceUpdated += OnReferenceUpdate;
@@ -385,11 +386,14 @@ public partial class MainWindow : Gtk.Window
 			break;
 		}
 	}
-
-
+	
 	protected virtual void OnAction12Activated (object sender, System.EventArgs e)
 	{
-		QSMain.RunAboutDialog ();
+		using(var local = AutofacScope.BeginLifetimeScope()) {
+			var about = local.Resolve<AboutView>();
+			about.Run();
+			about.Destroy();
+		}
 	}
 
 	protected virtual void OnDialogAuthenticationActionActivated (object sender, System.EventArgs e)
@@ -771,7 +775,10 @@ public partial class MainWindow : Gtk.Window
 
 	protected void OnCheckUpdateActionActivated (object sender, EventArgs e)
 	{
-		MainUpdater.CheckAppVersionShowAnyway ();
+		using(var scope = MainClass.AppDIContainer.BeginLifetimeScope()) {
+			var updater = scope.Resolve<ApplicationUpdater>();
+			updater.StartCheckUpdate(UpdaterFlags.ShowAnyway, scope);
+		}
 	}
 
 	protected void OnProvidersActionActivated (object sender, EventArgs e)

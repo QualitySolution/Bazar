@@ -1,18 +1,19 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using QS.Project.Versioning;
 using QSProjectsLib;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("QS: База арендаторов")]
-[assembly: AssemblyEdition(Edition = "salova", AllowEdition = new string[]{"gpl"})]
+[assembly: AssemblyModification("salova")]
 [assembly: AssemblyDescription("Программа позволяет вести учет арендаторов, кассы и т.п.")]
 [assembly: AssemblyCompany("Quality Solution")]
 [assembly: AssemblyProduct("QS: База арендаторов")]
 [assembly: AssemblyCopyright("Quality Solution 2024")]
 [assembly: AssemblyLogoIcon("bazar.icons.logo.png")]
-[assembly: AssemblySupport("", true, "MySQL")]
+[assembly: AssemblySupport("Телефон тех. поддержки +7(812)309-71-77")]
 [assembly: AssemblyAppWebsite("http://bazar.qsolution.ru/")]
 
 [assembly: AssemblyAuthor("Ганьков Андрей <gav@qsolution.ru>")]
