@@ -1,6 +1,5 @@
 #!/bin/bash
 echo "Что делаем?"
-echo "1) git pull"
 echo "2) nuget restore"
 echo "3) cleanup packages directories"
 echo "4) cleanup bin directories"
@@ -18,21 +17,11 @@ rm -v -f -R ./packages/*
 rm -v -f -R ../QSProjects/packages/*
 rm -v -f -R ../My-FyiReporting/packages/*
 ;;&
-    *1*)
-git pull --autostash
-cd ../QSProjects
-git pull --autostash
-cd ../Gtk.DataBindings
-git pull --autostash
-cd ../GammaBinding
-git pull --autostash
-cd ../My-FyiReporting
-git pull --autostash
-cd ../Bazar
-;;&
     *2*)
 nuget restore bazar.sln;
-nuget restore ../QSProjects/QSProjectsLib.sln;
+cd QSProjects;
+nuget restore QSProjectsLib.sln;
+cd ..;
 nuget restore ../My-FyiReporting/MajorsilenceReporting-Linux-GtkViewer.sln
 ;;&
 esac
