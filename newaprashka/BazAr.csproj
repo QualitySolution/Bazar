@@ -172,6 +172,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QSProjects\Binding\Gamma.Binding\Gamma.Binding.csproj">
+      <Project>{190cea0d-ea23-4c91-8030-203a5afed7b7}</Project>
+      <Name>Gamma.Binding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QSProjects\QS.MachineConfig\QS.MachineConfig.csproj">
       <Project>{769710d2-bf98-4120-9e07-67bd740cfa1d}</Project>
       <Name>QS.MachineConfig</Name>
@@ -211,14 +215,6 @@
     <ProjectReference Include="..\QSProjects\QSSaaS\QSSaaS.csproj">
       <Project>{4B502FE5-D419-4B5C-9276-0A25EF2F508A}</Project>
       <Name>QSSaaS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GammaBinding\GammaUtil\GammaUtil.csproj">
-      <Project>{1BF2A638-420D-456C-96A7-36873A0FB894}</Project>
-      <Name>GammaUtil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GammaBinding\GammaBinding\GammaBinding.csproj">
-      <Project>{190CEA0D-EA23-4C91-8030-203A5AFED7B7}</Project>
-      <Name>GammaBinding</Name>
     </ProjectReference>
     <ProjectReference Include="..\QSProjects\QS.Updater.Gtk\QS.Updater.Gtk.csproj">
       <Project>{6D755374-6EAF-44B6-8C6C-6FE5E5AB3432}</Project>
@@ -313,7 +309,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.25" />
+    <PackageReference Include="MySql.Data" Version="8.0.28" />
     <PackageReference Include="NLog" Version="4.7.0" />
   </ItemGroup>
 </Project>

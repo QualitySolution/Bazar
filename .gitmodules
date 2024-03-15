@@ -4,6 +4,3 @@
 [submodule "Gtk.DataBindings"]
 	path = Gtk.DataBindings
 	url = https://github.com/QualitySolution/Gtk.DataBindings
-[submodule "GammaBinding"]
-	path = GammaBinding
-	url = https://github.com/QualitySolution/GammaBinding
