@@ -686,16 +686,6 @@ public partial class MainWindow : Gtk.Window
 		WinReport.Destroy ();
 	}
 
-	protected void OnAction36Activated (object sender, EventArgs e)
-	{
-		System.Diagnostics.Process.Start ("http://bazar.qsolution.ru");
-	}
-
-	protected void OnAction37Activated (object sender, EventArgs e)
-	{
-		System.Diagnostics.Process.Start ("https://groups.google.com/forum/?fromgroups#!forum/bazarsoft");
-	}
-
 	protected void OnAction38Activated (object sender, EventArgs e)
 	{
 		DocRegister win = new DocRegister ();

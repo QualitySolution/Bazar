@@ -5,15 +5,14 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../../../QSProjects/QSProjectsLib/bin/Debug/QSProjectsLib.dll" />
-    <widget-library name="../../../QSProjects/QSWidgetLib/bin/Debug/QSWidgetLib.dll" />
-    <widget-library name="../../../QSProjects/QSSupportLib/bin/Debug/QSSupportLib.dll" />
-    <widget-library name="../../../QSProjects/QS.Updater.Gtk/bin/Debug/QSUpdater.dll" />
-    <widget-library name="../../../GammaBinding/GammaBinding/bin/Debug/GammaBinding.dll" />
-    <widget-library name="../../../QSProjects/QS.Updater.Gtk/bin/Debug/QSUpdater.dll" />
+    <widget-library name="../../QSProjects/Binding/Gamma.Binding/bin/Debug/GammaBinding.dll" />
+    <widget-library name="../../QSProjects/QS.Project.Gtk/bin/Debug/QS.Project.Gtk.dll" />
+    <widget-library name="../../QSProjects/QSProjectsLib/bin/Debug/QSProjectsLib.dll" />
+    <widget-library name="../../QSProjects/QSWidgetLib/bin/Debug/QSWidgetLib.dll" />
+    <widget-library name="../../QSProjects/QS.Updater.Gtk/bin/Debug/QSUpdater.dll" />
     <widget-library name="../bin/Debug/BazAr.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="875 590">
+  <widget class="Gtk.Window" id="MainWindow" design-size="875 591">
     <action-group name="Default">
       <action id="ActionFileMenu">
         <property name="Type">Action</property>
@@ -183,18 +182,6 @@
         <property name="ShortLabel" translatable="yes">Долги арендаторов</property>
         <signal name="Activated" handler="OnAction33Activated" />
       </action>
-      <action id="Action36">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Сайт программы</property>
-        <property name="ShortLabel" translatable="yes">Сайт программы</property>
-        <signal name="Activated" handler="OnAction36Activated" />
-      </action>
-      <action id="Action37">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Задать вопрос на форуме</property>
-        <property name="ShortLabel" translatable="yes">Задать вопрос на форуме</property>
-        <signal name="Activated" handler="OnAction37Activated" />
-      </action>
       <action id="Action38">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Реестр документов</property>
@@ -315,8 +302,6 @@
               </node>
               <node type="Menu" action="Action34">
                 <node type="Menuitem" action="helpAction" />
-                <node type="Menuitem" action="Action36" />
-                <node type="Menuitem" action="Action37" />
                 <node type="Menuitem" action="Action26" />
                 <node type="Menuitem" action="checkUpdateAction" />
                 <node type="Separator" />
@@ -2202,7 +2187,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2879,7 +2863,6 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
-                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>

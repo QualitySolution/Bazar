@@ -61,10 +61,6 @@ public partial class MainWindow
 
 	private global::Gtk.Action Action33;
 
-	private global::Gtk.Action Action36;
-
-	private global::Gtk.Action Action37;
-
 	private global::Gtk.Action Action38;
 
 	private global::Gtk.Action Action39;
@@ -565,12 +561,6 @@ public partial class MainWindow
 		this.Action33 = new global::Gtk.Action("Action33", global::Mono.Unix.Catalog.GetString("Долги арендаторов"), null, null);
 		this.Action33.ShortLabel = global::Mono.Unix.Catalog.GetString("Долги арендаторов");
 		w1.Add(this.Action33, null);
-		this.Action36 = new global::Gtk.Action("Action36", global::Mono.Unix.Catalog.GetString("Сайт программы"), null, null);
-		this.Action36.ShortLabel = global::Mono.Unix.Catalog.GetString("Сайт программы");
-		w1.Add(this.Action36, null);
-		this.Action37 = new global::Gtk.Action("Action37", global::Mono.Unix.Catalog.GetString("Задать вопрос на форуме"), null, null);
-		this.Action37.ShortLabel = global::Mono.Unix.Catalog.GetString("Задать вопрос на форуме");
-		w1.Add(this.Action37, null);
 		this.Action38 = new global::Gtk.Action("Action38", global::Mono.Unix.Catalog.GetString("Реестр документов"), null, null);
 		this.Action38.ShortLabel = global::Mono.Unix.Catalog.GetString("Реестр документов");
 		w1.Add(this.Action38, null);
@@ -633,11 +623,9 @@ public partial class MainWindow
 				"enuitem name=\'Action48\' action=\'Action48\'/><menuitem name=\'Action45\' action=\'Act" +
 				"ion45\'/><separator/><menuitem name=\'Action38\' action=\'Action38\'/><menuitem name=" +
 				"\'Action39\' action=\'Action39\'/></menu><menu name=\'Action34\' action=\'Action34\'><me" +
-				"nuitem name=\'helpAction\' action=\'helpAction\'/><menuitem name=\'Action36\' action=\'" +
-				"Action36\'/><menuitem name=\'Action37\' action=\'Action37\'/><menuitem name=\'Action26" +
-				"\' action=\'Action26\'/><menuitem name=\'checkUpdateAction\' action=\'checkUpdateActio" +
-				"n\'/><separator/><menuitem name=\'aboutAction\' action=\'aboutAction\'/></menu></menu" +
-				"bar></ui>");
+				"nuitem name=\'helpAction\' action=\'helpAction\'/><menuitem name=\'Action26\' action=\'" +
+				"Action26\'/><menuitem name=\'checkUpdateAction\' action=\'checkUpdateAction\'/><separ" +
+				"ator/><menuitem name=\'aboutAction\' action=\'aboutAction\'/></menu></menubar></ui>");
 		this.menubar1 = ((global::Gtk.MenuBar)(this.UIManager.GetWidget("/menubar1")));
 		this.menubar1.Name = "menubar1";
 		this.vbox1.Add(this.menubar1);
@@ -2588,7 +2576,7 @@ public partial class MainWindow
 			this.Child.ShowAll();
 		}
 		this.DefaultWidth = 875;
-		this.DefaultHeight = 590;
+		this.DefaultHeight = 591;
 		this.Show();
 		this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
 		this.Action10.Activated += new global::System.EventHandler(this.OnAction10Activated);
@@ -2614,8 +2602,6 @@ public partial class MainWindow
 		this.Action32.Activated += new global::System.EventHandler(this.OnAction32Activated);
 		this.helpAction.Activated += new global::System.EventHandler(this.OnHelpActionActivated);
 		this.Action33.Activated += new global::System.EventHandler(this.OnAction33Activated);
-		this.Action36.Activated += new global::System.EventHandler(this.OnAction36Activated);
-		this.Action37.Activated += new global::System.EventHandler(this.OnAction37Activated);
 		this.Action38.Activated += new global::System.EventHandler(this.OnAction38Activated);
 		this.Action39.Activated += new global::System.EventHandler(this.OnAction39Activated);
 		this.Action40.Activated += new global::System.EventHandler(this.OnAction40Activated);
