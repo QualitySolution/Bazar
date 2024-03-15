@@ -2,6 +2,7 @@ using System;
 using Gtk;
 using MySql.Data.MySqlClient;
 using bazar;
+using QS.Utilities.Text;
 using QSProjectsLib;
 
 public partial class MainWindow : Gtk.Window
@@ -193,7 +194,7 @@ public partial class MainWindow : Gtk.Window
 		if (oa == null)
 			return -1;
 
-		return StringWorks.NaturalStringComparer.Compare (oa, ob);
+		return NaturalStringComparer.CompareStrings(oa, ob);
 	}
 
 	private int ContractNumberSortFunction(TreeModel model, TreeIter a, TreeIter b) 
@@ -205,7 +206,7 @@ public partial class MainWindow : Gtk.Window
 		if (oa == null)
 			return -1;
 
-		return StringWorks.NaturalStringComparer.Compare (oa, ob);
+		return NaturalStringComparer.CompareStrings(oa, ob);
 	}
 
 	private int ContractEndDateSortFunction(TreeModel model, TreeIter a, TreeIter b) 
