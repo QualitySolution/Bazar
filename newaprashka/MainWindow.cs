@@ -797,4 +797,15 @@ public partial class MainWindow : Gtk.Window
 		MetersStatistics.Run ();
 		MetersStatistics.Destroy ();
 	}
+
+	protected void OnAction49Activated (object sender, EventArgs e)
+	{
+		Reference accrualStatusRef = new Reference (orderBy: "name");
+		accrualStatusRef.SetMode (true, false, true, true, true);
+		accrualStatusRef.NameMaxLength = 30;
+		accrualStatusRef.FillList ("accrual_status", "Статус взаиморасчёта", "Статус взаиморасчётов");
+		accrualStatusRef.Show ();
+		accrualStatusRef.Run ();
+		accrualStatusRef.Destroy ();
+	}
 }
