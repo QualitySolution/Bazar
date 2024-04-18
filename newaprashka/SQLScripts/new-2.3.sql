@@ -452,6 +452,7 @@ CREATE TABLE IF NOT EXISTS `accrual_pays` (
   `cash_id` INT UNSIGNED NOT NULL,
   `count` DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 1,
   `price` DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT 0,
+  `status_id` INT UNSIGNED NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_accrual_pays_accrual_id_idx` (`accrual_id` ASC),
   INDEX `fk_accrual_pays_service_id_idx` (`service_id` ASC),
@@ -470,6 +471,11 @@ CREATE TABLE IF NOT EXISTS `accrual_pays` (
     FOREIGN KEY (`cash_id`)
     REFERENCES `cash` (`id`)
     ON DELETE CASCADE
+    ON UPDATE CASCADE, 
+  CONSTRAINT `fk_accrual_pays_status_id`
+    FOREIGN KEY (`status_id`)
+    REFERENCES `accrual_status` (`id`)
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
@@ -817,6 +823,16 @@ CREATE TABLE IF NOT EXISTS `meter_reading` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `service_providers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `accrual_status` (
+       `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+       `name` VARCHAR(45) NOT NULL,
+       PRIMARY KEY (`id`))
+    ENGINE = InnoDB
+    AUTO_INCREMENT = 1
+    DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Placeholder table for view `active_contracts`
 -- -----------------------------------------------------

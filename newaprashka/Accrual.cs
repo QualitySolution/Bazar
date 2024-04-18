@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gtk;
 using MySql.Data.MySqlClient;
 using NLog;
-using QS.DomainModel.Entity;
 using QSProjectsLib;
 using QSWidgetLib;
 
@@ -135,7 +134,6 @@ namespace bazar
 			
 			Gtk.TreeViewColumn StatusColumn = new Gtk.TreeViewColumn ();
 			StatusColumn.Title = "Статус взаиморасчётов";
-			StatusColumn.MinWidth = 250;
             Gtk.CellRendererCombo CellStatus = new CellRendererCombo();
             CellStatus.TextColumn = 0;
             CellStatus.Editable = true;
