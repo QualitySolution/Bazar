@@ -478,6 +478,16 @@ namespace bazar
 			PrepareTable.ClearItems.Add ("credit_slips", 
 			                             new TableInfo.ClearDependenceItem ("WHERE user_id = @id", "", "@id", "user_id"));
 			Tables.Add ("users", PrepareTable);
+			
+			PrepareTable = new TableInfo ();
+			PrepareTable.ObjectsName = "Статусы взаиморасчётов";
+			PrepareTable.ObjectName = "статус взаиморасчётов"; 
+			PrepareTable.SqlSelect = "SELECT name, id FROM accrual_status ";
+			PrepareTable.DisplayString = "{0}";
+			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys ("id");
+			PrepareTable.DeleteItems.Add ("accrual_pays", 
+				new TableInfo.DeleteDependenceItem ("WHERE status_id = @id ", "", "@id"));
+			Tables.Add ("accrual_status", PrepareTable);
 
 		}
 

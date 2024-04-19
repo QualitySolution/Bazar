@@ -14,7 +14,7 @@ namespace bazar
 		public bool NewAccrual;
 
 		Gtk.ListStore ServiceListStore, ServiceRefListStore, IncomeListStore;
-		TreeModel ServiceNameList, CashNameList;
+		TreeModel ServiceNameList, CashNameList, StatusNameList ;
 		List<long> DeletedRowId = new List<long>();
 		List<int> servicesWithMeters;
 		Dictionary<TreeIter,List<PendingMeterReading>> allPendingMeterReadings;
@@ -40,7 +40,9 @@ namespace bazar
 			paid,
 			by_aria,
 			counters,
-			row_color
+			row_color,
+            status_id,
+            status
 		}
 
 		public Accrual ()
@@ -53,6 +55,11 @@ namespace bazar
 			ComboWorks.ComboFillReference(ServiceCombo,"services", ComboWorks.ListMode.OnlyItems, OrderBy: "name");
 			ServiceNameList = ServiceCombo.Model;
 			ServiceCombo.Destroy ();
+			
+			ComboBox StatusCombo = new ComboBox();
+			ComboWorks.ComboFillReference(StatusCombo,"accrual_status", ComboWorks.ListMode.WithNo, OrderBy: "name");
+			StatusNameList = StatusCombo.Model;
+			StatusCombo.Destroy ();
 			
 			ComboBox CashCombo = new ComboBox();
 			string sqlSelect = "SELECT name, id, color FROM cash";
@@ -76,7 +83,9 @@ namespace bazar
 			                                      typeof (decimal),	//11 - paid value
 			                                      typeof(bool),		//12 - from area
 			                                      typeof(int),		//13 - number of counters
-			                                      typeof(string)	//14 - marker color
+			                                      typeof(string),	//14 - marker color
+			                                      typeof(int),		//13 - number of status
+			                                      typeof(string)	//14 - status name
 			                                      );
 
 			Gtk.TreeViewColumn ServiceColumn = new Gtk.TreeViewColumn ();
@@ -123,6 +132,16 @@ namespace bazar
 			Gtk.CellRendererText CellSum = new CellRendererText();
 			SumColumn.PackStart (CellSum, true);
 			
+			Gtk.TreeViewColumn StatusColumn = new Gtk.TreeViewColumn ();
+			StatusColumn.Title = "Статус взаиморасчётов";
+            Gtk.CellRendererCombo CellStatus = new CellRendererCombo();
+            CellStatus.TextColumn = 0;
+            CellStatus.Editable = true;
+            CellStatus.Model = StatusNameList;
+            CellStatus.HasEntry = false;
+            CellStatus.Edited += OnStatusComboEdited;
+            StatusColumn.PackStart (CellStatus, true);
+            			
 			treeviewServices.AppendColumn (ServiceColumn);
 			ServiceColumn.AddAttribute (CellService,"text", (int)ServiceCol.service);
 			treeviewServices.AppendColumn (CashColumn);
@@ -132,6 +151,8 @@ namespace bazar
 			treeviewServices.AppendColumn (PriceColumn);
 			treeviewServices.AppendColumn (SumColumn);
 			treeviewServices.AppendColumn("Оплачено", new Gtk.CellRendererText (), "text", (int)ServiceCol.paid_text);
+			treeviewServices.AppendColumn (StatusColumn);
+			StatusColumn.AddAttribute (CellStatus,"text", (int)ServiceCol.status);
 
 			CountColumn.SetCellDataFunc (CellCount, RenderCountColumn);
 			PriceColumn.SetCellDataFunc (CellPrice, RenderPriceColumn);
@@ -281,6 +302,30 @@ namespace bazar
 			TestCanSave ();
 			CalculateServiceSum ();
 		}
+		
+		void OnStatusComboEdited (object o, EditedArgs args)
+		{
+			TreeIter iter;
+			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
+				return;
+			ServiceListStore.SetValue(iter, (int)ServiceCol.status, args.NewText);
+			TreeIter StatusIter;
+			if (!StatusNameList.GetIterFirst (out StatusIter))
+				return;
+			do {
+				if(StatusNameList.GetValue (StatusIter,0).ToString () == args.NewText) {
+					ServiceListStore.SetValue (iter, (int)ServiceCol.status_id, StatusNameList.GetValue(StatusIter, 1));
+					if((int)StatusNameList.GetValue(StatusIter, 1) == -1)
+						ServiceListStore.SetValue (iter, (int)ServiceCol.status, String.Empty);
+					else
+						ServiceListStore.SetValue (iter, (int)ServiceCol.status, StatusNameList.GetValue(StatusIter, 0));
+					break;
+				}
+			}
+			while(StatusNameList.IterNext (ref StatusIter));
+			TestCanSave ();
+			CalculateServiceSum ();
+		}
 
 		void OnCountTextEdited (object o, EditedArgs args)
 		{
@@ -386,10 +431,11 @@ namespace bazar
 				
 				//Получаем таблицу услуг
 				sql = "SELECT accrual_pays.*, cash.name as cash, cash.color as cashcolor, services.name as service, " +
-					"units.name as units, paysum.sum as paid, metercount.number FROM accrual_pays " +
+						"units.name as units, paysum.sum as paid, metercount.number, accrual_status.name as status FROM accrual_pays " +
 						"LEFT JOIN cash ON cash.id = accrual_pays.cash_id " +
 						"LEFT JOIN services ON accrual_pays.service_id = services.id " +
 						"LEFT JOIN units ON services.units_id = units.id " +
+						"LEFT JOIN accrual_status ON accrual_status.id = accrual_pays.status_id "+
 						"LEFT JOIN (" +
 						"SELECT accrual_pay_id, SUM(sum) as sum FROM payment_details GROUP BY accrual_pay_id) as paysum " +
 						"ON paysum.accrual_pay_id = accrual_pays.id " +
@@ -406,7 +452,7 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@place_type_id", Place_type_id);
 				cmd.Parameters.AddWithValue("@place_no", Place_no);
 				rdr = cmd.ExecuteReader();
-				
+
 				decimal count, price, paid;
 				
 				while (rdr.Read())
@@ -414,22 +460,26 @@ namespace bazar
 					paid = DBWorks.GetDecimal (rdr, "paid", 0);
 					count = DBWorks.GetDecimal(rdr, "count", 0);
 					price = DBWorks.GetDecimal(rdr, "price", 0);
+
+					ServiceListStore.AppendValues(
+						rdr.GetInt32("service_id"),
+						rdr["service"].ToString(),
+						DBWorks.GetInt(rdr, "cash_id", -1),
+						rdr["cash"].ToString(),
+						rdr["units"].ToString(),
+						count,
+						price,
+						count * price,
+						(object)rdr.GetInt64("id"),
+						String.Format("{0:0.00}", paid),
+						paid,
+						null,
+						DBWorks.GetInt(rdr, "number", 0),
+						DBWorks.GetString(rdr, "cashcolor", null),
+						DBWorks.GetInt (rdr, "status_id", -1),
+						DBWorks.GetString(rdr, "status", null)
+					);
 					
-					ServiceListStore.AppendValues(rdr.GetInt32 ("service_id"),
-					                              rdr["service"].ToString(),
-					                              DBWorks.GetInt (rdr, "cash_id", -1),
-					                              rdr["cash"].ToString(),
-					                              rdr["units"].ToString(),
-					                              count,
-					                              price,
-					                              count * price,
-					                              (object) rdr.GetInt64("id"),
-					                              String.Format ("{0:0.00}", paid),
-					                              paid,
-					                              null,
-					                              DBWorks.GetInt (rdr, "number", 0),
-					                              DBWorks.GetString(rdr, "cashcolor", null)
-					                             );
 				}
 				rdr.Close();
 				
@@ -667,11 +717,11 @@ namespace bazar
 						break; // не указано название услуги
 					if((long)ServiceListStore.GetValue(iter, (int)ServiceCol.id) > 0)
 						sql = "UPDATE accrual_pays SET accrual_id = @accrual_id, service_id = @service_id, " +
-							"cash_id = @cash_id, count = @count, price = @price " +
+							"cash_id = @cash_id, count = @count, price = @price, status_id = @status_id " +
 							"WHERE id = @id";
 					else
-						sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price) " +
-							"VALUES (@accrual_id, @service_id, @cash_id, @count, @price)";
+						sql = "INSERT INTO accrual_pays (accrual_id, service_id, cash_id, count, price, status_id) " +
+							"VALUES (@accrual_id, @service_id, @cash_id, @count, @price, @status_id)";
 					cmd = new MySqlCommand(sql, QSMain.connectionDB);
 					if(NewAccrual)
 						cmd.Parameters.AddWithValue("@accrual_id", NewAccrual_id);
@@ -684,6 +734,10 @@ namespace bazar
 						cmd.Parameters.AddWithValue("@cash_id", DBNull.Value);
 					cmd.Parameters.AddWithValue("@count", ServiceListStore.GetValue(iter, (int)ServiceCol.count));
 					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter, (int)ServiceCol.price));
+					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.status_id) == -1)
+						cmd.Parameters.AddWithValue("@status_id", DBNull.Value);
+					else
+						cmd.Parameters.AddWithValue("@status_id", ServiceListStore.GetValue(iter, (int)ServiceCol.status_id));
 					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter, (int)ServiceCol.id));
 					cmd.ExecuteNonQuery();
 					List<PendingMeterReading> pendingReadings;

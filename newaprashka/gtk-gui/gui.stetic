@@ -243,6 +243,12 @@
         <property name="ShortLabel" translatable="yes">Статистика по счетчикам</property>
         <signal name="Activated" handler="OnAction46Activated" />
       </action>
+      <action id="Action49">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Статусы взаиморасчётов</property>
+        <property name="ShortLabel" translatable="yes">Статусы взаиморасчётов</property>
+        <signal name="Activated" handler="OnAction49Activated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">QS: База арендаторов</property>
@@ -283,6 +289,7 @@
                 <node type="Menuitem" action="Action19" />
                 <node type="Menuitem" action="Action24" />
                 <node type="Menuitem" action="Action25" />
+                <node type="Menuitem" action="Action49" />
               </node>
               <node type="Menu" action="Action">
                 <node type="Menu" action="Action29">
@@ -319,7 +326,7 @@
           <widget class="Gtk.Notebook" id="notebookMain">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">3</property>
+            <property name="CurrentPage">1</property>
             <signal name="SwitchPage" handler="OnNotebookMainSwitchPage" />
             <child>
               <widget class="Gtk.VBox" id="vbox2">
@@ -2187,6 +2194,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -2863,6 +2871,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Сегодня</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>
@@ -10115,7 +10124,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="bazar.Accrual" design-size="753 512">
+  <widget class="Gtk.Dialog" id="bazar.Accrual" design-size="900 600">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Новое начисление</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -15184,6 +15193,7 @@
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Label" translatable="yes">Месяц</property>
+                    <property name="Active">True</property>
                     <property name="DrawIndicator">True</property>
                     <property name="HasLabel">True</property>
                     <property name="UseUnderline">True</property>
