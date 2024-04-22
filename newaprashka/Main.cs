@@ -485,8 +485,8 @@ namespace bazar
 			PrepareTable.SqlSelect = "SELECT name, id FROM accrual_status ";
 			PrepareTable.DisplayString = "{0}";
 			PrepareTable.PrimaryKey = new TableInfo.PrimaryKeys ("id");
-			PrepareTable.DeleteItems.Add ("accrual_pays", 
-				new TableInfo.DeleteDependenceItem ("WHERE status_id = @id ", "", "@id"));
+			PrepareTable.ClearItems.Add ("accrual_pays", 
+				new TableInfo.ClearDependenceItem ("WHERE status_id = @id", "", "@id", "status_id"));
 			Tables.Add ("accrual_status", PrepareTable);
 
 		}
