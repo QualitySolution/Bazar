@@ -67,17 +67,7 @@ namespace bazar
 			Login LoginDialog = new Login ();
 			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
 			LoginDialog.SetDefaultNames ("bazar");
-			LoginDialog.DefaultLogin = "demo";
-			LoginDialog.DefaultServer = "demo.qsolution.ru";
-			LoginDialog.DefaultConnection = "Демонстрационная база";
-			Login.ApplicationDemoServer = "demo.qsolution.ru";
-			LoginDialog.DemoMessage = "Для подключения к демострационному серверу используйте следующие настройки:\n" +
-			"\n" +
-			"<b>Сервер:</b> demo.qsolution.ru\n" +
-			"<b>Пользователь:</b> demo\n" +
-			"<b>Пароль:</b> demo\n" +
-			"\n" +
-			"Для установки собственного сервера обратитесь к документации.";
+			LoginDialog.DefaultConnection = "По умолчанию";
 			LoginDialog.GetDBCreator = scopeLoginTime.Resolve<IDBCreator>;
 			LoginDialog.UpdateFromGConf ();
 

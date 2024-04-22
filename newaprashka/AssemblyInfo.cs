@@ -12,9 +12,9 @@ using QS.Project.Versioning;
 [assembly: AssemblyCopyright("Quality Solution 2024")]
 [assembly: AssemblyLogoIcon("bazar.icons.logo.png")]
 [assembly: AssemblySupport("Телефон тех. поддержки +7(812)309-71-77")]
-[assembly: AssemblyAppWebsite("http://bazar.qsolution.ru/")]
 
 [assembly: AssemblyAuthor("Ганьков Андрей <gav@qsolution.ru>")]
+[assembly: AssemblyAuthor("Горячев Иван <space@qsolution.ru>")]
 [assembly: AssemblyAuthor("Виноградов Андрей 2015")]
 [assembly: AssemblyAuthor("Никитин Дмитрий 2016")]
 
