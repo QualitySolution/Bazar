@@ -657,8 +657,8 @@ namespace bazar
 			{
 				this.Child.ShowAll();
 			}
-			this.DefaultWidth = 753;
-			this.DefaultHeight = 512;
+			this.DefaultWidth = 900;
+			this.DefaultHeight = 600;
 			this.Show();
 			this.comboContract.Changed += new global::System.EventHandler(this.OnComboContractChanged);
 			this.buttonOpenContract.Clicked += new global::System.EventHandler(this.OnButtonOpenContractClicked);
