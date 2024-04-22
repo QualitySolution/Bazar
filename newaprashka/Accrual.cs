@@ -734,10 +734,10 @@ namespace bazar
 						cmd.Parameters.AddWithValue("@cash_id", DBNull.Value);
 					cmd.Parameters.AddWithValue("@count", ServiceListStore.GetValue(iter, (int)ServiceCol.count));
 					cmd.Parameters.AddWithValue("@price", ServiceListStore.GetValue(iter, (int)ServiceCol.price));
-					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.status_id) == -1)
-						cmd.Parameters.AddWithValue("@status_id", DBNull.Value);
-					else
+					if((int)ServiceListStore.GetValue(iter, (int)ServiceCol.status_id) > 0)
 						cmd.Parameters.AddWithValue("@status_id", ServiceListStore.GetValue(iter, (int)ServiceCol.status_id));
+					else
+						cmd.Parameters.AddWithValue("@status_id", DBNull.Value);
 					cmd.Parameters.AddWithValue("@id", ServiceListStore.GetValue(iter, (int)ServiceCol.id));
 					cmd.ExecuteNonQuery();
 					List<PendingMeterReading> pendingReadings;
