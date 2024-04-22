@@ -68,6 +68,8 @@ namespace bazar
 			LoginDialog.Logo = Gdk.Pixbuf.LoadFromResource ("bazar.icons.logo.png");
 			LoginDialog.SetDefaultNames ("bazar");
 			LoginDialog.DefaultConnection = "По умолчанию";
+			LoginDialog.DefaultServer = "localhost";
+			LoginDialog.DefaultLogin = "user";
 			LoginDialog.GetDBCreator = scopeLoginTime.Resolve<IDBCreator>;
 			LoginDialog.UpdateFromGConf ();
 
