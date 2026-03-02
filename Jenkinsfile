@@ -37,7 +37,7 @@ node {
         }
      }
      stage('Publish'){
-        sh 'scp WinInstall/bazar-*.exe a218160_qso@a218160.ftp.mchost.ru:subdomains/files/httpdocs/Bazar/'
+        sh 'scp WinInstall/bazar-*.exe root@odysseus.srv.qsolution.ru:/var/www/files/Bazar/'
      }
   }
 }
